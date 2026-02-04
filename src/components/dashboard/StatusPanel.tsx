@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 
 interface StatusItem {
   label: string;
@@ -16,6 +17,48 @@ interface StatusPanelProps {
 }
 
 export function StatusPanel({ title, items, statusIndicator, pieData }: StatusPanelProps) {
+  const showSkeleton = useInitialSkeleton();
+
+  if (showSkeleton) {
+    return (
+      <div className="dashboard-panel">
+        <div className="panel-header">
+          <div className="flex items-center gap-2">
+            {statusIndicator && <div className="skeleton h-2.5 w-2.5 rounded-full" />}
+            <div className="skeleton h-4 w-28 rounded-md" />
+          </div>
+        </div>
+
+        <div className="p-3 space-y-2">
+          {[0, 1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="flex items-center justify-between py-1.5 border-b border-border/30 last:border-0"
+            >
+              <span className="skeleton h-3 w-24 rounded-md" />
+              <span className="skeleton h-3 w-14 rounded-md" />
+            </div>
+          ))}
+        </div>
+
+        <div className="p-3 pt-1 border-t border-border/40">
+          <div className="skeleton h-40 w-full rounded-md" />
+          <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-muted-foreground">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="flex items-center gap-2">
+                <span className="skeleton h-2.5 w-2.5 rounded-full" />
+                <span className="flex-1 flex items-center justify-between">
+                  <span className="skeleton h-3 w-16 rounded-md" />
+                  <span className="skeleton h-3 w-10 rounded-md" />
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const pieColors: Record<string, string> = {
     normal: "hsl(var(--success))",
     warning: "hsl(var(--warning))",

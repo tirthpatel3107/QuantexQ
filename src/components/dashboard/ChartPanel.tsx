@@ -17,6 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 
 interface ChartPanelProps {
   title: string;
@@ -34,12 +35,31 @@ export function ChartPanel({
   threshold,
 }: ChartPanelProps) {
   const [open, setOpen] = useState(false);
+  const showSkeleton = useInitialSkeleton();
 
   const statusBorderColors = {
     normal: "border-border",
     warning: "border-warning/50",
     critical: "border-destructive/50",
   };
+
+  if (showSkeleton) {
+    return (
+      <div className={cn("dashboard-panel group", statusBorderColors[status])}>
+        <div className="panel-header relative">
+          <div className="flex items-center gap-3">
+            <div className="skeleton h-4 w-24 rounded-md" />
+          </div>
+          <div className="absolute right-2 top-1/2 -translate-y-1/2">
+            <div className="skeleton h-8 w-8 rounded-full" />
+          </div>
+        </div>
+        <div className="p-3">
+          <div className="skeleton h-[140px] w-full rounded-md" />
+        </div>
+      </div>
+    );
+  }
 
   const ChartContent = ({ className }: { className?: string }) => (
     <div className={cn("chart-container", className)}>

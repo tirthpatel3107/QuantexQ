@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { LucideIcon } from "lucide-react";
 
 interface PumpStatusCardProps {
@@ -7,6 +8,7 @@ interface PumpStatusCardProps {
   status: "running" | "warning" | "alert" | "offline";
   efficiency?: number;
   statusMessage?: string;
+  disableInitialSkeleton?: boolean;
 }
 
 export function PumpStatusCard({
@@ -15,7 +17,30 @@ export function PumpStatusCard({
   status,
   efficiency,
   statusMessage,
+  disableInitialSkeleton = false,
 }: PumpStatusCardProps) {
+  const showSkeleton = disableInitialSkeleton ? false : useInitialSkeleton();
+
+  if (showSkeleton) {
+    return (
+      <div className="relative p-3 rounded-lg border border-border bg-card">
+        <div className="flex items-start justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <div className="skeleton h-2.5 w-2.5 rounded-full" />
+            <div className="skeleton h-4 w-24 rounded-md" />
+          </div>
+          <div className="skeleton h-4 w-4 rounded-full" />
+        </div>
+
+        <div className="space-y-3">
+          <div className="skeleton h-3 w-16 rounded-md" />
+          <div className="skeleton h-2.5 w-full rounded-full" />
+          <div className="skeleton h-3 w-20 rounded-md" />
+        </div>
+      </div>
+    );
+  }
+
   const statusConfig = {
     running: {
       bg: "bg-success/10",

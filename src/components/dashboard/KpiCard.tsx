@@ -1,5 +1,6 @@
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 
 interface KpiCardProps {
   title: string;
@@ -20,11 +21,40 @@ export function KpiCard({
   status = "normal",
   subValues,
 }: KpiCardProps) {
+  const showSkeleton = useInitialSkeleton();
+
   const statusColors = {
     normal: "text-primary",
     warning: "text-warning glow-warning",
     critical: "text-destructive glow-danger",
   };
+
+  if (showSkeleton) {
+    return (
+      <div className="kpi-card group h-full min-h-[170px] flex flex-col">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="skeleton h-7 w-7 rounded-md" />
+            <div className="skeleton h-3 w-20 rounded-md" />
+          </div>
+        </div>
+
+        <div className="flex items-baseline gap-2">
+          <span className="skeleton h-7 w-24 rounded-md" />
+          <span className="skeleton h-4 w-10 rounded-md" />
+        </div>
+
+        <div className="mt-3 pt-3 border-t border-border/50 space-y-2">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="flex items-center justify-between text-xs">
+              <span className="skeleton h-3 w-24 rounded-md" />
+              <span className="skeleton h-3 w-12 rounded-md" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="kpi-card group h-full min-h-[170px] flex flex-col">

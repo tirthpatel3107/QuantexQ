@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 
 interface DepthGaugeProps {
   currentDepth: number;
@@ -13,6 +13,39 @@ export function DepthGauge({
   bitDepth,
   rateOfPenetration,
 }: DepthGaugeProps) {
+  const showSkeleton = useInitialSkeleton();
+
+  if (showSkeleton) {
+    return (
+      <div className="dashboard-panel h-full">
+        <div className="panel-header">
+          <div className="skeleton h-4 w-28 rounded-md" />
+          <div className="flex items-center gap-2">
+            <div className="skeleton h-3 w-16 rounded-md" />
+            <div className="skeleton h-4 w-20 rounded-md" />
+          </div>
+        </div>
+
+        <div className="p-4 flex flex-col gap-4 h-[calc(100%-52px)]">
+          <div className="skeleton h-10 w-40 mx-auto rounded-md" />
+
+          <div className="skeleton h-full w-full rounded-lg" />
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <div className="skeleton h-3 w-20 rounded-md" />
+              <div className="skeleton h-4 w-24 rounded-md" />
+            </div>
+            <div className="space-y-2">
+              <div className="skeleton h-3 w-20 rounded-md" />
+              <div className="skeleton h-4 w-24 rounded-md" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const progress = (currentDepth / targetDepth) * 100;
 
   // Generate depth markers

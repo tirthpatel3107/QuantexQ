@@ -11,6 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 
 interface Notification {
   id: string;
@@ -29,6 +30,7 @@ export function NotificationsPanel({ notifications }: NotificationsPanelProps) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [clearAllOpen, setClearAllOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const showSkeleton = useInitialSkeleton();
 
   const icons = {
     info: Info,
@@ -66,6 +68,34 @@ export function NotificationsPanel({ notifications }: NotificationsPanelProps) {
     setItems([]);
     setClearAllOpen(false);
   };
+
+  if (showSkeleton) {
+    return (
+      <div className="dashboard-panel h-full flex flex-col">
+        <div className="panel-header">
+          <div className="skeleton h-4 w-28 rounded-md" />
+          <div className="skeleton h-3 w-16 rounded-md" />
+        </div>
+
+        <div className="flex-1 overflow-hidden p-4 space-y-3">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="flex items-start gap-3">
+              <div className="skeleton h-4 w-4 rounded-full" />
+              <div className="flex-1 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="skeleton h-3 w-16 rounded-md" />
+                  <div className="skeleton h-3 w-12 rounded-md" />
+                </div>
+                <div className="skeleton h-3 w-full rounded-md" />
+                <div className="skeleton h-3 w-3/5 rounded-md" />
+              </div>
+              <div className="skeleton h-5 w-5 rounded-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

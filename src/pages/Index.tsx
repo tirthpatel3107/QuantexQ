@@ -21,6 +21,7 @@ import { PumpStatusCard } from "@/components/dashboard/PumpStatusCard";
 import { NotificationsPanel } from "@/components/dashboard/NotificationsPanel";
 import { StatusPanel } from "@/components/dashboard/StatusPanel";
 import { ActionToolbar } from "@/components/dashboard/ActionToolbar";
+import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 
 import {
   flowData,
@@ -37,6 +38,7 @@ import {
 const pumpIcons = [Cylinder, Cylinder, Waves, Cog, Snowflake, Shield];
 
 const Index = () => {
+  const showPumpSkeleton = useInitialSkeleton();
   const [kpiCards, setKpiCards] = useState([
     {
       id: "flow-in",
@@ -211,23 +213,53 @@ const Index = () => {
               />
 
               {/* Pump Status Grid */}
-              <div className="dashboard-panel lg:col-span-1 xl:col-span-2">
-                <div className="panel-header">
-                  <h3 className="panel-title">Pump Status</h3>
+              {showPumpSkeleton ? (
+                <div className="dashboard-panel lg:col-span-1 xl:col-span-2">
+                  <div className="panel-header">
+                    <div className="skeleton h-4 w-28 rounded-md" />
+                  </div>
+                  <div className="p-3 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                    {pumpStatus.map((_, i) => (
+                      <div
+                        key={i}
+                        className="relative p-3 rounded-lg border border-border bg-card space-y-3"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <div className="skeleton h-2.5 w-2.5 rounded-full" />
+                            <div className="skeleton h-4 w-24 rounded-md" />
+                          </div>
+                          <div className="skeleton h-4 w-4 rounded-full" />
+                        </div>
+                        <div className="space-y-3">
+                          <div className="skeleton h-3 w-16 rounded-md" />
+                          <div className="skeleton h-2.5 w-full rounded-full" />
+                          <div className="skeleton h-3 w-20 rounded-md" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="p-3 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                  {pumpStatus.map((pump, i) => (
-                    <PumpStatusCard
-                      key={i}
-                      name={pump.name}
-                      icon={pumpIcons[i]}
-                      status={pump.status}
-                      efficiency={pump.efficiency}
-                      statusMessage={pump.statusMessage}
-                    />
-                  ))}
+              ) : (
+                <div className="dashboard-panel lg:col-span-1 xl:col-span-2">
+                  <div className="panel-header">
+                    <h3 className="panel-title">Pump Status</h3>
+                  </div>
+                  <div className="p-3 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                    {pumpStatus.map((pump, i) => (
+                      <PumpStatusCard
+                        key={i}
+                        name={pump.name}
+                        icon={pumpIcons[i]}
+                        status={pump.status}
+                        efficiency={pump.efficiency}
+                        statusMessage={pump.statusMessage}
+                        disableInitialSkeleton
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 

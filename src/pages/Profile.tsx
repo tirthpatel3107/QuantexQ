@@ -28,6 +28,7 @@ import {
   Wifi,
   Clock4,
 } from "lucide-react";
+import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 
 const sessions = [
   { device: "Rugged Tablet · Rig Control Room", location: "DW-0347", status: "Active", lastSeen: "Now" },
@@ -42,6 +43,80 @@ const Profile = () => {
     alerts: false,
     notifications: false,
   });
+  const showSkeleton = useInitialSkeleton();
+
+  if (showSkeleton) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex flex-col">
+        <Header />
+        <main className="flex-1 px-6 py-20 pt-24">
+          <div className="max-w-6xl mx-auto space-y-8">
+            {/* Hero skeleton */}
+            <Card className="overflow-hidden border-border/60 bg-card/60 backdrop-blur">
+              <CardContent className="p-6 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="skeleton h-16 w-16 rounded-full" />
+                  <div className="space-y-2">
+                    <div className="skeleton h-5 w-48 rounded-md" />
+                    <div className="skeleton h-3 w-56 rounded-md" />
+                    <div className="flex flex-wrap items-center gap-2 mt-2">
+                      <div className="skeleton h-6 w-24 rounded-full" />
+                      <div className="skeleton h-6 w-28 rounded-full" />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="skeleton h-9 w-32 rounded-md" />
+                  <div className="skeleton h-9 w-32 rounded-md" />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Grids skeleton */}
+            <div className="grid gap-4 lg:grid-cols-3">
+              {[0, 1, 2].map((i) => (
+                <Card key={i} className="border-border/60 bg-card/70 backdrop-blur">
+                  <CardHeader>
+                    <div className="flex items-center gap-2">
+                      <div className="skeleton h-4 w-4 rounded-full" />
+                      <div className="skeleton h-4 w-24 rounded-md" />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {[0, 1, 2].map((j) => (
+                      <div key={j} className="space-y-2">
+                        <div className="skeleton h-3 w-28 rounded-md" />
+                        <div className="skeleton h-3 w-40 rounded-md" />
+                        <Separator />
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <div className="grid gap-4 lg:grid-cols-2">
+              {[0, 1].map((i) => (
+                <Card key={i} className="border-border/60 bg-card/70 backdrop-blur">
+                  <CardHeader>
+                    <div className="flex items-center gap-2">
+                      <div className="skeleton h-4 w-4 rounded-full" />
+                      <div className="skeleton h-4 w-28 rounded-md" />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {[0, 1, 2].map((j) => (
+                      <div key={j} className="skeleton h-3 w-full rounded-md" />
+                    ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
