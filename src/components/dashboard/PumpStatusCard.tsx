@@ -19,7 +19,8 @@ export function PumpStatusCard({
   statusMessage,
   disableInitialSkeleton = false,
 }: PumpStatusCardProps) {
-  const showSkeleton = disableInitialSkeleton ? false : useInitialSkeleton();
+  const skeletonVisible = useInitialSkeleton();
+  const showSkeleton = !disableInitialSkeleton && skeletonVisible;
 
   if (showSkeleton) {
     return (

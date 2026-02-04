@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState, type ComponentProps } from "react";
 import {
   Droplets,
   Gauge,
@@ -35,104 +35,118 @@ import {
   chokeData,
 } from "@/data/mockData";
 
+type KpiCardConfig = {
+  id: string;
+  props: ComponentProps<typeof KpiCard>;
+};
+
 const pumpIcons = [Cylinder, Cylinder, Waves, Cog, Snowflake, Shield];
+
+const KPI_CARD_PRESETS: KpiCardConfig[] = [
+  {
+    id: "flow-in",
+    props: {
+      title: "Flow In",
+      value: "318.0",
+      unit: "gpm",
+      icon: Droplets,
+      trend: "up",
+      trendValue: "+3%",
+      subValues: [
+        { label: "OUT", value: "320.0 gpm", status: "warning" },
+        { label: "MUD", value: "50.6 ppg" },
+      ],
+    },
+  },
+  {
+    id: "density",
+    props: {
+      title: "Density",
+      value: "8.6",
+      unit: "ppg",
+      icon: Gauge,
+      trend: "stable",
+      subValues: [
+        { label: "IN", value: "8.6 ppg" },
+        { label: "OUT", value: "8.4 ppg" },
+        { label: "SBP", value: "227.0 psi" },
+      ],
+    },
+  },
+  {
+    id: "surface-pressure",
+    props: {
+      title: "Surface Pressure",
+      value: "1247.9",
+      unit: "psi",
+      icon: Activity,
+      status: "normal",
+      subValues: [
+        { label: "SP", value: "1247.9 psi" },
+        { label: "SPP", value: "3947.9 psi" },
+      ],
+    },
+  },
+  {
+    id: "standpipe",
+    props: {
+      title: "Standpipe",
+      value: "3483.0",
+      unit: "psi",
+      icon: CircleDot,
+      trend: "down",
+      trendValue: "-2%",
+    },
+  },
+  {
+    id: "bottom-hole",
+    props: {
+      title: "Bottom Hole",
+      value: "9627.0",
+      unit: "psi",
+      icon: Thermometer,
+      subValues: [
+        { label: "SP", value: "9627.0 psi" },
+        { label: "BHP", value: "9718.4 psi" },
+      ],
+    },
+  },
+];
 
 const Index = () => {
   const showPumpSkeleton = useInitialSkeleton();
-  const [kpiCards, setKpiCards] = useState([
-    {
-      id: "flow-in",
-      props: {
-        title: "Flow In",
-        value: "318.0",
-        unit: "gpm",
-        icon: Droplets,
-        trend: "up" as const,
-        trendValue: "+3%",
-        subValues: [
-          { label: "OUT", value: "320.0 gpm", status: "warning" as const },
-          { label: "MUD", value: "50.6 ppg" },
-        ],
-      },
-    },
-    {
-      id: "density",
-      props: {
-        title: "Density",
-        value: "8.6",
-        unit: "ppg",
-        icon: Gauge,
-        trend: "stable" as const,
-        subValues: [
-          { label: "IN", value: "8.6 ppg" },
-          { label: "OUT", value: "8.4 ppg" },
-          { label: "SBP", value: "227.0 psi" },
-        ],
-      },
-    },
-    {
-      id: "surface-pressure",
-      props: {
-        title: "Surface Pressure",
-        value: "1247.9",
-        unit: "psi",
-        icon: Activity,
-        status: "normal" as const,
-        subValues: [
-          { label: "SP", value: "1247.9 psi" },
-          { label: "SPP", value: "3947.9 psi" },
-        ],
-      },
-    },
-    {
-      id: "standpipe",
-      props: {
-        title: "Standpipe",
-        value: "3483.0",
-        unit: "psi",
-        icon: CircleDot,
-        trend: "down" as const,
-        trendValue: "-2%",
-      },
-    },
-    {
-      id: "bottom-hole",
-      props: {
-        title: "Bottom Hole",
-        value: "9627.0",
-        unit: "psi",
-        icon: Thermometer,
-        subValues: [
-          { label: "SP", value: "9627.0 psi" },
-          { label: "BHP", value: "9718.4 psi" },
-        ],
-      },
-    },
-  ]);
+  const [kpiCards, setKpiCards] = useState(() => KPI_CARD_PRESETS);
 
-  const handleKpiDragStart = (id: string) => (event: React.DragEvent<HTMLDivElement>) => {
-    event.dataTransfer.setData("text/plain", id);
-  };
+  // Stable drag & drop handlers keep child props from thrashing and avoid rerenders.
+  const handleKpiDragStart = useCallback(
+    (id: string) => (event: React.DragEvent<HTMLDivElement>) => {
+      event.dataTransfer.setData("text/plain", id);
+    },
+    []
+  );
 
-  const handleKpiDrop = (targetId: string) => (event: React.DragEvent<HTMLDivElement>) => {
+  const handleKpiDrop = useCallback(
+    (targetId: string) => (event: React.DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      const draggedId = event.dataTransfer.getData("text/plain");
+      if (!draggedId || draggedId === targetId) return;
+
+      setKpiCards((cards) => {
+        const fromIndex = cards.findIndex((c) => c.id === draggedId);
+        const toIndex = cards.findIndex((c) => c.id === targetId);
+        if (fromIndex === -1 || toIndex === -1) return cards;
+        const next = [...cards];
+        const [moved] = next.splice(fromIndex, 1);
+        next.splice(toIndex, 0, moved);
+        return next;
+      });
+    },
+    []
+  );
+
+  const handleKpiDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    const draggedId = event.dataTransfer.getData("text/plain");
-    if (!draggedId || draggedId === targetId) return;
-
-    setKpiCards((cards) => {
-      const fromIndex = cards.findIndex((c) => c.id === draggedId);
-      const toIndex = cards.findIndex((c) => c.id === targetId);
-      if (fromIndex === -1 || toIndex === -1) return cards;
-      const next = [...cards];
-      const [moved] = next.splice(fromIndex, 1);
-      next.splice(toIndex, 0, moved);
-      return next;
-    });
-  };
-
-  const handleKpiDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

@@ -1,21 +1,20 @@
-// Generate realistic-looking chart data
+// Generate deterministic, realistic-looking chart data without runtime randomness so
+// renders remain stable between reloads and snapshots.
 const generateChartData = (baseValue: number, variance: number, points = 20) => {
   const data = [];
-  let value = baseValue;
-  
+  const now = Date.now();
+
   for (let i = 0; i < points; i++) {
-    const time = new Date();
-    time.setMinutes(time.getMinutes() - (points - i) * 3);
-    
-    value += (Math.random() - 0.5) * variance;
-    value = Math.max(baseValue - variance * 2, Math.min(baseValue + variance * 2, value));
-    
+    const time = new Date(now - (points - i) * 3 * 60_000);
+    const wave = Math.sin((i + 1) * 1.35) * variance * 0.45;
+    const value = Math.max(baseValue - variance * 2, Math.min(baseValue + variance * 2, baseValue + wave));
+
     data.push({
       time: time.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
       value: Math.round(value * 100) / 100,
     });
   }
-  
+
   return data;
 };
 

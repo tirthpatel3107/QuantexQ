@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
@@ -13,7 +14,13 @@ interface KpiCardProps {
   subValues?: { label: string; value: string; status?: "normal" | "warning" | "critical" }[];
 }
 
-export function KpiCard({
+const statusColors: Record<NonNullable<KpiCardProps["status"]>, string> = {
+  normal: "text-primary",
+  warning: "text-warning glow-warning",
+  critical: "text-destructive glow-danger",
+};
+
+export const KpiCard = memo(function KpiCard({
   title,
   value,
   unit,
@@ -22,12 +29,6 @@ export function KpiCard({
   subValues,
 }: KpiCardProps) {
   const showSkeleton = useInitialSkeleton();
-
-  const statusColors = {
-    normal: "text-primary",
-    warning: "text-warning glow-warning",
-    critical: "text-destructive glow-danger",
-  };
 
   if (showSkeleton) {
     return (
@@ -113,4 +114,4 @@ export function KpiCard({
       />
     </div>
   );
-}
+});

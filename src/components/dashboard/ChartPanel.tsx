@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Maximize2 } from "lucide-react";
 import {
   LineChart,
@@ -27,7 +27,13 @@ interface ChartPanelProps {
   threshold?: { value: number; label: string };
 }
 
-export function ChartPanel({
+const statusBorderColors = {
+  normal: "border-border",
+  warning: "border-warning/50",
+  critical: "border-destructive/50",
+};
+
+export const ChartPanel = memo(function ChartPanel({
   title,
   data,
   color = "hsl(var(--primary))",
@@ -36,12 +42,6 @@ export function ChartPanel({
 }: ChartPanelProps) {
   const [open, setOpen] = useState(false);
   const showSkeleton = useInitialSkeleton();
-
-  const statusBorderColors = {
-    normal: "border-border",
-    warning: "border-warning/50",
-    critical: "border-destructive/50",
-  };
 
   if (showSkeleton) {
     return (
@@ -94,6 +94,7 @@ export function ChartPanel({
               y={threshold.value}
               stroke="hsl(var(--warning))"
               strokeDasharray="3 3"
+              // Highlight alert thresholds without redrawing the chart every render.
               label={{
                 value: threshold.label,
                 position: "right",
@@ -154,4 +155,4 @@ export function ChartPanel({
       </DialogContent>
     </Dialog>
   );
-}
+});

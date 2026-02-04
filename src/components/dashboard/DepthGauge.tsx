@@ -1,3 +1,5 @@
+import { memo, useMemo } from "react";
+
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 
 interface DepthGaugeProps {
@@ -7,13 +9,28 @@ interface DepthGaugeProps {
   rateOfPenetration: number;
 }
 
-export function DepthGauge({
+export const DepthGauge = memo(function DepthGauge({
   currentDepth,
   targetDepth,
   bitDepth,
   rateOfPenetration,
 }: DepthGaugeProps) {
   const showSkeleton = useInitialSkeleton();
+
+  const progress = useMemo(
+    () => Math.min(100, Math.max(0, (currentDepth / targetDepth) * 100)),
+    [currentDepth, targetDepth]
+  );
+
+  // Generate depth markers once per target change to avoid recreating arrays every render.
+  const markers = useMemo(() => {
+    const values: number[] = [];
+    const step = targetDepth / 5;
+    for (let i = 0; i <= 5; i++) {
+      values.push(Math.round(step * i));
+    }
+    return values;
+  }, [targetDepth]);
 
   if (showSkeleton) {
     return (
@@ -44,15 +61,6 @@ export function DepthGauge({
         </div>
       </div>
     );
-  }
-
-  const progress = (currentDepth / targetDepth) * 100;
-
-  // Generate depth markers
-  const markers = [];
-  const step = targetDepth / 5;
-  for (let i = 0; i <= 5; i++) {
-    markers.push(Math.round(step * i));
   }
 
   return (
@@ -151,4 +159,4 @@ export function DepthGauge({
       </div>
     </div>
   );
-}
+});

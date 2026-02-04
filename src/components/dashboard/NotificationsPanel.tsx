@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { AlertTriangle, Info, CheckCircle, XCircle, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -25,26 +25,33 @@ interface NotificationsPanelProps {
   notifications: Notification[];
 }
 
-export function NotificationsPanel({ notifications }: NotificationsPanelProps) {
+const icons = {
+  info: Info,
+  success: CheckCircle,
+  warning: AlertTriangle,
+  error: XCircle,
+};
+
+const styles = {
+  info: "text-info",
+  success: "text-success",
+  warning: "text-warning",
+  error: "text-destructive",
+};
+
+export const NotificationsPanel = memo(function NotificationsPanel({
+  notifications,
+}: NotificationsPanelProps) {
   const [items, setItems] = useState<Notification[]>(notifications);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [clearAllOpen, setClearAllOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const showSkeleton = useInitialSkeleton();
 
-  const icons = {
-    info: Info,
-    success: CheckCircle,
-    warning: AlertTriangle,
-    error: XCircle,
-  };
-
-  const styles = {
-    info: "text-info",
-    success: "text-success",
-    warning: "text-warning",
-    error: "text-destructive",
-  };
+  // Keep local state aligned if a new notifications list is passed from above.
+  useEffect(() => {
+    setItems(notifications);
+  }, [notifications]);
 
   const selectedNotification = useMemo(
     () => items.find((item) => item.id === selectedId),
@@ -190,4 +197,4 @@ export function NotificationsPanel({ notifications }: NotificationsPanelProps) {
       </AlertDialog>
     </>
   );
-}
+});
