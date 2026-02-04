@@ -174,7 +174,6 @@ const Index = () => {
                 title="Flow Rate"
                 data={flowData}
                 color="hsl(var(--primary))"
-                status="warning"
                 threshold={{ value: 350, label: "Max" }}
               />
               <ChartPanel
