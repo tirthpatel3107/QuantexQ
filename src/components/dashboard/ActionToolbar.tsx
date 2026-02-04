@@ -21,9 +21,9 @@ export function ActionToolbar() {
   ];
 
   return (
-    <div className="h-12 border-t border-border bg-card px-4 flex items-center justify-between">
+    <div className="border-t border-border bg-card px-3 sm:px-4 py-2 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       {/* Left Actions */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2 flex-wrap md:flex-nowrap">
         {actions.map((action, i) => (
           <button
             key={i}

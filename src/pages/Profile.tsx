@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -6,6 +7,15 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   BellRing,
   Globe2,
@@ -26,6 +36,13 @@ const sessions = [
 ];
 
 const Profile = () => {
+  const [maintenanceOpen, setMaintenanceOpen] = useState<false | "access" | "profile">(false);
+  const [prefs, setPrefs] = useState({
+    theme: true,
+    alerts: false,
+    notifications: false,
+  });
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header />
@@ -59,10 +76,14 @@ const Profile = () => {
                 </div>
               </div>
               <div className="flex gap-3">
-                <Button variant="outline" className="border-border text-foreground">
+                <Button
+                  variant="outline"
+                  className="border-border text-foreground"
+                  onClick={() => setMaintenanceOpen("access")}
+                >
                   Manage Access
                 </Button>
-                <Button>Update Profile</Button>
+                <Button onClick={() => setMaintenanceOpen("profile")}>Update Profile</Button>
               </div>
             </CardContent>
           </Card>
@@ -107,21 +128,30 @@ const Profile = () => {
                     <span className="text-foreground">Theme</span>
                     <p className="text-xs text-muted-foreground">Dark mode locked during shifts</p>
                   </div>
-                  <Switch checked aria-readonly />
+                  <Switch
+                    checked={prefs.theme}
+                    onCheckedChange={(checked) => setPrefs((p) => ({ ...p, theme: checked }))}
+                  />
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <span className="text-foreground">Alerts</span>
                     <p className="text-xs text-muted-foreground">Critical + Warning</p>
                   </div>
-                  <Switch checked aria-readonly />
+                  <Switch
+                    checked={prefs.alerts}
+                    onCheckedChange={(checked) => setPrefs((p) => ({ ...p, alerts: checked }))}
+                  />
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <span className="text-foreground">Notifications</span>
                     <p className="text-xs text-muted-foreground">In-app + Email</p>
                   </div>
-                  <Switch checked aria-readonly />
+                  <Switch
+                    checked={prefs.notifications}
+                    onCheckedChange={(checked) => setPrefs((p) => ({ ...p, notifications: checked }))}
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -215,6 +245,23 @@ const Profile = () => {
           </div>
         </div>
       </main>
+
+      <AlertDialog open={!!maintenanceOpen} onOpenChange={(open) => setMaintenanceOpen(open ? "access" : false)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Feature under maintenance</AlertDialogTitle>
+            <AlertDialogDescription>
+              {maintenanceOpen === "access"
+                ? "Manage Access is temporarily unavailable while we perform maintenance."
+                : "Update Profile is temporarily unavailable while we perform maintenance."}
+              {" "}Please try again later.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setMaintenanceOpen(false)}>OK</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

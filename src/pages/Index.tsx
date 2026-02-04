@@ -42,10 +42,10 @@ const Index = () => {
       <Header />
 
       {/* Main Content */}
-      <main className="flex-1 p-4 pt-20 overflow-auto custom-scrollbar">
-        <div className="grid grid-cols-12 gap-4 h-full">
+      <main className="flex-1 p-3 sm:p-4 pt-28 sm:pt-24 md:pt-20 overflow-auto custom-scrollbar">
+        <div className="grid h-full gap-4 grid-cols-1 lg:grid-cols-12">
           {/* Left Column - Depth Gauge */}
-          <div className="col-span-2">
+          <div className="min-h-[320px] min-w-0 lg:col-span-3 xl:col-span-2">
             <DepthGauge
               currentDepth={14978}
               targetDepth={20000}
@@ -55,18 +55,18 @@ const Index = () => {
           </div>
 
           {/* Center Column - Main Dashboard */}
-          <div className="col-span-7 flex flex-col gap-4">
+          <div className="flex flex-col gap-4 min-w-0 lg:col-span-6 xl:col-span-7">
             {/* KPI Cards Row */}
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               <KpiCard
                 title="Flow In"
-                value="220.1"
+                value="318.0"
                 unit="gpm"
                 icon={Droplets}
                 trend="up"
-                trendValue="+5%"
+                trendValue="+3%"
                 subValues={[
-                  { label: "OUT", value: "318.0 gpm", status: "warning" },
+                  { label: "OUT", value: "320.0 gpm", status: "warning" },
                   { label: "MUD", value: "50.6 ppg" },
                 ]}
               />
@@ -114,7 +114,7 @@ const Index = () => {
             </div>
 
             {/* Charts Grid */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
               <ChartPanel
                 title="Flow Rate"
                 data={flowData}
@@ -140,7 +140,7 @@ const Index = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
               <ChartPanel
                 title="Standpipe Pressure"
                 data={standpipePressureData}
@@ -158,7 +158,7 @@ const Index = () => {
             </div>
 
             {/* Bottom Row - Status & Pump Grid */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
               {/* Operational Status */}
               <StatusPanel
                 title="Status"
@@ -167,11 +167,11 @@ const Index = () => {
               />
 
               {/* Pump Status Grid */}
-              <div className="col-span-2 dashboard-panel">
+              <div className="dashboard-panel lg:col-span-1 xl:col-span-2">
                 <div className="panel-header">
                   <h3 className="panel-title">Pump Status</h3>
                 </div>
-                <div className="p-3 grid grid-cols-3 gap-4">
+                <div className="p-3 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                   {pumpStatus.map((pump, i) => (
                     <PumpStatusCard
                       key={i}
@@ -188,7 +188,7 @@ const Index = () => {
           </div>
 
           {/* Right Column - Notifications & Choke */}
-          <div className="col-span-3 flex flex-col gap-4">
+          <div className="flex flex-col gap-4 min-h-0 min-w-0 lg:col-span-3 xl:col-span-3">
             {/* Choke Status */}
             <StatusPanel
               title="Choke"

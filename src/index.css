@@ -170,7 +170,26 @@
 
   /* Panel styles */
   .dashboard-panel {
-    @apply rounded-lg bg-card border border-border overflow-hidden;
+    @apply relative rounded-lg bg-card border border-border overflow-hidden;
+    @apply transition-all duration-200 hover:border-primary/30;
+  }
+
+  .dashboard-panel::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, hsl(var(--primary)), transparent);
+    opacity: 0;
+    transition: opacity 200ms ease;
+    pointer-events: none;
+  }
+
+  .dashboard-panel:hover::after,
+  .dashboard-panel:focus-within::after {
+    opacity: 1;
   }
 
   .panel-header {

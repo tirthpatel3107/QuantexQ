@@ -36,8 +36,8 @@ export function ChartPanel({
   };
 
   return (
-    <div className={cn("dashboard-panel", statusBorderColors[status])}>
-      <div className="panel-header">
+    <div className={cn("dashboard-panel group", statusBorderColors[status])}>
+      <div className="panel-header relative">
         <div className="flex items-center gap-3">
           <h3 className="panel-title">{title}</h3>
           {currentValue && (
@@ -54,9 +54,14 @@ export function ChartPanel({
             </span>
           )}
         </div>
-        <button className="h-6 w-6 rounded hover:bg-accent flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-          <Maximize2 className="h-3.5 w-3.5" />
-        </button>
+        <div className="absolute right-2 top-1/2 -translate-y-1/2">
+          <button
+            className="h-8 w-8 rounded flex items-center justify-center text-muted-foreground hover:bg-accent hover:text-foreground transition-colors opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            aria-label="Expand chart"
+          >
+            <Maximize2 className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       <div className="p-3">
