@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Droplets,
   Gauge,
@@ -36,6 +37,101 @@ import {
 const pumpIcons = [Cylinder, Cylinder, Waves, Cog, Snowflake, Shield];
 
 const Index = () => {
+  const [kpiCards, setKpiCards] = useState([
+    {
+      id: "flow-in",
+      props: {
+        title: "Flow In",
+        value: "318.0",
+        unit: "gpm",
+        icon: Droplets,
+        trend: "up" as const,
+        trendValue: "+3%",
+        subValues: [
+          { label: "OUT", value: "320.0 gpm", status: "warning" as const },
+          { label: "MUD", value: "50.6 ppg" },
+        ],
+      },
+    },
+    {
+      id: "density",
+      props: {
+        title: "Density",
+        value: "8.6",
+        unit: "ppg",
+        icon: Gauge,
+        trend: "stable" as const,
+        subValues: [
+          { label: "IN", value: "8.6 ppg" },
+          { label: "OUT", value: "8.4 ppg" },
+          { label: "SBP", value: "227.0 psi" },
+        ],
+      },
+    },
+    {
+      id: "surface-pressure",
+      props: {
+        title: "Surface Pressure",
+        value: "1247.9",
+        unit: "psi",
+        icon: Activity,
+        status: "normal" as const,
+        subValues: [
+          { label: "SP", value: "1247.9 psi" },
+          { label: "SPP", value: "3947.9 psi" },
+        ],
+      },
+    },
+    {
+      id: "standpipe",
+      props: {
+        title: "Standpipe",
+        value: "3483.0",
+        unit: "psi",
+        icon: CircleDot,
+        trend: "down" as const,
+        trendValue: "-2%",
+      },
+    },
+    {
+      id: "bottom-hole",
+      props: {
+        title: "Bottom Hole",
+        value: "9627.0",
+        unit: "psi",
+        icon: Thermometer,
+        subValues: [
+          { label: "SP", value: "9627.0 psi" },
+          { label: "BHP", value: "9718.4 psi" },
+        ],
+      },
+    },
+  ]);
+
+  const handleKpiDragStart = (id: string) => (event: React.DragEvent<HTMLDivElement>) => {
+    event.dataTransfer.setData("text/plain", id);
+  };
+
+  const handleKpiDrop = (targetId: string) => (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const draggedId = event.dataTransfer.getData("text/plain");
+    if (!draggedId || draggedId === targetId) return;
+
+    setKpiCards((cards) => {
+      const fromIndex = cards.findIndex((c) => c.id === draggedId);
+      const toIndex = cards.findIndex((c) => c.id === targetId);
+      if (fromIndex === -1 || toIndex === -1) return cards;
+      const next = [...cards];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, moved);
+      return next;
+    });
+  };
+
+  const handleKpiDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
@@ -58,59 +154,18 @@ const Index = () => {
           <div className="flex flex-col gap-4 min-w-0 lg:col-span-6 xl:col-span-7">
             {/* KPI Cards Row */}
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-              <KpiCard
-                title="Flow In"
-                value="318.0"
-                unit="gpm"
-                icon={Droplets}
-                trend="up"
-                trendValue="+3%"
-                subValues={[
-                  { label: "OUT", value: "320.0 gpm", status: "warning" },
-                  { label: "MUD", value: "50.6 ppg" },
-                ]}
-              />
-              <KpiCard
-                title="Density"
-                value="8.6"
-                unit="ppg"
-                icon={Gauge}
-                trend="stable"
-                subValues={[
-                  { label: "IN", value: "8.6 ppg" },
-                  { label: "OUT", value: "8.4 ppg" },
-                  { label: "SBP", value: "227.0 psi" },
-                ]}
-              />
-              <KpiCard
-                title="Surface Pressure"
-                value="1247.9"
-                unit="psi"
-                icon={Activity}
-                status="normal"
-                subValues={[
-                  { label: "SP", value: "1247.9 psi" },
-                  { label: "SPP", value: "3947.9 psi" },
-                ]}
-              />
-              <KpiCard
-                title="Standpipe"
-                value="3483.0"
-                unit="psi"
-                icon={CircleDot}
-                trend="down"
-                trendValue="-2%"
-              />
-              <KpiCard
-                title="Bottom Hole"
-                value="9627.0"
-                unit="psi"
-                icon={Thermometer}
-                subValues={[
-                  { label: "SP", value: "9627.0 psi" },
-                  { label: "BHP", value: "9718.4 psi" },
-                ]}
-              />
+              {kpiCards.map((card) => (
+                <div
+                  key={card.id}
+                  draggable
+                  onDragStart={handleKpiDragStart(card.id)}
+                  onDragOver={handleKpiDragOver}
+                  onDrop={handleKpiDrop(card.id)}
+                  className="cursor-move"
+                >
+                  <KpiCard {...card.props} />
+                </div>
+              ))}
             </div>
 
             {/* Charts Grid */}
@@ -118,8 +173,6 @@ const Index = () => {
               <ChartPanel
                 title="Flow Rate"
                 data={flowData}
-                currentValue="318.0"
-                unit="gpm"
                 color="hsl(var(--primary))"
                 status="warning"
                 threshold={{ value: 350, label: "Max" }}
@@ -127,15 +180,11 @@ const Index = () => {
               <ChartPanel
                 title="Density"
                 data={densityData}
-                currentValue="8.6"
-                unit="ppg"
                 color="hsl(var(--success))"
               />
               <ChartPanel
                 title="Surface Back Pressure"
                 data={surfacePressureData}
-                currentValue="1247.9"
-                unit="psi"
                 color="hsl(var(--warning))"
               />
             </div>
@@ -144,15 +193,11 @@ const Index = () => {
               <ChartPanel
                 title="Standpipe Pressure"
                 data={standpipePressureData}
-                currentValue="3483.0"
-                unit="psi"
                 color="hsl(var(--chart-4))"
               />
               <ChartPanel
                 title="Bottom Hole Pressure"
                 data={bottomHolePressureData}
-                currentValue="9627.0"
-                unit="psi"
                 color="hsl(var(--chart-5))"
               />
             </div>
@@ -193,6 +238,12 @@ const Index = () => {
             <StatusPanel
               title="Choke"
               items={chokeData}
+              pieData={chokeData.map((item) => ({
+                label: item.label,
+                value: Math.max(0, Number(item.value)),
+                unit: item.unit,
+                status: item.status,
+              }))}
               statusIndicator="warning"
             />
 

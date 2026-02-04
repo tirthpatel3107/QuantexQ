@@ -60,7 +60,7 @@ export function DepthGauge({
           </div>
 
           {/* Gauge Bar */}
-          <div className="flex-1 relative">
+          <div className="flex-1 relative min-w-[72px]">
             {/* Background track */}
             <div className="absolute inset-0 bg-muted rounded-lg overflow-hidden">
               {/* Grid lines */}

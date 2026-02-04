@@ -1,4 +1,4 @@
-import { LucideIcon, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface KpiCardProps {
@@ -17,8 +17,6 @@ export function KpiCard({
   value,
   unit,
   icon: Icon,
-  trend,
-  trendValue,
   status = "normal",
   subValues,
 }: KpiCardProps) {
@@ -28,10 +26,8 @@ export function KpiCard({
     critical: "text-destructive glow-danger",
   };
 
-  const TrendIcon = trend === "up" ? TrendingUp : trend === "down" ? TrendingDown : Minus;
-
   return (
-    <div className="kpi-card group">
+    <div className="kpi-card group h-full min-h-[170px] flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -47,19 +43,6 @@ export function KpiCard({
           </div>
           <span className="kpi-label">{title}</span>
         </div>
-        {trend && (
-          <div
-            className={cn(
-              "flex items-center gap-1 text-xs",
-              trend === "up" && "text-success",
-              trend === "down" && "text-destructive",
-              trend === "stable" && "text-muted-foreground"
-            )}
-          >
-            <TrendIcon className="h-3 w-3" />
-            {trendValue && <span>{trendValue}</span>}
-          </div>
-        )}
       </div>
 
       {/* Main Value */}

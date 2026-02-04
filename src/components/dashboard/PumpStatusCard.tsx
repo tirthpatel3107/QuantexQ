@@ -69,11 +69,6 @@ export function PumpStatusCard({
       <div className="space-y-1">
         <div className="flex items-center justify-between text-xs">
           <span className={config.text}>{config.label}</span>
-          {efficiency !== undefined && (
-            <span className="text-muted-foreground">
-              {efficiency}% efficiency
-            </span>
-          )}
         </div>
 
         {statusMessage && (
@@ -82,18 +77,23 @@ export function PumpStatusCard({
 
         {/* Efficiency bar */}
         {efficiency !== undefined && (
-          <div className="h-1 bg-background/50 rounded-full overflow-hidden mt-2">
-            <div
-              className={cn(
-                "h-full transition-all duration-500 rounded-full",
-                status === "running" && "bg-success",
-                status === "warning" && "bg-warning",
-                status === "alert" && "bg-destructive",
-                status === "offline" && "bg-muted-foreground"
-              )}
-              style={{ width: `${efficiency}%` }}
-            />
-          </div>
+          <>
+            <div className="h-1 bg-background/50 rounded-full overflow-hidden my-3">
+              <div
+                className={cn(
+                  "h-full transition-all duration-500 rounded-full",
+                  status === "running" && "bg-success",
+                  status === "warning" && "bg-warning",
+                  status === "alert" && "bg-destructive",
+                  status === "offline" && "bg-muted-foreground"
+                )}
+                style={{ width: `${efficiency}%` }}
+              />
+            </div>
+            <div className="text-[11px] text-muted-foreground">
+              {efficiency}% efficiency
+            </div>
+          </>
         )}
       </div>
     </div>

@@ -115,6 +115,6 @@ export const operationalStatus = [
 
 export const chokeData = [
   { label: "Choke A", value: "10.1", unit: "%", status: "normal" as const },
-  { label: "Choke B", value: "-1.1", unit: "%", status: "critical" as const },
+  { label: "Choke B", value: "0", unit: "%", status: "critical" as const },
   { label: "Set Point", value: "12.5", unit: "%" },
 ];
