@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Bell, Gauge, Moon, Sun, UserRound } from "lucide-react";
+import { Bell, Gauge, Moon, Sun, UserRound, Filter, Check, SlidersHorizontal } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -17,6 +17,11 @@ export function Header() {
   const [theme, setTheme] = useState<"dark" | "light">(() => {
     if (typeof window === "undefined") return "dark";
     return (localStorage.getItem("theme") as "dark" | "light") || "dark";
+  });
+  const [filters, setFilters] = useState({
+    severity: "all",
+    timeframe: "24h",
+    system: "all",
   });
   const navigate = useNavigate();
 
@@ -53,6 +58,12 @@ export function Header() {
       year: "numeric",
     });
   };
+
+  const activeFilterCount = [
+    filters.severity !== "all",
+    filters.timeframe !== "24h",
+    filters.system !== "all",
+  ].filter(Boolean).length;
 
   return (
     <header className="fixed top-0 inset-x-0 z-30 min-h-14 h-auto border-b border-border bg-card px-3 sm:px-4 py-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 backdrop-blur supports-[backdrop-filter]:bg-card/80">
@@ -108,6 +119,96 @@ export function Header() {
         <div className="hidden sm:block h-8 w-px bg-border" />
 
         <div className="flex items-center gap-1">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="action-btn action-btn-ghost bg-accent text-foreground hover:bg-accent/80"
+                aria-label="Dashboard filters"
+              >
+                <Filter className="h-4 w-4" />
+                <span className="hidden sm:inline">Filters</span>
+                {activeFilterCount > 0 && (
+                  <span className="ml-1 rounded-full bg-primary/20 text-primary text-[10px] px-1.5 py-0.5">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64 space-y-1">
+              <div className="px-3 pt-2 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
+                Severity
+              </div>
+              {[
+                { key: "all", label: "All" },
+                { key: "normal", label: "Normal" },
+                { key: "warning", label: "Warnings only" },
+                { key: "critical", label: "Critical only" },
+              ].map((option) => (
+                <DropdownMenuItem
+                  key={option.key}
+                  onSelect={() => setFilters((f) => ({ ...f, severity: option.key }))}
+                  className="cursor-pointer flex items-center justify-between"
+                >
+                  <span>{option.label}</span>
+                  {filters.severity === option.key && <Check className="h-4 w-4 text-primary" />}
+                </DropdownMenuItem>
+              ))}
+
+              <div className="px-3 pt-3 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
+                Timeframe
+              </div>
+              {[
+                { key: "1h", label: "Last 1 hour" },
+                { key: "6h", label: "Last 6 hours" },
+                { key: "24h", label: "Last 24 hours" },
+                { key: "7d", label: "Last 7 days" },
+              ].map((option) => (
+                <DropdownMenuItem
+                  key={option.key}
+                  onSelect={() => setFilters((f) => ({ ...f, timeframe: option.key }))}
+                  className="cursor-pointer flex items-center justify-between"
+                >
+                  <span>{option.label}</span>
+                  {filters.timeframe === option.key && <Check className="h-4 w-4 text-primary" />}
+                </DropdownMenuItem>
+              ))}
+
+              <div className="px-3 pt-3 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
+                System
+              </div>
+              {[
+                { key: "all", label: "All systems" },
+                { key: "pumps", label: "Pumps" },
+                { key: "circulation", label: "Circulation" },
+                { key: "pressure", label: "Pressure" },
+              ].map((option) => (
+                <DropdownMenuItem
+                  key={option.key}
+                  onSelect={() => setFilters((f) => ({ ...f, system: option.key }))}
+                  className="cursor-pointer flex items-center justify-between"
+                >
+                  <span>{option.label}</span>
+                  {filters.system === option.key && <Check className="h-4 w-4 text-primary" />}
+                </DropdownMenuItem>
+              ))}
+
+              <div className="px-3 py-2">
+                <button
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-border bg-secondary/40 px-3 py-2 text-sm font-medium hover:bg-secondary/60 transition-colors"
+                  onClick={() =>
+                    setFilters({
+                      severity: "all",
+                      timeframe: "24h",
+                      system: "all",
+                    })
+                  }
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                  Reset filters
+                </button>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <button
             className="action-btn action-btn-ghost bg-accent text-foreground hover:bg-accent/80"
             aria-label="Toggle theme"
