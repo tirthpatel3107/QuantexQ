@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Bell, Gauge, UserRound } from "lucide-react";
+import { Bell, Gauge, Moon, Sun, UserRound } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -14,12 +14,27 @@ import { notifications } from "@/data/mockData";
 
 export function Header() {
   const [time, setTime] = useState(new Date());
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    if (typeof window === "undefined") return "dark";
+    return (localStorage.getItem("theme") as "dark" | "light") || "dark";
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString("en-US", {
@@ -93,6 +108,14 @@ export function Header() {
         <div className="hidden sm:block h-8 w-px bg-border" />
 
         <div className="flex items-center gap-1">
+          <button
+            className="action-btn action-btn-ghost bg-accent text-foreground hover:bg-accent/80"
+            aria-label="Toggle theme"
+            onClick={toggleTheme}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+
           <Sheet>
             <SheetTrigger asChild>
               <button
