@@ -153,7 +153,7 @@ export const NotificationsPanel = memo(function NotificationsPanel({
                     </p>
                   </div>
                   <button
-                    className="shrink-0 h-5 w-5 rounded hover:bg-accent flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                    className="shrink-0 h-5 w-5 rounded hover:bg-accent flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-0"
                     onClick={() => handleRequestRemove(notification.id)}
                     aria-label="Remove notification"
                   >

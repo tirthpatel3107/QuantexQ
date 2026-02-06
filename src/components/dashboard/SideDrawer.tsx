@@ -21,8 +21,8 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { memo, useState } from "react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
 
 interface SideDrawerProps {
   open: boolean;
@@ -61,7 +61,7 @@ const menuSections = [
   },
 ];
 
-export function SideDrawer({ open, onOpenChange }: SideDrawerProps) {
+export const SideDrawer = memo(function SideDrawer({ open, onOpenChange }: SideDrawerProps) {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     monitoring: true,
     configuration: false,
@@ -81,7 +81,7 @@ export function SideDrawer({ open, onOpenChange }: SideDrawerProps) {
               <Gauge className="h-5 w-5 text-primary-foreground" />
             </div>
             <span className="text-base font-semibold flex-1">QuantexQ</span>
-            <SheetClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none p-1.5 -m-1.5">
+            <SheetClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-0 disabled:pointer-events-none p-1.5 -m-1.5">
               <X className="h-4 w-4" />
               <span className="sr-only">Close</span>
             </SheetClose>
@@ -156,4 +156,4 @@ export function SideDrawer({ open, onOpenChange }: SideDrawerProps) {
       </SheetContent>
     </Sheet>
   );
-}
+});

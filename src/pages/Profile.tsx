@@ -297,8 +297,8 @@ const Profile = () => {
               <CardContent className="p-0">
                 <ScrollArea className="max-h-[260px]">
                   <div className="divide-y divide-border/50">
-                    {sessions.map((session, idx) => (
-                      <div key={idx} className="px-4 py-3 flex items-center justify-between text-sm">
+                    {sessions.map((session) => (
+                      <div key={session.device} className="px-4 py-3 flex items-center justify-between text-sm">
                         <div className="space-y-0.5">
                           <div className="text-foreground">{session.device}</div>
                           <div className="text-xs text-muted-foreground flex items-center gap-1">

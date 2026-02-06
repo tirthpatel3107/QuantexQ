@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useState, useCallback } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Maximize2 } from "lucide-react";
 import {
@@ -23,6 +23,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+
+const CHART_MARGIN = { top: 6, right: 6, bottom: 6, left: 2 };
+const TOOLTIP_STYLE = {
+  contentStyle: {
+    backgroundColor: "hsl(var(--card))",
+    border: "1px solid hsl(var(--border))",
+    borderRadius: "6px",
+    fontSize: "11px",
+  },
+  labelStyle: { color: "hsl(var(--muted-foreground))" },
+};
+const Y_AXIS_TICK = { fontSize: 9, fill: "hsl(var(--muted-foreground))" };
 
 export interface VerticalChartMetric {
   label: string;
@@ -55,17 +67,79 @@ const trendIcons = {
   stable: "=",
 };
 
-const trendColors = {
-  up: "text-success",
-  down: "text-destructive",
-  stable: "text-muted-foreground",
-};
+interface ChartInnerProps {
+  data: { time: string; value: number }[];
+  color: string;
+  threshold?: { value: number; label: string };
+  title: string;
+}
 
-const metricStatusColors = {
-  normal: "text-foreground",
-  warning: "text-warning",
-  critical: "text-destructive",
-};
+const ChartInner = memo(function ChartInner({
+  data,
+  color,
+  threshold,
+  title,
+}: ChartInnerProps) {
+  const formatter = useCallback((value: number) => [value, "Value"], []);
+  const labelFormatter = useCallback(
+    (label: string) => `${title} — Time: ${label}`,
+    [title]
+  );
+  return (
+    <LineChart
+      data={data}
+      margin={CHART_MARGIN}
+      layout="vertical"
+    >
+      <XAxis
+        type="category"
+        dataKey="time"
+        axisLine={false}
+        tickLine={false}
+        tick={false}
+        width={0}
+      />
+      <YAxis
+        type="number"
+        dataKey="value"
+        domain={["auto", "auto"]}
+        axisLine={false}
+        tickLine={false}
+        tick={Y_AXIS_TICK}
+        width={32}
+      />
+      <Tooltip
+        contentStyle={TOOLTIP_STYLE.contentStyle}
+        labelStyle={TOOLTIP_STYLE.labelStyle}
+        itemStyle={{ color }}
+        formatter={formatter}
+        labelFormatter={labelFormatter}
+      />
+      {threshold && (
+        <ReferenceLine
+          y={threshold.value}
+          stroke="hsl(var(--warning))"
+          strokeDasharray="2 2"
+          strokeWidth={1}
+        />
+      )}
+      <Line
+        type="monotone"
+        dataKey="value"
+        stroke={color}
+        strokeWidth={2}
+        dot={false}
+        isAnimationActive={false}
+        activeDot={{
+          r: 3,
+          fill: color,
+          stroke: "hsl(var(--background))",
+          strokeWidth: 1,
+        }}
+      />
+    </LineChart>
+  );
+});
 
 export const VerticalChartCard = memo(function VerticalChartCard({
   title,
@@ -124,7 +198,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
             )}
             <Maximize2 className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden />
           </button>
-          <h3 className="panel-title min-w-0 truncate text-foreground font-medium uppercase tracking-wide" title={title}>
+          <h3 className="panel-title min-w-0 truncate text-foreground font-bold uppercase tracking-wide" title={title}>
             {title}
           </h3>
         </div>
@@ -136,78 +210,25 @@ export const VerticalChartCard = memo(function VerticalChartCard({
       {/* Chart area only */}
       <div className="vertical-line-chart px-2.5 pb-2 min-h-[420px] flex-1 w-full max-h-[540px]">
         <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={data}
-              margin={{ top: 6, right: 6, bottom: 6, left: 2 }}
-              layout="vertical"
-            >
-              <XAxis
-                type="category"
-                dataKey="time"
-                axisLine={false}
-                tickLine={false}
-                tick={false}
-                width={0}
-              />
-              <YAxis
-                type="number"
-                dataKey="value"
-                domain={["auto", "auto"]}
-                axisLine={false}
-                tickLine={false}
-                tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }}
-                width={32}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "6px",
-                  fontSize: "11px",
-                }}
-                labelStyle={{ color: "hsl(var(--muted-foreground))" }}
-                itemStyle={{ color }}
-                formatter={(value: number) => [value, "Value"]}
-                labelFormatter={(label) => `${title} — Time: ${label}`}
-              />
-              {threshold && (
-                <ReferenceLine
-                  y={threshold.value}
-                  stroke="hsl(var(--warning))"
-                  strokeDasharray="2 2"
-                  strokeWidth={1}
-                />
-              )}
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke={color}
-                strokeWidth={2}
-                dot={false}
-                isAnimationActive={false}
-                activeDot={{
-                  r: 3,
-                  fill: color,
-                  stroke: "hsl(var(--background))",
-                  strokeWidth: 1,
-                }}
-              />
-            </LineChart>
+          <ChartInner data={data} color={color} threshold={threshold} title={title} />
         </ResponsiveContainer>
       </div>
 
-      {/* Badges: below chart, centered; unique text color per badge (#21d5ed, #f59f0a, #FFFFFF) */}
+      {/* Badges: below chart, centered; last badge: light=black bg+white text, dark=white bg+black text */}
       <div className="px-3 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
         {metrics.map((m, i) => {
-          const badgeTextColors = ["#21d5ed", "#f59f0a"] as const;
-          const isThird = i % 3 === 2;
-          const textColor = isThird ? "hsl(var(--foreground))" : badgeTextColors[i % badgeTextColors.length];
+          const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
+          const isLastBadge = i % 3 === 2;
+          const bgColor = isLastBadge ? undefined : badgeBgColors[i % badgeBgColors.length];
           return (
             <UITooltip key={i}>
               <TooltipTrigger asChild>
                 <span
-                  className="inline-flex min-w-0 flex-shrink items-center rounded border border-border/80 px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default bg-muted/40 font-bold"
-                  style={{ color: textColor }}
+                  className={cn(
+                    "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold",
+                    isLastBadge ? "bg-black text-white dark:bg-white dark:text-black" : "text-black"
+                  )}
+                  style={bgColor != null ? { backgroundColor: bgColor } : undefined}
                 >
                   <span className="min-w-0 truncate">
                     {m.value}
@@ -234,69 +255,13 @@ export const VerticalChartCard = memo(function VerticalChartCard({
       <Dialog open={expandOpen} onOpenChange={setExpandOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
           <DialogHeader>
-            <DialogTitle className="text-foreground font-medium uppercase tracking-wide">
+            <DialogTitle className="text-foreground font-bold uppercase tracking-wide">
               {title}
             </DialogTitle>
           </DialogHeader>
           <div className="flex-1 min-h-[420px] w-full -mx-2">
             <ResponsiveContainer width="100%" height={420}>
-              <LineChart
-                data={data}
-                margin={{ top: 6, right: 6, bottom: 6, left: 2 }}
-                layout="vertical"
-              >
-                <XAxis
-                  type="category"
-                  dataKey="time"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={false}
-                  width={0}
-                />
-                <YAxis
-                  type="number"
-                  dataKey="value"
-                  domain={["auto", "auto"]}
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }}
-                  width={32}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "hsl(var(--card))",
-                    border: "1px solid hsl(var(--border))",
-                    borderRadius: "6px",
-                    fontSize: "11px",
-                  }}
-                  labelStyle={{ color: "hsl(var(--muted-foreground))" }}
-                  itemStyle={{ color }}
-                  formatter={(value: number) => [value, "Value"]}
-                  labelFormatter={(label) => `${title} — Time: ${label}`}
-                />
-                {threshold && (
-                  <ReferenceLine
-                    y={threshold.value}
-                    stroke="hsl(var(--warning))"
-                    strokeDasharray="2 2"
-                    strokeWidth={1}
-                  />
-                )}
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke={color}
-                  strokeWidth={2}
-                  dot={false}
-                  isAnimationActive={false}
-                  activeDot={{
-                    r: 3,
-                    fill: color,
-                    stroke: "hsl(var(--background))",
-                    strokeWidth: 1,
-                  }}
-                />
-              </LineChart>
+              <ChartInner data={data} color={color} threshold={threshold} title={title} />
             </ResponsiveContainer>
           </div>
         </DialogContent>

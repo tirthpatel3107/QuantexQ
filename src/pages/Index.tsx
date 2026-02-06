@@ -221,15 +221,15 @@ const Index = () => {
         >
           <DialogHeader className="flex flex-row items-center justify-between space-y-0">
             <DialogTitle>Pump Status</DialogTitle>
-            <DialogClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+            <DialogClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-0 disabled:pointer-events-none">
               <X className="h-4 w-4" />
               <span className="sr-only">Close</span>
             </DialogClose>
           </DialogHeader>
           <div className="grid gap-3 grid-cols-4 pt-2">
-            {pumpStatus.map((pump, i) => (
+            {pumpStatus.map((pump) => (
               <PumpStatusCard
-                key={i}
+                key={pump.name}
                 name={pump.name}
                 status={pump.status}
                 disableInitialSkeleton

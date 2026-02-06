@@ -1,5 +1,21 @@
+import { memo } from "react";
 import { cn } from "@/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+
+const STATUS_CONFIG = {
+  running: {
+    bg: "bg-success/10",
+    border: "border-success/30",
+    text: "text-success",
+    label: "Running",
+  },
+  stop: {
+    bg: "bg-destructive/10",
+    border: "border-destructive/30",
+    text: "text-destructive",
+    label: "Stop",
+  },
+} as const;
 
 interface PumpStatusCardProps {
   name: string;
@@ -7,7 +23,7 @@ interface PumpStatusCardProps {
   disableInitialSkeleton?: boolean;
 }
 
-export function PumpStatusCard({
+export const PumpStatusCard = memo(function PumpStatusCard({
   name,
   status,
   disableInitialSkeleton = false,
@@ -24,22 +40,7 @@ export function PumpStatusCard({
     );
   }
 
-  const statusConfig = {
-    running: {
-      bg: "bg-success/10",
-      border: "border-success/30",
-      text: "text-success",
-      label: "Running",
-    },
-    stop: {
-      bg: "bg-destructive/10",
-      border: "border-destructive/30",
-      text: "text-destructive",
-      label: "Stop",
-    },
-  };
-
-  const config = statusConfig[status];
+  const config = STATUS_CONFIG[status];
 
   return (
     <div
@@ -70,4 +71,4 @@ export function PumpStatusCard({
       </div>
     </div>
   );
-}
+});

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Bell, Gauge, Menu, Moon, Sun, UserRound, Filter, Check, SlidersHorizontal } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -11,19 +11,54 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { notifications, operationalStatus } from "@/data/mockData";
+import { notifications } from "@/data/mockData";
+
+const formatTime = (date: Date) =>
+  date.toLocaleTimeString("en-US", {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+
+const SEVERITY_OPTIONS = [
+  { key: "all", label: "All" },
+  { key: "normal", label: "Normal" },
+  { key: "warning", label: "Warnings only" },
+  { key: "critical", label: "Critical only" },
+] as const;
+
+const TIMEFRAME_OPTIONS = [
+  { key: "1h", label: "Last 1 hour" },
+  { key: "6h", label: "Last 6 hours" },
+  { key: "24h", label: "Last 24 hours" },
+  { key: "7d", label: "Last 7 days" },
+] as const;
+
+const SYSTEM_OPTIONS = [
+  { key: "all", label: "All systems" },
+  { key: "pumps", label: "Pumps" },
+  { key: "circulation", label: "Circulation" },
+  { key: "pressure", label: "Pressure" },
+] as const;
+
+const INITIAL_FILTERS = { severity: "all", timeframe: "24h", system: "all" };
 
 export function Header() {
-  const [time, setTime] = useState(new Date());
+  const [time, setTime] = useState(() => new Date());
   const [theme, setTheme] = useState<"dark" | "light">(() => {
     if (typeof window === "undefined") return "dark";
     return (localStorage.getItem("theme") as "dark" | "light") || "dark";
   });
-  const [filters, setFilters] = useState({
-    severity: "all",
-    timeframe: "24h",
-    system: "all",
-  });
+  const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -39,27 +74,9 @@ export function Header() {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("en-US", {
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-  };
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
+  }, []);
 
   return (
     <header className="fixed top-0 inset-x-0 z-30 min-h-14 h-auto border-b border-border bg-card px-3 sm:px-4 py-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 backdrop-blur supports-[backdrop-filter]:bg-card/80">
@@ -189,12 +206,7 @@ export function Header() {
                   <div className="px-3 pt-2 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
                     Severity
                   </div>
-                  {[
-                    { key: "all", label: "All" },
-                    { key: "normal", label: "Normal" },
-                    { key: "warning", label: "Warnings only" },
-                    { key: "critical", label: "Critical only" },
-                  ].map((option) => (
+                  {SEVERITY_OPTIONS.map((option) => (
                     <DropdownMenuItem
                       key={option.key}
                       onSelect={() => setFilters((f) => ({ ...f, severity: option.key }))}
@@ -208,12 +220,7 @@ export function Header() {
                   <div className="px-3 pt-3 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
                     Timeframe
                   </div>
-                  {[
-                    { key: "1h", label: "Last 1 hour" },
-                    { key: "6h", label: "Last 6 hours" },
-                    { key: "24h", label: "Last 24 hours" },
-                    { key: "7d", label: "Last 7 days" },
-                  ].map((option) => (
+                  {TIMEFRAME_OPTIONS.map((option) => (
                     <DropdownMenuItem
                       key={option.key}
                       onSelect={() => setFilters((f) => ({ ...f, timeframe: option.key }))}
@@ -227,12 +234,7 @@ export function Header() {
                   <div className="px-3 pt-3 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
                     System
                   </div>
-                  {[
-                    { key: "all", label: "All systems" },
-                    { key: "pumps", label: "Pumps" },
-                    { key: "circulation", label: "Circulation" },
-                    { key: "pressure", label: "Pressure" },
-                  ].map((option) => (
+                  {SYSTEM_OPTIONS.map((option) => (
                     <DropdownMenuItem
                       key={option.key}
                       onSelect={() => setFilters((f) => ({ ...f, system: option.key }))}
@@ -247,13 +249,7 @@ export function Header() {
               <div className="px-3 py-2 border-t border-border shrink-0 bg-card">
                 <button
                   className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-border bg-secondary/40 px-3 py-2 text-sm font-medium hover:bg-secondary/60 transition-colors"
-                  onClick={() =>
-                    setFilters({
-                      severity: "all",
-                      timeframe: "24h",
-                      system: "all",
-                    })
-                  }
+                  onClick={() => setFilters(INITIAL_FILTERS)}
                 >
                   <SlidersHorizontal className="h-4 w-4" />
                   Reset filters
