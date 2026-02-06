@@ -88,9 +88,9 @@ export const notifications = [
 ];
 
 export const pumpStatus = [
-  { name: "Mud Pump #1", status: "running" as const },
-  { name: "Mud Pump #2", status: "running" as const },
-  { name: "Mud Pump #3", status: "stop" as const },
+  { name: "MP1", status: "running" as const },
+  { name: "MP2", status: "running" as const },
+  { name: "MP3", status: "stop" as const },
   { name: "Mud Cooler", status: "running" as const },
 ];
 

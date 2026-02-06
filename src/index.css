@@ -298,7 +298,7 @@
 
   /* Vertical line chart (Recharts layout=vertical) */
   .vertical-line-chart {
-    @apply min-h-[140px];
+    @apply min-h-[220px];
   }
 
   /* Action button styles */

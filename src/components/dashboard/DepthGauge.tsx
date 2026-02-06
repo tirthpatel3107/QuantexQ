@@ -35,7 +35,7 @@ export const DepthGauge = memo(function DepthGauge({
   if (showSkeleton) {
     return (
       <div className="dashboard-panel h-full">
-        <div className="panel-header flex-col items-center gap-1 text-center px-2.5 py-2">
+        <div className="panel-header flex-col items-center gap-1 text-center px-2.5 py-3">
           <div className="skeleton h-4 w-28 rounded-md" />
           <div className="flex items-center justify-center gap-2">
             <div className="skeleton h-3 w-16 rounded-md" />
@@ -65,7 +65,7 @@ export const DepthGauge = memo(function DepthGauge({
 
   return (
     <div className="dashboard-panel h-full">
-      <div className="panel-header flex-col items-center gap-1 text-center px-2.5 py-2">
+      <div className="panel-header flex-col items-center gap-1 text-center px-2.5 py-4">
         <h3 className="panel-title">Drill Depth</h3>
         <div className="flex items-center justify-center gap-2">
           <span className="text-xs text-muted-foreground">Target:</span>
@@ -75,7 +75,7 @@ export const DepthGauge = memo(function DepthGauge({
         </div>
       </div>
 
-      <div className="px-2.5 py-2 flex flex-col h-[calc(100%-52px)] gap-0">
+      <div className="px-2.5 py-4 flex flex-col h-[calc(100%-52px)] gap-0">
         {/* Current Depth Display */}
         <div className="text-center mb-2">
           <div className="text-3xl font-bold text-primary glow-primary tabular-nums">
@@ -142,7 +142,7 @@ export const DepthGauge = memo(function DepthGauge({
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-border">
+        <div className="grid grid-cols-2 gap-2 mt-2 px-2 py-5 border-t border-border">
           <div>
             <div className="text-xs text-muted-foreground">Bit Depth</div>
             <div className="text-sm font-semibold tabular-nums">

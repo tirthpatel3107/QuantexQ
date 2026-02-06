@@ -95,27 +95,32 @@ export function Header() {
       </div>
 
       {/* Center - Project Info */}
-      <div className="hidden lg:flex items-center gap-6 text-sm min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="text-muted-foreground">Project:</span>
+      <div className="hidden lg:flex items-center gap-3 text-sm min-w-0">
+        <div className="flex items-center gap-1">
+          {/* <span className="text-muted-foreground">Project:</span> */}
           <span className="font-medium text-foreground">Offshore Block A-7</span>
         </div>
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-2">
-          <span className="text-muted-foreground">Well:</span>
+        <div className="flex items-center gap-1">
+          {/* <span className="text-muted-foreground">Well:</span> */}
           <span className="font-medium text-foreground">DW-0347</span>
         </div>
         <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <div className="status-indicator online" />
           <span className="text-success text-xs font-medium">Live</span>
+        </div>
+        <div className="h-4 w-px bg-border" />
+        <div className="flex items-center gap-1">
+          <div className="status-indicator online" />
+          <span className="text-success text-xs font-medium">System Hydraulics</span>
         </div>
       </div>
 
       {/* Right - Time & Actions */}
       <div className="flex w-full sm:w-auto items-center gap-2 sm:gap-3 justify-between sm:justify-end flex-wrap">
         {/* Status - top right */}
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
               className="action-btn action-btn-ghost bg-accent text-foreground hover:bg-accent/80 inline-flex items-center gap-2"
@@ -155,7 +160,7 @@ export function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <div className="hidden sm:block h-8 w-px bg-border" />
+        <div className="hidden sm:block h-8 w-px bg-border" /> */}
 
         <div className="text-right leading-tight">
           <div className="text-base sm:text-lg font-bold tabular-nums text-primary glow-primary">

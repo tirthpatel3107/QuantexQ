@@ -55,8 +55,17 @@ export function PumpStatusCard({
       </div>
 
       <div className="space-y-1">
-        <div className="flex items-center justify-between text-xs">
-          <span className={config.text}>{config.label}</span>
+        <div className="flex items-center justify-between text-xs gap-2">
+          <span className={cn("flex items-center gap-1.5", config.text)}>
+            <span
+              className={cn(
+                "h-2 w-2 shrink-0 rounded-full",
+                status === "running" ? "bg-success" : "bg-destructive"
+              )}
+              aria-hidden
+            />
+            {config.label}
+          </span>
         </div>
       </div>
     </div>
