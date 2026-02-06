@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import type { VerticalChartMetric } from "@/components/dashboard/VerticalChartCard";
+import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { Header } from "@/components/dashboard/Header";
 import { VerticalChartCard } from "@/components/dashboard/VerticalChartCard";
 import { DepthGauge } from "@/components/dashboard/DepthGauge";
@@ -143,6 +144,7 @@ function PsiGaugeIcon({ className }: { className?: string }) {
 
 const Index = () => {
   const [pumpDialogOpen, setPumpDialogOpen] = useState(false);
+  const showSkeleton = useInitialSkeleton();
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -192,21 +194,30 @@ const Index = () => {
 
             {/* Pump button - below charts, opens popup */}
             <div className="flex justify-end min-w-0">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    onClick={() => setPumpDialogOpen(true)}
-                    className="flex flex-col items-center justify-center rounded-lg border border-border bg-card p-3 shadow-md transition-all hover:shadow-md focus:outline-none"
-                    aria-label="Open pump status"
-                  >
-                    <PsiGaugeIcon className="h-8 w-8 text-foreground" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Pump Status</p>
-                </TooltipContent>
-              </Tooltip>
+              {showSkeleton ? (
+                <div
+                  className="flex flex-col items-center justify-center rounded-lg border border-border bg-card p-3 shadow-md min-w-[56px]"
+                  aria-hidden
+                >
+                  <div className="skeleton h-8 w-8 rounded-md" />
+                </div>
+              ) : (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={() => setPumpDialogOpen(true)}
+                      className="flex flex-col items-center justify-center rounded-lg border border-border bg-card p-3 shadow-md transition-all hover:shadow-md focus:outline-none"
+                      aria-label="Open pump status"
+                    >
+                      <PsiGaugeIcon className="h-8 w-8 text-foreground" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Pump Status</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
             </div>
           </div>
         </div>
