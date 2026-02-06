@@ -63,6 +63,7 @@
     --chart-3: 38 92% 50%;
     --chart-4: 280 65% 60%;
     --chart-5: 0 84% 60%;
+    --chart-6: 173 80% 40%;
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(187 85% 53%) 0%, hsl(199 89% 48%) 100%);
@@ -127,6 +128,7 @@
     --chart-3: 38 92% 50%;
     --chart-4: 280 65% 55%;
     --chart-5: 0 72% 51%;
+    --chart-6: 173 58% 39%;
   }
 
   .dark {
@@ -174,7 +176,7 @@
 @layer components {
   /* KPI Card styles */
   .kpi-card {
-    @apply relative overflow-hidden rounded-lg bg-card border border-border p-4;
+    @apply relative overflow-hidden rounded-lg bg-card border border-border p-3;
     @apply transition-all duration-200 hover:border-primary/30;
   }
 
@@ -217,7 +219,7 @@
 
   /* Panel styles */
   .dashboard-panel {
-    @apply relative rounded-lg bg-card border border-border overflow-hidden;
+    @apply relative rounded-lg bg-card border border-border overflow-hidden min-w-0;
     @apply transition-all duration-200 hover:border-primary/30;
   }
 
@@ -240,7 +242,7 @@
   }
 
   .panel-header {
-    @apply flex items-center justify-between px-4 py-3 border-b border-border;
+    @apply flex items-center justify-between px-3 py-2 border-b border-border;
     background-color: hsl(var(--card-elevated) / 0.5);
   }
 
@@ -255,7 +257,7 @@
 
   /* Notification styles */
   .notification-item {
-    @apply flex items-start gap-3 px-4 py-3 border-b border-border/50 last:border-0;
+    @apply flex items-start gap-3 px-3 py-2 border-b border-border/50 last:border-0;
     @apply transition-colors hover:bg-accent/50;
   }
 
@@ -292,6 +294,11 @@
   /* Chart container */
   .chart-container {
     @apply w-full h-[140px];
+  }
+
+  /* Vertical line chart (Recharts layout=vertical) */
+  .vertical-line-chart {
+    @apply min-h-[140px];
   }
 
   /* Action button styles */

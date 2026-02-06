@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Bell, Gauge, Moon, Sun, UserRound, Filter, Check, SlidersHorizontal } from "lucide-react";
+import { Bell, Gauge, Menu, Moon, Sun, UserRound, Filter, Check, SlidersHorizontal } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { SideDrawer } from "@/components/dashboard/SideDrawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   DropdownMenu,
@@ -10,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { notifications } from "@/data/mockData";
+import { notifications, operationalStatus } from "@/data/mockData";
 
 export function Header() {
   const [time, setTime] = useState(new Date());
@@ -23,6 +24,7 @@ export function Header() {
     timeframe: "24h",
     system: "all",
   });
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,23 +61,27 @@ export function Header() {
     });
   };
 
-  const activeFilterCount = [
-    filters.severity !== "all",
-    filters.timeframe !== "24h",
-    filters.system !== "all",
-  ].filter(Boolean).length;
-
   return (
     <header className="fixed top-0 inset-x-0 z-30 min-h-14 h-auto border-b border-border bg-card px-3 sm:px-4 py-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-      {/* Brand */}
-      <Link
-        to="/"
-        className="flex items-center gap-3 hover:text-foreground transition-colors shrink-0 min-w-0 w-full sm:w-auto"
-      >
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-info flex items-center justify-center">
-            <Gauge className="h-5 w-5 text-primary-foreground" />
-          </div>
+      <SideDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
+      {/* Hamburger + Brand */}
+      <div className="flex items-center gap-2 shrink-0 min-w-0 w-full sm:w-auto">
+        <button
+          type="button"
+          onClick={() => setDrawerOpen(true)}
+          className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+          aria-label="Open menu"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        <Link
+          to="/"
+          className="flex items-center gap-3 hover:text-foreground transition-colors min-w-0"
+        >
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-info flex items-center justify-center">
+              <Gauge className="h-5 w-5 text-primary-foreground" />
+            </div>
           <div>
             <h1 className="text-base font-bold tracking-tight text-foreground">
               QuantexQ<span className="text-primary">™</span>
@@ -85,7 +91,8 @@ export function Header() {
             </p>
           </div>
         </div>
-      </Link>
+        </Link>
+      </div>
 
       {/* Center - Project Info */}
       <div className="hidden lg:flex items-center gap-6 text-sm min-w-0">
@@ -107,6 +114,49 @@ export function Header() {
 
       {/* Right - Time & Actions */}
       <div className="flex w-full sm:w-auto items-center gap-2 sm:gap-3 justify-between sm:justify-end flex-wrap">
+        {/* Status - top right */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              className="action-btn action-btn-ghost bg-accent text-foreground hover:bg-accent/80 inline-flex items-center gap-2"
+              aria-label="Operational status"
+            >
+              <div className="status-indicator online" />
+              <span className="hidden sm:inline text-xs font-medium">Status</span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56 p-0">
+            <div className="px-3 py-2 border-b border-border text-xs font-semibold text-muted-foreground uppercase">
+              Operational Status
+            </div>
+            <div className="p-2 space-y-1">
+              {operationalStatus.map((item, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between py-1.5 px-2 rounded-md hover:bg-accent/50 text-xs"
+                >
+                  <span className="text-muted-foreground">{item.label}</span>
+                  <span
+                    className={cn(
+                      "font-medium tabular-nums",
+                      item.status === "warning" && "text-warning",
+                      item.status === "critical" && "text-destructive",
+                      (!item.status || item.status === "normal") && "text-foreground"
+                    )}
+                  >
+                    {item.value}
+                    {item.unit && (
+                      <span className="text-muted-foreground ml-1">{item.unit}</span>
+                    )}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <div className="hidden sm:block h-8 w-px bg-border" />
+
         <div className="text-right leading-tight">
           <div className="text-base sm:text-lg font-bold tabular-nums text-primary glow-primary">
             {formatTime(time)}
@@ -126,73 +176,70 @@ export function Header() {
                 aria-label="Dashboard filters"
               >
                 <Filter className="h-4 w-4" />
-                <span className="hidden sm:inline">Filters</span>
-                {activeFilterCount > 0 && (
-                  <span className="ml-1 rounded-full bg-primary/20 text-primary text-[10px] px-1.5 py-0.5">
-                    {activeFilterCount}
-                  </span>
-                )}
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-64 space-y-1">
-              <div className="px-3 pt-2 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
-                Severity
-              </div>
-              {[
-                { key: "all", label: "All" },
-                { key: "normal", label: "Normal" },
-                { key: "warning", label: "Warnings only" },
-                { key: "critical", label: "Critical only" },
-              ].map((option) => (
-                <DropdownMenuItem
-                  key={option.key}
-                  onSelect={() => setFilters((f) => ({ ...f, severity: option.key }))}
-                  className="cursor-pointer flex items-center justify-between"
-                >
-                  <span>{option.label}</span>
-                  {filters.severity === option.key && <Check className="h-4 w-4 text-primary" />}
-                </DropdownMenuItem>
-              ))}
+            <DropdownMenuContent align="end" className="w-64 p-0 flex flex-col max-h-[min(70vh,320px)]">
+              <ScrollArea className="h-[220px] shrink-0">
+                <div className="p-2 space-y-1">
+                  <div className="px-3 pt-2 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
+                    Severity
+                  </div>
+                  {[
+                    { key: "all", label: "All" },
+                    { key: "normal", label: "Normal" },
+                    { key: "warning", label: "Warnings only" },
+                    { key: "critical", label: "Critical only" },
+                  ].map((option) => (
+                    <DropdownMenuItem
+                      key={option.key}
+                      onSelect={() => setFilters((f) => ({ ...f, severity: option.key }))}
+                      className="cursor-pointer flex items-center justify-between"
+                    >
+                      <span>{option.label}</span>
+                      {filters.severity === option.key && <Check className="h-4 w-4 text-primary" />}
+                    </DropdownMenuItem>
+                  ))}
 
-              <div className="px-3 pt-3 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
-                Timeframe
-              </div>
-              {[
-                { key: "1h", label: "Last 1 hour" },
-                { key: "6h", label: "Last 6 hours" },
-                { key: "24h", label: "Last 24 hours" },
-                { key: "7d", label: "Last 7 days" },
-              ].map((option) => (
-                <DropdownMenuItem
-                  key={option.key}
-                  onSelect={() => setFilters((f) => ({ ...f, timeframe: option.key }))}
-                  className="cursor-pointer flex items-center justify-between"
-                >
-                  <span>{option.label}</span>
-                  {filters.timeframe === option.key && <Check className="h-4 w-4 text-primary" />}
-                </DropdownMenuItem>
-              ))}
+                  <div className="px-3 pt-3 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
+                    Timeframe
+                  </div>
+                  {[
+                    { key: "1h", label: "Last 1 hour" },
+                    { key: "6h", label: "Last 6 hours" },
+                    { key: "24h", label: "Last 24 hours" },
+                    { key: "7d", label: "Last 7 days" },
+                  ].map((option) => (
+                    <DropdownMenuItem
+                      key={option.key}
+                      onSelect={() => setFilters((f) => ({ ...f, timeframe: option.key }))}
+                      className="cursor-pointer flex items-center justify-between"
+                    >
+                      <span>{option.label}</span>
+                      {filters.timeframe === option.key && <Check className="h-4 w-4 text-primary" />}
+                    </DropdownMenuItem>
+                  ))}
 
-              <div className="px-3 pt-3 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
-                System
-              </div>
-              {[
-                { key: "all", label: "All systems" },
-                { key: "pumps", label: "Pumps" },
-                { key: "circulation", label: "Circulation" },
-                { key: "pressure", label: "Pressure" },
-              ].map((option) => (
-                <DropdownMenuItem
-                  key={option.key}
-                  onSelect={() => setFilters((f) => ({ ...f, system: option.key }))}
-                  className="cursor-pointer flex items-center justify-between"
-                >
-                  <span>{option.label}</span>
-                  {filters.system === option.key && <Check className="h-4 w-4 text-primary" />}
-                </DropdownMenuItem>
-              ))}
-
-              <div className="px-3 py-2">
+                  <div className="px-3 pt-3 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
+                    System
+                  </div>
+                  {[
+                    { key: "all", label: "All systems" },
+                    { key: "pumps", label: "Pumps" },
+                    { key: "circulation", label: "Circulation" },
+                    { key: "pressure", label: "Pressure" },
+                  ].map((option) => (
+                    <DropdownMenuItem
+                      key={option.key}
+                      onSelect={() => setFilters((f) => ({ ...f, system: option.key }))}
+                      className="cursor-pointer flex items-center justify-between"
+                    >
+                      <span>{option.label}</span>
+                      {filters.system === option.key && <Check className="h-4 w-4 text-primary" />}
+                    </DropdownMenuItem>
+                  ))}
+                </div>
+              </ScrollArea>
+              <div className="px-3 py-2 border-t border-border shrink-0 bg-card">
                 <button
                   className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-border bg-secondary/40 px-3 py-2 text-sm font-medium hover:bg-secondary/60 transition-colors"
                   onClick={() =>

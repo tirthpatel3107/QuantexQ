@@ -40,6 +40,7 @@ export const densityData = generateChartData(8.5, 0.3, 20, 2);
 export const surfacePressureData = generateChartData(1200, 100, 20, 3);
 export const standpipePressureData = generateChartData(3500, 200, 20, 4);
 export const bottomHolePressureData = generateChartData(9600, 150, 20, 5);
+export const chokeChartData = generateChartData(10, 3, 20, 6);
 
 export const notifications = [
   {
@@ -87,38 +88,10 @@ export const notifications = [
 ];
 
 export const pumpStatus = [
-  {
-    name: "Mud Pump #1",
-    status: "running" as const,
-    efficiency: 94,
-  },
-  {
-    name: "Mud Pump #2",
-    status: "running" as const,
-    efficiency: 92,
-  },
-  {
-    name: "Shale Shaker",
-    status: "warning" as const,
-    efficiency: 78,
-    statusMessage: "Vibration high",
-  },
-  {
-    name: "Top Drive",
-    status: "running" as const,
-    efficiency: 98,
-  },
-  {
-    name: "Mud Cooler",
-    status: "alert" as const,
-    efficiency: 65,
-    statusMessage: "Temperature high",
-  },
-  {
-    name: "BOP Stack",
-    status: "running" as const,
-    efficiency: 100,
-  },
+  { name: "Mud Pump #1", status: "running" as const },
+  { name: "Mud Pump #2", status: "running" as const },
+  { name: "Mud Pump #3", status: "stop" as const },
+  { name: "Mud Cooler", status: "running" as const },
 ];
 
 export const operationalStatus = [
