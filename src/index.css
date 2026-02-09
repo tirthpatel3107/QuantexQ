@@ -296,7 +296,7 @@
     @apply w-full h-[140px];
   }
 
-  /* Vertical line chart (Recharts layout=vertical) */
+  /* Vertical line chart */
   .vertical-line-chart {
     @apply min-h-[220px];
   }

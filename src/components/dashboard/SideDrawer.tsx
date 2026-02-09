@@ -4,8 +4,6 @@ import {
   Wrench,
   Info,
   Plus,
-  Play,
-  Square,
   Sliders,
   ChevronDown,
   Gauge,
@@ -133,26 +131,6 @@ export const SideDrawer = memo(function SideDrawer({ open, onOpenChange }: SideD
             ))}
           </nav>
         </ScrollArea>
-
-        {/* Bottom actions - Start / Stop */}
-        <div className="shrink-0 p-3 pt-2 border-t border-border flex gap-2">
-          <button
-            type="button"
-            className="action-btn action-btn-primary flex-1 justify-center"
-            onClick={() => onOpenChange(false)}
-          >
-            <Play className="h-4 w-4" />
-            <span>Start</span>
-          </button>
-          <button
-            type="button"
-            className="action-btn action-btn-danger flex-1 justify-center"
-            onClick={() => onOpenChange(false)}
-          >
-            <Square className="h-4 w-4" />
-            <span>Stop</span>
-          </button>
-        </div>
       </SheetContent>
     </Sheet>
   );

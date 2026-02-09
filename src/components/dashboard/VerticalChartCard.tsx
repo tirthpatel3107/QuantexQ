@@ -1,15 +1,8 @@
-import { memo, useState, useCallback } from "react";
+import { memo, useState, useMemo, useEffect, useRef } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Maximize2 } from "lucide-react";
-import {
-  LineChart,
-  Line,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ReferenceLine,
-} from "recharts";
+import ReactECharts from "echarts-for-react";
+import type { EChartsOption } from "echarts";
 import { cn } from "@/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import {
@@ -24,32 +17,22 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const CHART_MARGIN = { top: 6, right: 6, bottom: 6, left: 2 };
-const TOOLTIP_STYLE = {
-  contentStyle: {
-    backgroundColor: "hsl(var(--card))",
-    border: "1px solid hsl(var(--border))",
-    borderRadius: "6px",
-    fontSize: "11px",
-  },
-  labelStyle: { color: "hsl(var(--muted-foreground))" },
-};
-const Y_AXIS_TICK = { fontSize: 9, fill: "hsl(var(--muted-foreground))" };
-
 export interface VerticalChartMetric {
   label: string;
   value: string;
   unit?: string;
   trend?: "up" | "down" | "stable";
   status?: "normal" | "warning" | "critical";
+  dataKey?: string;
+  color?: string;
 }
 
 interface VerticalChartCardProps {
   title: string;
   icon?: LucideIcon;
   metrics: VerticalChartMetric[];
-  data: { time: string; value: number }[];
-  color?: string;
+  data: any[];
+  color?: string; // Fallback color
   threshold?: { value: number; label: string };
   status?: "normal" | "warning" | "critical";
   className?: string;
@@ -68,76 +51,189 @@ const trendIcons = {
 };
 
 interface ChartInnerProps {
-  data: { time: string; value: number }[];
-  color: string;
+  data: any[];
+  metrics: VerticalChartMetric[];
   threshold?: { value: number; label: string };
-  title: string;
+  height?: number | string;
+  badgeColors: string[]; // Pass badge colors to match lines
+  isDark: boolean;
 }
 
 const ChartInner = memo(function ChartInner({
   data,
-  color,
+  metrics,
   threshold,
-  title,
+  height = "100%",
+  badgeColors,
+  isDark,
 }: ChartInnerProps) {
-  const formatter = useCallback((value: number) => [value, "Value"], []);
-  const labelFormatter = useCallback(
-    (label: string) => `${title} — Time: ${label}`,
-    [title]
-  );
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      const w = Math.round(rect.width);
+      const h = Math.round(rect.height);
+      setSize((prev) => (prev.width === w && prev.height === h ? prev : { width: w, height: h }));
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const option: EChartsOption = useMemo(() => {
+    const times = data.map((d) => d.time);
+    
+    // Theme-specific colors
+    const axisColor = isDark ? "#ffffff" : "hsl(var(--foreground))";
+    const gridColor = isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)";
+    const tooltipBg = isDark ? "hsl(var(--card))" : "#ffffff";
+    const tooltipText = isDark ? "#ffffff" : "#000000";
+
+    const series = metrics
+      .filter((m) => m.dataKey)
+      .map((m, i) => ({
+        name: m.label,
+        type: "line",
+        data: data.map((d) => d[m.dataKey!]),
+        symbol: "none",
+        smooth: 0.4,
+        lineStyle: {
+          width: 1.5,
+          color: badgeColors[i] || m.color || "#3b82f6",
+        },
+        ...(threshold && i === metrics.length - 1
+          ? {
+              markLine: {
+                symbol: "none",
+                label: { 
+                  formatter: threshold.label, 
+                  position: "start", // Moved to top
+                  color: isDark ? "#ffffff" : "#000000",
+                  fontSize: 11
+                },
+                lineStyle: { 
+                  type: "dashed", 
+                  color: isDark ? "#ffffff" : "#000000", 
+                  width: 2 
+                },
+                data: [{ xAxis: threshold.value }],
+              },
+            }
+          : {}),
+      }));
+
+    return {
+      tooltip: {
+        trigger: "axis",
+        appendToBody: true, // Render directly in body to avoid container scaling/transform issues which cause blur
+        renderMode: "html",
+        transitionDuration: 0,
+        backgroundColor: tooltipBg,
+        borderColor: "hsl(var(--border))",
+        borderWidth: 1,
+        textStyle: {
+          color: tooltipText,
+          fontSize: 12,
+          fontFamily: "inherit",
+          fontWeight: 600, // Thicker text for clarity
+        },
+        // Combine crisp text settings with a clean shadow and high z-index
+        extraCssText: "box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border-radius: 6px; z-index: 9999; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;", 
+        padding: [8, 12],
+        formatter: (params: any) => {
+          if (!Array.isArray(params) || params.length === 0) return "";
+          const time = params[0].axisValueLabel;
+          let content = `<div class="font-bold mb-1.5" style="color:${tooltipText}; font-size: 13px;">${time}</div>`;
+          params.forEach((p: any) => {
+             const metric = metrics.find(m => m.label === p.seriesName);
+             const unit = metric?.unit ? ` ${metric.unit}` : "";
+             const circleColor = badgeColors[p.seriesIndex] || p.color;
+             content += `
+              <div class="flex items-center gap-2 text-xs mb-1 last:mb-0" style="color:${tooltipText}">
+                <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background-color:${circleColor}"></span>
+                <span style="opacity: 0.8">${p.seriesName}:</span>
+                <span class="font-mono font-bold">${p.value}${unit}</span>
+              </div>
+            `;
+          });
+          return content;
+        },
+      },
+      grid: {
+        top: 25,
+        right: 20,
+        bottom: 10,
+        left: 10,
+        containLabel: true,
+      },
+      dataZoom: [
+        {
+          type: "inside",
+          yAxisIndex: 0,
+          filterMode: "empty",
+        },
+      ],
+      xAxis: {
+        type: "value",
+        splitLine: { 
+          show: true,
+          lineStyle: { color: gridColor } 
+        },
+        axisLabel: { 
+          show: true,
+          fontSize: 11,
+          fontWeight: "normal", // Set to normal
+          color: axisColor,
+          rotate: 90,
+          interval: 0 
+        },
+        axisLine: { show: false },
+        axisTick: { show: true, lineStyle: { color: axisColor } },
+        scale: true, 
+      },
+      yAxis: {
+        type: "category",
+        data: times,
+        inverse: true,
+        show: true,
+        axisLine: { show: false },
+        axisTick: { show: true, lineStyle: { color: axisColor } },
+        axisLabel: { 
+           show: true,
+           interval: Math.floor(data.length / 10),
+           fontSize: 11,
+           fontWeight: "normal", // Set to normal
+           color: axisColor
+        },
+        splitLine: { 
+          show: true, // Show horizontal lines
+          lineStyle: { color: gridColor }
+        },
+      },
+      series: series as any,
+      animation: false,
+    };
+  }, [data, metrics, threshold, badgeColors, isDark]);
+
+  const chartHeight = typeof height === "string" ? size.height : height;
+  const chartWidth = size.width;
+  const hasSize = chartWidth > 0 && chartHeight > 0;
+
   return (
-    <LineChart
-      data={data}
-      margin={CHART_MARGIN}
-      layout="vertical"
-    >
-      <XAxis
-        type="category"
-        dataKey="time"
-        axisLine={false}
-        tickLine={false}
-        tick={false}
-        width={0}
-      />
-      <YAxis
-        type="number"
-        dataKey="value"
-        domain={["auto", "auto"]}
-        axisLine={false}
-        tickLine={false}
-        tick={Y_AXIS_TICK}
-        width={32}
-      />
-      <Tooltip
-        contentStyle={TOOLTIP_STYLE.contentStyle}
-        labelStyle={TOOLTIP_STYLE.labelStyle}
-        itemStyle={{ color }}
-        formatter={formatter}
-        labelFormatter={labelFormatter}
-      />
-      {threshold && (
-        <ReferenceLine
-          y={threshold.value}
-          stroke="hsl(var(--warning))"
-          strokeDasharray="2 2"
-          strokeWidth={1}
+    <div ref={containerRef} className="h-full w-full min-h-0 min-w-0">
+      {hasSize && (
+        <ReactECharts
+          option={option}
+          style={{ width: chartWidth, height: chartHeight }}
+          opts={{ renderer: "svg" }}
         />
       )}
-      <Line
-        type="monotone"
-        dataKey="value"
-        stroke={color}
-        strokeWidth={2}
-        dot={false}
-        isAnimationActive={false}
-        activeDot={{
-          r: 3,
-          fill: color,
-          stroke: "hsl(var(--background))",
-          strokeWidth: 1,
-        }}
-      />
-    </LineChart>
+    </div>
   );
 });
 
@@ -153,6 +249,38 @@ export const VerticalChartCard = memo(function VerticalChartCard({
 }: VerticalChartCardProps) {
   const showSkeleton = useInitialSkeleton();
   const [expandOpen, setExpandOpen] = useState(false);
+  const [isDark, setIsDark] = useState(
+    typeof document !== "undefined" ? !document.documentElement.classList.contains("light") : true
+  );
+
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          setIsDark(!document.documentElement.classList.contains("light"));
+        }
+      });
+    });
+    observer.observe(document.documentElement, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
+
+  // Badge colors logic - recreated from previous version
+  const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
+  
+  // Pre-calculate colors for chart lines to match badges
+  const seriesLineColors = useMemo(() => {
+    return metrics.map((_, i) => {
+       const isLastBadge = i % 3 === 2;
+       // For line colors:
+       // 1st badge (i=0) -> #21d5ed (Cyan)
+       // 2nd badge (i=1) -> #f59f0a (Orange)
+       // 3rd badge (i=2) -> White (Dark mode) / Black (Light mode)
+       if (isLastBadge) return isDark ? "#ffffff" : "#000000"; 
+       return badgeBgColors[i % badgeBgColors.length];
+    });
+  }, [metrics, isDark]);
+
 
   const mainMetric = metrics[0];
   const mainDisplay = mainMetric
@@ -182,11 +310,10 @@ export const VerticalChartCard = memo(function VerticalChartCard({
   }
 
   return (
-    <div className={cn("dashboard-panel group flex flex-col relative h-full", statusBorderColors[status], className)}>
-      {/* Header: left = Icon (replaced by expand on hover) + Title, right = main count (teal) */}
+    <div className={cn("dashboard-panel group flex flex-col relative h-full antialiased", statusBorderColors[status], className)}>
+      {/* Header: left = Icon + Title, right = main count */}
       <div className="panel-header flex items-center justify-between gap-2 min-w-0">
         <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
-          {/* Chart content icon place: metric icon by default, expand icon on card hover */}
           <button
             type="button"
             onClick={() => setExpandOpen(true)}
@@ -202,42 +329,46 @@ export const VerticalChartCard = memo(function VerticalChartCard({
             {title}
           </h3>
         </div>
-        <span className="font-bold tabular-nums text-primary flex-shrink-0">
+        <span className="font-bold tabular-nums text-primary flex-shrink-0 antialiased">
           {mainDisplay}
         </span>
       </div>
 
-      {/* Chart area only */}
-      <div className="vertical-line-chart px-2.5 pb-2 min-h-[420px] flex-1 w-full max-h-[540px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <ChartInner data={data} color={color} threshold={threshold} title={title} />
-        </ResponsiveContainer>
+      {/* Chart area */}
+      <div className="vertical-line-chart px-0 pb-0 min-h-[420px] flex-1 w-full max-h-[540px] overflow-hidden">
+         <ChartInner 
+            data={data} 
+            metrics={metrics} 
+            threshold={threshold} 
+            badgeColors={seriesLineColors}
+            isDark={isDark}
+         />
       </div>
 
-      {/* Badges: below chart, centered; last badge: light=black bg+white text, dark=white bg+black text */}
+      {/* Badges */}
       <div className="px-3 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
         {metrics.map((m, i) => {
-          const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
           const isLastBadge = i % 3 === 2;
           const bgColor = isLastBadge ? undefined : badgeBgColors[i % badgeBgColors.length];
+          
           return (
             <UITooltip key={i}>
               <TooltipTrigger asChild>
                 <span
                   className={cn(
-                    "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold",
+                    "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
                     isLastBadge ? "bg-black text-white dark:bg-white dark:text-black" : "text-black"
                   )}
                   style={bgColor != null ? { backgroundColor: bgColor } : undefined}
                 >
-                  <span className="min-w-0 truncate">
+                  <span className="min-w-0 truncate font-bold">
                     {m.value}
                   </span>
                   {m.unit != null && m.unit !== "" && (
-                    <span className="ml-0.5 shrink-0">{m.unit}</span>
+                    <span className="ml-0.5 shrink-0 font-bold" style={{ opacity: 0.8 }}>{m.unit}</span>
                   )}
                   {m.trend && (
-                    <span className="ml-0.5 shrink-0 text-[9px]" aria-hidden>
+                    <span className="ml-0.5 shrink-0 text-[9px] font-bold" aria-hidden>
                       {trendIcons[m.trend]}
                     </span>
                   )}
@@ -251,18 +382,56 @@ export const VerticalChartCard = memo(function VerticalChartCard({
         })}
       </div>
 
-      {/* Expand popup: chart in dialog */}
+      {/* Expand popup */}
       <Dialog open={expandOpen} onOpenChange={setExpandOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
+        <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col h-[80vh]">
           <DialogHeader>
             <DialogTitle className="text-foreground font-bold uppercase tracking-wide">
               {title}
             </DialogTitle>
           </DialogHeader>
-          <div className="flex-1 min-h-[420px] w-full -mx-2">
-            <ResponsiveContainer width="100%" height={420}>
-              <ChartInner data={data} color={color} threshold={threshold} title={title} />
-            </ResponsiveContainer>
+          <div className="flex-1 w-full min-h-0 flex flex-col">
+             <ChartInner 
+                data={data} 
+                metrics={metrics} 
+                threshold={threshold} 
+                badgeColors={seriesLineColors}
+                height="100%" 
+                isDark={isDark}
+             />
+            {/* Badges in expanded view */}
+            <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+              {metrics.map((m, i) => {
+                const isLastBadge = i % 3 === 2;
+                const bgColor = isLastBadge ? undefined : badgeBgColors[i % badgeBgColors.length];
+                return (
+                  <UITooltip key={i}>
+                    <TooltipTrigger asChild>
+                      <span
+                        className={cn(
+                          "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-2 py-1 text-xs tabular-nums overflow-hidden cursor-default font-bold",
+                          isLastBadge ? "bg-black text-white dark:bg-white dark:text-black" : "text-black"
+                        )}
+                        style={bgColor != null ? { backgroundColor: bgColor } : undefined}
+                      >
+                        <span className="min-w-0 truncate font-bold">{m.value}</span>
+                        {m.unit != null && m.unit !== "" && (
+                          <span className="ml-0.5 shrink-0 font-bold" style={{ opacity: 0.8 }}>{m.unit}</span>
+                        )}
+                        {m.trend && (
+                          <span className="ml-0.5 shrink-0 text-[10px] font-bold" aria-hidden>
+                            {trendIcons[m.trend]}
+                          </span>
+                        )}
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{m.label}</p>
+                    </TooltipContent>
+                  </UITooltip>
+                );
+              })}
+            </div>
           </div>
         </DialogContent>
       </Dialog>

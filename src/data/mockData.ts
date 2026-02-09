@@ -10,37 +10,127 @@ const mulberry32 = (seed: number) => {
   };
 };
 
-const generateChartData = (baseValue: number, variance: number, points = 20, patternSeed = 1) => {
-  const data = [];
-  const now = Date.now();
-  const random = mulberry32(patternSeed);
-  const baseFrequency = 0.9 + (patternSeed % 5) * 0.22;
-  const secondaryFrequency = 0.6 + (patternSeed % 3) * 0.18;
-  const phase = patternSeed * 0.45;
+export type ChartDataPoint = Record<string, string | number>;
+export type ChartDataset = ChartDataPoint[];
 
-  for (let i = 0; i < points; i++) {
-    const time = new Date(now - (points - i) * 3 * 60_000);
-    const primaryWave = Math.sin((i + 1) * baseFrequency + phase) * variance * 0.38;
-    const secondaryWave = Math.cos((i + 1.5) * secondaryFrequency) * variance * 0.2;
-    const jitter = (random() - 0.5) * variance * 0.12; // small variation to break identical shapes
+const seriesConfigs: Record<string, { key: string; baseValue: number; variance: number; patternSeed: number }[]> = {
+  flow: [
+    { key: "in", baseValue: 220, variance: 40, patternSeed: 1 },
+    { key: "out", baseValue: 318, variance: 60, patternSeed: 2 },
+    { key: "mud", baseValue: 50, variance: 10, patternSeed: 3 },
+  ],
+  density: [
+    { key: "in", baseValue: 8.6, variance: 0.5, patternSeed: 4 },
+    { key: "out", baseValue: 8.4, variance: 0.5, patternSeed: 5 },
+  ],
+  surfacePressure: [
+    { key: "sp", baseValue: 1247.9, variance: 100, patternSeed: 6 },
+    { key: "sbp", baseValue: 227.0, variance: 30, patternSeed: 7 },
+  ],
+  standpipePressure: [
+    { key: "sp", baseValue: 3483.0, variance: 150, patternSeed: 8 },
+    { key: "spp", baseValue: 3947.9, variance: 180, patternSeed: 9 },
+  ],
+  bottomHolePressure: [
+    { key: "sp", baseValue: 9627.0, variance: 200, patternSeed: 10 },
+    { key: "bhp", baseValue: 9718.4, variance: 200, patternSeed: 11 },
+  ],
+  choke: [
+    { key: "choke_a", baseValue: 10.1, variance: 2, patternSeed: 12 },
+    { key: "choke_b", baseValue: -1.1, variance: 0.5, patternSeed: 13 },
+    { key: "set_point", baseValue: 12.5, variance: 0.1, patternSeed: 14 },
+  ],
+};
+
+const generateSinglePoint = (
+  seriesConfig: { key: string; baseValue: number; variance: number; patternSeed: number }[],
+  index: number,
+  useNow = false
+): ChartDataPoint => {
+  const now = Date.now();
+  const time = useNow ? new Date(now) : new Date(now - index * 3 * 60_000);
+  const point: ChartDataPoint = {
+    time: time.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }),
+  };
+
+  const seedIndex = useNow ? Math.floor(Date.now() / 5000) : index;
+  seriesConfig.forEach(({ key, baseValue, variance, patternSeed }) => {
+    const random = mulberry32(patternSeed + seedIndex);
+    const baseFrequency = 0.9 + (patternSeed % 5) * 0.22;
+    const secondaryFrequency = 0.6 + (patternSeed % 3) * 0.18;
+    const phase = patternSeed * 0.45;
+
+    const primaryWave = Math.sin((seedIndex + 1) * baseFrequency + phase) * variance * 0.38;
+    const secondaryWave = Math.cos((seedIndex + 1.5) * secondaryFrequency) * variance * 0.2;
+    const jitter = (random() - 0.5) * variance * 0.12;
+
     const rawValue = baseValue + primaryWave + secondaryWave + jitter;
     const value = Math.max(baseValue - variance * 2, Math.min(baseValue + variance * 2, rawValue));
 
-    data.push({
-      time: time.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
-      value: Math.round(value * 100) / 100,
-    });
-  }
+    point[key] = Math.round(value * 100) / 100;
+  });
 
+  return point;
+};
+
+// Generate multi-series data
+const generateMultiSeriesChartData = (
+  config: { key: string; baseValue: number; variance: number; patternSeed: number }[],
+  points = 50
+): ChartDataset => {
+  const data: ChartDataset = [];
+  for (let i = 0; i < points; i++) {
+    data.push(generateSinglePoint(config, points - i));
+  }
   return data;
 };
 
-export const flowData = generateChartData(320, 50, 20, 1);
-export const densityData = generateChartData(8.5, 0.3, 20, 2);
-export const surfacePressureData = generateChartData(1200, 100, 20, 3);
-export const standpipePressureData = generateChartData(3500, 200, 20, 4);
-export const bottomHolePressureData = generateChartData(9600, 150, 20, 5);
-export const chokeChartData = generateChartData(10, 3, 20, 6);
+/** Append one new data point and keep last 50 points (sliding window) */
+export function appendChartPoint(
+  data: ChartDataset,
+  configKey: keyof typeof seriesConfigs
+): ChartDataset {
+  const config = seriesConfigs[configKey];
+  if (!config || data.length === 0) return data;
+
+  const newPoint = generateSinglePoint(config, 0, true); // Use current time for new point
+  const next = [...data.slice(1), newPoint];
+  return next.length > 50 ? next.slice(-50) : next;
+}
+
+// Data exports with specific series keys matching the dashboard requirements
+export const flowData = generateMultiSeriesChartData([
+  { key: "in", baseValue: 220, variance: 40, patternSeed: 1 },
+  { key: "out", baseValue: 318, variance: 60, patternSeed: 2 },
+  { key: "mud", baseValue: 50, variance: 10, patternSeed: 3 },
+]);
+
+export const densityData = generateMultiSeriesChartData([
+  { key: "in", baseValue: 8.6, variance: 0.5, patternSeed: 4 },
+  { key: "out", baseValue: 8.4, variance: 0.5, patternSeed: 5 },
+]);
+
+// For Surface & Stand Pipe, we use "sp" and "sbp"/"spp" keys
+export const surfacePressureData = generateMultiSeriesChartData([
+  { key: "sp", baseValue: 1247.9, variance: 100, patternSeed: 6 },
+  { key: "sbp", baseValue: 227.0, variance: 30, patternSeed: 7 },
+]);
+
+export const standpipePressureData = generateMultiSeriesChartData([
+  { key: "sp", baseValue: 3483.0, variance: 150, patternSeed: 8 },
+  { key: "spp", baseValue: 3947.9, variance: 180, patternSeed: 9 },
+]);
+
+export const bottomHolePressureData = generateMultiSeriesChartData([
+  { key: "sp", baseValue: 9627.0, variance: 200, patternSeed: 10 },
+  { key: "bhp", baseValue: 9718.4, variance: 200, patternSeed: 11 },
+]);
+
+export const chokeChartData = generateMultiSeriesChartData([
+  { key: "choke_a", baseValue: 10.1, variance: 2, patternSeed: 12 },
+  { key: "choke_b", baseValue: -1.1, variance: 0.5, patternSeed: 13 },
+  { key: "set_point", baseValue: 12.5, variance: 0.1, patternSeed: 14 },
+]);
 
 export const notifications = [
   {

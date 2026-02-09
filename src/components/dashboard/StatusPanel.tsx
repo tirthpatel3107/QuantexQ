@@ -1,6 +1,63 @@
 import { cn } from "@/lib/utils";
-import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+
+/** SVG donut slice: angle in radians, 0 = right, clockwise */
+function getDonutPath(
+  cx: number,
+  cy: number,
+  innerR: number,
+  outerR: number,
+  startAngle: number,
+  endAngle: number
+): string {
+  const x1 = cx + outerR * Math.cos(startAngle);
+  const y1 = cy + outerR * Math.sin(startAngle);
+  const x2 = cx + outerR * Math.cos(endAngle);
+  const y2 = cy + outerR * Math.sin(endAngle);
+  const x3 = cx + innerR * Math.cos(endAngle);
+  const y3 = cy + innerR * Math.sin(endAngle);
+  const x4 = cx + innerR * Math.cos(startAngle);
+  const y4 = cy + innerR * Math.sin(startAngle);
+  const large = endAngle - startAngle > Math.PI ? 1 : 0;
+  return `M ${x1} ${y1} A ${outerR} ${outerR} 0 ${large} 1 ${x2} ${y2} L ${x3} ${y3} A ${innerR} ${innerR} 0 ${large} 0 ${x4} ${y4} Z`;
+}
+
+const PAD_RAD = (2 * Math.PI) / 180;
+
+function DonutChart({
+  data,
+  size,
+  innerR,
+  outerR,
+}: {
+  data: { label: string; value: number; color: string }[];
+  size: number;
+  innerR: number;
+  outerR: number;
+}) {
+  const sum = data.reduce((a, s) => a + s.value, 0) || 1;
+  const cx = size / 2;
+  const cy = size / 2;
+  let acc = -Math.PI / 2; // start from top
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="shrink-0">
+      {data.map((slice) => {
+        const ratio = Math.max(0, slice.value) / sum;
+        const start = acc;
+        acc += ratio * 2 * Math.PI;
+        const end = acc;
+        acc += PAD_RAD;
+        return (
+          <path
+            key={slice.label}
+            d={getDonutPath(cx, cy, innerR, outerR, start, end)}
+            fill={slice.color}
+          />
+        );
+      })}
+    </svg>
+  );
+}
 
 interface StatusItem {
   label: string;
@@ -119,23 +176,8 @@ export function StatusPanel({ title, items, statusIndicator, pieData }: StatusPa
 
       {showPie && (
         <div className="p-3 pt-1 border-t border-border/40">
-          <div className="h-40">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={normalizedPieData}
-                  dataKey="value"
-                  nameKey="label"
-                  innerRadius={35}
-                  outerRadius={60}
-                  paddingAngle={2}
-                >
-                  {normalizedPieData.map((slice) => (
-                    <Cell key={slice.label} fill={slice.color} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
+          <div className="h-40 flex items-center justify-center">
+            <DonutChart data={normalizedPieData} size={120} innerR={35} outerR={60} />
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-muted-foreground">
             {normalizedPieData.map((slice) => (

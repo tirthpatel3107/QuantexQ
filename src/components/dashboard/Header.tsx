@@ -1,9 +1,19 @@
 import { useState, useEffect, useCallback } from "react";
-import { Bell, Gauge, Menu, Moon, Sun, UserRound, Filter, Check, SlidersHorizontal } from "lucide-react";
+import { Bell, Gauge, Menu, Moon, Sun, Settings, Filter, Check, SlidersHorizontal, Square, Play } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { SideDrawer } from "@/components/dashboard/SideDrawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +22,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { notifications } from "@/data/mockData";
+import { useSimulation } from "@/hooks/useSimulation";
+import { SimulationTimerWidget } from "@/components/dashboard/SimulationTimerWidget";
 
 const formatTime = (date: Date) =>
   date.toLocaleTimeString("en-US", {
@@ -54,12 +66,15 @@ const INITIAL_FILTERS = { severity: "all", timeframe: "24h", system: "all" };
 
 export function Header() {
   const [time, setTime] = useState(() => new Date());
+  const { isRunning, setRunning } = useSimulation();
   const [theme, setTheme] = useState<"dark" | "light">(() => {
     if (typeof window === "undefined") return "dark";
     return (localStorage.getItem("theme") as "dark" | "light") || "dark";
   });
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [stopConfirmOpen, setStopConfirmOpen] = useState(false);
+  const [startConfirmOpen, setStartConfirmOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -190,7 +205,29 @@ export function Header() {
 
         <div className="hidden sm:block h-8 w-px bg-border" />
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
+          {!isRunning ? (
+            <button
+              type="button"
+              onClick={() => setStartConfirmOpen(true)}
+              className="action-btn action-btn-primary inline-flex items-center gap-2"
+              aria-label="Start operation"
+            >
+              <Play className="h-4 w-4" />
+              <span className="hidden sm:inline">Start</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setStopConfirmOpen(true)}
+              className="action-btn action-btn-danger inline-flex items-center gap-2"
+              aria-label="Stop operation"
+            >
+              <Square className="h-4 w-4" />
+              <span className="hidden sm:inline">Stop</span>
+            </button>
+          )}
+          <div className="hidden sm:block h-8 w-px bg-border" />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -330,9 +367,9 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <button
                 className="action-btn action-btn-ghost bg-accent text-foreground hover:bg-accent/80"
-                aria-label="Profile menu"
+                aria-label="Settings menu"
               >
-                <UserRound className="h-4 w-4" />
+                <Settings className="h-4 w-4" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
@@ -340,7 +377,7 @@ export function Header() {
                 onSelect={() => navigate("/profile")}
                 className="cursor-pointer"
               >
-                Settings
+                Profile
               </DropdownMenuItem>
               <DropdownMenuItem
                 onSelect={() => navigate("/")}
@@ -352,6 +389,53 @@ export function Header() {
           </DropdownMenu>
         </div>
       </div>
+
+      <SimulationTimerWidget useOwnStopDialog={false} onStopClick={() => setStopConfirmOpen(true)} />
+
+      <AlertDialog open={stopConfirmOpen} onOpenChange={setStopConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Stop operation?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to stop? This will halt the current operation.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={() => {
+                setRunning(false);
+                setStopConfirmOpen(false);
+              }}
+            >
+              Stop
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={startConfirmOpen} onOpenChange={setStartConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Start operation?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to start? This will begin the operation.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setRunning(true);
+                setStartConfirmOpen(false);
+              }}
+            >
+              Start
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </header>
   );
 }

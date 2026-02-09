@@ -1,14 +1,7 @@
-import { memo, useState } from "react";
+import { memo, useState, useMemo } from "react";
 import { Maximize2 } from "lucide-react";
-import {
-  LineChart,
-  Line,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ReferenceLine,
-} from "recharts";
+import ReactECharts from "echarts-for-react";
+import type { EChartsOption } from "echarts";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
@@ -32,6 +25,96 @@ const statusBorderColors = {
   warning: "border-warning/50",
   critical: "border-destructive/50",
 };
+
+function LineChartContent({
+  data,
+  color,
+  threshold,
+  className,
+}: {
+  data: { time: string; value: number }[];
+  color: string;
+  threshold?: { value: number; label: string };
+  className?: string;
+}) {
+  const option: EChartsOption = useMemo(
+    () => ({
+      grid: { top: 5, right: 5, bottom: 5, left: 35, containLabel: true },
+      xAxis: {
+        type: "category",
+        data: data.map((d) => d.time),
+        axisLine: { show: false },
+        axisTick: { show: false },
+        axisLabel: { fontSize: 10, color: "hsl(var(--muted-foreground))" },
+      },
+      yAxis: {
+        type: "value",
+        axisLine: { show: false },
+        axisTick: { show: false },
+        axisLabel: { fontSize: 10, color: "hsl(var(--muted-foreground))" },
+        splitLine: { show: false },
+      },
+      tooltip: {
+        trigger: "axis",
+        backgroundColor: "hsl(var(--card))",
+        borderColor: "hsl(var(--border))",
+        borderWidth: 1,
+        borderRadius: 6,
+        textStyle: { fontSize: 12, color: "hsl(var(--muted-foreground))" },
+        formatter: (params: unknown) => {
+          const p = Array.isArray(params) ? params[0] : null;
+          if (!p) return "";
+          const point = data[p.dataIndex];
+          return `${point.time}<br/><span style="color:${color};font-weight:600">${point.value}</span>`;
+        },
+      },
+      series: [
+        {
+          type: "line",
+          data: data.map((d) => d.value),
+          smooth: true,
+          symbol: "none",
+          lineStyle: { width: 2, color },
+          emphasis: {
+            focus: "series",
+            lineStyle: { width: 2 },
+            itemStyle: {
+              color,
+              borderColor: "hsl(var(--background))",
+              borderWidth: 2,
+            },
+          },
+          ...(threshold && {
+            markLine: {
+              symbol: "none",
+              lineStyle: {
+                type: "dashed",
+                color: "hsl(var(--warning))",
+                width: 1.5,
+              },
+              label: {
+                show: true,
+                position: "end",
+                color: "hsl(var(--warning))",
+                fontSize: 10,
+                formatter: threshold.label,
+              },
+              data: [{ yAxis: threshold.value }],
+            },
+          }),
+        },
+      ],
+      animation: false,
+    }),
+    [data, color, threshold]
+  );
+
+  return (
+    <div className={cn("chart-container h-full w-full min-h-0 min-w-0", className)}>
+      <ReactECharts option={option} style={{ width: "100%", height: "100%" }} opts={{ renderer: "svg" }} />
+    </div>
+  );
+}
 
 export const ChartPanel = memo(function ChartPanel({
   title,
@@ -61,66 +144,6 @@ export const ChartPanel = memo(function ChartPanel({
     );
   }
 
-  const ChartContent = ({ className }: { className?: string }) => (
-    <div className={cn("chart-container", className)}>
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
-          <XAxis
-            dataKey="time"
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
-            interval="preserveStartEnd"
-          />
-          <YAxis
-            axisLine={false}
-            tickLine={false}
-            tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
-            width={35}
-            domain={["auto", "auto"]}
-          />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "hsl(var(--card))",
-              border: "1px solid hsl(var(--border))",
-              borderRadius: "6px",
-              fontSize: "12px",
-            }}
-            labelStyle={{ color: "hsl(var(--muted-foreground))" }}
-            itemStyle={{ color: color }}
-          />
-          {threshold && (
-            <ReferenceLine
-              y={threshold.value}
-              stroke="hsl(var(--warning))"
-              strokeDasharray="3 3"
-              // Highlight alert thresholds without redrawing the chart every render.
-              label={{
-                value: threshold.label,
-                position: "right",
-                fill: "hsl(var(--warning))",
-                fontSize: 10,
-              }}
-            />
-          )}
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke={color}
-            strokeWidth={2}
-            dot={false}
-            activeDot={{
-              r: 4,
-              fill: color,
-              stroke: "hsl(var(--background))",
-              strokeWidth: 2,
-            }}
-          />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
-  );
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <div className={cn("dashboard-panel group", statusBorderColors[status])}>
@@ -140,8 +163,8 @@ export const ChartPanel = memo(function ChartPanel({
           </div>
         </div>
 
-        <div className="p-3">
-          <ChartContent />
+        <div className="p-3 h-[140px]">
+          <LineChartContent data={data} color={color} threshold={threshold} />
         </div>
       </div>
 
@@ -150,7 +173,7 @@ export const ChartPanel = memo(function ChartPanel({
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <div className="h-[420px] sm:h-[520px]">
-          <ChartContent className="h-full" />
+          <LineChartContent data={data} color={color} threshold={threshold} className="h-full" />
         </div>
       </DialogContent>
     </Dialog>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   Droplets,
@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import type { VerticalChartMetric } from "@/components/dashboard/VerticalChartCard";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+import { useSimulation } from "@/hooks/useSimulation";
+import { SimulationProvider } from "@/hooks/useSimulation";
 import { Header } from "@/components/dashboard/Header";
 import { VerticalChartCard } from "@/components/dashboard/VerticalChartCard";
 import { DepthGauge } from "@/components/dashboard/DepthGauge";
@@ -28,95 +30,103 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import {
-  flowData,
-  densityData,
-  surfacePressureData,
-  standpipePressureData,
-  bottomHolePressureData,
-  chokeChartData,
-  pumpStatus,
-} from "@/data/mockData";
+import { pumpStatus } from "@/data/mockData";
+import type { ChartDataPoint } from "@/data/mockData";
+
+type ChartDataKey = "flow" | "density" | "surfacePressure" | "standpipePressure" | "bottomHolePressure" | "choke";
 
 type VerticalCardConfig = {
   id: string;
+  chartKey: ChartDataKey;
   title: string;
   icon: LucideIcon;
-  metrics: VerticalChartMetric[];
-  data: { time: string; value: number }[];
+  metrics: Omit<VerticalChartMetric, "value">[];
   color: string;
   threshold?: { value: number; label: string };
   status?: "normal" | "warning" | "critical";
 };
 
-/** 6 center cards: details + Recharts vertical line graph merged in each */
+/** Derive metric values from the latest data point */
+function metricsFromLatestPoint(
+  baseMetrics: Omit<VerticalChartMetric, "value">[],
+  latestPoint: ChartDataPoint | undefined
+): VerticalChartMetric[] {
+  if (!latestPoint) return baseMetrics.map((m) => ({ ...m, value: "—" }));
+  return baseMetrics.map((m) => {
+    const raw = m.dataKey ? latestPoint[m.dataKey] : undefined;
+    const value = typeof raw === "number" ? String(raw) : raw != null ? String(raw) : "—";
+    return { ...m, value };
+  });
+}
+
+/** 6 center cards: details + ECharts vertical line graph merged in each */
 const CENTER_CARDS: VerticalCardConfig[] = [
   {
     id: "flow",
+    chartKey: "flow",
     title: "Flow",
     icon: Droplets,
     metrics: [
-      { label: "IN", value: "220.1", unit: "gpm", trend: "down" },
-      { label: "OUT", value: "318.0", unit: "gpm", trend: "stable", status: "warning" },
-      { label: "MUD", value: "50.6", unit: "ppg", trend: "down", status: "warning" },
+      { label: "IN", unit: "gpm", trend: "down", dataKey: "in", color: "#fbbf24" },
+      { label: "OUT", unit: "gpm", trend: "stable", status: "warning", dataKey: "out", color: "#ef4444" },
+      { label: "MUD", unit: "ppg", trend: "down", status: "warning", dataKey: "mud", color: "#3b82f6" },
     ],
-    data: flowData,
     color: "hsl(var(--chart-3))",
   },
   {
     id: "density",
+    chartKey: "density",
     title: "Density",
     icon: Gauge,
     metrics: [
-      { label: "IN", value: "8.6", unit: "ppg", trend: "stable" },
-      { label: "OUT", value: "8.4", unit: "ppg", trend: "stable" },
+      { label: "IN", unit: "ppg", trend: "stable", dataKey: "in", color: "#22c55e" },
+      { label: "OUT", unit: "ppg", trend: "stable", dataKey: "out", color: "#3b82f6" },
     ],
-    data: densityData,
     color: "hsl(var(--success))",
   },
   {
     id: "surface-back-pressure",
+    chartKey: "surfacePressure",
     title: "Surface Back Pressure",
     icon: Activity,
     metrics: [
-      { label: "SP", value: "1247.9", unit: "psi", trend: "down" },
-      { label: "SBP", value: "227.0", unit: "psi", trend: "down" },
+      { label: "SP", unit: "psi", trend: "down", dataKey: "sp", color: "#22c55e" },
+      { label: "SBP", unit: "psi", trend: "down", dataKey: "sbp", color: "#3b82f6" },
     ],
-    data: surfacePressureData,
     color: "hsl(var(--chart-4))",
   },
   {
     id: "standpipe-pressure",
+    chartKey: "standpipePressure",
     title: "Stand Pipe Pressure",
     icon: CircleDot,
     metrics: [
-      { label: "SP", value: "3483.0", unit: "psi", trend: "stable" },
-      { label: "SPP", value: "3947.9", unit: "psi", trend: "up" },
+      { label: "SP", unit: "psi", trend: "stable", dataKey: "sp", color: "#22c55e" },
+      { label: "SPP", unit: "psi", trend: "up", dataKey: "spp", color: "#3b82f6" },
     ],
-    data: standpipePressureData,
     color: "hsl(var(--chart-4))",
   },
   {
     id: "bottom-hole-pressure",
+    chartKey: "bottomHolePressure",
     title: "Bottom Hole Pressure",
     icon: Thermometer,
     metrics: [
-      { label: "SP", value: "9627.0", unit: "psi", trend: "stable" },
-      { label: "BHP", value: "9718.4", unit: "psi", trend: "stable" },
+      { label: "SP", unit: "psi", trend: "stable", dataKey: "sp", color: "#22c55e" },
+      { label: "BHP", unit: "psi", trend: "stable", dataKey: "bhp", color: "#3b82f6" },
     ],
-    data: bottomHolePressureData,
     color: "hsl(var(--chart-5))",
   },
   {
     id: "choke",
+    chartKey: "choke",
     title: "Choke",
     icon: SlidersHorizontal,
     metrics: [
-      { label: "Chock A", value: "10.1", unit: "%", trend: "up" },
-      { label: "Chock B", value: "-1.1", unit: "%", trend: "stable", status: "critical" },
-      { label: "Set point", value: "12.5", unit: "%", trend: "stable" },
+      { label: "Chock A", unit: "%", trend: "up", dataKey: "choke_a", color: "#22c55e" },
+      { label: "Chock B", unit: "%", trend: "stable", status: "critical", dataKey: "choke_b", color: "#ef4444" },
+      { label: "Set point", unit: "%", trend: "stable", dataKey: "set_point", color: "#eab308" },
     ],
-    data: chokeChartData,
     color: "hsl(var(--chart-6))",
     threshold: { value: 12.5, label: "Set" },
   },
@@ -142,9 +152,22 @@ function PsiGaugeIcon({ className }: { className?: string }) {
   );
 }
 
-const Index = () => {
+const IndexContent = () => {
   const [pumpDialogOpen, setPumpDialogOpen] = useState(false);
   const showSkeleton = useInitialSkeleton();
+  const { chartData } = useSimulation();
+
+  const cardDataMap = useMemo(
+    () => ({
+      flow: chartData.flow,
+      density: chartData.density,
+      surfacePressure: chartData.surfacePressure,
+      standpipePressure: chartData.standpipePressure,
+      bottomHolePressure: chartData.bottomHolePressure,
+      choke: chartData.choke,
+    }),
+    [chartData]
+  );
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -167,29 +190,34 @@ const Index = () => {
           {/* Center Column: 6 charts + Pump Status below */}
           <div className="min-w-0 flex flex-col gap-3 overflow-x-auto overflow-y-hidden">
             <div className="grid gap-2 grid-cols-6 min-w-[1080px] items-stretch">
-              {CENTER_CARDS.map((card) => (
-                <Tooltip key={card.id}>
-                  <TooltipTrigger asChild>
-                    <div className="min-w-0 h-full flex flex-col">
-                      <div className="flex-1 min-h-0">
-                        <VerticalChartCard
-                          title={card.title}
-                          icon={card.icon}
-                          metrics={card.metrics}
-                          data={card.data}
-                          color={card.color}
-                          threshold={card.threshold}
-                          status={card.status}
-                          className="min-h-0"
-                        />
+              {CENTER_CARDS.map((card) => {
+                const data = cardDataMap[card.chartKey];
+                const latestPoint = data?.length ? data[data.length - 1] : undefined;
+                const metrics = metricsFromLatestPoint(card.metrics, latestPoint);
+                return (
+                  <Tooltip key={card.id}>
+                    <TooltipTrigger asChild>
+                      <div className="min-w-0 h-full flex flex-col">
+                        <div className="flex-1 min-h-0">
+                          <VerticalChartCard
+                            title={card.title}
+                            icon={card.icon}
+                            metrics={metrics}
+                            data={data ?? []}
+                            color={card.color}
+                            threshold={card.threshold}
+                            status={card.status}
+                            className="min-h-0"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{card.title}</p>
-                  </TooltipContent>
-                </Tooltip>
-              ))}
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{card.title}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              })}
             </div>
 
             {/* Pump button - below charts, opens popup */}
@@ -252,5 +280,11 @@ const Index = () => {
     </div>
   );
 };
+
+const Index = () => (
+  <SimulationProvider>
+    <IndexContent />
+  </SimulationProvider>
+);
 
 export default Index;

@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import { SimulationProvider } from "@/hooks/useSimulation";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,14 +23,16 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Loading…</div>}>
-          <Routes>
+        <SimulationProvider>
+          <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Loading…</div>}>
+            <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/profile" element={<Profile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+            </Routes>
+          </Suspense>
+        </SimulationProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
