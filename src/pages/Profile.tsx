@@ -29,6 +29,7 @@ import {
   Clock4,
 } from "lucide-react";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+import { useTheme } from "@/components/theme-provider";
 
 const sessions = [
   { device: "Rugged Tablet · Rig Control Room", location: "DW-0347", status: "Active", lastSeen: "Now" },
@@ -38,8 +39,9 @@ const sessions = [
 
 const Profile = () => {
   const [maintenanceOpen, setMaintenanceOpen] = useState<false | "access" | "profile">(false);
+  const { theme, setTheme } = useTheme();
+
   const [prefs, setPrefs] = useState({
-    theme: true,
     alerts: false,
     notifications: false,
   });
@@ -201,11 +203,11 @@ const Profile = () => {
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <span className="text-foreground">Theme</span>
-                    <p className="text-xs text-muted-foreground">Dark mode locked during shifts</p>
+                    <p className="text-xs text-muted-foreground">{theme === "dark" ? "Dark mode active" : "Light mode active"}</p>
                   </div>
                   <Switch
-                    checked={prefs.theme}
-                    onCheckedChange={(checked) => setPrefs((p) => ({ ...p, theme: checked }))}
+                    checked={theme === "dark"}
+                    onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
                   />
                 </div>
                 <div className="flex items-center justify-between">

@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { notifications } from "@/data/mockData";
 import { useSimulation } from "@/hooks/useSimulation";
 import { SimulationTimerWidget } from "@/components/dashboard/SimulationTimerWidget";
+import { useTheme } from "@/components/theme-provider";
 
 const formatTime = (date: Date) =>
   date.toLocaleTimeString("en-US", {
@@ -67,10 +68,7 @@ const INITIAL_FILTERS = { severity: "all", timeframe: "24h", system: "all" };
 export function Header() {
   const [time, setTime] = useState(() => new Date());
   const { isRunning, setRunning } = useSimulation();
-  const [theme, setTheme] = useState<"dark" | "light">(() => {
-    if (typeof window === "undefined") return "dark";
-    return (localStorage.getItem("theme") as "dark" | "light") || "dark";
-  });
+  const { theme, setTheme } = useTheme();
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [stopConfirmOpen, setStopConfirmOpen] = useState(false);
@@ -82,16 +80,9 @@ export function Header() {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.remove("light", "dark");
-    root.classList.add(theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
   const toggleTheme = useCallback(() => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  }, []);
+    setTheme(theme === "dark" ? "light" : "dark");
+  }, [theme, setTheme]);
 
   return (
     <header className="fixed top-0 inset-x-0 z-30 min-h-14 h-auto border-b border-border bg-card px-3 sm:px-4 py-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 backdrop-blur supports-[backdrop-filter]:bg-card/80">
