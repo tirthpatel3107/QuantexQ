@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   Network,
   Gauge,
+  Droplets,
   Monitor,
   Users,
   Info,
@@ -14,7 +15,6 @@ import {
   Save,
   RotateCcw,
   Download,
-  ChevronDown,
   MoreHorizontal,
   GripVertical,
 } from "lucide-react";
@@ -23,11 +23,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import {
   Select,
   SelectContent,
@@ -47,7 +42,7 @@ const SETTINGS_NAV = [
   { id: "alarms", label: "Alarms & Limits", icon: AlertTriangle },
   { id: "auto-control", label: "Auto Control", icon: Network },
   { id: "choke-pumps", label: "Choke & Pumps", icon: Gauge },
-  { id: "hydraulics", label: "Hydraulics Model", icon: Gauge },
+  { id: "hydraulics", label: "Hydraulics Model", icon: Droplets },
   { id: "ui", label: "UI & Display", icon: Monitor },
   { id: "users", label: "Users & Roles", icon: Users },
   { id: "about", label: "About / Diagnostics", icon: Info },
@@ -72,12 +67,14 @@ const CATEGORY_CARDS = [
   {
     id: "signals",
     title: "Signals / Tags",
-    description: "Tag mapping to WITS / EDR systems, scaling, validation status.",
+    description:
+      "Tag mapping to WITS / EDR systems, scaling, validation status.",
   },
   {
     id: "alarms",
     title: "Alarms & Limits",
-    description: "Thresholds, alarm logic, notification options for kick/loss, SPP/SPP/etc.",
+    description:
+      "Thresholds, alarm logic, notification options for kick/loss, SPP/SPP/etc.",
   },
   {
     id: "auto-control",
@@ -94,8 +91,6 @@ const CATEGORY_CARDS = [
 export default function Settings() {
   const [activeSection, setActiveSection] = useState("general");
   const [search, setSearch] = useState("");
-  const [projectOpen, setProjectOpen] = useState(true);
-  const [safetyOpen, setSafetyOpen] = useState(true);
   const [general, setGeneral] = useState({
     defaultWellName: "NFQ-21-6A",
     defaultRigName: "Rig-01",
@@ -118,7 +113,9 @@ export default function Settings() {
             </div>
             <h1 className="text-base font-bold tracking-tight">Settings</h1>
           </div>
-          <span className="hidden sm:inline text-sm text-muted-foreground">|</span>
+          <span className="hidden sm:inline text-sm text-muted-foreground">
+            |
+          </span>
           <span className="text-sm text-muted-foreground">
             Active Profile: Rig-01 / NFQ-21-6A Admin
           </span>
@@ -152,7 +149,7 @@ export default function Settings() {
                     "w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                     activeSection === item.id
                       ? "bg-primary/15 text-primary"
-                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground",
                   )}
                 >
                   <item.icon className="h-4 w-4 shrink-0" />
@@ -200,26 +197,26 @@ export default function Settings() {
             General
           </h2>
 
-          {/* Project / Well Context */}
-          <Collapsible open={projectOpen} onOpenChange={setProjectOpen}>
-            <Card className="mb-4">
-              <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0">
-                <CollapsibleTrigger className="flex items-center gap-2 cursor-pointer">
-                  <ChevronDown
-                    className={cn("h-4 w-4 transition-transform", projectOpen && "rotate-180")}
-                  />
-                  <CardTitle className="text-base">Project / Well Context</CardTitle>
-                </CollapsibleTrigger>
+          {/* Project / Well Context + Safety side by side */}
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 mb-4">
+          <Card className="dashboard-panel h-full min-w-0">
+              <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0 min-h-[60px]">
+                <CardTitle className="text-base">
+                  Project / Well Context
+                </CardTitle>
               </CardHeader>
-              <CollapsibleContent>
-                <CardContent className="pt-0 px-4 pb-4 space-y-3">
-                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <hr className="mb-3" />
+              <CardContent className="pt-0 px-4 pb-4 space-y-3">
+                  <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label>Default Well Name</Label>
                       <Input
                         value={general.defaultWellName}
                         onChange={(e) =>
-                          setGeneral((g) => ({ ...g, defaultWellName: e.target.value }))
+                          setGeneral((g) => ({
+                            ...g,
+                            defaultWellName: e.target.value,
+                          }))
                         }
                       />
                     </div>
@@ -227,7 +224,9 @@ export default function Settings() {
                       <Label>Default Rig name</Label>
                       <Select
                         value={general.defaultRigName}
-                        onValueChange={(v) => setGeneral((g) => ({ ...g, defaultRigName: v }))}
+                        onValueChange={(v) =>
+                          setGeneral((g) => ({ ...g, defaultRigName: v }))
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -242,7 +241,9 @@ export default function Settings() {
                       <Label>Default Scenario</Label>
                       <Select
                         value={general.defaultScenario}
-                        onValueChange={(v) => setGeneral((g) => ({ ...g, defaultScenario: v }))}
+                        onValueChange={(v) =>
+                          setGeneral((g) => ({ ...g, defaultScenario: v }))
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -258,7 +259,30 @@ export default function Settings() {
                       <Select
                         value={general.startupScreen1}
                         onValueChange={(v) =>
-                          setGeneral((g) => ({ ...g, startupScreen1: v, startupScreen2: v }))
+                          setGeneral((g) => ({
+                            ...g,
+                            startupScreen1: v,
+                            startupScreen2: v,
+                          }))
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Quantum HUD">
+                            Quantum HUD
+                          </SelectItem>
+                          <SelectItem value="Dashboard">Dashboard</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Startup Screen (secondary)</Label>
+                      <Select
+                        value={general.startupScreen2}
+                        onValueChange={(v) =>
+                          setGeneral((g) => ({ ...g, startupScreen2: v }))
                         }
                       >
                         <SelectTrigger>
@@ -271,66 +295,46 @@ export default function Settings() {
                       </Select>
                     </div>
                   </div>
-                  <div className="sm:w-48">
-                    <Label>Startup Screen (secondary)</Label>
-                    <Select
-                      value={general.startupScreen2}
-                      onValueChange={(v) => setGeneral((g) => ({ ...g, startupScreen2: v }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Quantum HUD">Quantum HUD</SelectItem>
-                        <SelectItem value="Dashboard">Dashboard</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
                 </CardContent>
-              </CollapsibleContent>
             </Card>
-          </Collapsible>
 
           {/* Safety */}
-          <Collapsible open={safetyOpen} onOpenChange={setSafetyOpen}>
-            <Card className="mb-6">
-              <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0">
-                <CollapsibleTrigger className="flex items-center gap-2 cursor-pointer">
-                  <ChevronDown
-                    className={cn("h-4 w-4 transition-transform", safetyOpen && "rotate-180")}
-                  />
-                  <CardTitle className="text-base">Safety</CardTitle>
-                </CollapsibleTrigger>
+            <Card className="dashboard-panel h-full">
+              <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0 min-h-[60px]">
+                <CardTitle className="text-base">Safety</CardTitle>
                 <Button variant="ghost" size="sm">
                   Restore defaults
                 </Button>
               </CardHeader>
-              <CollapsibleContent>
-                <CardContent className="pt-0 px-4 pb-4 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="safety-confirm">Enable safety confirmations</Label>
+              <hr className="mb-3" />
+              <CardContent className="pt-0 px-4 pb-4 space-y-3">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="space-y-0.5 min-w-0 flex-1 pr-2">
+                      <Label htmlFor="safety-confirm">
+                        Enable safety confirmations
+                      </Label>
                       <p className="text-xs text-muted-foreground">
-                        Confirmations for Auto Control ON, PRC ON, Mode change, and Import settings.
+                        Confirmations for Auto Control ON, PRC ON, Mode change,
+                        and Import settings.
                       </p>
                     </div>
                     <Switch
                       id="safety-confirm"
                       checked={safetyConfirmations}
                       onCheckedChange={setSafetyConfirmations}
+                      className="shrink-0"
                     />
                   </div>
                 </CardContent>
-              </CollapsibleContent>
             </Card>
-          </Collapsible>
+          </div>
 
           {/* Category cards grid */}
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {CATEGORY_CARDS.map((cat) => (
               <Card
                 key={cat.id}
-                className="cursor-pointer transition-colors hover:bg-accent/30 border-border/80"
+                className="dashboard-panel cursor-pointer border-border/80"
                 onClick={() => setActiveSection(cat.id)}
               >
                 <CardContent className="p-4 flex items-start gap-3">
@@ -343,7 +347,9 @@ export default function Settings() {
                   </button>
                   <div className="min-w-0 flex-1">
                     <h3 className="font-medium text-sm">{cat.title}</h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">{cat.description}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {cat.description}
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -351,12 +357,6 @@ export default function Settings() {
           </div>
         </main>
       </div>
-
-      {/* Footer */}
-      <footer className="border-t border-border bg-warning/10 px-4 py-2 flex items-center gap-2 text-sm text-warning">
-        <span className="inline-block w-4 h-4 rounded-full bg-warning/80 shrink-0" aria-hidden />
-        Apply & Restart — Restart required to apply certain changes
-      </footer>
     </div>
   );
 }
