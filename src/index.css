@@ -167,6 +167,13 @@
     min-height: 100%;
   }
 
+  /* Form inputs: match select/dark theme (override browser defaults) */
+  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]),
+  textarea {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
   /* Tabular numbers for data displays */
   .tabular-nums {
     font-variant-numeric: tabular-nums;

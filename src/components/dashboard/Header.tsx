@@ -365,18 +365,6 @@ export function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem
-                onSelect={() => navigate("/mud-properties")}
-                className="cursor-pointer"
-              >
-                Mud Properties
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={() => navigate("/settings")}
-                className="cursor-pointer"
-              >
-                Settings
-              </DropdownMenuItem>
-              <DropdownMenuItem
                 onSelect={() => navigate("/profile")}
                 className="cursor-pointer"
               >

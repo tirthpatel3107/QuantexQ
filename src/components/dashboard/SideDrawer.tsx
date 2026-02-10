@@ -45,8 +45,8 @@ const menuSections = [
     label: "Configuration",
     icon: Settings,
     items: [
-      { label: "Mud Properties", to: "/mud-properties", icon: Droplets },
       { label: "Settings", to: "/settings", icon: Cog },
+      { label: "Mud Properties", to: "/mud-properties", icon: Droplets },
       { label: "Network", to: "#", icon: Network },
       { label: "Valve Config", to: "#", icon: Sliders },
     ],

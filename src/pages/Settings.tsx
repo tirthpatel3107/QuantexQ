@@ -14,14 +14,17 @@ import {
   Search,
   Save,
   RotateCcw,
+  Undo2,
   Download,
+  Upload,
   MoreHorizontal,
 } from "lucide-react";
 import { Header } from "@/components/dashboard/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PanelCard } from "@/components/dashboard/PanelCard";
+import { CategoryCard } from "@/components/dashboard/CategoryCard";
 import {
   Select,
   SelectContent,
@@ -30,6 +33,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
@@ -114,28 +122,30 @@ export default function Settings() {
         {/* Left sidebar: fixed so it doesn't scroll; only inner content scrolls */}
         <div className="hidden lg:block fixed left-0 top-14 bottom-0 z-10 w-[16rem] p-4">
           <aside className="h-full max-h-[calc(100vh-3.5rem)] w-56 border border-border rounded-lg bg-card/50 shadow-sm flex flex-col overflow-hidden">
-          <ScrollArea className="flex-1 min-h-0">
-            <nav className="py-4 px-3 space-y-0.5">
-              {SETTINGS_NAV.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveSection(item.id)}
-                  className={cn(
-                    "w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                    activeSection === item.id
-                      ? "bg-primary/15 text-primary"
-                      : "text-muted-foreground hover:bg-accent hover:text-foreground",
-                  )}
-                >
-                  <item.icon className="h-4 w-4 shrink-0" />
-                  {item.label}
-                </button>
-              ))}
-            </nav>
-            <div className="px-3 py-4 mt-4 border-t border-border text-[10px] text-muted-foreground">
-              Modified by adm.tirth | 06 Feb 2026 | 12:21
+            <ScrollArea className="flex-1 min-h-0">
+              <nav className="py-4 px-3 space-y-0.5">
+                {SETTINGS_NAV.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveSection(item.id)}
+                    className={cn(
+                      "w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                      activeSection === item.id
+                        ? "bg-primary/15 text-primary"
+                        : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                    )}
+                  >
+                    <item.icon className="h-4 w-4 shrink-0" />
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+            </ScrollArea>
+            <div className="shrink-0 px-3 pb-3 pt-2 border-t border-border">
+              <p className="text-[11px] text-muted-foreground">
+                Modified by adm.tirth | 06 Feb 2026 | 12:21
+              </p>
             </div>
-          </ScrollArea>
           </aside>
         </div>
 
@@ -173,48 +183,38 @@ export default function Settings() {
             </div>
           </div>
 
-        {/* Main content */}
-        <main className="flex-1 min-w-0 py-4 overflow-auto">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-            <div className="relative min-w-[400px] max-w-xl w-full sm:w-auto">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search settings..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 focus-visible:ring-0 focus-visible:ring-offset-0"
-              />
+          {/* Main content */}
+          <main className="flex-1 min-w-0 py-4 overflow-auto">
+            <div className="w-full flex flex-wrap items-center justify-between gap-4 mb-4 shrink-0">
+              <div className="relative flex-1 min-w-[200px] max-w-xl">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search settings..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-9 focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
+                />
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Button variant="outline" size="sm">
+                  <Save className="h-4 w-4" />
+                  Save
+                </Button>
+                <Button variant="outline" size="sm">
+                  <RotateCcw className="h-4 w-4" />
+                  Discard
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Upload className="h-4 w-4" />
+                  Import
+                </Button>
+              </div>
             </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <Button variant="outline" size="sm">
-                <Save className="h-4 w-4" />
-                Save
-              </Button>
-              <Button variant="outline" size="sm">
-                <RotateCcw className="h-4 w-4" />
-                Discard
-              </Button>
-              <Button variant="outline" size="sm">
-                Import
-              </Button>
-              <Button variant="ghost" size="sm">
-                <MoreHorizontal className="h-4 w-4" />
-                Restore defaults
-              </Button>
-            </div>
-          </div>
 
-          {/* Project / Well Context + Safety side by side */}
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 mb-4">
-          <Card className="dashboard-panel h-full min-w-0">
-              <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0 min-h-[60px]">
-                <CardTitle className="text-base">
-                  Project / Well Context
-                </CardTitle>
-              </CardHeader>
-              <hr className="mb-3" />
-              <CardContent className="pt-0 px-4 pb-4 space-y-3">
-                  <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
+            {/* Project / Well Context + Safety side by side */}
+            <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 mb-4">
+              <PanelCard title="Project / Well Context">
+                <div className="grid gap-5 grid-cols-1 sm:grid-cols-3">
                     <div className="space-y-2">
                       <Label>Default Well Name</Label>
                       <Input
@@ -261,7 +261,7 @@ export default function Settings() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 ">
                       <Label>Startup Screen</Label>
                       <Select
                         value={general.startupScreen1}
@@ -296,26 +296,33 @@ export default function Settings() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Quantum HUD">Quantum HUD</SelectItem>
+                          <SelectItem value="Quantum HUD">
+                            Quantum HUD
+                          </SelectItem>
                           <SelectItem value="Dashboard">Dashboard</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
-                </CardContent>
-            </Card>
+              </PanelCard>
 
-          {/* Safety */}
-            <Card className="dashboard-panel h-full">
-              <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0 min-h-[60px]">
-                <CardTitle className="text-base">Safety</CardTitle>
-                <Button variant="ghost" size="sm">
-                  Restore defaults
-                </Button>
-              </CardHeader>
-              <hr className="mb-3" />
-              <CardContent className="pt-0 px-4 pb-4 space-y-3">
-                  <div className="flex items-center justify-between gap-4">
+              {/* Safety */}
+              <PanelCard
+                title="Safety"
+                headerAction={
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <Undo2 className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Restore defaults</p>
+                    </TooltipContent>
+                  </Tooltip>
+                }
+              >
+                <div className="flex items-center justify-between gap-4">
                     <div className="space-y-0.5 min-w-0 flex-1 pr-2">
                       <Label htmlFor="safety-confirm">
                         Enable safety confirmations
@@ -332,36 +339,22 @@ export default function Settings() {
                       className="shrink-0"
                     />
                   </div>
-                </CardContent>
-            </Card>
-          </div>
+              </PanelCard>
+            </div>
 
-          {/* Category cards grid */}
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {CATEGORY_CARDS.map((cat) => {
-              const Icon = cat.icon;
-              return (
-              <Card
-                key={cat.id}
-                className="dashboard-panel cursor-pointer border-border/80"
-                onClick={() => setActiveSection(cat.id)}
-              >
-                <CardContent className="p-4 flex items-start gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-medium text-sm">{cat.title}</h3>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {cat.description}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-            })}
-          </div>
-        </main>
+            {/* Category cards grid */}
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 items-start">
+              {CATEGORY_CARDS.map((cat) => (
+                <CategoryCard
+                  key={cat.id}
+                  title={cat.title}
+                  description={cat.description}
+                  icon={cat.icon}
+                  onClick={() => setActiveSection(cat.id)}
+                />
+              ))}
+            </div>
+          </main>
         </div>
       </div>
     </div>

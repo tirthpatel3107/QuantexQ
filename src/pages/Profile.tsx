@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Header } from "@/components/dashboard/Header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PanelCard } from "@/components/dashboard/PanelCard";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -167,158 +168,163 @@ const Profile = () => {
 
           {/* Grids */}
           <div className="grid gap-4 lg:grid-cols-3">
-            <Card className="border-border/60 bg-card/70 backdrop-blur">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-sm">
+            <PanelCard
+              className="border-border/60 bg-card/70 backdrop-blur"
+              title={
+                <>
                   <UserRound className="h-4 w-4 text-primary" />
                   Account
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm text-muted-foreground">
-                <div className="flex items-center justify-between">
-                  <span className="text-foreground">Email</span>
-                  <span>operator@quantexq.com</span>
-                </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                  <span className="text-foreground">Role</span>
-                  <span>Monitoring & Control</span>
-                </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                  <span className="text-foreground">Access</span>
-                  <span>Tier 2 (write)</span>
-                </div>
-              </CardContent>
-            </Card>
+                </>
+              }
+              contentClassName="space-y-4 text-sm text-muted-foreground"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-foreground">Email</span>
+                <span>operator@quantexq.com</span>
+              </div>
+              <Separator />
+              <div className="flex items-center justify-between">
+                <span className="text-foreground">Role</span>
+                <span>Monitoring & Control</span>
+              </div>
+              <Separator />
+              <div className="flex items-center justify-between">
+                <span className="text-foreground">Access</span>
+                <span>Tier 2 (write)</span>
+              </div>
+            </PanelCard>
 
-            <Card className="border-border/60 bg-card/70 backdrop-blur">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-sm">
+            <PanelCard
+              className="border-border/60 bg-card/70 backdrop-blur"
+              title={
+                <>
                   <MoonStar className="h-4 w-4 text-primary" />
                   Preferences
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm text-muted-foreground">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <span className="text-foreground">Theme</span>
-                    <p className="text-xs text-muted-foreground">{theme === "dark" ? "Dark mode active" : "Light mode active"}</p>
-                  </div>
-                  <Switch
-                    checked={theme === "dark"}
-                    onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
-                  />
+                </>
+              }
+              contentClassName="space-y-4 text-sm text-muted-foreground"
+            >
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <span className="text-foreground">Theme</span>
+                  <p className="text-xs text-muted-foreground">{theme === "dark" ? "Dark mode active" : "Light mode active"}</p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <span className="text-foreground">Alerts</span>
-                    <p className="text-xs text-muted-foreground">Critical + Warning</p>
-                  </div>
-                  <Switch
-                    checked={prefs.alerts}
-                    onCheckedChange={(checked) => setPrefs((p) => ({ ...p, alerts: checked }))}
-                  />
+                <Switch
+                  checked={theme === "dark"}
+                  onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <span className="text-foreground">Alerts</span>
+                  <p className="text-xs text-muted-foreground">Critical + Warning</p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <span className="text-foreground">Notifications</span>
-                    <p className="text-xs text-muted-foreground">In-app + Email</p>
-                  </div>
-                  <Switch
-                    checked={prefs.notifications}
-                    onCheckedChange={(checked) => setPrefs((p) => ({ ...p, notifications: checked }))}
-                  />
+                <Switch
+                  checked={prefs.alerts}
+                  onCheckedChange={(checked) => setPrefs((p) => ({ ...p, alerts: checked }))}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <span className="text-foreground">Notifications</span>
+                  <p className="text-xs text-muted-foreground">In-app + Email</p>
                 </div>
-              </CardContent>
-            </Card>
+                <Switch
+                  checked={prefs.notifications}
+                  onCheckedChange={(checked) => setPrefs((p) => ({ ...p, notifications: checked }))}
+                />
+              </div>
+            </PanelCard>
 
-            <Card className="border-border/60 bg-card/70 backdrop-blur">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-sm">
+            <PanelCard
+              className="border-border/60 bg-card/70 backdrop-blur"
+              title={
+                <>
                   <BellRing className="h-4 w-4 text-primary" />
                   Alerts & Coverage
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm text-muted-foreground">
-                <div className="flex items-center justify-between">
-                  <span className="text-foreground">Live coverage</span>
-                  <Badge variant="outline">24/7</Badge>
+                </>
+              }
+              contentClassName="space-y-3 text-sm text-muted-foreground"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-foreground">Live coverage</span>
+                <Badge variant="outline">24/7</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-foreground">SLA</span>
+                <span>3 min response</span>
+              </div>
+              <Separator />
+              <div className="space-y-2">
+                <p className="text-foreground text-sm">Recent flags</p>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <Badge variant="secondary">SPP drift +1.8%</Badge>
+                  <Badge variant="secondary">Choke variance</Badge>
+                  <Badge variant="secondary">Density stable</Badge>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-foreground">SLA</span>
-                  <span>3 min response</span>
-                </div>
-                <Separator />
-                <div className="space-y-2">
-                  <p className="text-foreground text-sm">Recent flags</p>
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <Badge variant="secondary">SPP drift +1.8%</Badge>
-                    <Badge variant="secondary">Choke variance</Badge>
-                    <Badge variant="secondary">Density stable</Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+            </PanelCard>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
-            <Card className="border-border/60 bg-card/70 backdrop-blur">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-sm">
+            <PanelCard
+              className="border-border/60 bg-card/70 backdrop-blur"
+              title={
+                <>
                   <Globe2 className="h-4 w-4 text-primary" />
                   Current Session
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm text-muted-foreground">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-foreground">
-                    <Wifi className="h-4 w-4 text-primary" />
-                    <span>Connected · Secure</span>
-                  </div>
-                  <Badge variant="outline">VPN</Badge>
+                </>
+              }
+              contentClassName="space-y-3 text-sm text-muted-foreground"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-foreground">
+                  <Wifi className="h-4 w-4 text-primary" />
+                  <span>Connected · Secure</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-primary" />
-                  <span>Rig Control Room · DW-0347</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-primary" />
-                  <span>operator@quantexq.com</span>
-                </div>
-              </CardContent>
-            </Card>
+                <Badge variant="outline">VPN</Badge>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-primary" />
+                <span>Rig Control Room · DW-0347</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-primary" />
+                <span>operator@quantexq.com</span>
+              </div>
+            </PanelCard>
 
-            <Card className="border-border/60 bg-card/70 backdrop-blur">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-sm">
+            <PanelCard
+              className="border-border/60 bg-card/70 backdrop-blur"
+              title={
+                <>
                   <Smartphone className="h-4 w-4 text-primary" />
                   Sessions & Devices
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <ScrollArea className="max-h-[260px]">
-                  <div className="divide-y divide-border/50">
-                    {sessions.map((session) => (
-                      <div key={session.device} className="px-4 py-3 flex items-center justify-between text-sm">
-                        <div className="space-y-0.5">
-                          <div className="text-foreground">{session.device}</div>
-                          <div className="text-xs text-muted-foreground flex items-center gap-1">
-                            <MapPin className="h-3 w-3" /> {session.location}
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <Badge variant={session.status === "Active" ? "default" : "outline"}>
-                            {session.status}
-                          </Badge>
-                          <div className="text-xs text-muted-foreground">{session.lastSeen}</div>
+                </>
+              }
+              contentClassName="p-0"
+            >
+              <ScrollArea className="max-h-[260px]">
+                <div className="divide-y divide-border/50">
+                  {sessions.map((session) => (
+                    <div key={session.device} className="py-3 flex items-center justify-between text-sm">
+                      <div className="space-y-0.5">
+                        <div className="text-foreground">{session.device}</div>
+                        <div className="text-xs text-muted-foreground flex items-center gap-1">
+                          <MapPin className="h-3 w-3" /> {session.location}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
+                      <div className="text-right">
+                        <Badge variant={session.status === "Active" ? "default" : "outline"}>
+                          {session.status}
+                        </Badge>
+                        <div className="text-xs text-muted-foreground">{session.lastSeen}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </PanelCard>
           </div>
         </div>
       </main>
