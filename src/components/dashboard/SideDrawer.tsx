@@ -10,6 +10,8 @@ import {
   LayoutDashboard,
   BarChart3,
   X,
+  Droplets,
+  Cog,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -43,7 +45,8 @@ const menuSections = [
     label: "Configuration",
     icon: Settings,
     items: [
-      { label: "Settings", to: "/profile", icon: Settings },
+      { label: "Mud Properties", to: "/mud-properties", icon: Droplets },
+      { label: "Settings", to: "/settings", icon: Cog },
       { label: "Network", to: "#", icon: Network },
       { label: "Valve Config", to: "#", icon: Sliders },
     ],
@@ -62,7 +65,7 @@ const menuSections = [
 export const SideDrawer = memo(function SideDrawer({ open, onOpenChange }: SideDrawerProps) {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     monitoring: true,
-    configuration: false,
+    configuration: true,
     equipment: false,
   });
 
