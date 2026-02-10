@@ -16,16 +16,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import type { VerticalChartMetric } from "@/types/chart";
 
-export interface VerticalChartMetric {
-  label: string;
-  value: string;
-  unit?: string;
-  trend?: "up" | "down" | "stable";
-  status?: "normal" | "warning" | "critical";
-  dataKey?: string;
-  color?: string;
-}
+export type { VerticalChartMetric };
 
 interface VerticalChartCardProps {
   title: string;

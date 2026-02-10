@@ -11,15 +11,12 @@ import {
   Monitor,
   Users,
   Info,
-  Search,
   Save,
   RotateCcw,
-  Undo2,
   Download,
   Upload,
-  MoreHorizontal,
 } from "lucide-react";
-import { Header } from "@/components/dashboard/Header";
+import { PageLayout, SidebarLayout, PageHeaderBar, SearchInput, RestoreDefaultsButton } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,12 +30,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 const SETTINGS_NAV = [
@@ -102,6 +93,8 @@ const CATEGORY_CARDS = [
   },
 ];
 
+const SIDEBAR_FOOTER = "Modified by adm.tirth | 06 Feb 2026 | 12:21";
+
 export default function Settings() {
   const [activeSection, setActiveSection] = useState("general");
   const [search, setSearch] = useState("");
@@ -114,60 +107,64 @@ export default function Settings() {
   });
   const [safetyConfirmations, setSafetyConfirmations] = useState(true);
 
+  const headerActions = (
+    <>
+      <Button variant="outline" size="sm">
+        <Save className="h-4 w-4" />
+        Save
+      </Button>
+      <Button variant="outline" size="sm">
+        <RotateCcw className="h-4 w-4" />
+        Discard
+      </Button>
+      <Button variant="outline" size="sm">
+        <Download className="h-4 w-4" />
+        Export
+      </Button>
+    </>
+  );
+
+  const sidebarNav = (
+    <nav className="py-4 px-3 space-y-0.5">
+      {SETTINGS_NAV.map((item) => (
+        <button
+          key={item.id}
+          onClick={() => setActiveSection(item.id)}
+          className={cn(
+            "w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+            activeSection === item.id
+              ? "bg-primary/15 text-primary"
+              : "text-muted-foreground hover:bg-accent hover:text-foreground"
+          )}
+        >
+          <item.icon className="h-4 w-4 shrink-0" />
+          {item.label}
+        </button>
+      ))}
+    </nav>
+  );
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Header />
+    <PageLayout>
+      <SidebarLayout
+        sidebar={sidebarNav}
+        sidebarFooter={<p className="text-[11px] text-muted-foreground">{SIDEBAR_FOOTER}</p>}
+      >
+        <PageHeaderBar
+          icon={<SettingsIcon className="h-5 w-5 text-primary-foreground" />}
+          title="Setting"
+          metadata="Active Profile: Rig-01 / NFQ-21-6A Admin"
+          actions={headerActions}
+        />
 
-      <div className="flex flex-1 pt-14">
-        {/* Left sidebar: fixed so it doesn't scroll; only inner content scrolls */}
-        <div className="hidden lg:block fixed left-0 top-14 bottom-0 z-10 w-[16rem] p-4">
-          <aside className="h-full max-h-[calc(100vh-3.5rem)] w-56 border border-border rounded-lg bg-card/50 shadow-sm flex flex-col overflow-hidden">
-            <ScrollArea className="flex-1 min-h-0">
-              <nav className="py-4 px-3 space-y-0.5">
-                {SETTINGS_NAV.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveSection(item.id)}
-                    className={cn(
-                      "w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                      activeSection === item.id
-                        ? "bg-primary/15 text-primary"
-                        : "text-muted-foreground hover:bg-accent hover:text-foreground",
-                    )}
-                  >
-                    <item.icon className="h-4 w-4 shrink-0" />
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
-            </ScrollArea>
-            <div className="shrink-0 px-3 pb-3 pt-2 border-t border-border">
-              <p className="text-[11px] text-muted-foreground">
-                Modified by adm.tirth | 06 Feb 2026 | 12:21
-              </p>
-            </div>
-          </aside>
-        </div>
-
-        {/* Right side: margin so content is not under fixed sidebar; Settings header + main content */}
-        <div className="flex-1 min-w-0 flex flex-col min-h-0 p-4 pt-4 lg:ml-[16rem]">
-          {/* Settings header (normal page flow) */}
-          <div className="shrink-0 border-b border-border bg-card/95 backdrop-blur px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-info flex items-center justify-center shrink-0">
-                  <SettingsIcon className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <h1 className="text-base font-bold tracking-tight">Setting</h1>
-              </div>
-              <span className="hidden sm:inline text-sm text-muted-foreground">
-                |
-              </span>
-              <span className="text-sm text-muted-foreground">
-                Active Profile: Rig-01 / NFQ-21-6A Admin
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
+        <main className="flex-1 min-w-0 py-4 overflow-auto">
+          <div className="w-full flex flex-wrap items-center justify-between gap-4 mb-4 shrink-0">
+            <SearchInput
+              placeholder="Search settings..."
+              value={search}
+              onChange={setSearch}
+            />
+            <div className="flex items-center gap-2 flex-shrink-0">
               <Button variant="outline" size="sm">
                 <Save className="h-4 w-4" />
                 Save
@@ -177,39 +174,11 @@ export default function Settings() {
                 Discard
               </Button>
               <Button variant="outline" size="sm">
-                <Download className="h-4 w-4" />
-                Export
+                <Upload className="h-4 w-4" />
+                Import
               </Button>
             </div>
           </div>
-
-          {/* Main content */}
-          <main className="flex-1 min-w-0 py-4 overflow-auto">
-            <div className="w-full flex flex-wrap items-center justify-between gap-4 mb-4 shrink-0">
-              <div className="relative flex-1 min-w-[200px] max-w-xl">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search settings..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
-                />
-              </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <Button variant="outline" size="sm">
-                  <Save className="h-4 w-4" />
-                  Save
-                </Button>
-                <Button variant="outline" size="sm">
-                  <RotateCcw className="h-4 w-4" />
-                  Discard
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Upload className="h-4 w-4" />
-                  Import
-                </Button>
-              </div>
-            </div>
 
             {/* Project / Well Context + Safety side by side */}
             <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 mb-4">
@@ -309,18 +278,7 @@ export default function Settings() {
               {/* Safety */}
               <PanelCard
                 title="Safety"
-                headerAction={
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="ghost" size="sm">
-                        <Undo2 className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Restore defaults</p>
-                    </TooltipContent>
-                  </Tooltip>
-                }
+                headerAction={<RestoreDefaultsButton size="sm" />}
               >
                 <div className="flex items-center justify-between gap-4">
                     <div className="space-y-0.5 min-w-0 flex-1 pr-2">
@@ -355,8 +313,7 @@ export default function Settings() {
               ))}
             </div>
           </main>
-        </div>
-      </div>
-    </div>
+        </SidebarLayout>
+    </PageLayout>
   );
 }

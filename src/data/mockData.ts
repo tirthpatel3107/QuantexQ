@@ -1,8 +1,10 @@
-// Generate deterministic, realistic-looking chart data with unique shapes per series
-// while keeping point counts stable for layout/skeleton correctness.
+/**
+ * Mock chart data: deterministic series generation and sliding-window updates.
+ * Used by useSimulation for dashboard charts.
+ */
 const mulberry32 = (seed: number) => {
+  seed |= 0;
   return () => {
-    seed |= 0;
     seed = (seed + 0x6d2b79f5) | 0;
     let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
     t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
@@ -13,7 +15,10 @@ const mulberry32 = (seed: number) => {
 export type ChartDataPoint = Record<string, string | number>;
 export type ChartDataset = ChartDataPoint[];
 
-const seriesConfigs: Record<string, { key: string; baseValue: number; variance: number; patternSeed: number }[]> = {
+type SeriesConfigItem = { key: string; baseValue: number; variance: number; patternSeed: number };
+
+/** Single source of truth for chart series; used for initial data and append. */
+const seriesConfigs: Record<string, SeriesConfigItem[]> = {
   flow: [
     { key: "in", baseValue: 220, variance: 40, patternSeed: 1 },
     { key: "out", baseValue: 318, variance: 60, patternSeed: 2 },
@@ -43,7 +48,7 @@ const seriesConfigs: Record<string, { key: string; baseValue: number; variance: 
 };
 
 const generateSinglePoint = (
-  seriesConfig: { key: string; baseValue: number; variance: number; patternSeed: number }[],
+  seriesConfig: SeriesConfigItem[],
   index: number,
   useNow = false
 ): ChartDataPoint => {
@@ -73,9 +78,8 @@ const generateSinglePoint = (
   return point;
 };
 
-// Generate multi-series data
 const generateMultiSeriesChartData = (
-  config: { key: string; baseValue: number; variance: number; patternSeed: number }[],
+  config: SeriesConfigItem[],
   points = 50
 ): ChartDataset => {
   const data: ChartDataset = [];
@@ -85,52 +89,25 @@ const generateMultiSeriesChartData = (
   return data;
 };
 
-/** Append one new data point and keep last 50 points (sliding window) */
+/** Append one new data point and keep last 50 points (sliding window). */
 export function appendChartPoint(
   data: ChartDataset,
   configKey: keyof typeof seriesConfigs
 ): ChartDataset {
   const config = seriesConfigs[configKey];
   if (!config || data.length === 0) return data;
-
-  const newPoint = generateSinglePoint(config, 0, true); // Use current time for new point
+  const newPoint = generateSinglePoint(config, 0, true);
   const next = [...data.slice(1), newPoint];
   return next.length > 50 ? next.slice(-50) : next;
 }
 
-// Data exports with specific series keys matching the dashboard requirements
-export const flowData = generateMultiSeriesChartData([
-  { key: "in", baseValue: 220, variance: 40, patternSeed: 1 },
-  { key: "out", baseValue: 318, variance: 60, patternSeed: 2 },
-  { key: "mud", baseValue: 50, variance: 10, patternSeed: 3 },
-]);
-
-export const densityData = generateMultiSeriesChartData([
-  { key: "in", baseValue: 8.6, variance: 0.5, patternSeed: 4 },
-  { key: "out", baseValue: 8.4, variance: 0.5, patternSeed: 5 },
-]);
-
-// For Surface & Stand Pipe, we use "sp" and "sbp"/"spp" keys
-export const surfacePressureData = generateMultiSeriesChartData([
-  { key: "sp", baseValue: 1247.9, variance: 100, patternSeed: 6 },
-  { key: "sbp", baseValue: 227.0, variance: 30, patternSeed: 7 },
-]);
-
-export const standpipePressureData = generateMultiSeriesChartData([
-  { key: "sp", baseValue: 3483.0, variance: 150, patternSeed: 8 },
-  { key: "spp", baseValue: 3947.9, variance: 180, patternSeed: 9 },
-]);
-
-export const bottomHolePressureData = generateMultiSeriesChartData([
-  { key: "sp", baseValue: 9627.0, variance: 200, patternSeed: 10 },
-  { key: "bhp", baseValue: 9718.4, variance: 200, patternSeed: 11 },
-]);
-
-export const chokeChartData = generateMultiSeriesChartData([
-  { key: "choke_a", baseValue: 10.1, variance: 2, patternSeed: 12 },
-  { key: "choke_b", baseValue: -1.1, variance: 0.5, patternSeed: 13 },
-  { key: "set_point", baseValue: 12.5, variance: 0.1, patternSeed: 14 },
-]);
+/** Initial chart datasets derived from seriesConfigs (no duplicate config). */
+export const flowData = generateMultiSeriesChartData(seriesConfigs.flow);
+export const densityData = generateMultiSeriesChartData(seriesConfigs.density);
+export const surfacePressureData = generateMultiSeriesChartData(seriesConfigs.surfacePressure);
+export const standpipePressureData = generateMultiSeriesChartData(seriesConfigs.standpipePressure);
+export const bottomHolePressureData = generateMultiSeriesChartData(seriesConfigs.bottomHolePressure);
+export const chokeChartData = generateMultiSeriesChartData(seriesConfigs.choke);
 
 export const notifications = [
   {

@@ -8,20 +8,24 @@ import {
   Settings,
   FileBarChart,
   Gauge,
-  Search,
   Save,
   RotateCcw,
-  Undo2,
   Upload,
   Download,
-  MoreHorizontal,
   Lock,
   Check,
   FolderOpen,
   FolderPlus,
   ExternalLink,
 } from "lucide-react";
-import { Header } from "@/components/dashboard/Header";
+import {
+  PageLayout,
+  SidebarLayout,
+  PageHeaderBar,
+  SearchInput,
+  RestoreDefaultsButton,
+  LabeledInputWithUnit,
+} from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,17 +39,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 const MUD_NAV = [
@@ -87,70 +81,73 @@ export default function MudProperties() {
     tempSensorOffset: "",
   });
 
+  const headerActions = (
+    <>
+      <Button variant="outline" size="sm" onClick={() => setDirty(false)}>
+        <Save className="h-4 w-4" />
+        Save
+      </Button>
+      <Button variant="outline" size="sm">
+        <RotateCcw className="h-4 w-4" />
+        Discard
+      </Button>
+      <Button variant="outline" size="sm">
+        <Upload className="h-4 w-4" />
+        Import
+      </Button>
+    </>
+  );
+
+  const sidebarNav = (
+    <nav className="py-4 px-3 space-y-0.5">
+      {MUD_NAV.map((item) => (
+        <button
+          key={item.id}
+          onClick={() => setActiveSection(item.id)}
+          className={cn(
+            "w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+            activeSection === item.id
+              ? "bg-primary/15 text-primary"
+              : "text-muted-foreground hover:bg-accent hover:text-foreground"
+          )}
+        >
+          <item.icon className="h-4 w-4 shrink-0" />
+          {item.label}
+        </button>
+      ))}
+    </nav>
+  );
+
+  const sidebarFooter = (
+    <p className="text-[11px] text-muted-foreground">
+      Modified by adm.tirth | 06 Feb 2026 | 12:21
+    </p>
+  );
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Header />
+    <PageLayout>
+      <SidebarLayout sidebar={sidebarNav} sidebarFooter={sidebarFooter}>
+        <PageHeaderBar
+          icon={<Gauge className="h-5 w-5 text-primary-foreground" />}
+          title="Mud Properties"
+          metadata={
+            <>
+              Active Well/Profile: NFQ-21-6A
+              <span className="hidden md:inline"> · Mud System: OBM</span>
+            </>
+          }
+          actions={headerActions}
+        />
 
-      <div className="flex flex-1 pt-14">
-        {/* Left sidebar: fixed, same style as Settings */}
-        <div className="hidden lg:block fixed left-0 top-14 bottom-0 z-10 w-[16rem] p-4">
-          <aside className="h-full max-h-[calc(100vh-3.5rem)] w-56 border border-border rounded-lg bg-card/50 shadow-sm flex flex-col overflow-hidden">
-            <ScrollArea className="flex-1 min-h-0">
-              <nav className="py-4 px-3 space-y-0.5">
-                {MUD_NAV.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveSection(item.id)}
-                    className={cn(
-                      "w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                      activeSection === item.id
-                        ? "bg-primary/15 text-primary"
-                        : "text-muted-foreground hover:bg-accent hover:text-foreground",
-                    )}
-                  >
-                    <item.icon className="h-4 w-4 shrink-0" />
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
-            </ScrollArea>
-            <div className="shrink-0 px-3 pb-3 pt-2 border-t border-border">
-              <p className="text-[11px] text-muted-foreground">
-                Modified by adm.tirth | 06 Feb 2026 | 12:21
-              </p>
-            </div>
-          </aside>
-        </div>
-
-        {/* Right side: margin for fixed sidebar; page header + main content */}
-        <div className="flex-1 min-w-0 flex flex-col min-h-0 p-4 pt-4 lg:ml-[16rem]">
-          {/* Page header bar (same style as Settings) */}
-          <div className="shrink-0 border-b border-border bg-card/95 backdrop-blur px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-info flex items-center justify-center shrink-0">
-                  <Gauge className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <h1 className="text-base font-bold tracking-tight">
-                  Mud Properties
-                </h1>
-              </div>
-              <span className="hidden sm:inline text-sm text-muted-foreground">
-                |
-              </span>
-              <span className="text-sm text-muted-foreground">
-                Active Well/Profile: NFQ-21-6A
-              </span>
-              <span className="hidden md:inline text-sm text-muted-foreground">
-                Mud System: OBM
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setDirty(false)}
-              >
+        <main className="flex-1 min-w-0 py-4 overflow-auto flex flex-col">
+          <div className="w-full flex flex-wrap items-center justify-between gap-4 mb-4 shrink-0">
+            <SearchInput
+              placeholder="Search Mud Properties..."
+              value={search}
+              onChange={setSearch}
+            />
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <Button variant="outline" size="sm">
                 <Save className="h-4 w-4" />
                 Save
               </Button>
@@ -159,48 +156,19 @@ export default function MudProperties() {
                 Discard
               </Button>
               <Button variant="outline" size="sm">
-                <Upload className="h-4 w-4" />
-                Import
+                <FolderOpen className="h-4 w-4" />
+                Load Preset
+              </Button>
+              <Button variant="outline" size="sm">
+                <FolderPlus className="h-4 w-4" />
+                Save Preset
+              </Button>
+              <Button variant="outline" size="sm">
+                <Download className="h-4 w-4" />
+                Export
               </Button>
             </div>
           </div>
-
-          {/* Main content */}
-          <main className="flex-1 min-w-0 py-4 overflow-auto flex flex-col">
-            {/* Full-width bar: search + actions */}
-            <div className="w-full flex flex-wrap items-center justify-between gap-4 mb-4 shrink-0">
-              <div className="relative flex-1 min-w-[200px] max-w-xl">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search Mud Properties..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
-                />
-              </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <Button variant="outline" size="sm">
-                  <Save className="h-4 w-4" />
-                  Save
-                </Button>
-                <Button variant="outline" size="sm">
-                  <RotateCcw className="h-4 w-4" />
-                  Discard
-                </Button>
-                <Button variant="outline" size="sm">
-                  <FolderOpen className="h-4 w-4" />
-                  Load Preset
-                </Button>
-                <Button variant="outline" size="sm">
-                  <FolderPlus className="h-4 w-4" />
-                  Save Preset
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Download className="h-4 w-4" />
-                  Export
-                </Button>
-              </div>
-            </div>
 
             <div className="flex flex-1 min-w-0 gap-4 overflow-auto">
               <div className="flex-1 min-w-0 space-y-4">
@@ -220,21 +188,7 @@ export default function MudProperties() {
                     >
                       {/* Fluid System - overview only */}
                       {activeSection === "overview" && (
-                        <PanelCard
-                          title="Fluid System"
-                          headerAction={
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                  <Undo2 className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Restore defaults</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          }
-                        >
+                        <PanelCard title="Fluid System" headerAction={<RestoreDefaultsButton />}>
                           <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 items-start">
                             <div className="space-y-2 min-w-0">
                               <Label className="h-5 flex items-center text-sm">
@@ -317,21 +271,7 @@ export default function MudProperties() {
                       {/* Rheology */}
                       {(activeSection === "overview" ||
                         activeSection === "rheology") && (
-                        <PanelCard
-                          title="Rheology"
-                          headerAction={
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                  <Undo2 className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Restore defaults</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          }
-                        >
+                        <PanelCard title="Rheology" headerAction={<RestoreDefaultsButton />}>
                           <div className="flex flex-row items-center justify-between gap-2 mb-5">
                             <Label
                               htmlFor="rheo-derive-viscometer"
@@ -441,21 +381,7 @@ export default function MudProperties() {
                       {/* Density & Solids */}
                       {(activeSection === "overview" ||
                         activeSection === "density") && (
-                        <PanelCard
-                          title="Density & Solids"
-                          headerAction={
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                  <Undo2 className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Restore defaults</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          }
-                        >
+                        <PanelCard title="Density & Solids" headerAction={<RestoreDefaultsButton />}>
                           <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 items-start">
                             <div className="space-y-2 min-w-0">
                               <Label className="h-5 flex items-center text-sm">
@@ -584,21 +510,7 @@ export default function MudProperties() {
                       {/* Temperature */}
                       {(activeSection === "overview" ||
                         activeSection === "temperature") && (
-                        <PanelCard
-                          title="Temperature"
-                          headerAction={
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                  <Undo2 className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Restore defaults</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          }
-                        >
+                        <PanelCard title="Temperature" headerAction={<RestoreDefaultsButton />}>
                           <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 items-start">
                             <div className="space-y-2 min-w-0">
                               <Label className="h-5 flex items-center text-sm">
@@ -666,18 +578,7 @@ export default function MudProperties() {
                     <div className="grid grid-cols-1 max-w-2xl gap-4 mb-4">
                       <PanelCard
                         title="Gas / Compressibility"
-                        headerAction={
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <Undo2 className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Restore defaults</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        }
+                        headerAction={<RestoreDefaultsButton />}
                       >
                         <div className="grid grid-cols-[140px_120px_auto] gap-3 items-center">
                           <Label className="text-xs text-muted-foreground text-left">
@@ -741,18 +642,7 @@ export default function MudProperties() {
                     <div className="grid grid-cols-1 max-w-2xl gap-4 mb-4">
                       <PanelCard
                         title="Calibration"
-                        headerAction={
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <Undo2 className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Restore defaults</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        }
+                        headerAction={<RestoreDefaultsButton />}
                       >
                         <div className="grid grid-cols-[140px_1fr] gap-3 items-center">
                           <Label className="text-xs text-muted-foreground text-left">
@@ -938,8 +828,7 @@ export default function MudProperties() {
               </aside>
             </div>
           </main>
-        </div>
-      </div>
-    </div>
+        </SidebarLayout>
+    </PageLayout>
   );
 }

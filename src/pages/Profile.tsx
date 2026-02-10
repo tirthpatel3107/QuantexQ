@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Header } from "@/components/dashboard/Header";
+import { PageLayout } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -50,8 +50,7 @@ const Profile = () => {
 
   if (showSkeleton) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex flex-col">
-        <Header />
+      <PageLayout>
         <main className="flex-1 px-6 py-20 pt-24">
           <div className="max-w-6xl mx-auto space-y-8">
             {/* Hero skeleton */}
@@ -117,14 +116,13 @@ const Profile = () => {
             </div>
           </div>
         </main>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <Header />
-      <main className="flex-1 px-6 py-20 pt-24">
+    <PageLayout>
+      <main className="flex-1 px-6 py-20 pt-24 text-foreground">
         <div className="max-w-6xl mx-auto space-y-8">
           {/* Hero */}
           <Card className="overflow-hidden border-border/60 bg-card/60 backdrop-blur">
@@ -345,7 +343,7 @@ const Profile = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </PageLayout>
   );
 };
 

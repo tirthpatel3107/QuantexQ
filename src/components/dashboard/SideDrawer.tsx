@@ -23,6 +23,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { memo, useState } from "react";
 import { cn } from "@/lib/utils";
+import { ROUTES } from "@/constants/routes";
 
 interface SideDrawerProps {
   open: boolean;
@@ -35,7 +36,7 @@ const menuSections = [
     label: "Monitoring",
     icon: LayoutDashboard,
     items: [
-      { label: "Dashboard", to: "/", icon: Gauge },
+      { label: "Dashboard", to: ROUTES.HOME, icon: Gauge },
       { label: "Well Info", to: "#", icon: Info },
       { label: "Charts & KPIs", to: "#", icon: BarChart3 },
     ],
@@ -45,8 +46,8 @@ const menuSections = [
     label: "Configuration",
     icon: Settings,
     items: [
-      { label: "Settings", to: "/settings", icon: Cog },
-      { label: "Mud Properties", to: "/mud-properties", icon: Droplets },
+      { label: "Settings", to: ROUTES.SETTINGS, icon: Cog },
+      { label: "Mud Properties", to: ROUTES.MUD_PROPERTIES, icon: Droplets },
       { label: "Network", to: "#", icon: Network },
       { label: "Valve Config", to: "#", icon: Sliders },
     ],

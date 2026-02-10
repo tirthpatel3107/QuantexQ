@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Bell, Gauge, Menu, Moon, Sun, Settings, Filter, Check, SlidersHorizontal, Square, Play } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants/routes";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { SideDrawer } from "@/components/dashboard/SideDrawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -98,7 +99,7 @@ export function Header() {
           <Menu className="h-5 w-5" />
         </button>
         <Link
-          to="/"
+          to={ROUTES.HOME}
           className="flex items-center gap-3 hover:text-foreground transition-colors min-w-0"
         >
           <div className="flex items-center gap-2">
@@ -365,13 +366,13 @@ export function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem
-                onSelect={() => navigate("/profile")}
+                onSelect={() => navigate(ROUTES.PROFILE)}
                 className="cursor-pointer"
               >
                 Profile
               </DropdownMenuItem>
               <DropdownMenuItem
-                onSelect={() => navigate("/")}
+                onSelect={() => navigate(ROUTES.HOME)}
                 className="cursor-pointer text-destructive"
               >
                 Logout

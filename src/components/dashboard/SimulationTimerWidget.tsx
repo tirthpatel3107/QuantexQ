@@ -13,11 +13,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-const STORAGE_KEY = "quantexq-simulation-timer-position";
+import { SIMULATION_TIMER_STORAGE_KEY } from "@/constants/config";
 
 function loadPosition(): { x: number; y: number } | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(SIMULATION_TIMER_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as { x: number; y: number };
     if (typeof parsed.x === "number" && typeof parsed.y === "number") return parsed;
@@ -29,7 +29,7 @@ function loadPosition(): { x: number; y: number } | null {
 
 function savePosition(x: number, y: number) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ x, y }));
+    localStorage.setItem(SIMULATION_TIMER_STORAGE_KEY, JSON.stringify({ x, y }));
   } catch {
     /* ignore */
   }
