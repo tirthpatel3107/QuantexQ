@@ -140,7 +140,7 @@ export default function Settings() {
         </div>
 
         {/* Right side: margin so content is not under fixed sidebar; Settings header + main content */}
-        <div className="flex-1 min-w-0 flex flex-col min-h-0 px-4 pt-4 lg:ml-[16rem]">
+        <div className="flex-1 min-w-0 flex flex-col min-h-0 p-4 pt-4 lg:ml-[16rem]">
           {/* Settings header (normal page flow) */}
           <div className="shrink-0 border-b border-border bg-card/95 backdrop-blur px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-3 min-w-0">
