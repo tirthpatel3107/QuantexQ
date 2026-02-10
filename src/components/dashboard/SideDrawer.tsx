@@ -47,8 +47,7 @@ const menuSections = [
     icon: Settings,
     items: [
       { label: "Settings", to: ROUTES.SETTINGS, icon: Cog },
-      // { label: "Mud Properties", to: ROUTES.MUD_PROPERTIES, icon: Droplets },
-      { label: "Mud Properties", to: ROUTES.SETTINGS, icon: Droplets },
+      { label: "Mud Properties", to: ROUTES.MUD_PROPERTIES, icon: Droplets },
       { label: "Network", to: "#", icon: Network },
       { label: "Valve Config", to: "#", icon: Sliders },
     ],
