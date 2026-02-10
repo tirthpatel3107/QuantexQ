@@ -271,183 +271,155 @@ export default function MudProperties() {
                 </Card>
               </Collapsible>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Rheology */}
-              <Collapsible open={sectionsOpen.rheology} onOpenChange={() => toggleSection("rheology")}>
-                <Card className="mb-3">
-                  <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0">
-                    <CollapsibleTrigger className="flex items-center gap-2 cursor-pointer">
-                      <ChevronDown
-                        className={cn("h-4 w-4 transition-transform", sectionsOpen.rheology && "rotate-180")}
-                      />
-                      <CardTitle className="text-base">Rheology</CardTitle>
-                    </CollapsibleTrigger>
-                    <Button variant="ghost" size="sm">
-                      Restore defaults
-                    </Button>
-                  </CardHeader>
-                  <CollapsibleContent>
-                    <CardContent className="pt-0 px-4 pb-4 space-y-3">
-                      <div className="space-y-2">
-                        <Label>Rheology model.</Label>
-                        <RadioGroup
-                          value={fluid.rheologySource}
-                          onValueChange={(v) => setFluid((f) => ({ ...f, rheologySource: v }))}
-                          className="flex flex-col gap-2"
-                        >
-                          <div className="flex items-center gap-2">
-                            <RadioGroupItem value="viscometer" id="rheo-visco" />
-                            <Label htmlFor="rheo-visco" className="font-normal">
-                              Derive from viscometer
-                            </Label>
-                          </div>
-                        </RadioGroup>
+              <Card className="mb-3 flex flex-col">
+                <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0">
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-base">Rheology</CardTitle>
+                  </div>
+                  <Button variant="ghost" size="sm">
+                    Restore defaults
+                  </Button>
+                </CardHeader>
+                <CardContent className="pt-4 px-4 pb-4 flex flex-col items-start gap-4">
+                  <div className="flex flex-col gap-2 w-full">
+                    <Label className="font-semibold text-xs tracking-tight">Rheology model.</Label>
+                    <RadioGroup
+                      value={fluid.rheologySource}
+                      onValueChange={(v) => setFluid((f) => ({ ...f, rheologySource: v }))}
+                      className="flex flex-col gap-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        <RadioGroupItem value="viscometer" id="rheo-visco" />
+                        <Label htmlFor="rheo-visco" className="font-normal text-[11px] italic text-muted-foreground">
+                          Derive from viscometer
+                        </Label>
                       </div>
-                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                        <div className="space-y-2">
-                          <Label>PV</Label>
-                          <div className="flex gap-1">
-                            <Input
-                              value={fluid.pv}
-                              onChange={(e) => setFluid((f) => ({ ...f, pv: e.target.value }))}
-                            />
-                            <span className="flex items-center text-sm text-muted-foreground">cP</span>
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <Label>YP</Label>
-                          <div className="flex gap-1">
-                            <Input
-                              value={fluid.yp}
-                              onChange={(e) => setFluid((f) => ({ ...f, yp: e.target.value }))}
-                            />
-                            <span className="flex items-center text-sm text-muted-foreground">lb/100ft²</span>
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Gel 10s</Label>
-                          <div className="flex gap-1">
-                            <Input
-                              value={fluid.gel10s}
-                              onChange={(e) => setFluid((f) => ({ ...f, gel10s: e.target.value }))}
-                            />
-                            <span className="flex items-center text-sm text-muted-foreground">lb/100ft²</span>
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Gel 10m</Label>
-                          <div className="flex gap-1">
-                            <Input
-                              value={fluid.gel10m}
-                              onChange={(e) => setFluid((f) => ({ ...f, gel10m: e.target.value }))}
-                            />
-                            <span className="flex items-center text-sm text-muted-foreground">lb/100ft²</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </CollapsibleContent>
-                </Card>
-              </Collapsible>
+                    </RadioGroup>
+                  </div>
+
+                  <div className="grid grid-cols-[80px_100px_auto] gap-x-6 gap-y-3 items-center">
+                    {/* PV Row */}
+                    <Label className="text-xs text-muted-foreground text-left">PV</Label>
+                    <Input
+                      value={fluid.pv}
+                      onChange={(e) => setFluid((f) => ({ ...f, pv: e.target.value }))}
+                      className="h-8 bg-accent/10 border-border/30 text-left text-xs"
+                    />
+                    <span className="text-[11px] text-muted-foreground">cP</span>
+
+                    {/* YP Row */}
+                    <Label className="text-xs text-muted-foreground text-left">YP</Label>
+                    <Input
+                      value={fluid.yp}
+                      onChange={(e) => setFluid((f) => ({ ...f, yp: e.target.value }))}
+                      className="h-8 bg-accent/10 border-border/30 text-left text-xs"
+                    />
+                    <span className="text-[11px] text-muted-foreground">lb/100ft²</span>
+
+                    {/* Gel 10s Row */}
+                    <Label className="text-xs text-muted-foreground text-left whitespace-nowrap">Gel 10s</Label>
+                    <Input
+                      value={fluid.gel10s}
+                      onChange={(e) => setFluid((f) => ({ ...f, gel10s: e.target.value }))}
+                      className="h-8 bg-accent/10 border-border/30 text-left text-xs"
+                    />
+                    <span className="text-[11px] text-muted-foreground">lb/100ft²</span>
+
+                    {/* Gel 10m Row */}
+                    <Label className="text-xs text-muted-foreground text-left whitespace-nowrap">Gel 10m</Label>
+                    <Input
+                      value={fluid.gel10m}
+                      onChange={(e) => setFluid((f) => ({ ...f, gel10m: e.target.value }))}
+                      className="h-8 bg-accent/10 border-border/30 text-left text-xs"
+                    />
+                    <span className="text-[11px] text-muted-foreground">lb/100ft²</span>
+                  </div>
+                </CardContent>
+              </Card>
 
               {/* Density & Solids */}
-              <Collapsible open={sectionsOpen.density} onOpenChange={() => toggleSection("density")}>
-                <Card className="mb-3">
-                  <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0">
-                    <CollapsibleTrigger className="flex items-center gap-2 cursor-pointer">
-                      <ChevronDown
-                        className={cn("h-4 w-4 transition-transform", sectionsOpen.density && "rotate-180")}
-                      />
-                      <CardTitle className="text-base">Density & Solids</CardTitle>
-                    </CollapsibleTrigger>
-                    <Button variant="ghost" size="sm">
-                      Restore defaults
-                    </Button>
-                  </CardHeader>
-                  <CollapsibleContent>
-                    <CardContent className="pt-0 px-4 pb-4 space-y-3">
-                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                        <div className="space-y-2">
-                          <Label className="flex items-center gap-1">
-                            MW In
-                            <Lock className="h-3 w-3 text-muted-foreground" />
-                          </Label>
-                          <div className="flex gap-1">
-                            <Input value={fluid.mwIn} placeholder="—" className="flex-1" />
-                            <span className="flex items-center text-sm text-muted-foreground">ppg/SG</span>
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <Label className="flex items-center gap-1">
-                            Oil/Water
-                            <Lock className="h-3 w-3 text-muted-foreground" />
-                          </Label>
-                          <Input value={fluid.oilWater} readOnly className="bg-muted/50" />
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Salinity</Label>
-                          <div className="flex gap-1">
-                            <Input
-                              value={fluid.salinity}
-                              onChange={(e) => setFluid((f) => ({ ...f, salinity: e.target.value }))}
-                            />
-                            <span className="flex items-center text-sm text-muted-foreground">ppk</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </CollapsibleContent>
-                </Card>
-              </Collapsible>
+              <Card className="mb-3 flex flex-col">
+                <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0">
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-base">Density & Solids</CardTitle>
+                  </div>
+                  <Button variant="ghost" size="sm">
+                    Restore defaults
+                  </Button>
+                </CardHeader>
+                <CardContent className="pt-4 px-4 pb-4">
+                  <div className="grid grid-cols-[80px_120px_auto] gap-x-4 gap-y-3 items-center">
+                    {/* MW In Row */}
+                    <Label className="flex items-center gap-1 text-xs text-muted-foreground text-left justify-start">
+                      MW In
+                      <Lock className="h-3 w-3" />
+                    </Label>
+                    <Input value={fluid.mwIn} placeholder="—" className="h-8 bg-accent/10 border-border/30 text-left text-xs" />
+                    <span className="text-[11px] text-muted-foreground">ppg/SG</span>
+
+                    {/* Oil/Water Row */}
+                    <Label className="flex items-center gap-1 text-xs text-muted-foreground text-left justify-start">
+                      Oil/Water
+                      <Lock className="h-3 w-3" />
+                    </Label>
+                    <Input value={fluid.oilWater} readOnly className="h-8 bg-muted/30 border-border/30 text-left text-xs" />
+                    <span className="text-[11px] text-muted-foreground invisible">-</span>
+
+                    {/* Salinity Row */}
+                    <Label className="text-xs text-muted-foreground text-left">Salinity</Label>
+                    <Input
+                      value={fluid.salinity}
+                      onChange={(e) => setFluid((f) => ({ ...f, salinity: e.target.value }))}
+                      className="h-8 bg-accent/10 border-border/30 text-left text-xs"
+                    />
+                    <span className="text-[11px] text-muted-foreground">ppk</span>
+                  </div>
+                </CardContent>
+              </Card>
 
               {/* Temperature */}
-              <Collapsible open={sectionsOpen.temperature} onOpenChange={() => toggleSection("temperature")}>
-                <Card className="mb-3">
-                  <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0">
-                    <CollapsibleTrigger className="flex items-center gap-2 cursor-pointer">
-                      <ChevronDown
-                        className={cn(
-                          "h-4 w-4 transition-transform",
-                          sectionsOpen.temperature && "rotate-180"
-                        )}
-                      />
-                      <CardTitle className="text-base">Temperature</CardTitle>
-                    </CollapsibleTrigger>
-                    <Button variant="ghost" size="sm">
-                      Restore defaults
-                    </Button>
-                  </CardHeader>
-                  <CollapsibleContent>
-                    <CardContent className="pt-0 px-4 pb-4 space-y-3">
-                      <div className="grid gap-3 sm:grid-cols-3">
-                        <div className="space-y-2">
-                          <Label>Surface temp</Label>
-                          <Input
-                            value={fluid.surfaceTemp}
-                            onChange={(e) => setFluid((f) => ({ ...f, surfaceTemp: e.target.value }))}
-                          />
-                          <span className="text-xs text-muted-foreground">°F</span>
-                        </div>
-                        <div className="space-y-2">
-                          <Label className="flex items-center gap-1">
-                            Bottomhole temp
-                            <Lock className="h-3 w-3 text-muted-foreground" />
-                          </Label>
-                          <Input value={fluid.bottomholeTemp} readOnly className="bg-muted/50" />
-                          <span className="text-xs text-muted-foreground">°F</span>
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Temperature gradient</Label>
-                          <Input
-                            value={fluid.tempGradient}
-                            onChange={(e) => setFluid((f) => ({ ...f, tempGradient: e.target.value }))}
-                          />
-                          <span className="text-xs text-muted-foreground">°F/100 ft</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </CollapsibleContent>
-                </Card>
-              </Collapsible>
+              <Card className="mb-3 flex flex-col">
+                <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0">
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-base">Temperature</CardTitle>
+                  </div>
+                  <Button variant="ghost" size="sm">
+                    Restore defaults
+                  </Button>
+                </CardHeader>
+                <CardContent className="pt-4 px-4 pb-4">
+                  <div className="grid grid-cols-[120px_100px_auto] gap-x-4 gap-y-3 items-center">
+                    {/* Surface Temp Row */}
+                    <Label className="text-xs text-muted-foreground text-left">Surface temp</Label>
+                    <Input
+                      value={fluid.surfaceTemp}
+                      onChange={(e) => setFluid((f) => ({ ...f, surfaceTemp: e.target.value }))}
+                      className="h-8 bg-accent/10 border-border/30 text-left text-xs"
+                    />
+                    <span className="text-[11px] text-muted-foreground">°F</span>
+
+                    {/* Bottomhole Temp Row */}
+                    <Label className="flex items-center gap-1 text-xs text-muted-foreground text-left justify-start">
+                      Bottomhole temp
+                      <Lock className="h-3 w-3" />
+                    </Label>
+                    <Input value={fluid.bottomholeTemp} readOnly className="h-8 bg-muted/30 border-border/30 text-left text-xs" />
+                    <span className="text-[11px] text-muted-foreground">°F</span>
+
+                    {/* Gradient Row */}
+                    <Label className="text-xs text-muted-foreground text-left">Temperature gradient</Label>
+                    <Input
+                      value={fluid.tempGradient}
+                      onChange={(e) => setFluid((f) => ({ ...f, tempGradient: e.target.value }))}
+                      className="h-8 bg-accent/10 border-border/30 text-left text-xs"
+                    />
+                    <span className="text-[11px] text-muted-foreground">°F/100 ft</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
             </div>
           </div>
 
