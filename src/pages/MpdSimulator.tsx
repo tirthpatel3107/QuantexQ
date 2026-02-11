@@ -23,6 +23,17 @@ import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { PageHeaderBar, PageLayout, SidebarLayout } from "@/components/common";
 
 function Sidebar() {
@@ -186,6 +197,10 @@ function SimulatorChart({
   maxY = 1000,
   showRefLine = false,
   refLineValue = 500,
+  seriesColors,
+  seriesLabels,
+  valueUnit,
+  currentValues,
 }: {
   color?: string;
   dataPoints?: number;
@@ -193,7 +208,37 @@ function SimulatorChart({
   maxY?: number;
   showRefLine?: boolean;
   refLineValue?: number;
+  seriesColors?: string[];
+  seriesLabels?: string[];
+  valueUnit?: string;
+  currentValues?: number[];
 }) {
+  const [isDark, setIsDark] = useState(
+    typeof document !== "undefined"
+      ? !document.documentElement.classList.contains("light")
+      : true,
+  );
+
+  useEffect(() => {
+    if (
+      typeof document === "undefined" ||
+      typeof MutationObserver === "undefined"
+    )
+      return;
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === "class") {
+          setIsDark(!document.documentElement.classList.contains("light"));
+          break;
+        }
+      }
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
+
   const generateTimeLabels = () => {
     let times = [];
     let now = new Date();
@@ -208,40 +253,96 @@ function SimulatorChart({
 
   const times = useMemo(() => generateTimeLabels(), [dataPoints]);
 
-  // Generate smooth wavy data
-  const generateWaveData = () => {
-    const data = [];
-    const midpoint = (maxY + minY) / 2;
-    const amplitude = (maxY - minY) * 0.15; // 15% of range for wave height
+  // Effective series colors and mock multi-series wave data (two traces resembling live signals)
+  const effectiveSeriesColors =
+    seriesColors && seriesColors.length > 0 ? seriesColors : [color];
 
-    for (let i = 0; i < dataPoints; i++) {
-      const angle = (i / dataPoints) * Math.PI * 4; // 4 complete waves
-      const value = midpoint + Math.sin(angle) * amplitude;
-      data.push(Math.round(value));
+  const waveSeries = useMemo(() => {
+    const totalRange = maxY - minY || 1;
+    const count = Math.min(2, effectiveSeriesColors.length); // cap at 2 lines
+    const allSeries: number[][] = [];
+
+    for (let s = 0; s < count; s++) {
+      const baseline = minY + ((s + 1) * totalRange) / (count + 1);
+      const amplitude = totalRange * 0.12; // 12% of range around baseline
+      const seriesData: number[] = [];
+
+      for (let i = 0; i < dataPoints; i++) {
+        const angle = (i / dataPoints) * Math.PI * (3 + s); // slightly different frequency per series
+        const noise = Math.sin(i * 0.7 + s) * 0.03 * amplitude; // subtle pseudo-random variation
+        const value = baseline + Math.sin(angle) * amplitude + noise;
+        seriesData.push(Math.round(value));
+      }
+
+      allSeries.push(seriesData);
     }
-    return data;
-  };
 
-  const waveData = useMemo(() => generateWaveData(), [dataPoints, minY, maxY]);
+    return allSeries.map((series, index) => {
+      // If currentValues are provided, force the last point to match the specific series value
+      if (currentValues && typeof currentValues[index] === "number") {
+        series[series.length - 1] = currentValues[index];
+      }
+      return series;
+    });
+  }, [dataPoints, minY, maxY, effectiveSeriesColors, currentValues]);
+
+  const axisColor = isDark ? "#E5E7EB" : "#111827";
+  const gridColor = isDark ? "rgba(148,163,184,0.22)" : "rgba(15,23,42,0.06)";
+  const tooltipBg = isDark ? "rgba(15,23,42,0.98)" : "#ffffff";
+  const tooltipText = isDark ? "#F9FAFB" : "#020617";
 
   const option: EChartsOption = useMemo(
     () => ({
       grid: {
-        top: 20,
-        right: 40,
-        bottom: 20,
-        left: 10,
-        containLabel: false,
+        top: 8,
+        right: 12,
+        bottom: 8,
+        left: 36,
+        containLabel: true,
       },
-      tooltip: { show: false },
-      dataZoom: [
-        {
-          type: "inside",
-          xAxisIndex: 0,
-          filterMode: "none",
-          zoomOnMouseWheel: true,
-          moveOnMouseMove: true,
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "line",
+          lineStyle: { color: axisColor, width: 1 },
         },
+        backgroundColor: tooltipBg,
+        borderColor: "hsl(var(--border))",
+        borderWidth: 1,
+        padding: [6, 10],
+        textStyle: {
+          color: tooltipText,
+          fontSize: 11,
+          fontFamily: "inherit",
+        },
+        renderMode: "html",
+        formatter: (params: any) => {
+          if (!Array.isArray(params) || params.length === 0) return "";
+          const time = params[0].axisValueLabel;
+          let content = `<div style="font-weight:600;margin-bottom:4px;color:${tooltipText};font-size:12px;">${time}</div>`;
+
+          params.forEach((p: any) => {
+            const idx = p.seriesIndex ?? 0;
+            const label =
+              seriesLabels?.[idx] ?? p.seriesName ?? `Series ${idx + 1}`;
+            const colorDot = p.color;
+            const unitSuffix = valueUnit ? ` ${valueUnit}` : "";
+
+            content += `
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:${tooltipText};margin-bottom:2px;">
+                <div style="display:flex;align-items:center;gap:6px;min-width:0;">
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:999px;background:${colorDot};"></span>
+                  <span style="opacity:0.85;white-space:nowrap;">${label}</span>
+                </div>
+                <span style="font-family:monospace;font-weight:600;white-space:nowrap;">${p.value}${unitSuffix}</span>
+              </div>
+            `;
+          });
+
+          return content;
+        },
+      },
+      dataZoom: [
         {
           type: "inside",
           yAxisIndex: 0,
@@ -250,87 +351,106 @@ function SimulatorChart({
           moveOnMouseMove: true,
         },
       ],
+      // Horizontal axis now represents the value, matching vertical charts on the main dashboard
       xAxis: {
-        type: "category",
-        data: times,
-        boundaryGap: false,
-        axisLine: { show: false },
-        axisTick: { show: false },
-        axisLabel: {
-          show: true,
-          color: "#666",
-          fontSize: 10,
-          fontFamily: "Inter, sans-serif",
-          interval: Math.floor(dataPoints / 4),
-          margin: 8,
-        },
-        splitLine: {
-          show: true,
-          lineStyle: {
-            color: "rgba(255, 255, 255, 0.05)",
-            width: 1,
-            type: "solid" as const,
-          },
-        },
-      },
-      yAxis: {
         type: "value",
-        position: "right",
         min: minY,
         max: maxY,
         axisLine: { show: false },
-        axisTick: { show: true, length: 3, lineStyle: { color: "#666" } },
+        axisTick: { show: true, length: 3, lineStyle: { color: axisColor } },
         axisLabel: {
-          color: "#888",
+          show: true,
+          color: axisColor,
           fontSize: 10,
-          fontFamily: "Inter, sans-serif",
-          margin: 4,
+          fontFamily: "Inter, system-ui, sans-serif",
+          margin: 6,
         },
         splitLine: {
           show: true,
           lineStyle: {
-            color: "rgba(255, 255, 255, 0.05)",
+            color: gridColor,
+            width: 1,
+            type: "solid" as const,
+          },
+        },
+        scale: true,
+      },
+      // Vertical axis is time (categories), inverted so latest time is at the bottom
+      yAxis: {
+        type: "category",
+        data: times,
+        inverse: true,
+        show: true,
+        axisLine: { show: false },
+        axisTick: { show: false },
+        axisLabel: {
+          color: axisColor,
+          fontSize: 10,
+          fontFamily: "Inter, system-ui, sans-serif",
+          margin: 6,
+          interval: Math.max(1, Math.floor(dataPoints / 8)),
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: gridColor,
             width: 1,
             type: "solid" as const,
           },
         },
       },
-      series: [
-        {
-          name: "Value",
-          type: "line",
-          data: waveData,
-          symbol: "none",
-          lineStyle: {
-            color: color,
-            width: 2,
-          },
-          smooth: 0.3,
-          markLine: {
-            symbol: ["none", "none"],
-            animation: false,
-            silent: true,
-            lineStyle: {
-              type: "dashed" as const,
-              color: "#fff",
-              opacity: 0.5,
-              width: 1,
-            },
-            label: { show: false },
-            data: showRefLine
-              ? [
+      series: waveSeries.map((seriesData, index) => ({
+        name: seriesLabels?.[index] ?? (index === 0 ? "Primary" : "Secondary"),
+        type: "line",
+        data: seriesData,
+        symbol: "none",
+        itemStyle: {
+          color: effectiveSeriesColors[index] ?? color,
+        },
+        lineStyle: {
+          color: effectiveSeriesColors[index] ?? color,
+          width: 1.8,
+        },
+        smooth: 0.45,
+        markLine:
+          showRefLine && index === 1
+            ? {
+                symbol: ["none", "none"],
+                animation: false,
+                silent: true,
+                lineStyle: {
+                  type: "dashed" as const,
+                  color: "#fff",
+                  opacity: 0.6,
+                  width: 1,
+                },
+                label: { show: false },
+                data: [
                   {
-                    yAxis: refLineValue,
+                    xAxis: refLineValue,
                     label: { show: false },
                   },
-                ]
-              : [],
-          },
-        },
-      ],
+                ],
+              }
+            : undefined,
+      })),
       animation: false,
     }),
-    [times, waveData, minY, maxY, showRefLine, refLineValue, color],
+    [
+      times,
+      waveSeries,
+      minY,
+      maxY,
+      showRefLine,
+      refLineValue,
+      color,
+      axisColor,
+      gridColor,
+      tooltipBg,
+      tooltipText,
+      seriesLabels,
+      valueUnit,
+    ],
   );
 
   return (
@@ -535,7 +655,7 @@ function ControlPanel({
   setShowFlowControls: (v: boolean) => void;
 }) {
   return (
-    <div className="h-[72px] bg-[#0C111F] border-t border-border/20 flex items-center shrink-0 backdrop-blur-sm z-10 font-sans shadow-[0_-4px_20px_rgba(0,0,0,0.4)] overflow-hidden select-none">
+    <div className="h-[72px] bg-[#0C111F] border border-border/30 rounded-lg px-4 flex items-center shrink-0 backdrop-blur-sm z-10 font-sans shadow-[0_-4px_20px_rgba(0,0,0,0.4)] overflow-hidden select-none">
       {/* 1. Toggle & Flow Difference (Left) */}
       <div className="flex h-full items-center pl-2 pr-6 gap-4 bg-[#0C111F] border-r border-white/5 relative group shrink-0">
         {/* Toggle Button - Absolute left or flex */}
@@ -665,6 +785,7 @@ function ControlPanel({
 // --- Main Page Component ---
 export default function MpdSimulator() {
   const [showFlowControls, setShowFlowControls] = useState(false);
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
   const headerActions = (
     <div className="flex items-center gap-1">
@@ -695,32 +816,35 @@ export default function MpdSimulator() {
   return (
     <PageLayout className="pt-14">
       {/* <SidebarLayout> */}
-      <PageHeaderBar
-        icon={<Gauge className="h-5 w-5 text-primary-foreground" />}
-        title="MPD Simulator"
-        metadata={
-          <div className="flex items-center gap-6">
-            <span className="text-sm">
-              SBP: <span className="font-bold">750 psi</span>
-            </span>
-            <span className="flex items-center gap-2 text-sm text-cyan-400">
-              <RotateCw className="h-3.5 w-3.5 animate-spin" />
-              Simulation
-            </span>
-          </div>
-        }
-        className="p-2"
-        actions={headerActions}
-      />
+      <div className="px-4 py-4">
+        <PageHeaderBar
+          icon={<Gauge className="h-5 w-5 text-primary-foreground" />}
+          title="MPD Simulator"
+          metadata={
+            <div className="flex items-center gap-6">
+              <span className="text-sm">
+                SBP: <span className="font-bold">750 psi</span>
+              </span>
+              <span className="flex items-center gap-2 text-sm text-cyan-400">
+                <RotateCw className="h-3.5 w-3.5 animate-spin" />
+                Simulation
+              </span>
+            </div>
+          }
+          className="p-2"
+          actions={headerActions}
+        />
+      </div>
+
       <div className="flex flex-col h-[calc(100vh-theme(spacing.1))] bg-background text-foreground overflow-hidden font-sans selection:bg-primary/20">
         {/* <SimulatorHeader /> */}
 
-        <div className="flex flex-1 min-h-0 relative p-2">
+        <div className="flex flex-1 min-h-0 relative px-4 pb-4">
           {/* <Sidebar /> */}
 
           <main className="flex-1 flex flex-col min-w-0 bg-background">
             {/* Top Grid Area */}
-            <div className="flex-1 grid grid-cols-5 gap-2 p-2 px-0 min-h-0 overflow-hidden relative">
+            <div className="flex-1 grid grid-cols-5 gap-4 py-4 pt-2 min-h-0 overflow-visible relative">
               {/* Wallpaper / Grid lines effect */}
               <div
                 className="absolute inset-0 pointer-events-none opacity-[0.03]"
@@ -731,14 +855,26 @@ export default function MpdSimulator() {
               />
 
               {/* Col 1: Flow */}
-              <div className="flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden">
-                <div className="panel-header">
-                  <div className="flex items-center gap-2">
-                    <span className="panel-title">Flow</span>
+              <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
+                <div className="panel-header flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedCard("flow")}
+                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                      aria-label="Flow panel actions"
+                    >
+                      <Gauge
+                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                        aria-hidden
+                      />
+                      <Maximize2
+                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                        aria-hidden
+                      />
+                    </button>
+                    <span className="panel-title truncate">Flow</span>
                   </div>
-                  {/* <Button variant="ghost" size="icon" className="h-6 w-6">
-                    <Menu className="h-4 w-4 text-muted-foreground/60" />
-                  </Button> */}
                 </div>
                 <div className="p-4 pt-3 pb-6 border-b border-border/30">
                   <div className="grid grid-cols-2 gap-x-8 gap-y-4">
@@ -765,54 +901,61 @@ export default function MpdSimulator() {
                   {/* Main Chart */}
                   <div className="flex-1 min-h-0 -ml-2 pb-4">
                     <SimulatorChart
-                      color="#60a5fa"
+                      color="#21d5ed"
+                      seriesColors={["#21d5ed", "#f59f0a"]}
+                      seriesLabels={["Flow In", "Flow Out"]}
+                      valueUnit="gpm"
                       minY={0}
                       maxY={1000}
-                      showRefLine={true}
-                      refLineValue={600}
+                      currentValues={[580, 596]}
                     />
                   </div>
 
                   {/* Value Badges */}
                   <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
                     {[
-                      { value: "224.8", unit: "gpm" },
-                      { value: "481.06", unit: "gpm" },
-                      { value: "46.96", unit: "pps" },
+                      { label: "Flow In", value: "580", unit: "gpm" },
+                      { label: "Flow Out", value: "596", unit: "gpm" },
                     ].map((m, i) => {
                       const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
-                      const isLastBadge = i % 3 === 2;
-                      const bgColor = isLastBadge
-                        ? undefined
-                        : badgeBgColors[i % badgeBgColors.length];
+                      const isLastBadge = i % 2 === 2; // Keep logic simple or just rely on index
+                      const bgColor = badgeBgColors[i % badgeBgColors.length];
+
+                      const tooltipText = m.label ?? "";
 
                       return (
-                        <span
-                          key={i}
-                          className={cn(
-                            "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
-                            isLastBadge
-                              ? "bg-black text-white dark:bg-white dark:text-black"
-                              : "text-black",
-                          )}
-                          style={
-                            bgColor != null
-                              ? { backgroundColor: bgColor }
-                              : undefined
-                          }
-                        >
-                          <span className="min-w-0 truncate font-bold">
-                            {m.value}
-                          </span>
-                          {m.unit != null && m.unit !== "" && (
+                        <Tooltip key={i}>
+                          <TooltipTrigger asChild>
                             <span
-                              className="ml-0.5 shrink-0 font-bold"
-                              style={{ opacity: 0.8 }}
+                              className={cn(
+                                "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
+                                isLastBadge
+                                  ? "bg-black text-white dark:bg-white dark:text-black"
+                                  : "text-black",
+                              )}
+                              style={
+                                bgColor != null
+                                  ? { backgroundColor: bgColor }
+                                  : undefined
+                              }
                             >
-                              {m.unit}
+                              <span className="min-w-0 truncate font-bold">
+                                {m.value}
+                              </span>
+                              {m.unit != null && m.unit !== "" && (
+                                <span
+                                  className="ml-0.5 shrink-0 font-bold"
+                                  style={{ opacity: 0.8 }}
+                                >
+                                  {m.unit}
+                                </span>
+                              )}
                             </span>
-                          )}
-                        </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{tooltipText}</p>
+                          </TooltipContent>
+                        </Tooltip>
                       );
                     })}
                   </div>
@@ -826,7 +969,12 @@ export default function MpdSimulator() {
                         : "translate-y-8 opacity-0",
                     )}
                   >
-                    <div className="pointer-events-auto bg-black/60 backdrop-blur-sm border-t border-white/5 rounded-t-sm shadow-2xl pt-2 -mx-2 px-2 pb-2">
+                    <div
+                      className={cn(
+                        "bg-black/60 backdrop-blur-sm border-t border-white/5 rounded-t-sm shadow-2xl pt-2 -mx-2 px-2 pb-2",
+                        showFlowControls ? "pointer-events-auto" : "pointer-events-none",
+                      )}
+                    >
                       <FlowControlStack />
                     </div>
                   </div>
@@ -834,14 +982,26 @@ export default function MpdSimulator() {
               </div>
 
               {/* Col 2: Density */}
-              <div className="flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden">
-                <div className="panel-header">
-                  <div className="flex items-center gap-2">
-                    <span className="panel-title">Density</span>
+              <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
+                <div className="panel-header flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedCard("density")}
+                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                      aria-label="Density panel actions"
+                    >
+                      <Thermometer
+                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                        aria-hidden
+                      />
+                      <Maximize2
+                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                        aria-hidden
+                      />
+                    </button>
+                    <span className="panel-title truncate">Density</span>
                   </div>
-                  {/* <Button variant="ghost" size="icon" className="h-6 w-6">
-                    <Menu className="h-4 w-4 text-muted-foreground/60" />
-                  </Button> */}
                 </div>
                 <div className="p-4 pt-3 pb-6 border-b border-border/30">
                   <div className="grid grid-cols-2 gap-x-8 gap-y-4">
@@ -865,19 +1025,20 @@ export default function MpdSimulator() {
                   {/* Main Chart */}
                   <div className="flex-1 min-h-0 -ml-2 pb-4">
                     <SimulatorChart
-                      color="#facc15"
+                      color="#21d5ed"
+                      seriesColors={["#21d5ed", "#f59f0a"]}
+                      seriesLabels={["Density In", "Density Out"]}
+                      valueUnit="ppg"
                       minY={0}
                       maxY={800}
-                      showRefLine={true}
-                      refLineValue={660}
                     />
                   </div>
 
                   {/* Value Badges */}
                   <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
                     {[
-                      { value: "12.6", unit: "ppg" },
-                      { value: "12.51", unit: "ppg" },
+                      { label: "Density In", value: "12.6", unit: "ppg" },
+                      { label: "Density Out", value: "12.51", unit: "ppg" },
                     ].map((m, i) => {
                       const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
                       const isLastBadge = i % 3 === 2;
@@ -885,33 +1046,41 @@ export default function MpdSimulator() {
                         ? undefined
                         : badgeBgColors[i % badgeBgColors.length];
 
+                      const tooltipText = m.label ?? "";
+
                       return (
-                        <span
-                          key={i}
-                          className={cn(
-                            "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
-                            isLastBadge
-                              ? "bg-black text-white dark:bg-white dark:text-black"
-                              : "text-black",
-                          )}
-                          style={
-                            bgColor != null
-                              ? { backgroundColor: bgColor }
-                              : undefined
-                          }
-                        >
-                          <span className="min-w-0 truncate font-bold">
-                            {m.value}
-                          </span>
-                          {m.unit != null && m.unit !== "" && (
+                        <Tooltip key={i}>
+                          <TooltipTrigger asChild>
                             <span
-                              className="ml-0.5 shrink-0 font-bold"
-                              style={{ opacity: 0.8 }}
+                              className={cn(
+                                "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
+                                isLastBadge
+                                  ? "bg-black text-white dark:bg-white dark:text-black"
+                                  : "text-black",
+                              )}
+                              style={
+                                bgColor != null
+                                  ? { backgroundColor: bgColor }
+                                  : undefined
+                              }
                             >
-                              {m.unit}
+                              <span className="min-w-0 truncate font-bold">
+                                {m.value}
+                              </span>
+                              {m.unit != null && m.unit !== "" && (
+                                <span
+                                  className="ml-0.5 shrink-0 font-bold"
+                                  style={{ opacity: 0.8 }}
+                                >
+                                  {m.unit}
+                                </span>
+                              )}
                             </span>
-                          )}
-                        </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{tooltipText}</p>
+                          </TooltipContent>
+                        </Tooltip>
                       );
                     })}
                   </div>
@@ -919,14 +1088,26 @@ export default function MpdSimulator() {
               </div>
 
               {/* Col 3: SBP Control */}
-              <div className="flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden">
-                <div className="panel-header">
-                  <div className="flex items-center gap-2">
-                    <span className="panel-title">SBP Control</span>
+              <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
+                <div className="panel-header flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedCard("sbp")}
+                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                      aria-label="SBP Control panel actions"
+                    >
+                      <Gauge
+                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                        aria-hidden
+                      />
+                      <Maximize2
+                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                        aria-hidden
+                      />
+                    </button>
+                    <span className="panel-title truncate">SBP Control</span>
                   </div>
-                  {/* <Button variant="ghost" size="icon" className="h-6 w-6">
-                    <Menu className="h-4 w-4 text-muted-foreground/60" />
-                  </Button> */}
                 </div>
                 <div className="p-4 pt-3 pb-6 border-b border-border/30">
                   <div className="grid grid-cols-2 gap-x-8 gap-y-4">
@@ -950,19 +1131,20 @@ export default function MpdSimulator() {
                   {/* Main Chart */}
                   <div className="flex-1 min-h-0 -ml-2 pb-4">
                     <SimulatorChart
-                      color="#facc15"
+                      color="#21d5ed"
+                      seriesColors={["#21d5ed", "#f59f0a"]}
+                      seriesLabels={["SBP", "SP"]}
+                      valueUnit="psi"
                       minY={100}
                       maxY={900}
-                      showRefLine={true}
-                      refLineValue={750}
                     />
                   </div>
 
                   {/* Value Badges */}
                   <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
                     {[
-                      { value: "750", unit: "psi" },
-                      { value: "760", unit: "psi" },
+                      { label: "SBP", value: "750", unit: "psi" },
+                      { label: "SP", value: "760", unit: "psi" },
                     ].map((m, i) => {
                       const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
                       const isLastBadge = i % 3 === 2;
@@ -970,33 +1152,41 @@ export default function MpdSimulator() {
                         ? undefined
                         : badgeBgColors[i % badgeBgColors.length];
 
+                      const tooltipText = m.label ?? "";
+
                       return (
-                        <span
-                          key={i}
-                          className={cn(
-                            "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
-                            isLastBadge
-                              ? "bg-black text-white dark:bg-white dark:text-black"
-                              : "text-black",
-                          )}
-                          style={
-                            bgColor != null
-                              ? { backgroundColor: bgColor }
-                              : undefined
-                          }
-                        >
-                          <span className="min-w-0 truncate font-bold">
-                            {m.value}
-                          </span>
-                          {m.unit != null && m.unit !== "" && (
+                        <Tooltip key={i}>
+                          <TooltipTrigger asChild>
                             <span
-                              className="ml-0.5 shrink-0 font-bold"
-                              style={{ opacity: 0.8 }}
+                              className={cn(
+                                "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
+                                isLastBadge
+                                  ? "bg-black text-white dark:bg-white dark:text-black"
+                                  : "text-black",
+                              )}
+                              style={
+                                bgColor != null
+                                  ? { backgroundColor: bgColor }
+                                  : undefined
+                              }
                             >
-                              {m.unit}
+                              <span className="min-w-0 truncate font-bold">
+                                {m.value}
+                              </span>
+                              {m.unit != null && m.unit !== "" && (
+                                <span
+                                  className="ml-0.5 shrink-0 font-bold"
+                                  style={{ opacity: 0.8 }}
+                                >
+                                  {m.unit}
+                                </span>
+                              )}
                             </span>
-                          )}
-                        </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{tooltipText}</p>
+                          </TooltipContent>
+                        </Tooltip>
                       );
                     })}
                   </div>
@@ -1004,14 +1194,26 @@ export default function MpdSimulator() {
               </div>
 
               {/* Col 4: SPP Control */}
-              <div className="flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden">
-                <div className="panel-header">
-                  <div className="flex items-center gap-2">
-                    <span className="panel-title">SPP Control</span>
+              <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
+                <div className="panel-header flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedCard("spp")}
+                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                      aria-label="SPP Control panel actions"
+                    >
+                      <Gauge
+                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                        aria-hidden
+                      />
+                      <Maximize2
+                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                        aria-hidden
+                      />
+                    </button>
+                    <span className="panel-title truncate">SPP Control</span>
                   </div>
-                  {/* <Button variant="ghost" size="icon" className="h-6 w-6">
-                    <Menu className="h-4 w-4 text-muted-foreground/60" />
-                  </Button> */}
                 </div>
                 <div className="p-4 pt-3 pb-6 border-b border-border/30">
                   <div className="grid grid-cols-2 gap-x-8 gap-y-4">
@@ -1035,19 +1237,20 @@ export default function MpdSimulator() {
                   {/* Main Chart */}
                   <div className="flex-1 min-h-0 -ml-2 pb-4">
                     <SimulatorChart
-                      color="#60a5fa"
+                      color="#21d5ed"
+                      seriesColors={["#21d5ed", "#f59f0a"]}
+                      seriesLabels={["SPP", "SP"]}
+                      valueUnit="psi"
                       minY={0}
                       maxY={1000}
-                      showRefLine={true}
-                      refLineValue={660}
                     />
                   </div>
 
                   {/* Value Badges */}
                   <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
                     {[
-                      { value: "6146.5", unit: "psi" },
-                      { value: "6150", unit: "psi" },
+                      { label: "SPP", value: "6146.5", unit: "psi" },
+                      { label: "SP", value: "6150", unit: "psi" },
                     ].map((m, i) => {
                       const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
                       const isLastBadge = i % 3 === 2;
@@ -1055,33 +1258,41 @@ export default function MpdSimulator() {
                         ? undefined
                         : badgeBgColors[i % badgeBgColors.length];
 
+                      const tooltipText = m.label ?? "";
+
                       return (
-                        <span
-                          key={i}
-                          className={cn(
-                            "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
-                            isLastBadge
-                              ? "bg-black text-white dark:bg-white dark:text-black"
-                              : "text-black",
-                          )}
-                          style={
-                            bgColor != null
-                              ? { backgroundColor: bgColor }
-                              : undefined
-                          }
-                        >
-                          <span className="min-w-0 truncate font-bold">
-                            {m.value}
-                          </span>
-                          {m.unit != null && m.unit !== "" && (
+                        <Tooltip key={i}>
+                          <TooltipTrigger asChild>
                             <span
-                              className="ml-0.5 shrink-0 font-bold"
-                              style={{ opacity: 0.8 }}
+                              className={cn(
+                                "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
+                                isLastBadge
+                                  ? "bg-black text-white dark:bg-white dark:text-black"
+                                  : "text-black",
+                              )}
+                              style={
+                                bgColor != null
+                                  ? { backgroundColor: bgColor }
+                                  : undefined
+                              }
                             >
-                              {m.unit}
+                              <span className="min-w-0 truncate font-bold">
+                                {m.value}
+                              </span>
+                              {m.unit != null && m.unit !== "" && (
+                                <span
+                                  className="ml-0.5 shrink-0 font-bold"
+                                  style={{ opacity: 0.8 }}
+                                >
+                                  {m.unit}
+                                </span>
+                              )}
                             </span>
-                          )}
-                        </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{tooltipText}</p>
+                          </TooltipContent>
+                        </Tooltip>
                       );
                     })}
                   </div>
@@ -1089,13 +1300,25 @@ export default function MpdSimulator() {
               </div>
 
               {/* Col 5: Well Visualization */}
-              <div className="flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden">
-                <div className="panel-header">
-                  <div className="flex items-center justify-between w-full">
-                    <span className="panel-title">Well</span>
-                    <div className="flex items-center gap-1 text-[10px] font-medium text-muted-foreground hover:text-foreground cursor-pointer transition-colors bg-card/50 border border-border/50 rounded-full px-2 py-0.5">
-                      Help <Maximize2 className="h-3 w-3" />
-                    </div>
+              <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
+                <div className="panel-header flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedCard("well")}
+                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                      aria-label="Well panel actions"
+                    >
+                      <LayoutTemplate
+                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                        aria-hidden
+                      />
+                      <Maximize2
+                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                        aria-hidden
+                      />
+                    </button>
+                    <span className="panel-title truncate">Well</span>
                   </div>
                 </div>
                 <div className="flex-1 min-h-0 p-4 flex flex-col relative gap-4">
@@ -1114,53 +1337,10 @@ export default function MpdSimulator() {
                       <div className="absolute bottom-1/4 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-primary/20"></div>
                     </div>
 
-                    <div className="absolute bottom-4 right-4 text-[10px] text-muted-foreground font-mono">
-                      MD: 12,450 ft
-                    </div>
+
                   </div>
 
-                  {/* Value Badges */}
-                  <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
-                    {[
-                      { value: "12,450", unit: "ft" },
-                      { value: "8.5", unit: "in" },
-                    ].map((m, i) => {
-                      const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
-                      const isLastBadge = i % 3 === 2;
-                      const bgColor = isLastBadge
-                        ? undefined
-                        : badgeBgColors[i % badgeBgColors.length];
 
-                      return (
-                        <span
-                          key={i}
-                          className={cn(
-                            "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
-                            isLastBadge
-                              ? "bg-black text-white dark:bg-white dark:text-black"
-                              : "text-black",
-                          )}
-                          style={
-                            bgColor != null
-                              ? { backgroundColor: bgColor }
-                              : undefined
-                          }
-                        >
-                          <span className="min-w-0 truncate font-bold">
-                            {m.value}
-                          </span>
-                          {m.unit != null && m.unit !== "" && (
-                            <span
-                              className="ml-0.5 shrink-0 font-bold"
-                              style={{ opacity: 0.8 }}
-                            >
-                              {m.unit}
-                            </span>
-                          )}
-                        </span>
-                      );
-                    })}
-                  </div>
                 </div>
               </div>
             </div>
@@ -1173,6 +1353,141 @@ export default function MpdSimulator() {
           </main>
         </div>
       </div>
+      
+      <Dialog open={!!expandedCard} onOpenChange={(open) => !open && setExpandedCard(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col h-[80vh]">
+          <DialogHeader>
+            <DialogTitle className="text-foreground font-bold uppercase tracking-wide">
+              {expandedCard === "flow" && "Flow"}
+              {expandedCard === "density" && "Density"}
+              {expandedCard === "sbp" && "SBP Control"}
+              {expandedCard === "spp" && "SPP Control"}
+              {expandedCard === "well" && "Well"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 w-full min-h-0 flex flex-col pt-4">
+             {expandedCard === "flow" && (
+                <>
+                  <div className="flex-1 min-h-0">
+                    <SimulatorChart
+                       color="#21d5ed"
+                       seriesColors={["#21d5ed", "#f59f0a"]}
+                       seriesLabels={["Flow In", "Flow Out"]}
+                       valueUnit="gpm"
+                       minY={0}
+                       maxY={1000}
+                       currentValues={[580, 596]}
+                    />
+                  </div>
+                  <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+                     {[
+                       { label: "Flow In", value: "580", unit: "gpm" },
+                       { label: "Flow Out", value: "596", unit: "gpm" },
+                     ].map((m, i) => (
+                       <div key={i} className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]">
+                          <span className="mr-1 opacity-70">{m.label}:</span>
+                          <span>{m.value} {m.unit}</span>
+                       </div>
+                     ))}
+                  </div>
+                </>
+             )}
+
+             {expandedCard === "density" && (
+                <>
+                  <div className="flex-1 min-h-0">
+                    <SimulatorChart
+                       color="#21d5ed"
+                       seriesColors={["#21d5ed", "#f59f0a"]}
+                       seriesLabels={["Density In", "Density Out"]}
+                       valueUnit="ppg"
+                       minY={0}
+                       maxY={800}
+                    />
+                  </div>
+                  <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+                     {[
+                       { label: "Density In", value: "12.6", unit: "ppg" },
+                       { label: "Density Out", value: "12.51", unit: "ppg" },
+                     ].map((m, i) => (
+                       <div key={i} className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]">
+                          <span className="mr-1 opacity-70">{m.label}:</span>
+                          <span>{m.value} {m.unit}</span>
+                       </div>
+                     ))}
+                  </div>
+                </>
+             )}
+
+             {expandedCard === "sbp" && (
+                <>
+                  <div className="flex-1 min-h-0">
+                    <SimulatorChart
+                       color="#21d5ed"
+                       seriesColors={["#21d5ed", "#f59f0a"]}
+                       seriesLabels={["SBP", "SP"]}
+                       valueUnit="psi"
+                       minY={100}
+                       maxY={900}
+                    />
+                  </div>
+                  <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+                     {[
+                       { label: "SBP", value: "750", unit: "psi" },
+                       { label: "SP", value: "760", unit: "psi" },
+                     ].map((m, i) => (
+                       <div key={i} className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]">
+                          <span className="mr-1 opacity-70">{m.label}:</span>
+                          <span>{m.value} {m.unit}</span>
+                       </div>
+                     ))}
+                  </div>
+                </>
+             )}
+
+             {expandedCard === "spp" && (
+                <>
+                  <div className="flex-1 min-h-0">
+                    <SimulatorChart
+                       color="#21d5ed"
+                       seriesColors={["#21d5ed", "#f59f0a"]}
+                       seriesLabels={["SPP", "SP"]}
+                       valueUnit="psi"
+                       minY={0}
+                       maxY={1000}
+                    />
+                  </div>
+                  <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+                     {[
+                       { label: "SPP", value: "6146.5", unit: "psi" },
+                       { label: "SP", value: "6150", unit: "psi" },
+                     ].map((m, i) => (
+                       <div key={i} className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]">
+                          <span className="mr-1 opacity-70">{m.label}:</span>
+                          <span>{m.value} {m.unit}</span>
+                       </div>
+                     ))}
+                  </div>
+                </>
+             )}
+
+             {expandedCard === "well" && (
+                 <div className="flex-1 w-full bg-[#0a0a0a] rounded-lg relative overflow-hidden shadow-inner border border-white/5 group">
+                    <div
+                      className="absolute inset-0 opacity-20"
+                      style={{
+                        backgroundImage: `repeating-linear-gradient(0deg, transparent 0, transparent 49px, #333 50px), repeating-linear-gradient(90deg, transparent 0, transparent 49px, #333 50px)`,
+                        backgroundSize: "100% 50px",
+                      }}
+                    />
+                    <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-48 border-l border-r border-white/10 bg-white/5">
+                      <div className="absolute bottom-1/4 left-0 right-0 h-64 bg-gradient-to-b from-transparent to-primary/20"></div>
+                    </div>
+                 </div>
+             )}
+          </div>
+        </DialogContent>
+      </Dialog>
       {/* </SidebarLayout> */}
     </PageLayout>
   );

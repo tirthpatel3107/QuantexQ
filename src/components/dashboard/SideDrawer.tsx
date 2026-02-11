@@ -36,7 +36,7 @@ const menuSections = [
     label: "Monitoring",
     icon: LayoutDashboard,
     items: [
-      { label: "Dashboard", to: ROUTES.MPD_SIMULATOR, icon: Gauge },
+      { label: "MPD Simulator", to: ROUTES.MPD_SIMULATOR, icon: Gauge },
       { label: "Well Info", to: "#", icon: Info },
       { label: "Charts & KPIs", to: "#", icon: BarChart3 },
     ],
