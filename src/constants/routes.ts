@@ -6,6 +6,7 @@ export const ROUTES = {
   HOME: "/",
   PROFILE: "/profile",
   MUD_PROPERTIES: "/mud-properties",
+  MPD_SIMULATOR: "/mpd-simulator",
   SETTINGS: "/settings",
 } as const;
 
