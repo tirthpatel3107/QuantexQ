@@ -107,10 +107,10 @@ export function Header() {
               <Gauge className="h-5 w-5 text-primary-foreground" />
             </div>
           <div>
-            <h1 className="text-base font-bold tracking-tight text-foreground">
+            <h1 className="text-sm sm:text-base font-bold tracking-tight text-foreground">
               QuantexQ<span className="text-primary">™</span>
             </h1>
-            <p className="text-[10px] text-muted-foreground -mt-0.5 hidden sm:block">
+            <p className="text-[10px] text-muted-foreground -mt-0.5 hidden xl:block">
               Professional Drilling Monitoring
             </p>
           </div>
@@ -119,25 +119,25 @@ export function Header() {
       </div>
 
       {/* Center - Project Info */}
-      <div className="hidden lg:flex items-center gap-3 text-sm min-w-0">
-        <div className="flex items-center gap-1">
+      <div className="hidden lg:flex items-center gap-2 xl:gap-3 text-sm min-w-0 flex-1 justify-center max-w-[40%] text-center">
+        <div className="flex items-center gap-1 min-w-0">
           {/* <span className="text-muted-foreground">Project:</span> */}
-          <span className="font-medium text-foreground">Offshore Block A-7</span>
+          <span className="font-medium text-foreground truncate block max-w-[120px] xl:max-w-none">Offshore Block A-7</span>
         </div>
-        <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
+        <div className="h-4 w-px bg-border shrink-0" />
+        <div className="flex items-center gap-1 shrink-0">
           {/* <span className="text-muted-foreground">Well:</span> */}
           <span className="font-medium text-foreground">DW-0347</span>
         </div>
-        <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
+        <div className="h-4 w-px bg-border shrink-0" />
+        <div className="flex items-center gap-1 shrink-0">
           <div className="status-indicator online" />
           <span className="text-success text-xs font-medium">Live</span>
         </div>
-        <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
+        <div className="h-4 w-px bg-border shrink-0" />
+        <div className="flex items-center gap-1 shrink-0">
           <div className="status-indicator online" />
-          <span className="text-success text-xs font-medium">System Hydraulics</span>
+          <span className="text-success text-xs font-medium lg:inline">System Hydraulics</span>
         </div>
       </div>
 
@@ -190,7 +190,7 @@ export function Header() {
           <div className="text-base sm:text-lg font-bold tabular-nums text-primary glow-primary">
             {formatTime(time)}
           </div>
-          <div className="hidden sm:block text-[10px] text-muted-foreground -mt-0.5">
+          <div className="hidden xl:block text-[10px] text-muted-foreground -mt-0.5">
             {formatDate(time)}
           </div>
         </div>
@@ -408,7 +408,7 @@ export function Header() {
       </AlertDialog>
 
       <AlertDialog open={startConfirmOpen} onOpenChange={setStartConfirmOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-sm:w-[90vw]">
           <AlertDialogHeader>
             <AlertDialogTitle>Start operation?</AlertDialogTitle>
             <AlertDialogDescription>

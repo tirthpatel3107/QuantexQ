@@ -17,6 +17,7 @@ import {
   FolderOpen,
   FolderPlus,
   ExternalLink,
+  Menu,
 } from "lucide-react";
 import {
   PageLayout,
@@ -41,6 +42,13 @@ import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 const MUD_NAV = [
   { id: "overview", label: "Fluid Overview", icon: Clock },
@@ -85,15 +93,15 @@ export default function MudProperties() {
     <>
       <Button variant="outline" size="sm" onClick={() => setDirty(false)}>
         <Save className="h-4 w-4" />
-        Save
+        <span className="hidden lg:inline">Save</span>
       </Button>
       <Button variant="outline" size="sm">
         <RotateCcw className="h-4 w-4" />
-        Discard
+        <span className="hidden lg:inline">Discard</span>
       </Button>
       <Button variant="outline" size="sm">
         <Upload className="h-4 w-4" />
-        Import
+        <span className="hidden lg:inline">Import</span>
       </Button>
     </>
   );
@@ -137,10 +145,34 @@ export default function MudProperties() {
             </>
           }
           actions={headerActions}
+          className="max-sm:mt-10"
         />
 
         <main className="flex-1 min-w-0 py-4 overflow-auto flex flex-col">
           <div className="w-full flex flex-wrap items-center justify-between gap-4 mb-4 shrink-0">
+            <div className="flex items-center gap-2 lg:hidden">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="shrink-0">
+                    <Menu className="h-5 w-5" />
+                    <span className="sr-only">Toggle navigation menu</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
+                   <div className="flex flex-col h-full">
+                    <SheetHeader className="p-4 border-b text-left">
+                      <SheetTitle>Navigation</SheetTitle>
+                    </SheetHeader>
+                    <ScrollArea className="flex-1">
+                      {sidebarNav}
+                    </ScrollArea>
+                    <div className="p-4 border-t">
+                      {sidebarFooter}
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
             <SearchInput
               placeholder="Search Mud Properties..."
               value={search}
@@ -149,28 +181,28 @@ export default function MudProperties() {
             <div className="flex items-center gap-2 flex-shrink-0">
               <Button variant="outline" size="sm">
                 <Save className="h-4 w-4" />
-                Save
+                <span className="max-sm:hidden">Save</span>
               </Button>
               <Button variant="outline" size="sm">
                 <RotateCcw className="h-4 w-4" />
-                Discard
+                <span className="max-sm:hidden">Discard</span>
               </Button>
               <Button variant="outline" size="sm">
                 <FolderOpen className="h-4 w-4" />
-                Load Preset
+                <span className="max-sm:hidden">Load Preset</span>
               </Button>
               <Button variant="outline" size="sm">
                 <FolderPlus className="h-4 w-4" />
-                Save Preset
+                <span className="max-sm:hidden">Save Preset</span>
               </Button>
               <Button variant="outline" size="sm">
                 <Download className="h-4 w-4" />
-                Export
+                <span className="max-sm:hidden">Export</span>
               </Button>
             </div>
           </div>
 
-            <div className="flex flex-1 min-w-0 gap-4 overflow-auto">
+            <div className="flex flex-col xl:flex-row flex-1 min-w-0 gap-4">
               <div className="flex-1 min-w-0 space-y-4">
                 <div>
                   {/* Section-specific or overview layout */}
@@ -580,58 +612,70 @@ export default function MudProperties() {
                         title="Gas / Compressibility"
                         headerAction={<RestoreDefaultsButton />}
                       >
-                        <div className="grid grid-cols-[140px_120px_auto] gap-3 items-center">
-                          <Label className="text-xs text-muted-foreground text-left">
-                            Gas solubility
-                          </Label>
-                          <Input
-                            value={fluid.gasSolubility}
-                            onChange={(e) =>
-                              setFluid((f) => ({
-                                ...f,
-                                gasSolubility: e.target.value,
-                              }))
-                            }
-                            placeholder="—"
-                            className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
-                          />
-                          <span className="text-[11px] text-muted-foreground">
-                            scf/bbl
-                          </span>
-                          <Label className="text-xs text-muted-foreground text-left">
-                            Compressibility factor
-                          </Label>
-                          <Input
-                            value={fluid.compressibilityFactor}
-                            onChange={(e) =>
-                              setFluid((f) => ({
-                                ...f,
-                                compressibilityFactor: e.target.value,
-                              }))
-                            }
-                            placeholder="—"
-                            className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
-                          />
-                          <span className="text-[11px] text-muted-foreground">
-                            —
-                          </span>
-                          <Label className="text-xs text-muted-foreground text-left">
-                            Gas/oil ratio
-                          </Label>
-                          <Input
-                            value={fluid.gasOilRatio}
-                            onChange={(e) =>
-                              setFluid((f) => ({
-                                ...f,
-                                gasOilRatio: e.target.value,
-                              }))
-                            }
-                            placeholder="—"
-                            className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
-                          />
-                          <span className="text-[11px] text-muted-foreground">
-                            scf/stb
-                          </span>
+                        <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 items-start">
+                          <div className="space-y-2 min-w-0">
+                            <Label className="h-5 flex items-center text-sm">
+                              Gas solubility
+                            </Label>
+                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
+                              <Input
+                                value={fluid.gasSolubility}
+                                onChange={(e) =>
+                                  setFluid((f) => ({
+                                    ...f,
+                                    gasSolubility: e.target.value,
+                                  }))
+                                }
+                                placeholder="—"
+                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
+                              />
+                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
+                                scf/bbl
+                              </span>
+                            </div>
+                          </div>
+                          <div className="space-y-2 min-w-0">
+                            <Label className="h-5 flex items-center text-sm">
+                              Compressibility factor
+                            </Label>
+                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
+                              <Input
+                                value={fluid.compressibilityFactor}
+                                onChange={(e) =>
+                                  setFluid((f) => ({
+                                    ...f,
+                                    compressibilityFactor: e.target.value,
+                                  }))
+                                }
+                                placeholder="—"
+                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
+                              />
+                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
+                                —
+                              </span>
+                            </div>
+                          </div>
+                          <div className="space-y-2 min-w-0">
+                            <Label className="h-5 flex items-center text-sm">
+                              Gas/oil ratio
+                            </Label>
+                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
+                              <Input
+                                value={fluid.gasOilRatio}
+                                onChange={(e) =>
+                                  setFluid((f) => ({
+                                    ...f,
+                                    gasOilRatio: e.target.value,
+                                  }))
+                                }
+                                placeholder="—"
+                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
+                              />
+                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
+                                scf/stb
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </PanelCard>
                     </div>
@@ -644,51 +688,57 @@ export default function MudProperties() {
                         title="Calibration"
                         headerAction={<RestoreDefaultsButton />}
                       >
-                        <div className="grid grid-cols-[140px_1fr] gap-3 items-center">
-                          <Label className="text-xs text-muted-foreground text-left">
-                            Viscometer cal. date
-                          </Label>
-                          <Input
-                            value={fluid.viscometerCalDate}
-                            onChange={(e) =>
-                              setFluid((f) => ({
-                                ...f,
-                                viscometerCalDate: e.target.value,
-                              }))
-                            }
-                            placeholder="—"
-                            type="date"
-                            className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
-                          />
-                          <Label className="text-xs text-muted-foreground text-left">
-                            Density cal. date
-                          </Label>
-                          <Input
-                            value={fluid.densityCalDate}
-                            onChange={(e) =>
-                              setFluid((f) => ({
-                                ...f,
-                                densityCalDate: e.target.value,
-                              }))
-                            }
-                            placeholder="—"
-                            type="date"
-                            className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
-                          />
-                          <Label className="text-xs text-muted-foreground text-left">
-                            Temp. sensor offset
-                          </Label>
-                          <Input
-                            value={fluid.tempSensorOffset}
-                            onChange={(e) =>
-                              setFluid((f) => ({
-                                ...f,
-                                tempSensorOffset: e.target.value,
-                              }))
-                            }
-                            placeholder="°F"
-                            className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
-                          />
+                        <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 items-start">
+                          <div className="space-y-2 min-w-0">
+                            <Label className="h-5 flex items-center text-sm">
+                              Viscometer cal. date
+                            </Label>
+                            <Input
+                              value={fluid.viscometerCalDate}
+                              onChange={(e) =>
+                                setFluid((f) => ({
+                                  ...f,
+                                  viscometerCalDate: e.target.value,
+                                }))
+                              }
+                              placeholder="—"
+                              type="date"
+                              className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
+                            />
+                          </div>
+                          <div className="space-y-2 min-w-0">
+                            <Label className="h-5 flex items-center text-sm">
+                              Density cal. date
+                            </Label>
+                            <Input
+                              value={fluid.densityCalDate}
+                              onChange={(e) =>
+                                setFluid((f) => ({
+                                  ...f,
+                                  densityCalDate: e.target.value,
+                                }))
+                              }
+                              placeholder="—"
+                              type="date"
+                              className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
+                            />
+                          </div>
+                          <div className="space-y-2 min-w-0">
+                            <Label className="h-5 flex items-center text-sm">
+                              Temp. sensor offset
+                            </Label>
+                            <Input
+                              value={fluid.tempSensorOffset}
+                              onChange={(e) =>
+                                setFluid((f) => ({
+                                  ...f,
+                                  tempSensorOffset: e.target.value,
+                                }))
+                              }
+                              placeholder="°F"
+                              className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
+                            />
+                          </div>
                         </div>
                       </PanelCard>
                     </div>
@@ -753,7 +803,7 @@ export default function MudProperties() {
               </div>
 
               {/* Right sidebar - Calculated outputs & Preset summary */}
-              <aside className="w-72 shrink-0 hidden xl:block space-y-4">
+              <aside className="w-full xl:w-72 shrink-0 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-4">
                 <PanelCard title="Calculated Outputs" className="h-auto">
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
