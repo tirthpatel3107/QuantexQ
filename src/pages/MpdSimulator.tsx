@@ -1,5 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useMemo, useEffect, useRef } from "react";
 import {
   Lock,
   Database,
@@ -660,6 +659,7 @@ function ControlPanel({
       <div className="flex h-full items-center pl-1 pr-3 sm:pl-2 sm:pr-6 gap-2 sm:gap-4 bg-[#0C111F] border-r border-white/5 relative group shrink-0">
         {/* Toggle Button - Absolute left or flex */}
         <button
+          id="flow-control-toggle"
           onClick={() => setShowFlowControls(!showFlowControls)}
           className="h-full w-5 flex items-center justify-center hover:bg-white/5 transition-colors -ml-1 sm:-ml-2 mr-1"
         >
@@ -785,6 +785,43 @@ function ControlPanel({
 export default function MpdSimulator() {
   const [showFlowControls, setShowFlowControls] = useState(false);
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const flowControlRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        showFlowControls &&
+        flowControlRef.current &&
+        !flowControlRef.current.contains(event.target as Node) &&
+        !(
+          event.target instanceof Element &&
+          event.target.closest("#flow-control-toggle")
+        )
+      ) {
+        setShowFlowControls(false);
+      }
+    }
+
+    function handleScroll(event: Event) {
+      // Close if scrolling happens outside the control stack
+      if (
+        showFlowControls &&
+        flowControlRef.current &&
+        event.target instanceof Node &&
+        !flowControlRef.current.contains(event.target)
+      ) {
+        setShowFlowControls(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("scroll", handleScroll, { capture: true });
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("scroll", handleScroll, { capture: true });
+    };
+  }, [showFlowControls]);
 
   const headerActions = (
     <div className="flex items-center gap-1">
@@ -843,6 +880,7 @@ export default function MpdSimulator() {
 
           <div>
             <div
+              ref={flowControlRef}
               className={cn(
                 // "absolute bottom-0 sm:-bottom-[45px] md:-bottom-[5px] left-0 right-0 z-30 transition-all duration-300 ease-in-out transform",
                 "absolute max-w-[400px] max-sm:max-w-[300px] ml-4 bottom-[102px] max-lg:bottom-[100px] left-0 right-0 z-50 transition-all duration-300 ease-in-out transform",
