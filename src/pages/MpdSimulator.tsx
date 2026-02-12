@@ -655,13 +655,13 @@ function ControlPanel({
   setShowFlowControls: (v: boolean) => void;
 }) {
   return (
-    <div className="h-[72px] bg-[#0C111F] border border-border/30 rounded-lg px-4 flex items-center shrink-0 backdrop-blur-sm z-10 font-sans shadow-[0_-4px_20px_rgba(0,0,0,0.4)] overflow-hidden select-none">
+    <div className="h-[72px] bg-[#0C111F] border border-border/30 rounded-lg px-2 sm:px-4 flex items-center shrink-0 backdrop-blur-sm z-10 font-sans shadow-[0_-4px_20px_rgba(0,0,0,0.4)] overflow-x-auto overflow-y-hidden select-none custom-scrollbar">
       {/* 1. Toggle & Flow Difference (Left) */}
-      <div className="flex h-full items-center pl-2 pr-6 gap-4 bg-[#0C111F] border-r border-white/5 relative group shrink-0">
+      <div className="flex h-full items-center pl-1 pr-3 sm:pl-2 sm:pr-6 gap-2 sm:gap-4 bg-[#0C111F] border-r border-white/5 relative group shrink-0">
         {/* Toggle Button - Absolute left or flex */}
         <button
           onClick={() => setShowFlowControls(!showFlowControls)}
-          className="h-full w-5 flex items-center justify-center hover:bg-white/5 transition-colors -ml-2 mr-1"
+          className="h-full w-5 flex items-center justify-center hover:bg-white/5 transition-colors -ml-1 sm:-ml-2 mr-1"
         >
           <div className="h-8 w-4 bg-[#0C1322] border border-white/10 rounded-r-md flex items-center justify-center">
             {showFlowControls ? (
@@ -673,22 +673,21 @@ function ControlPanel({
         </button>
 
         {/* Flow Difference Component */}
-        <div className="flex items-center gap-4 w-[360px]">
+        <div className="flex items-center gap-2 sm:gap-4 w-[240px] xs:w-[280px] sm:w-[320px] md:w-[360px]">
           {/* Icon */}
-          <div className="h-10 w-10 rounded-full bg-[#111] flex items-center justify-center border-2 border-[#1f2128] shadow-[0_0_15px_rgba(0,0,0,0.5)] shrink-0 box-content">
-            <div className="h-3 w-3 bg-slate-300 rounded-full shadow-[0_0_8px_rgba(255,255,255,0.2)]" />
+          <div className="hidden xs:flex h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-[#111] items-center justify-center border-2 border-[#1f2128] shadow-[0_0_15px_rgba(0,0,0,0.5)] shrink-0 box-content">
+            <div className="h-2.5 w-2.5 sm:h-3 sm:w-3 bg-slate-300 rounded-full shadow-[0_0_8px_rgba(255,255,255,0.2)]" />
           </div>
 
           {/* Text & Bar */}
           <div className="flex-1 flex flex-col justify-center gap-1.5 pt-1">
             <div className="flex items-baseline justify-between w-full px-1">
-              <span className="panel-title text-sm font-bold text-slate-400 tracking-wide">
+              <span className="panel-title text-xc sm:text-sm font-bold text-slate-400 tracking-wide uppercase whitespace-nowrap">
                 Flow Difference
               </span>
-              {/* <span className="text-lg font-bold tabular-nums text-white leading-none antialiased"> */}
-              <span className="font-bold tabular-nums text-primary flex-shrink-0 antialiased">
+              <span className="font-bold tabular-nums text-primary flex-shrink-0 antialiased text-xs sm:text-base">
                 0{" "}
-                <span className="text-[14px] text-primary font-medium ml-0.5 antialiased">
+                <span className="text-[10px] sm:text-[14px] text-primary font-medium ml-0.5 antialiased">
                   gpm
                 </span>
               </span>
@@ -704,14 +703,14 @@ function ControlPanel({
       </div>
 
       {/* 2. Gauges (Middle) */}
-      <div className="flex items-center gap-5 px-6 border-r border-white/5 h-full bg-[#0C111F] shrink-0">
-        <div className="flex gap-4">
+      <div className="flex items-center gap-3 sm:gap-5 px-3 sm:px-6 border-r border-white/5 h-full bg-[#0C111F] shrink-0">
+        <div className="flex gap-2 sm:gap-4">
           <ArcGauge value={0} label="Choke A" color="#60a5fa" />
           <ArcGauge value={100} label="Choke B" color="#eab308" />
         </div>
 
         {/* Arrow & Limit Indicator */}
-        <div className="flex flex-col gap-1.5 w-28 opacity-80 pt-1">
+        <div className="flex flex-col gap-1.5 w-20 sm:w-28 opacity-80 pt-1">
           {/* Arrow Line */}
           <div className="h-[2px] w-full bg-[#1f2937] relative mt-1">
             <div className="absolute left-0 top-1/2 -translate-y-1/2 h-0 w-0 border-y-[3px] border-y-transparent border-r-[6px] border-r-[#eab308]" />
@@ -729,27 +728,27 @@ function ControlPanel({
       </div>
 
       {/* 3. Auto Controls (Right) */}
-      <div className="flex-1 flex flex-col justify-center gap-2.5 px-6 min-w-0">
+      <div className="flex-1 flex flex-col justify-center gap-2.5 px-3 sm:px-6 min-w-[320px] md:min-w-[500px]">
         {/* Auto Control Row */}
-        <div className="flex items-center gap-4">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider w-28 text-right shrink-0">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider w-24 sm:w-28 text-right shrink-0 whitespace-nowrap">
             AUTO CONTROL
           </span>
           <div className="flex-1 h-4 bg-[#0a0a0c] rounded-[1px] border border-white/5 p-[1px]">
             <SegmentedBar count={60} fillCount={0} emptyColor="bg-[#15171e]" />
           </div>
-          <span className="text-[9px] font-mono text-slate-700 font-bold shrink-0 w-24 text-right">
+          <span className="hidden sm:inline-block text-[9px] font-mono text-slate-700 font-bold shrink-0 w-24 text-right">
             Hi/Day / AAC p
           </span>
         </div>
 
         {/* Auto Detection Row */}
-        <div className="flex items-center gap-4">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider w-28 text-right shrink-0">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider w-24 sm:w-28 text-right shrink-0 whitespace-nowrap">
             AUTO DETECTION
           </span>
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <span className="text-xs font-bold text-cyan-400 ml-1 w-6 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+            <span className="text-[10px] sm:text-xs font-bold text-cyan-400 ml-1 w-4 sm:w-6 shrink-0">
               ON
             </span>
             <div className="flex-1 h-4 bg-[#0a0a0c] rounded-[1px] border border-white/5 p-[1px]">
@@ -762,17 +761,17 @@ function ControlPanel({
             </div>
           </div>
 
-          <div className="ml-auto flex gap-2 items-center shrink-0 w-24 justify-end">
-            <span className="text-[9px] font-mono text-slate-700 font-bold">
+          <div className="ml-auto flex gap-1 sm:gap-2 items-center shrink-0 w-auto sm:w-24 justify-end">
+            <span className="hidden sm:inline text-[9px] font-mono text-slate-700 font-bold">
               1600
             </span>
-            <span className="text-[9px] font-mono text-slate-700 font-bold">
+            <span className="hidden sm:inline text-[9px] font-mono text-slate-700 font-bold">
               Tria
             </span>
             <span className="bg-[#111] border border-white/10 px-1.5 py-0.5 rounded-[2px] text-white font-bold text-[10px] font-mono min-w-[28px] text-center">
               155
             </span>
-            <span className="text-[9px] font-mono text-slate-600 font-bold">
+            <span className="hidden sm:inline text-[9px] font-mono text-slate-600 font-bold">
               ppm
             </span>
           </div>
@@ -816,7 +815,7 @@ export default function MpdSimulator() {
   return (
     <PageLayout className="pt-14">
       {/* <SidebarLayout> */}
-      <div className="px-4 py-4">
+      <div className="px-4 py-4 max-sm:mt-10">
         <PageHeaderBar
           icon={<Gauge className="h-5 w-5 text-primary-foreground" />}
           title="MPD Simulator"
@@ -836,525 +835,514 @@ export default function MpdSimulator() {
         />
       </div>
 
-      <div className="flex flex-col h-[calc(100vh-theme(spacing.1))] bg-background text-foreground overflow-hidden font-sans selection:bg-primary/20">
+      <div className="flex flex-col bg-background text-foreground overflow-hidden font-sans selection:bg-primary/20">
         {/* <SimulatorHeader /> */}
 
         <div className="flex flex-1 min-h-0 relative px-4 pb-4">
           {/* <Sidebar /> */}
 
+          <div>
+            <div
+              className={cn(
+                // "absolute bottom-0 sm:-bottom-[45px] md:-bottom-[5px] left-0 right-0 z-30 transition-all duration-300 ease-in-out transform",
+                "absolute max-w-[400px] max-sm:max-w-[300px] ml-4 bottom-[102px] max-lg:bottom-[100px] left-0 right-0 z-50 transition-all duration-300 ease-in-out transform",
+                showFlowControls
+                  ? "translate-y-0 opacity-100  bg-[#0C1322]"
+                  : "translate-y-8 opacity-0 pointer-events-none",
+              )}
+            >
+              <div className="bg-black/60 backdrop-blur-sm border-t border-white/5 shadow-2xl rounded-b-lg p-3">
+                <FlowControlStack />
+              </div>
+            </div>
+          </div>
+
           <main className="flex-1 flex flex-col min-w-0 bg-background">
             {/* Top Grid Area */}
-            <div className="flex-1 grid grid-cols-5 gap-4 py-4 pt-2 min-h-0 overflow-visible relative">
-              {/* Wallpaper / Grid lines effect */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-[0.03]"
-                style={{
-                  // backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
-                  backgroundSize: "40px 40px",
-                }}
+            <div>
+              <div className="flex-1 grid grid-cols-5 gap-4 py-4 pt-2 min-h-0 xs:grid-cols-1 max-sm:pb-4 max-sm:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 xs:gap-2 sm:gap-3 md:gap-4 py-2 sm:py-3 md:py-4 pt-2 min-h-0 overflow-y-auto custom-scrollbar relative pb-20 md:pb-4 overflow-visible relative">
+                {/* Wallpaper / Grid lines effect */}
+                <div
+                  className="absolute inset-0 pointer-events-none opacity-[0.03]"
+                  style={{
+                    backgroundSize: "40px 40px",
+                  }}
+                />
+
+                {/* Col 1: Flow */}
+                <div className="relative">
+                  {/* Main Card */}
+                  <div className="group flex flex-col min-h-[480px] max-h-[620px] h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
+                    {/* Header */}
+                    <div className="panel-header flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <button
+                          type="button"
+                          onClick={() => setExpandedCard("flow")}
+                          className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                          aria-label="Flow panel actions"
+                        >
+                          <Gauge className="h-4 w-4 transition-opacity group-hover:opacity-0" />
+                          <Maximize2 className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
+                        </button>
+                        <span className="panel-title truncate">Flow</span>
+                      </div>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="p-4 pt-3 pb-6 border-b border-border/30">
+                      <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                        <StatRow label="Flow In" value="580" unit="gpm" />
+                        <StatRow
+                          label="Flow Out"
+                          value="596"
+                          unit="gpm"
+                          highlight
+                        />
+                      </div>
+                      <div className="mt-8 text-[10px] text-muted-foreground flex items-center gap-2 opacity-60">
+                        <span>High Limit</span>
+                        <div className="flex-1 border-b border-dashed border-muted-foreground/50"></div>
+                      </div>
+                    </div>
+
+                    {/* Charts Section */}
+                    <div className="flex-1 min-h-0 p-4 flex flex-col relative gap-4">
+                      <SetpointTransitionChart
+                        label="Flow Difference"
+                        color="#3b82f6"
+                      />
+
+                      <div className="flex-1 min-h-0 -ml-2 pb-4">
+                        <SimulatorChart
+                          color="#21d5ed"
+                          seriesColors={["#21d5ed", "#f59f0a"]}
+                          seriesLabels={["Flow In", "Flow Out"]}
+                          valueUnit="gpm"
+                          minY={0}
+                          maxY={1000}
+                          currentValues={[580, 596]}
+                        />
+                      </div>
+
+                      {/* Value Badges */}
+                      <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
+                        {[
+                          { label: "Flow In", value: "580", unit: "gpm" },
+                          { label: "Flow Out", value: "596", unit: "gpm" },
+                        ].map((m, i) => {
+                          const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
+                          const bgColor =
+                            badgeBgColors[i % badgeBgColors.length];
+
+                          return (
+                            <Tooltip key={i}>
+                              <TooltipTrigger asChild>
+                                <span
+                                  className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-bold text-black tabular-nums"
+                                  style={{ backgroundColor: bgColor }}
+                                >
+                                  {m.value}
+                                  <span className="ml-0.5 opacity-80">
+                                    {m.unit}
+                                  </span>
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{m.label}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Col 2: Density */}
+                <div className="group flex flex-col min-h-[480px] max-h-[620px] h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
+                  <div className="panel-header flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <button
+                        type="button"
+                        onClick={() => setExpandedCard("density")}
+                        className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                        aria-label="Density panel actions"
+                      >
+                        <Thermometer
+                          className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                          aria-hidden
+                        />
+                        <Maximize2
+                          className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                          aria-hidden
+                        />
+                      </button>
+                      <span className="panel-title truncate">Density</span>
+                    </div>
+                  </div>
+                  <div className="p-4 pt-3 pb-6 border-b border-border/30">
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                      <StatRow label="Density In" value="12.6" unit="ppg" />
+                      <StatRow
+                        label="Density Out"
+                        value="12.51"
+                        unit="ppg"
+                        highlight
+                      />
+                    </div>
+                    <div className="mt-8 text-[10px] text-muted-foreground flex items-center gap-2 opacity-60">
+                      <span>High Limit</span>
+                      <div className="flex-1 border-b border-dashed border-muted-foreground/50"></div>
+                    </div>
+                  </div>
+                  <div className="flex-1 min-h-0 p-4 flex flex-col relative gap-4">
+                    {/* Setpoint Transition Component */}
+                    <SetpointTransitionChart label="Density" color="#eab308" />
+
+                    {/* Main Chart */}
+                    <div className="flex-1 min-h-0 -ml-2 pb-4">
+                      <SimulatorChart
+                        color="#21d5ed"
+                        seriesColors={["#21d5ed", "#f59f0a"]}
+                        seriesLabels={["Density In", "Density Out"]}
+                        valueUnit="ppg"
+                        minY={0}
+                        maxY={800}
+                      />
+                    </div>
+
+                    {/* Value Badges */}
+                    <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
+                      {[
+                        { label: "Density In", value: "12.6", unit: "ppg" },
+                        { label: "Density Out", value: "12.51", unit: "ppg" },
+                      ].map((m, i) => {
+                        const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
+                        const isLastBadge = i % 3 === 2;
+                        const bgColor = isLastBadge
+                          ? undefined
+                          : badgeBgColors[i % badgeBgColors.length];
+
+                        const tooltipText = m.label ?? "";
+
+                        return (
+                          <Tooltip key={i}>
+                            <TooltipTrigger asChild>
+                              <span
+                                className={cn(
+                                  "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
+                                  isLastBadge
+                                    ? "bg-black text-white dark:bg-white dark:text-black"
+                                    : "text-black",
+                                )}
+                                style={
+                                  bgColor != null
+                                    ? { backgroundColor: bgColor }
+                                    : undefined
+                                }
+                              >
+                                <span className="min-w-0 truncate font-bold">
+                                  {m.value}
+                                </span>
+                                {m.unit != null && m.unit !== "" && (
+                                  <span
+                                    className="ml-0.5 shrink-0 font-bold"
+                                    style={{ opacity: 0.8 }}
+                                  >
+                                    {m.unit}
+                                  </span>
+                                )}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{tooltipText}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Col 3: SBP Control */}
+                <div className="group flex flex-col min-h-[480px] max-h-[620px] h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
+                  <div className="panel-header flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <button
+                        type="button"
+                        onClick={() => setExpandedCard("sbp")}
+                        className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                        aria-label="SBP Control panel actions"
+                      >
+                        <Gauge
+                          className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                          aria-hidden
+                        />
+                        <Maximize2
+                          className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                          aria-hidden
+                        />
+                      </button>
+                      <span className="panel-title truncate">SBP Control</span>
+                    </div>
+                  </div>
+                  <div className="p-4 pt-3 pb-6 border-b border-border/30">
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                      <StatRow label="SBP" value="750" />
+                      <StatRow
+                        label="SP"
+                        value="750"
+                        unit="psi"
+                        subValue="760 psi (High)"
+                      />
+                    </div>
+                    <div className="mt-8 text-[10px] text-muted-foreground flex items-center gap-2 opacity-60">
+                      <span>High Limit</span>
+                      <div className="flex-1 border-b border-dashed border-muted-foreground/50"></div>
+                    </div>
+                  </div>
+                  <div className="flex-1 min-h-0 p-4 flex flex-col relative gap-4">
+                    {/* Setpoint Transition Component */}
+                    <SetpointTransitionChart label="SBP" color="#eab308" />
+
+                    {/* Main Chart */}
+                    <div className="flex-1 min-h-0 -ml-2 pb-4">
+                      <SimulatorChart
+                        color="#21d5ed"
+                        seriesColors={["#21d5ed", "#f59f0a"]}
+                        seriesLabels={["SBP", "SP"]}
+                        valueUnit="psi"
+                        minY={100}
+                        maxY={900}
+                      />
+                    </div>
+
+                    {/* Value Badges */}
+                    <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
+                      {[
+                        { label: "SBP", value: "750", unit: "psi" },
+                        { label: "SP", value: "760", unit: "psi" },
+                      ].map((m, i) => {
+                        const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
+                        const isLastBadge = i % 3 === 2;
+                        const bgColor = isLastBadge
+                          ? undefined
+                          : badgeBgColors[i % badgeBgColors.length];
+
+                        const tooltipText = m.label ?? "";
+
+                        return (
+                          <Tooltip key={i}>
+                            <TooltipTrigger asChild>
+                              <span
+                                className={cn(
+                                  "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
+                                  isLastBadge
+                                    ? "bg-black text-white dark:bg-white dark:text-black"
+                                    : "text-black",
+                                )}
+                                style={
+                                  bgColor != null
+                                    ? { backgroundColor: bgColor }
+                                    : undefined
+                                }
+                              >
+                                <span className="min-w-0 truncate font-bold">
+                                  {m.value}
+                                </span>
+                                {m.unit != null && m.unit !== "" && (
+                                  <span
+                                    className="ml-0.5 shrink-0 font-bold"
+                                    style={{ opacity: 0.8 }}
+                                  >
+                                    {m.unit}
+                                  </span>
+                                )}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{tooltipText}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Col 4: SPP Control */}
+                <div className="group flex flex-col min-h-[480px] max-h-[620px] h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
+                  <div className="panel-header flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <button
+                        type="button"
+                        onClick={() => setExpandedCard("spp")}
+                        className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                        aria-label="SPP Control panel actions"
+                      >
+                        <Gauge
+                          className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                          aria-hidden
+                        />
+                        <Maximize2
+                          className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                          aria-hidden
+                        />
+                      </button>
+                      <span className="panel-title truncate">SPP Control</span>
+                    </div>
+                  </div>
+                  <div className="p-4 pt-3 pb-6 border-b border-border/30">
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                      <StatRow
+                        label="SPP"
+                        value="6146.5"
+                        unit="psi"
+                        highlight
+                      />
+                      <StatRow
+                        label="SP"
+                        value="6150"
+                        unit="psi"
+                        subValue="6160 psi (High)"
+                      />
+                    </div>
+                    <div className="mt-8 text-[10px] text-muted-foreground flex items-center gap-2 opacity-60">
+                      <span>High Limit</span>
+                      <div className="flex-1 border-b border-dashed border-muted-foreground/50"></div>
+                    </div>
+                  </div>
+                  <div className="flex-1 min-h-0 p-4 flex flex-col relative gap-4">
+                    {/* Setpoint Transition Component */}
+                    <SetpointTransitionChart label="SPP" color="#60a5fa" />
+
+                    {/* Main Chart */}
+                    <div className="flex-1 min-h-0 -ml-2 pb-4">
+                      <SimulatorChart
+                        color="#21d5ed"
+                        seriesColors={["#21d5ed", "#f59f0a"]}
+                        seriesLabels={["SPP", "SP"]}
+                        valueUnit="psi"
+                        minY={0}
+                        maxY={1000}
+                      />
+                    </div>
+
+                    {/* Value Badges */}
+                    <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
+                      {[
+                        { label: "SPP", value: "6146.5", unit: "psi" },
+                        { label: "SP", value: "6150", unit: "psi" },
+                      ].map((m, i) => {
+                        const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
+                        const isLastBadge = i % 3 === 2;
+                        const bgColor = isLastBadge
+                          ? undefined
+                          : badgeBgColors[i % badgeBgColors.length];
+
+                        const tooltipText = m.label ?? "";
+
+                        return (
+                          <Tooltip key={i}>
+                            <TooltipTrigger asChild>
+                              <span
+                                className={cn(
+                                  "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
+                                  isLastBadge
+                                    ? "bg-black text-white dark:bg-white dark:text-black"
+                                    : "text-black",
+                                )}
+                                style={
+                                  bgColor != null
+                                    ? { backgroundColor: bgColor }
+                                    : undefined
+                                }
+                              >
+                                <span className="min-w-0 truncate font-bold">
+                                  {m.value}
+                                </span>
+                                {m.unit != null && m.unit !== "" && (
+                                  <span
+                                    className="ml-0.5 shrink-0 font-bold"
+                                    style={{ opacity: 0.8 }}
+                                  >
+                                    {m.unit}
+                                  </span>
+                                )}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{tooltipText}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Col 5: Well Visualization */}
+                <div className="group flex flex-col min-h-[480px] max-h-[620px] h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
+                  <div className="panel-header flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <button
+                        type="button"
+                        onClick={() => setExpandedCard("well")}
+                        className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                        aria-label="Well panel actions"
+                      >
+                        <LayoutTemplate
+                          className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                          aria-hidden
+                        />
+                        <Maximize2
+                          className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                          aria-hidden
+                        />
+                      </button>
+                      <span className="panel-title truncate">Well</span>
+                    </div>
+                  </div>
+                  <div className="flex-1 min-h-0 p-4 flex flex-col relative gap-4">
+                    <div className="flex-1 w-full bg-[#0a0a0a] rounded-lg relative overflow-hidden shadow-inner border border-white/5 group">
+                      {/* Richer visualization placeholder */}
+                      <div
+                        className="absolute inset-0 opacity-20"
+                        style={{
+                          backgroundImage: `repeating-linear-gradient(0deg, transparent 0, transparent 49px, #333 50px), repeating-linear-gradient(90deg, transparent 0, transparent 49px, #333 50px)`,
+                          backgroundSize: "100% 50px",
+                        }}
+                      ></div>
+
+                      {/* Mock well bore */}
+                      <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-16 border-l border-r border-white/10 bg-white/5">
+                        <div className="absolute bottom-[20%] left-0 right-0 h-[30%] bg-gradient-to-t from-[#21d5ed]/40 to-[#21d5ed]/5 border-y border-[#21d5ed]/30 shadow-[0_0_15px_rgba(33,213,237,0.15)]"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Bottom Control Area */}
+              <ControlPanel
+                showFlowControls={showFlowControls}
+                setShowFlowControls={setShowFlowControls}
               />
-
-              {/* Col 1: Flow */}
-              <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
-                <div className="panel-header flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <button
-                      type="button"
-                      onClick={() => setExpandedCard("flow")}
-                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
-                      aria-label="Flow panel actions"
-                    >
-                      <Gauge
-                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
-                        aria-hidden
-                      />
-                      <Maximize2
-                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
-                        aria-hidden
-                      />
-                    </button>
-                    <span className="panel-title truncate">Flow</span>
-                  </div>
-                </div>
-                <div className="p-4 pt-3 pb-6 border-b border-border/30">
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                    <StatRow label="Flow In" value="580" unit="gpm" />
-                    <StatRow
-                      label="Flow Out"
-                      value="596"
-                      unit="gpm"
-                      highlight
-                    />
-                  </div>
-                  <div className="mt-8 text-[10px] text-muted-foreground flex items-center gap-2 opacity-60">
-                    <span>High Limit</span>
-                    <div className="flex-1 border-b border-dashed border-muted-foreground/50"></div>
-                  </div>
-                </div>
-                <div className="flex-1 min-h-0 p-4 flex flex-col relative gap-4">
-                  {/* Setpoint Transition Component */}
-                  <SetpointTransitionChart
-                    label="Flow Difference"
-                    color="#3b82f6"
-                  />
-
-                  {/* Main Chart */}
-                  <div className="flex-1 min-h-0 -ml-2 pb-4">
-                    <SimulatorChart
-                      color="#21d5ed"
-                      seriesColors={["#21d5ed", "#f59f0a"]}
-                      seriesLabels={["Flow In", "Flow Out"]}
-                      valueUnit="gpm"
-                      minY={0}
-                      maxY={1000}
-                      currentValues={[580, 596]}
-                    />
-                  </div>
-
-                  {/* Value Badges */}
-                  <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
-                    {[
-                      { label: "Flow In", value: "580", unit: "gpm" },
-                      { label: "Flow Out", value: "596", unit: "gpm" },
-                    ].map((m, i) => {
-                      const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
-                      const isLastBadge = i % 2 === 2; // Keep logic simple or just rely on index
-                      const bgColor = badgeBgColors[i % badgeBgColors.length];
-
-                      const tooltipText = m.label ?? "";
-
-                      return (
-                        <Tooltip key={i}>
-                          <TooltipTrigger asChild>
-                            <span
-                              className={cn(
-                                "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
-                                isLastBadge
-                                  ? "bg-black text-white dark:bg-white dark:text-black"
-                                  : "text-black",
-                              )}
-                              style={
-                                bgColor != null
-                                  ? { backgroundColor: bgColor }
-                                  : undefined
-                              }
-                            >
-                              <span className="min-w-0 truncate font-bold">
-                                {m.value}
-                              </span>
-                              {m.unit != null && m.unit !== "" && (
-                                <span
-                                  className="ml-0.5 shrink-0 font-bold"
-                                  style={{ opacity: 0.8 }}
-                                >
-                                  {m.unit}
-                                </span>
-                              )}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{tooltipText}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      );
-                    })}
-                  </div>
-
-                  {/* Integrated Flow Column Stack - overlay positioned */}
-                  <div
-                    className={cn(
-                      "absolute bottom-0 left-0 right-0 z-20 pb-2 px-2 transition-all duration-300 ease-in-out transform flex flex-col justify-end pointer-events-none",
-                      showFlowControls
-                        ? "translate-y-0 opacity-100 bg-[#0C1322]"
-                        : "translate-y-8 opacity-0",
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        "bg-black/60 backdrop-blur-sm border-t border-white/5 rounded-t-sm shadow-2xl pt-2 -mx-2 px-2 pb-2",
-                        showFlowControls ? "pointer-events-auto" : "pointer-events-none",
-                      )}
-                    >
-                      <FlowControlStack />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Col 2: Density */}
-              <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
-                <div className="panel-header flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <button
-                      type="button"
-                      onClick={() => setExpandedCard("density")}
-                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
-                      aria-label="Density panel actions"
-                    >
-                      <Thermometer
-                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
-                        aria-hidden
-                      />
-                      <Maximize2
-                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
-                        aria-hidden
-                      />
-                    </button>
-                    <span className="panel-title truncate">Density</span>
-                  </div>
-                </div>
-                <div className="p-4 pt-3 pb-6 border-b border-border/30">
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                    <StatRow label="Density In" value="12.6" unit="ppg" />
-                    <StatRow
-                      label="Density Out"
-                      value="12.51"
-                      unit="ppg"
-                      highlight
-                    />
-                  </div>
-                  <div className="mt-8 text-[10px] text-muted-foreground flex items-center gap-2 opacity-60">
-                    <span>High Limit</span>
-                    <div className="flex-1 border-b border-dashed border-muted-foreground/50"></div>
-                  </div>
-                </div>
-                <div className="flex-1 min-h-0 p-4 flex flex-col relative gap-4">
-                  {/* Setpoint Transition Component */}
-                  <SetpointTransitionChart label="Density" color="#eab308" />
-
-                  {/* Main Chart */}
-                  <div className="flex-1 min-h-0 -ml-2 pb-4">
-                    <SimulatorChart
-                      color="#21d5ed"
-                      seriesColors={["#21d5ed", "#f59f0a"]}
-                      seriesLabels={["Density In", "Density Out"]}
-                      valueUnit="ppg"
-                      minY={0}
-                      maxY={800}
-                    />
-                  </div>
-
-                  {/* Value Badges */}
-                  <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
-                    {[
-                      { label: "Density In", value: "12.6", unit: "ppg" },
-                      { label: "Density Out", value: "12.51", unit: "ppg" },
-                    ].map((m, i) => {
-                      const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
-                      const isLastBadge = i % 3 === 2;
-                      const bgColor = isLastBadge
-                        ? undefined
-                        : badgeBgColors[i % badgeBgColors.length];
-
-                      const tooltipText = m.label ?? "";
-
-                      return (
-                        <Tooltip key={i}>
-                          <TooltipTrigger asChild>
-                            <span
-                              className={cn(
-                                "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
-                                isLastBadge
-                                  ? "bg-black text-white dark:bg-white dark:text-black"
-                                  : "text-black",
-                              )}
-                              style={
-                                bgColor != null
-                                  ? { backgroundColor: bgColor }
-                                  : undefined
-                              }
-                            >
-                              <span className="min-w-0 truncate font-bold">
-                                {m.value}
-                              </span>
-                              {m.unit != null && m.unit !== "" && (
-                                <span
-                                  className="ml-0.5 shrink-0 font-bold"
-                                  style={{ opacity: 0.8 }}
-                                >
-                                  {m.unit}
-                                </span>
-                              )}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{tooltipText}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Col 3: SBP Control */}
-              <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
-                <div className="panel-header flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <button
-                      type="button"
-                      onClick={() => setExpandedCard("sbp")}
-                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
-                      aria-label="SBP Control panel actions"
-                    >
-                      <Gauge
-                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
-                        aria-hidden
-                      />
-                      <Maximize2
-                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
-                        aria-hidden
-                      />
-                    </button>
-                    <span className="panel-title truncate">SBP Control</span>
-                  </div>
-                </div>
-                <div className="p-4 pt-3 pb-6 border-b border-border/30">
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                    <StatRow label="SBP" value="750" />
-                    <StatRow
-                      label="SP"
-                      value="750"
-                      unit="psi"
-                      subValue="760 psi (High)"
-                    />
-                  </div>
-                  <div className="mt-8 text-[10px] text-muted-foreground flex items-center gap-2 opacity-60">
-                    <span>High Limit</span>
-                    <div className="flex-1 border-b border-dashed border-muted-foreground/50"></div>
-                  </div>
-                </div>
-                <div className="flex-1 min-h-0 p-4 flex flex-col relative gap-4">
-                  {/* Setpoint Transition Component */}
-                  <SetpointTransitionChart label="SBP" color="#eab308" />
-
-                  {/* Main Chart */}
-                  <div className="flex-1 min-h-0 -ml-2 pb-4">
-                    <SimulatorChart
-                      color="#21d5ed"
-                      seriesColors={["#21d5ed", "#f59f0a"]}
-                      seriesLabels={["SBP", "SP"]}
-                      valueUnit="psi"
-                      minY={100}
-                      maxY={900}
-                    />
-                  </div>
-
-                  {/* Value Badges */}
-                  <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
-                    {[
-                      { label: "SBP", value: "750", unit: "psi" },
-                      { label: "SP", value: "760", unit: "psi" },
-                    ].map((m, i) => {
-                      const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
-                      const isLastBadge = i % 3 === 2;
-                      const bgColor = isLastBadge
-                        ? undefined
-                        : badgeBgColors[i % badgeBgColors.length];
-
-                      const tooltipText = m.label ?? "";
-
-                      return (
-                        <Tooltip key={i}>
-                          <TooltipTrigger asChild>
-                            <span
-                              className={cn(
-                                "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
-                                isLastBadge
-                                  ? "bg-black text-white dark:bg-white dark:text-black"
-                                  : "text-black",
-                              )}
-                              style={
-                                bgColor != null
-                                  ? { backgroundColor: bgColor }
-                                  : undefined
-                              }
-                            >
-                              <span className="min-w-0 truncate font-bold">
-                                {m.value}
-                              </span>
-                              {m.unit != null && m.unit !== "" && (
-                                <span
-                                  className="ml-0.5 shrink-0 font-bold"
-                                  style={{ opacity: 0.8 }}
-                                >
-                                  {m.unit}
-                                </span>
-                              )}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{tooltipText}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Col 4: SPP Control */}
-              <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
-                <div className="panel-header flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <button
-                      type="button"
-                      onClick={() => setExpandedCard("spp")}
-                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
-                      aria-label="SPP Control panel actions"
-                    >
-                      <Gauge
-                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
-                        aria-hidden
-                      />
-                      <Maximize2
-                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
-                        aria-hidden
-                      />
-                    </button>
-                    <span className="panel-title truncate">SPP Control</span>
-                  </div>
-                </div>
-                <div className="p-4 pt-3 pb-6 border-b border-border/30">
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                    <StatRow label="SPP" value="6146.5" unit="psi" highlight />
-                    <StatRow
-                      label="SP"
-                      value="6150"
-                      unit="psi"
-                      subValue="6160 psi (High)"
-                    />
-                  </div>
-                  <div className="mt-8 text-[10px] text-muted-foreground flex items-center gap-2 opacity-60">
-                    <span>High Limit</span>
-                    <div className="flex-1 border-b border-dashed border-muted-foreground/50"></div>
-                  </div>
-                </div>
-                <div className="flex-1 min-h-0 p-4 flex flex-col relative gap-4">
-                  {/* Setpoint Transition Component */}
-                  <SetpointTransitionChart label="SPP" color="#60a5fa" />
-
-                  {/* Main Chart */}
-                  <div className="flex-1 min-h-0 -ml-2 pb-4">
-                    <SimulatorChart
-                      color="#21d5ed"
-                      seriesColors={["#21d5ed", "#f59f0a"]}
-                      seriesLabels={["SPP", "SP"]}
-                      valueUnit="psi"
-                      minY={0}
-                      maxY={1000}
-                    />
-                  </div>
-
-                  {/* Value Badges */}
-                  <div className="px-2 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
-                    {[
-                      { label: "SPP", value: "6146.5", unit: "psi" },
-                      { label: "SP", value: "6150", unit: "psi" },
-                    ].map((m, i) => {
-                      const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
-                      const isLastBadge = i % 3 === 2;
-                      const bgColor = isLastBadge
-                        ? undefined
-                        : badgeBgColors[i % badgeBgColors.length];
-
-                      const tooltipText = m.label ?? "";
-
-                      return (
-                        <Tooltip key={i}>
-                          <TooltipTrigger asChild>
-                            <span
-                              className={cn(
-                                "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
-                                isLastBadge
-                                  ? "bg-black text-white dark:bg-white dark:text-black"
-                                  : "text-black",
-                              )}
-                              style={
-                                bgColor != null
-                                  ? { backgroundColor: bgColor }
-                                  : undefined
-                              }
-                            >
-                              <span className="min-w-0 truncate font-bold">
-                                {m.value}
-                              </span>
-                              {m.unit != null && m.unit !== "" && (
-                                <span
-                                  className="ml-0.5 shrink-0 font-bold"
-                                  style={{ opacity: 0.8 }}
-                                >
-                                  {m.unit}
-                                </span>
-                              )}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{tooltipText}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Col 5: Well Visualization */}
-              <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
-                <div className="panel-header flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <button
-                      type="button"
-                      onClick={() => setExpandedCard("well")}
-                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
-                      aria-label="Well panel actions"
-                    >
-                      <LayoutTemplate
-                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
-                        aria-hidden
-                      />
-                      <Maximize2
-                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
-                        aria-hidden
-                      />
-                    </button>
-                    <span className="panel-title truncate">Well</span>
-                  </div>
-                </div>
-                <div className="flex-1 min-h-0 p-4 flex flex-col relative gap-4">
-                  <div className="flex-1 w-full bg-[#0a0a0a] rounded-lg relative overflow-hidden shadow-inner border border-white/5 group">
-                    {/* Richer visualization placeholder */}
-                    <div
-                      className="absolute inset-0 opacity-20"
-                      style={{
-                        backgroundImage: `repeating-linear-gradient(0deg, transparent 0, transparent 49px, #333 50px), repeating-linear-gradient(90deg, transparent 0, transparent 49px, #333 50px)`,
-                        backgroundSize: "100% 50px",
-                      }}
-                    ></div>
-
-                    {/* Mock well bore */}
-                    <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-16 border-l border-r border-white/10 bg-white/5">
-                      <div className="absolute bottom-1/4 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-primary/20"></div>
-                    </div>
-
-
-                  </div>
-
-
-                </div>
-              </div>
             </div>
 
             {/* Bottom Control Area */}
-            <ControlPanel
+            {/* <ControlPanel
               showFlowControls={showFlowControls}
               setShowFlowControls={setShowFlowControls}
-            />
+            /> */}
           </main>
         </div>
       </div>
-      
-      <Dialog open={!!expandedCard} onOpenChange={(open) => !open && setExpandedCard(null)}>
+
+      <Dialog
+        open={!!expandedCard}
+        onOpenChange={(open) => !open && setExpandedCard(null)}
+      >
         <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col h-[80vh]">
           <DialogHeader>
             <DialogTitle className="text-foreground font-bold uppercase tracking-wide">
@@ -1366,125 +1354,145 @@ export default function MpdSimulator() {
             </DialogTitle>
           </DialogHeader>
           <div className="flex-1 w-full min-h-0 flex flex-col pt-4">
-             {expandedCard === "flow" && (
-                <>
-                  <div className="flex-1 min-h-0">
-                    <SimulatorChart
-                       color="#21d5ed"
-                       seriesColors={["#21d5ed", "#f59f0a"]}
-                       seriesLabels={["Flow In", "Flow Out"]}
-                       valueUnit="gpm"
-                       minY={0}
-                       maxY={1000}
-                       currentValues={[580, 596]}
-                    />
-                  </div>
-                  <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
-                     {[
-                       { label: "Flow In", value: "580", unit: "gpm" },
-                       { label: "Flow Out", value: "596", unit: "gpm" },
-                     ].map((m, i) => (
-                       <div key={i} className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]">
-                          <span className="mr-1 opacity-70">{m.label}:</span>
-                          <span>{m.value} {m.unit}</span>
-                       </div>
-                     ))}
-                  </div>
-                </>
-             )}
-
-             {expandedCard === "density" && (
-                <>
-                  <div className="flex-1 min-h-0">
-                    <SimulatorChart
-                       color="#21d5ed"
-                       seriesColors={["#21d5ed", "#f59f0a"]}
-                       seriesLabels={["Density In", "Density Out"]}
-                       valueUnit="ppg"
-                       minY={0}
-                       maxY={800}
-                    />
-                  </div>
-                  <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
-                     {[
-                       { label: "Density In", value: "12.6", unit: "ppg" },
-                       { label: "Density Out", value: "12.51", unit: "ppg" },
-                     ].map((m, i) => (
-                       <div key={i} className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]">
-                          <span className="mr-1 opacity-70">{m.label}:</span>
-                          <span>{m.value} {m.unit}</span>
-                       </div>
-                     ))}
-                  </div>
-                </>
-             )}
-
-             {expandedCard === "sbp" && (
-                <>
-                  <div className="flex-1 min-h-0">
-                    <SimulatorChart
-                       color="#21d5ed"
-                       seriesColors={["#21d5ed", "#f59f0a"]}
-                       seriesLabels={["SBP", "SP"]}
-                       valueUnit="psi"
-                       minY={100}
-                       maxY={900}
-                    />
-                  </div>
-                  <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
-                     {[
-                       { label: "SBP", value: "750", unit: "psi" },
-                       { label: "SP", value: "760", unit: "psi" },
-                     ].map((m, i) => (
-                       <div key={i} className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]">
-                          <span className="mr-1 opacity-70">{m.label}:</span>
-                          <span>{m.value} {m.unit}</span>
-                       </div>
-                     ))}
-                  </div>
-                </>
-             )}
-
-             {expandedCard === "spp" && (
-                <>
-                  <div className="flex-1 min-h-0">
-                    <SimulatorChart
-                       color="#21d5ed"
-                       seriesColors={["#21d5ed", "#f59f0a"]}
-                       seriesLabels={["SPP", "SP"]}
-                       valueUnit="psi"
-                       minY={0}
-                       maxY={1000}
-                    />
-                  </div>
-                  <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
-                     {[
-                       { label: "SPP", value: "6146.5", unit: "psi" },
-                       { label: "SP", value: "6150", unit: "psi" },
-                     ].map((m, i) => (
-                       <div key={i} className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]">
-                          <span className="mr-1 opacity-70">{m.label}:</span>
-                          <span>{m.value} {m.unit}</span>
-                       </div>
-                     ))}
-                  </div>
-                </>
-             )}
-
-             {expandedCard === "well" && (
-                 <div className="flex-1 w-full bg-[#0a0a0a] rounded-lg relative overflow-hidden shadow-inner border border-white/5 group">
+            {expandedCard === "flow" && (
+              <>
+                <div className="flex-1 min-h-0">
+                  <SimulatorChart
+                    color="#21d5ed"
+                    seriesColors={["#21d5ed", "#f59f0a"]}
+                    seriesLabels={["Flow In", "Flow Out"]}
+                    valueUnit="gpm"
+                    minY={0}
+                    maxY={1000}
+                    currentValues={[580, 596]}
+                  />
+                </div>
+                <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+                  {[
+                    { label: "Flow In", value: "580", unit: "gpm" },
+                    { label: "Flow Out", value: "596", unit: "gpm" },
+                  ].map((m, i) => (
                     <div
-                      className="absolute inset-0 opacity-20"
-                      style={{
-                        backgroundImage: `repeating-linear-gradient(0deg, transparent 0, transparent 49px, #333 50px), repeating-linear-gradient(90deg, transparent 0, transparent 49px, #333 50px)`,
-                        backgroundSize: "100% 50px",
-                      }}
-                    />
-                    <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-48 border-l border-r border-white/10 bg-white/5">
-                      <div className="absolute bottom-1/4 left-0 right-0 h-64 bg-gradient-to-b from-transparent to-primary/20"></div>
+                      key={i}
+                      className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]"
+                    >
+                      <span className="mr-1 opacity-70">{m.label}:</span>
+                      <span>
+                        {m.value} {m.unit}
+                      </span>
                     </div>
-                 </div>
-             )}
+                  ))}
+                </div>
+              </>
+            )}
+
+            {expandedCard === "density" && (
+              <>
+                <div className="flex-1 min-h-0">
+                  <SimulatorChart
+                    color="#21d5ed"
+                    seriesColors={["#21d5ed", "#f59f0a"]}
+                    seriesLabels={["Density In", "Density Out"]}
+                    valueUnit="ppg"
+                    minY={0}
+                    maxY={800}
+                  />
+                </div>
+                <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+                  {[
+                    { label: "Density In", value: "12.6", unit: "ppg" },
+                    { label: "Density Out", value: "12.51", unit: "ppg" },
+                  ].map((m, i) => (
+                    <div
+                      key={i}
+                      className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]"
+                    >
+                      <span className="mr-1 opacity-70">{m.label}:</span>
+                      <span>
+                        {m.value} {m.unit}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {expandedCard === "sbp" && (
+              <>
+                <div className="flex-1 min-h-0">
+                  <SimulatorChart
+                    color="#21d5ed"
+                    seriesColors={["#21d5ed", "#f59f0a"]}
+                    seriesLabels={["SBP", "SP"]}
+                    valueUnit="psi"
+                    minY={100}
+                    maxY={900}
+                  />
+                </div>
+                <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+                  {[
+                    { label: "SBP", value: "750", unit: "psi" },
+                    { label: "SP", value: "760", unit: "psi" },
+                  ].map((m, i) => (
+                    <div
+                      key={i}
+                      className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]"
+                    >
+                      <span className="mr-1 opacity-70">{m.label}:</span>
+                      <span>
+                        {m.value} {m.unit}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {expandedCard === "spp" && (
+              <>
+                <div className="flex-1 min-h-0">
+                  <SimulatorChart
+                    color="#21d5ed"
+                    seriesColors={["#21d5ed", "#f59f0a"]}
+                    seriesLabels={["SPP", "SP"]}
+                    valueUnit="psi"
+                    minY={0}
+                    maxY={1000}
+                  />
+                </div>
+                <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+                  {[
+                    { label: "SPP", value: "6146.5", unit: "psi" },
+                    { label: "SP", value: "6150", unit: "psi" },
+                  ].map((m, i) => (
+                    <div
+                      key={i}
+                      className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]"
+                    >
+                      <span className="mr-1 opacity-70">{m.label}:</span>
+                      <span>
+                        {m.value} {m.unit}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {expandedCard === "well" && (
+              <div className="flex-1 w-full bg-[#0a0a0a] rounded-lg relative overflow-hidden shadow-inner border border-white/5 group">
+                <div
+                  className="absolute inset-0 opacity-20"
+                  style={{
+                    backgroundImage: `repeating-linear-gradient(0deg, transparent 0, transparent 49px, #333 50px), repeating-linear-gradient(90deg, transparent 0, transparent 49px, #333 50px)`,
+                    backgroundSize: "100% 50px",
+                  }}
+                />
+                <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-48 border-l border-r border-white/10 bg-white/5">
+                  <div className="absolute bottom-1/4 left-0 right-0 h-64 bg-gradient-to-b from-transparent to-primary/20"></div>
+                </div>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
