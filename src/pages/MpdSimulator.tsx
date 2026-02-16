@@ -35,6 +35,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { PageHeaderBar, PageLayout, SidebarLayout } from "@/components/common";
+import { SegmentedBar } from "@/components/dashboard/SegmentedBar";
+import { FlowControlStack } from "@/components/dashboard/FlowControlStack";
+import { StatRow } from "@/components/dashboard/StatRow";
 
 function Sidebar() {
   const icons = [
@@ -66,46 +69,6 @@ function Sidebar() {
   );
 }
 
-interface StatRowProps {
-  label: string;
-  value: string;
-  unit?: string;
-  subValue?: string;
-  highlight?: boolean;
-}
-
-function StatRow({ label, value, unit, subValue, highlight }: StatRowProps) {
-  return (
-    <div className="flex flex-col min-w-0">
-      <span className="text-xs text-muted-foreground font-medium mb-1 truncate">
-        {label}
-      </span>
-      <div className="flex items-baseline gap-1.5">
-        <span
-          className={cn(
-            "text-2xl font-bold tracking-tight truncate",
-            highlight ? "text-primary" : "text-foreground",
-          )}
-        >
-          {value}
-        </span>
-        {unit && (
-          <span className="text-xs text-muted-foreground font-medium">
-            {unit}
-          </span>
-        )}
-      </div>
-      {subValue && (
-        <div className="h-4 mt-1 flex items-center">
-          <span className="text-[10px] text-muted-foreground truncate opacity-70">
-            {subValue}
-          </span>
-        </div>
-      )}
-      {!subValue && <div className="h-4 mt-1" />}
-    </div>
-  );
-}
 
 // --- Specialized Charts ---
 
@@ -529,123 +492,6 @@ function ArcGauge({
   );
 }
 
-function SegmentedBar({
-  count = 20,
-  fillCount = 0,
-  color = "bg-slate-700",
-  emptyColor = "bg-[#1a1c23]",
-}: {
-  count?: number;
-  fillCount?: number;
-  color?: string;
-  emptyColor?: string;
-}) {
-  return (
-    <div className="flex gap-[1px] h-full w-full">
-      {Array.from({ length: count }).map((_, i) => (
-        <div
-          key={i}
-          className={cn(
-            "flex-1 h-full rounded-[1px]",
-            i < fillCount ? color : emptyColor,
-          )}
-        />
-      ))}
-    </div>
-  );
-}
-
-// New component for the stack of controls (Kick/Loss/PRC)
-function FlowControlStack() {
-  return (
-    <div className="flex flex-col gap-1 pb-2">
-      {/* Kick Detection */}
-      <div className="bg-[#0C1322] border border-white/5 mx-2 rounded-sm px-3 py-2 flex items-center justify-between group cursor-pointer hover:border-white/10 transition-colors shadow-sm">
-        <div className="flex items-center gap-2">
-          <Triangle className="h-4 w-4 text-amber-500 fill-transparent stroke-[2.5]" />
-          <span className="text-[11px] font-bold text-gray-200 uppercase tracking-wide">
-            KICK DETECTION
-          </span>
-        </div>
-        <span className="text-[10px] font-bold text-slate-500 tracking-wider">
-          ARMED
-        </span>
-      </div>
-
-      {/* Loss Detection */}
-      <div className="bg-[#0C1322] border border-white/5 mx-2 rounded-sm px-3 py-2 flex items-center justify-between group cursor-pointer hover:border-white/10 transition-colors shadow-sm">
-        <div className="flex items-center gap-2">
-          <div className="h-4 w-4 rounded-full border-[2px] border-slate-600 flex items-center justify-center">
-            <div className="h-1 w-1 bg-slate-600 rounded-full" />
-          </div>
-          <span className="text-[11px] font-bold text-gray-200 uppercase tracking-wide">
-            LOSS DETECTION
-          </span>
-        </div>
-        <span className="text-[10px] font-bold text-slate-500 tracking-wider">
-          ARMED
-        </span>
-      </div>
-
-      {/* PRC Panel */}
-      <div className="bg-[#0C1322] border border-white/5 mx-2 rounded-sm p-2 shadow-sm">
-        {/* Header Row */}
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-[11px] font-bold text-gray-200 ml-1">PRC</span>
-          <div className="flex bg-[#0C1322] rounded-[1px] p-0.5 border border-white/5">
-            <span className="text-[9px] bg-black text-white px-1.5 py-0.5 rounded-[1px] cursor-pointer font-bold tracking-tight border border-white/10">
-              MAN
-            </span>
-            <span className="text-[9px] text-slate-500 px-1.5 py-0.5 hover:text-slate-300 cursor-pointer transition-colors font-medium">
-              4K
-            </span>
-            <span className="text-[9px] text-slate-500 px-1.5 py-0.5 hover:text-slate-300 cursor-pointer transition-colors font-medium">
-              OFF
-            </span>
-          </div>
-        </div>
-
-        {/* Value Row */}
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-[10px] font-bold text-slate-500 w-7 ml-1">
-            MAN
-          </span>
-          <div className="bg-[#0C1322] border border-white/10 rounded-[2px] w-9 h-5 flex items-center justify-center shadow-inner">
-            <span className="text-xs font-bold text-cyan-400 font-mono">
-              32
-            </span>
-          </div>
-          <div className="flex gap-1">
-            <button className="h-5 px-1.5 bg-[#0C1322] border border-white/5 rounded-[2px] text-[9px] font-bold text-slate-500 hover:text-slate-300 transition-colors">
-              Off
-            </button>
-            <button className="h-5 px-1.5 bg-[#0C1322] border border-white/5 rounded-[2px] text-[9px] font-bold text-slate-500 hover:text-slate-300 transition-colors">
-              $$ M
-            </button>
-          </div>
-        </div>
-
-        {/* Toggle Row */}
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-bold text-slate-500 w-7 ml-1">
-            AUX
-          </span>
-          <div className="flex bg-[#0C1322] rounded-[2px] p-0.5 border border-white/5">
-            <button className="px-1.5 py-0.5 text-[9px] font-bold text-slate-500 hover:text-slate-300 transition-colors">
-              ON
-            </button>
-            <button className="px-1.5 py-0.5 bg-cyan-400 text-black text-[9px] font-bold rounded-[1px] shadow-sm">
-              ON
-            </button>
-            <button className="px-1.5 py-0.5 text-[9px] font-bold text-slate-500 hover:text-slate-300 transition-colors">
-              OF
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function ControlPanel({
   showFlowControls,

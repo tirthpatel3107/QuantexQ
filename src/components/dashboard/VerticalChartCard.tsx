@@ -6,17 +6,14 @@ import type { EChartsOption } from "echarts";
 import { cn } from "@/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import {
-  Tooltip as UITooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { VerticalChartMetric } from "@/types/chart";
+import { COLORS } from "@/constants/colors";
+import { useTheme } from "@/components/theme-provider";
 
 export type { VerticalChartMetric };
 
@@ -83,10 +80,10 @@ const ChartInner = memo(function ChartInner({
     const times = data.map((d) => d.time);
     
     // Theme-specific colors
-    const axisColor = isDark ? "#ffffff" : "hsl(var(--foreground))";
-    const gridColor = isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)";
-    const tooltipBg = isDark ? "hsl(var(--card))" : "#ffffff";
-    const tooltipText = isDark ? "#ffffff" : "#000000";
+    const axisColor = isDark ? COLORS.charts_ui.axis_dark : COLORS.charts_ui.axis_light;
+    const gridColor = isDark ? COLORS.charts_ui.grid_dark : COLORS.charts_ui.grid_light;
+    const tooltipBg = isDark ? "hsl(var(--card))" : COLORS.charts_ui.tooltip_bg_light;
+    const tooltipText = isDark ? COLORS.charts_ui.tooltip_text_dark : COLORS.charts_ui.tooltip_text_light;
 
     const series = metrics
       .filter((m) => m.dataKey)
@@ -98,7 +95,7 @@ const ChartInner = memo(function ChartInner({
         smooth: 0.4,
         lineStyle: {
           width: 1.5,
-          color: badgeColors[i] || m.color || "#3b82f6",
+          color: badgeColors[i] || m.color || COLORS.data.out,
         },
         ...(threshold && i === metrics.length - 1
           ? {
@@ -106,13 +103,13 @@ const ChartInner = memo(function ChartInner({
                 symbol: "none",
                 label: { 
                   formatter: threshold.label, 
-                  position: "start", // Moved to top
-                  color: isDark ? "#ffffff" : "#000000",
+                  position: "start", 
+                  color: isDark ? COLORS.charts_ui.axis_dark : COLORS.charts_ui.axis_light,
                   fontSize: 11
                 },
                 lineStyle: { 
                   type: "dashed", 
-                  color: isDark ? "#ffffff" : "#000000", 
+                  color: isDark ? COLORS.charts_ui.axis_dark : COLORS.charts_ui.axis_light, 
                   width: 2 
                 },
                 data: [{ xAxis: threshold.value }],
@@ -124,7 +121,7 @@ const ChartInner = memo(function ChartInner({
     return {
       tooltip: {
         trigger: "axis",
-        appendToBody: true, // Render directly in body to avoid container scaling/transform issues which cause blur
+        appendToBody: true,
         renderMode: "html",
         transitionDuration: 0,
         backgroundColor: tooltipBg,
@@ -134,9 +131,8 @@ const ChartInner = memo(function ChartInner({
           color: tooltipText,
           fontSize: 12,
           fontFamily: "inherit",
-          fontWeight: 600, // Thicker text for clarity
+          fontWeight: 600,
         },
-        // Combine crisp text settings with a clean shadow and high z-index
         extraCssText: "box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border-radius: 6px; z-index: 9999; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;", 
         padding: [8, 12],
         formatter: (params: any) => {
@@ -181,7 +177,7 @@ const ChartInner = memo(function ChartInner({
         axisLabel: { 
           show: true,
           fontSize: 11,
-          fontWeight: "normal", // Set to normal
+          fontWeight: "normal",
           color: axisColor,
           rotate: 90,
           interval: 0 
@@ -201,11 +197,11 @@ const ChartInner = memo(function ChartInner({
            show: true,
            interval: Math.floor(data.length / 10),
            fontSize: 11,
-           fontWeight: "normal", // Set to normal
+           fontWeight: "normal",
            color: axisColor
         },
         splitLine: { 
-          show: true, // Show horizontal lines
+          show: true,
           lineStyle: { color: gridColor }
         },
       },
@@ -244,34 +240,23 @@ export const VerticalChartCard = memo(function VerticalChartCard({
 }: VerticalChartCardProps) {
   const showSkeleton = useInitialSkeleton();
   const [expandOpen, setExpandOpen] = useState(false);
-  const [isDark, setIsDark] = useState(
-    typeof document !== "undefined" ? !document.documentElement.classList.contains("light") : true
-  );
+  const { theme } = useTheme();
+  
+  const isDark = useMemo(() => {
+    if (theme === "system") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    return theme === "dark";
+  }, [theme]);
 
-  useEffect(() => {
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === "class") {
-          setIsDark(!document.documentElement.classList.contains("light"));
-        }
-      });
-    });
-    observer.observe(document.documentElement, { attributes: true });
-    return () => observer.disconnect();
-  }, []);
-
-  // Badge colors logic - recreated from previous version
-  const badgeBgColors = ["#21d5ed", "#f59f0a"] as const;
+  // Badge colors logic
+  const badgeBgColors = [COLORS.data.cyan, COLORS.data.orange] as const;
   
   // Pre-calculate colors for chart lines to match badges
   const seriesLineColors = useMemo(() => {
     return metrics.map((_, i) => {
        const isLastBadge = i % 3 === 2;
-       // For line colors:
-       // 1st badge (i=0) -> #21d5ed (Cyan)
-       // 2nd badge (i=1) -> #f59f0a (Orange)
-       // 3rd badge (i=2) -> White (Dark mode) / Black (Light mode)
-       if (isLastBadge) return isDark ? "#ffffff" : "#000000"; 
+       if (isLastBadge) return isDark ? COLORS.charts_ui.axis_dark : COLORS.charts_ui.axis_light; 
        return badgeBgColors[i % badgeBgColors.length];
     });
   }, [metrics, isDark]);

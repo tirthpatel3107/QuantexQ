@@ -15,6 +15,8 @@ import type { ChartDataPoint } from "@/data/mockData";
 import type { VerticalCardConfig } from "@/types/chart";
 import type { VerticalChartMetric } from "@/types/chart";
 
+import { COLORS } from "@/constants/colors";
+
 /** Build metric rows with values from latest data point; use "—" when no point. */
 export function metricsFromLatestPoint(
   baseMetrics: Omit<VerticalChartMetric, "value">[],
@@ -39,14 +41,14 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     title: "Flow",
     icon: Droplets,
     metrics: [
-      { label: "IN", unit: "gpm", trend: "down", dataKey: "in", color: "#fbbf24" },
+      { label: "IN", unit: "gpm", trend: "down", dataKey: "in", color: COLORS.data.warning },
       {
         label: "OUT",
         unit: "gpm",
         trend: "stable",
         status: "warning",
         dataKey: "out",
-        color: "#ef4444",
+        color: COLORS.data.error,
       },
       {
         label: "AUX",
@@ -54,10 +56,10 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
         trend: "down",
         status: "warning",
         dataKey: "mud",
-        color: "#3b82f6",
+        color: COLORS.data.out,
       },
     ],
-    color: "hsl(var(--chart-3))",
+    color: COLORS.charts[3],
   },
   {
     id: "density",
@@ -65,10 +67,10 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     title: "Density",
     icon: Gauge,
     metrics: [
-      { label: "IN", unit: "ppg", trend: "stable", dataKey: "in", color: "#22c55e" },
-      { label: "OUT", unit: "ppg", trend: "stable", dataKey: "out", color: "#3b82f6" },
+      { label: "IN", unit: "ppg", trend: "stable", dataKey: "in", color: COLORS.data.in },
+      { label: "OUT", unit: "ppg", trend: "stable", dataKey: "out", color: COLORS.data.out },
     ],
-    color: "hsl(var(--success))",
+    color: COLORS.success,
   },
   {
     id: "surface-back-pressure",
@@ -76,10 +78,10 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     title: "Surface Back Pressure",
     icon: Activity,
     metrics: [
-      { label: "SP", unit: "psi", trend: "down", dataKey: "sp", color: "#22c55e" },
-      { label: "SBP", unit: "psi", trend: "down", dataKey: "sbp", color: "#3b82f6" },
+      { label: "SP", unit: "psi", trend: "down", dataKey: "sp", color: COLORS.data.in },
+      { label: "SBP", unit: "psi", trend: "down", dataKey: "sbp", color: COLORS.data.out },
     ],
-    color: "hsl(var(--chart-4))",
+    color: COLORS.charts[4],
   },
   {
     id: "standpipe-pressure",
@@ -87,10 +89,10 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     title: "Stand Pipe Pressure",
     icon: CircleDot,
     metrics: [
-      { label: "SP", unit: "psi", trend: "stable", dataKey: "sp", color: "#22c55e" },
-      { label: "SPP", unit: "psi", trend: "up", dataKey: "spp", color: "#3b82f6" },
+      { label: "SP", unit: "psi", trend: "stable", dataKey: "sp", color: COLORS.data.in },
+      { label: "SPP", unit: "psi", trend: "up", dataKey: "spp", color: COLORS.data.out },
     ],
-    color: "hsl(var(--chart-4))",
+    color: COLORS.charts[4],
   },
   {
     id: "bottom-hole-pressure",
@@ -98,10 +100,10 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     title: "Bottom Hole Pressure",
     icon: Thermometer,
     metrics: [
-      { label: "SP", unit: "psi", trend: "stable", dataKey: "sp", color: "#22c55e" },
-      { label: "BHP", unit: "psi", trend: "stable", dataKey: "bhp", color: "#3b82f6" },
+      { label: "SP", unit: "psi", trend: "stable", dataKey: "sp", color: COLORS.data.in },
+      { label: "BHP", unit: "psi", trend: "stable", dataKey: "bhp", color: COLORS.data.out },
     ],
-    color: "hsl(var(--chart-5))",
+    color: COLORS.charts[5],
   },
   {
     id: "choke",
@@ -109,24 +111,24 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     title: "Choke",
     icon: SlidersHorizontal,
     metrics: [
-      { label: "Chock A", unit: "%", trend: "up", dataKey: "choke_a", color: "#22c55e" },
+      { label: "Chock A", unit: "%", trend: "up", dataKey: "choke_a", color: COLORS.data.in },
       {
         label: "Chock B",
         unit: "%",
         trend: "stable",
         status: "critical",
         dataKey: "choke_b",
-        color: "#ef4444",
+        color: COLORS.data.error,
       },
       {
         label: "Set point",
         unit: "%",
         trend: "stable",
         dataKey: "set_point",
-        color: "#eab308",
+        color: COLORS.data.setpoint,
       },
     ],
-    color: "hsl(var(--chart-6))",
+    color: COLORS.charts[6],
     threshold: { value: 12.5, label: "Set" },
   },
 ];
