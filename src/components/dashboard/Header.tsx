@@ -129,16 +129,6 @@ export function Header() {
           {/* <span className="text-muted-foreground">Well:</span> */}
           <span className="font-medium text-foreground">DW-0347</span>
         </div>
-        <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <div className="status-indicator online" />
-          <span className="text-success text-xs font-medium">Live</span>
-        </div>
-        <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-1">
-          <div className="status-indicator online" />
-          <span className="text-success text-xs font-medium">System Hydraulics</span>
-        </div>
       </div>
 
       {/* Right - Time & Actions */}
@@ -220,7 +210,7 @@ export function Header() {
             </button>
           )}
           <div className="hidden sm:block h-8 w-px bg-border" />
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
                 className="action-btn action-btn-ghost bg-accent text-foreground hover:bg-accent/80"
@@ -285,14 +275,14 @@ export function Header() {
                 </button>
               </div>
             </DropdownMenuContent>
-          </DropdownMenu>
-          <button
+          </DropdownMenu> */}
+          {/* <button
             className="action-btn action-btn-ghost bg-accent text-foreground hover:bg-accent/80"
             aria-label="Toggle theme"
             onClick={toggleTheme}
           >
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
+          </button> */}
 
           <Sheet>
             <SheetTrigger asChild>

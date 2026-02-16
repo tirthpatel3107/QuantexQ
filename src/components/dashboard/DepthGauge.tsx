@@ -48,7 +48,7 @@ export const DepthGauge = memo(function DepthGauge({
 
           <div className="skeleton flex-1 min-h-0 rounded-lg" />
 
-          <div className="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-border">
+          <div className="grid gap-2 grid-cols-1 mt-2 pt-2 border-t border-border">
             <div className="space-y-2">
               <div className="skeleton h-3 w-20 rounded-md" />
               <div className="skeleton h-4 w-24 rounded-md" />
@@ -78,11 +78,11 @@ export const DepthGauge = memo(function DepthGauge({
       <div className="px-2.5 py-4 flex flex-col h-[calc(100%-52px)] gap-0">
         {/* Current Depth Display */}
         <div className="text-center mb-2">
-          <div className="text-3xl font-bold text-primary glow-primary tabular-nums">
+          <div className="text-2xl font-bold text-primary glow-primary tabular-nums">
             {currentDepth.toLocaleString()}
             <span className="text-lg font-normal text-muted-foreground ml-1">ft</span>
           </div>
-          <div className="flex items-center justify-center gap-1 mt-1">
+          <div className="flex items-center justify-center gap-1 my-1">
             <span className="text-success text-sm font-medium">
               +{rateOfPenetration.toFixed(1)} ft/hr
             </span>
@@ -90,7 +90,7 @@ export const DepthGauge = memo(function DepthGauge({
         </div>
 
         {/* Visual Gauge */}
-        <div className="flex-1 flex gap-3 min-h-0">
+        <div className="flex-1 flex justify-center gap-4 min-h-0">
           {/* Depth Scale */}
           <div className="flex flex-col justify-between text-xs text-muted-foreground tabular-nums w-12 py-1">
             {markers.map((depth, i) => (
@@ -101,7 +101,7 @@ export const DepthGauge = memo(function DepthGauge({
           </div>
 
           {/* Gauge Bar */}
-          <div className="w-9 shrink-0 relative">
+          <div className="w-12 shrink-0 relative">
             {/* Background track */}
             <div className="absolute inset-0 bg-muted rounded-lg overflow-hidden">
               {/* Grid lines */}
@@ -134,7 +134,7 @@ export const DepthGauge = memo(function DepthGauge({
           </div>
 
           {/* Unit label */}
-          <div className="w-5 flex flex-col justify-center shrink-0">
+          <div className="flex flex-col justify-center shrink-0">
             <span className="text-xs text-muted-foreground -rotate-90 origin-center whitespace-nowrap">
               feet
             </span>
@@ -142,16 +142,16 @@ export const DepthGauge = memo(function DepthGauge({
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 gap-2 mt-2 px-2 py-5 border-t border-border">
-          <div>
-            <div className="text-xs text-muted-foreground">Bit Depth</div>
-            <div className="text-sm font-semibold tabular-nums">
+        <div className="grid grid-cols-1 gap-2 mt-4 px-2 py-5 border-t border-border">
+          <div className="flex justify-between">
+            <div className="text-[12px] font-bold text-muted-foreground">BIT DEPTH</div>
+            <div className="text-[12px] font-bold tabular-nums">
               {bitDepth.toLocaleString()} ft
             </div>
           </div>
-          <div>
-            <div className="text-xs text-muted-foreground">Remaining</div>
-            <div className="text-sm font-semibold tabular-nums text-warning">
+          <div className="flex justify-between">
+            <div className="text-[12px] font-bold text-muted-foreground">REMAINING</div>
+            <div className="text-[12px] font-bold tabular-nums text-warning">
               {(targetDepth - currentDepth).toLocaleString()} ft
             </div>
           </div>

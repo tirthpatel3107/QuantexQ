@@ -29,6 +29,7 @@ interface VerticalChartCardProps {
   threshold?: { value: number; label: string };
   status?: "normal" | "warning" | "critical";
   className?: string;
+  onDoubleClick?: () => void;
 }
 
 const statusBorderColors = {
@@ -239,6 +240,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
   threshold,
   status = "normal",
   className,
+  onDoubleClick,
 }: VerticalChartCardProps) {
   const showSkeleton = useInitialSkeleton();
   const [expandOpen, setExpandOpen] = useState(false);
@@ -303,7 +305,11 @@ export const VerticalChartCard = memo(function VerticalChartCard({
   }
 
   return (
-    <div className={cn("dashboard-panel group flex flex-col relative h-full antialiased", statusBorderColors[status], className)}>
+    <div 
+      className={cn("dashboard-panel group flex flex-col relative h-full antialiased cursor-pointer select-none", statusBorderColors[status], className)}
+      onDoubleClick={onDoubleClick}
+      onClick={(e) => e.stopPropagation()}
+    >
       {/* Header: left = Icon + Title, right = main count */}
       <div className="panel-header flex items-center justify-between gap-2 min-w-0">
         <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
@@ -322,58 +328,34 @@ export const VerticalChartCard = memo(function VerticalChartCard({
             {title}
           </h3>
         </div>
-        <span className="font-bold tabular-nums text-primary flex-shrink-0 antialiased">
-          {mainDisplay}
-        </span>
       </div>
 
       {/* Chart area */}
-      <div className="vertical-line-chart px-0 pb-0 min-h-[420px] flex-1 w-full max-h-[540px] overflow-hidden">
-         <ChartInner 
+      <div className="vertical-line-chart flex flex-col px-0 pb-0 min-h-[420px] flex-1 w-full max-h-[540px] overflow-hidden relative">
+        <div className="px-2.5 py-2 flex flex-col gap-1 pointer-events-none">
+          {metrics.map((m, i) => (
+            <div 
+              key={i} 
+              className="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider h-4" 
+              style={{ color: seriesLineColors[i] }}
+            >
+              <span className="truncate mr-2 max-w-[60%]">{m.label}</span>
+              <span className="tabular-nums shrink-0">{m.value} {m.unit}</span>
+            </div>
+          ))}
+        </div>
+        <div className="flex-1 min-h-0">
+          <ChartInner 
             data={data} 
             metrics={metrics} 
             threshold={threshold} 
             badgeColors={seriesLineColors}
             isDark={isDark}
-         />
+          />
+        </div>
       </div>
 
-      {/* Badges */}
-      <div className="px-3 pt-1.5 pb-2 flex flex-wrap gap-1.5 justify-center">
-        {metrics.map((m, i) => {
-          const isLastBadge = i % 3 === 2;
-          const bgColor = isLastBadge ? undefined : badgeBgColors[i % badgeBgColors.length];
-          
-          return (
-            <UITooltip key={i}>
-              <TooltipTrigger asChild>
-                <span
-                  className={cn(
-                    "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-1.5 py-0.5 text-[10px] tabular-nums overflow-hidden cursor-default font-bold antialiased",
-                    isLastBadge ? "bg-black text-white dark:bg-white dark:text-black" : "text-black"
-                  )}
-                  style={bgColor != null ? { backgroundColor: bgColor } : undefined}
-                >
-                  <span className="min-w-0 truncate font-bold">
-                    {m.value}
-                  </span>
-                  {m.unit != null && m.unit !== "" && (
-                    <span className="ml-0.5 shrink-0 font-bold" style={{ opacity: 0.8 }}>{m.unit}</span>
-                  )}
-                  {m.trend && (
-                    <span className="ml-0.5 shrink-0 text-[9px] font-bold" aria-hidden>
-                      {trendIcons[m.trend]}
-                    </span>
-                  )}
-                </span>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{m.label}</p>
-              </TooltipContent>
-            </UITooltip>
-          );
-        })}
-      </div>
+
 
       {/* Expand popup */}
       <Dialog open={expandOpen} onOpenChange={setExpandOpen}>
@@ -383,48 +365,30 @@ export const VerticalChartCard = memo(function VerticalChartCard({
               {title}
             </DialogTitle>
           </DialogHeader>
-          <div className="flex-1 w-full min-h-0 flex flex-col">
-             <ChartInner 
-                data={data} 
-                metrics={metrics} 
-                threshold={threshold} 
-                badgeColors={seriesLineColors}
-                height="100%" 
-                isDark={isDark}
-             />
-            {/* Badges in expanded view */}
-            <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
-              {metrics.map((m, i) => {
-                const isLastBadge = i % 3 === 2;
-                const bgColor = isLastBadge ? undefined : badgeBgColors[i % badgeBgColors.length];
-                return (
-                  <UITooltip key={i}>
-                    <TooltipTrigger asChild>
-                      <span
-                        className={cn(
-                          "inline-flex min-w-0 flex-shrink items-center rounded border border-transparent px-2 py-1 text-xs tabular-nums overflow-hidden cursor-default font-bold",
-                          isLastBadge ? "bg-black text-white dark:bg-white dark:text-black" : "text-black"
-                        )}
-                        style={bgColor != null ? { backgroundColor: bgColor } : undefined}
-                      >
-                        <span className="min-w-0 truncate font-bold">{m.value}</span>
-                        {m.unit != null && m.unit !== "" && (
-                          <span className="ml-0.5 shrink-0 font-bold" style={{ opacity: 0.8 }}>{m.unit}</span>
-                        )}
-                        {m.trend && (
-                          <span className="ml-0.5 shrink-0 text-[10px] font-bold" aria-hidden>
-                            {trendIcons[m.trend]}
-                          </span>
-                        )}
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{m.label}</p>
-                    </TooltipContent>
-                  </UITooltip>
-                );
-              })}
+          <div className="flex-1 w-full min-h-0 flex flex-col relative">
+            <div className="px-4 py-2 flex flex-col gap-1 pointer-events-none">
+              {metrics.map((m, i) => (
+                <div 
+                  key={i} 
+                  className="flex justify-between items-center text-xs font-bold uppercase tracking-wider h-5" 
+                  style={{ color: seriesLineColors[i] }}
+                >
+                  <span className="truncate mr-2 max-w-[70%]">{m.label}</span>
+                  <span className="tabular-nums shrink-0">{m.value} {m.unit}</span>
+                </div>
+              ))}
             </div>
+            <div className="flex-1 min-h-0">
+               <ChartInner 
+                  data={data} 
+                  metrics={metrics} 
+                  threshold={threshold} 
+                  badgeColors={seriesLineColors}
+                  height="100%" 
+                  isDark={isDark}
+               />
+            </div>
+
           </div>
         </DialogContent>
       </Dialog>

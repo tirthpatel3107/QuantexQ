@@ -49,7 +49,7 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
         color: "#ef4444",
       },
       {
-        label: "MUD",
+        label: "AUX",
         unit: "ppg",
         trend: "down",
         status: "warning",
