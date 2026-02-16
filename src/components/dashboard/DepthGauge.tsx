@@ -1,6 +1,7 @@
 import { memo, useMemo } from "react";
 
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+import { cn } from "@/lib/utils";
 
 interface DepthGaugeProps {
   currentDepth: number;
@@ -14,7 +15,8 @@ export const DepthGauge = memo(function DepthGauge({
   targetDepth,
   bitDepth,
   rateOfPenetration,
-}: DepthGaugeProps) {
+  className,
+}: DepthGaugeProps & { className?: string }) {
   const showSkeleton = useInitialSkeleton();
 
   const progress = useMemo(
@@ -34,7 +36,7 @@ export const DepthGauge = memo(function DepthGauge({
 
   if (showSkeleton) {
     return (
-      <div className="dashboard-panel h-full">
+      <div className={cn("dashboard-panel h-full", className)}>
         <div className="panel-header flex-col items-center gap-1 text-center px-2.5 py-3">
           <div className="skeleton h-4 w-28 rounded-md" />
           <div className="flex items-center justify-center gap-2">
@@ -64,7 +66,7 @@ export const DepthGauge = memo(function DepthGauge({
   }
 
   return (
-    <div className="dashboard-panel h-full">
+    <div className={cn("dashboard-panel h-full flex flex-col", className)}>
       <div className="panel-header flex-col items-center gap-1 text-center px-2.5 py-4">
         <h3 className="panel-title">Drill Depth</h3>
         <div className="flex items-center justify-center gap-2">
@@ -75,7 +77,7 @@ export const DepthGauge = memo(function DepthGauge({
         </div>
       </div>
 
-      <div className="px-2.5 py-4 flex flex-col h-[calc(100%-52px)] gap-0">
+      <div className="px-2.5 py-4 flex flex-col flex-1 min-h-0 gap-0">
         {/* Current Depth Display */}
         <div className="text-center mb-2">
           <div className="text-2xl font-bold text-primary glow-primary tabular-nums">
@@ -142,16 +144,16 @@ export const DepthGauge = memo(function DepthGauge({
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-1 gap-2 mt-4 px-2 py-5 border-t border-border">
+        <div className="grid grid-cols-1 gap-2 mt-4 px-2 pt-5 border-t border-border">
           <div className="flex justify-between">
-            <div className="text-[12px] font-bold text-muted-foreground">BIT DEPTH</div>
-            <div className="text-[12px] font-bold tabular-nums">
+            <div className="text-[13px] font-bold text-muted-foreground">BIT DEPTH</div>
+            <div className="text-[14px] font-bold tabular-nums">
               {bitDepth.toLocaleString()} ft
             </div>
           </div>
           <div className="flex justify-between">
-            <div className="text-[12px] font-bold text-muted-foreground">REMAINING</div>
-            <div className="text-[12px] font-bold tabular-nums text-warning">
+            <div className="text-[13px] font-bold text-muted-foreground">REMAINING</div>
+            <div className="text-[14px] font-bold tabular-nums text-warning">
               {(targetDepth - currentDepth).toLocaleString()} ft
             </div>
           </div>

@@ -86,7 +86,7 @@ export function Header() {
   }, [theme, setTheme]);
 
   return (
-    <header className="fixed top-0 inset-x-0 z-30 min-h-14 h-auto border-b border-border bg-card px-3 sm:px-4 py-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 backdrop-blur supports-[backdrop-filter]:bg-card/80">
+    <header className="z-30 min-h-14 h-auto border-b border-border bg-card px-3 sm:px-4 py-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 backdrop-blur supports-[backdrop-filter]:bg-card/80">
       <SideDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
       {/* Hamburger + Brand */}
       <div className="flex items-center gap-2 shrink-0 min-w-0 w-full sm:w-auto">

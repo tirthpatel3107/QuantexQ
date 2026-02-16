@@ -277,8 +277,8 @@ export const VerticalChartCard = memo(function VerticalChartCard({
           </div>
           <div className="skeleton h-6 w-16 rounded-md" />
         </div>
-        <div className="p-2.5 pt-0 min-h-[420px]">
-          <div className="skeleton h-[420px] w-full rounded-md" />
+        <div className="p-2.5 pt-0 flex-1">
+          <div className="skeleton h-full w-full rounded-md" />
         </div>
         <div className="px-3 pt-1.5 pb-2 flex gap-2 justify-center">
           <div className="skeleton h-5 w-14 rounded-md" />
@@ -316,7 +316,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
       </div>
 
       {/* Chart area */}
-      <div className="vertical-line-chart flex flex-col px-0 pb-0 min-h-[420px] flex-1 w-full max-h-[540px] overflow-hidden relative">
+      <div className="vertical-line-chart flex flex-col px-0 pb-0 flex-1 w-full overflow-hidden relative">
         <div className="px-2.5 py-2 flex flex-col gap-1 pointer-events-none">
           {metrics.map((m, i) => (
             <div 

@@ -34,16 +34,11 @@ export function FlowControlStack() {
           <span className="text-[12px] font-bold text-foreground dark:text-gray-200 ml-1">
             PRC
           </span>
-          <div className="flex bg-muted/50 dark:bg-black/40 rounded-[1px] p-0.5 border border-border dark:border-white/5">
-            <span className="text-[10px] bg-foreground dark:bg-black text-background dark:text-white px-2 py-0.5 rounded-[1px] cursor-pointer font-bold tracking-tight border border-border dark:border-white/10">
-              MAN
-            </span>
+          <div className="flex items-center bg-muted/50 dark:bg-black/40 rounded-[1px] p-0.5 border border-border dark:border-white/5">
             <span className="text-[10px] text-muted-foreground dark:text-slate-500 px-2 py-0.5 hover:text-foreground dark:hover:text-slate-300 cursor-pointer transition-colors font-medium">
-              4K
+              Enabled
             </span>
-            <span className="text-[10px] text-muted-foreground dark:text-slate-500 px-2 py-0.5 hover:text-foreground dark:hover:text-slate-300 cursor-pointer transition-colors font-medium">
-              OFF
-            </span>
+            <ControlNumberButton label="0.000 PSI" />
           </div>
         </div>
 
@@ -65,8 +60,6 @@ export function FlowControlStack() {
           <div className="flex flex-wrap bg-muted/50 dark:bg-black/20 rounded-[2px]">
             <ControlNumberButton label="1" />
             <ControlNumberButton label="2" />
-            <ControlNumberButton label="3" />
-            <ControlNumberButton label="4" />
           </div>
         </div>
       </div>
