@@ -55,7 +55,7 @@ export const NotificationsPanel = memo(function NotificationsPanel({
 
   const selectedNotification = useMemo(
     () => items.find((item) => item.id === selectedId),
-    [items, selectedId]
+    [items, selectedId],
   );
 
   const handleRequestRemove = (id: string) => {
@@ -127,8 +127,13 @@ export const NotificationsPanel = memo(function NotificationsPanel({
             items.map((notification) => {
               const Icon = icons[notification.type];
               return (
-                <div key={notification.id} className="notification-item animate-fade-in">
-                  <div className={cn("shrink-0 mt-0.5", styles[notification.type])}>
+                <div
+                  key={notification.id}
+                  className="notification-item animate-fade-in"
+                >
+                  <div
+                    className={cn("shrink-0 mt-0.5", styles[notification.type])}
+                  >
                     <Icon className="h-4 w-4" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -139,10 +144,14 @@ export const NotificationsPanel = memo(function NotificationsPanel({
                       <span
                         className={cn(
                           "text-[10px] font-medium px-1.5 py-0.5 rounded",
-                          notification.type === "info" && "bg-info/10 text-info",
-                          notification.type === "success" && "bg-success/10 text-success",
-                          notification.type === "warning" && "bg-warning/10 text-warning",
-                          notification.type === "error" && "bg-destructive/10 text-destructive"
+                          notification.type === "info" &&
+                            "bg-info/10 text-info",
+                          notification.type === "success" &&
+                            "bg-success/10 text-success",
+                          notification.type === "warning" &&
+                            "bg-warning/10 text-warning",
+                          notification.type === "error" &&
+                            "bg-destructive/10 text-destructive",
                         )}
                       >
                         {notification.category}
@@ -177,7 +186,9 @@ export const NotificationsPanel = memo(function NotificationsPanel({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setConfirmOpen(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={() => setConfirmOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction onClick={handleRemove}>Remove</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -187,11 +198,17 @@ export const NotificationsPanel = memo(function NotificationsPanel({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Clear all notifications?</AlertDialogTitle>
-            <AlertDialogDescription>This will remove every notification in the list.</AlertDialogDescription>
+            <AlertDialogDescription>
+              This will remove every notification in the list.
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setClearAllOpen(false)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleClearAll}>Clear all</AlertDialogAction>
+            <AlertDialogCancel onClick={() => setClearAllOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleClearAll}>
+              Clear all
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

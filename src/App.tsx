@@ -39,7 +39,10 @@ const App = () => (
               <Routes>
                 <Route path={ROUTES.HOME} element={<Index />} />
                 <Route path={ROUTES.PROFILE} element={<Profile />} />
-                <Route path={ROUTES.MUD_PROPERTIES} element={<MudProperties />} />
+                <Route
+                  path={ROUTES.MUD_PROPERTIES}
+                  element={<MudProperties />}
+                />
                 <Route path={ROUTES.MPD_SIMULATOR} element={<MpdSimulator />} />
                 <Route path={ROUTES.SETTINGS} element={<Settings />} />
                 <Route path="*" element={<NotFound />} />

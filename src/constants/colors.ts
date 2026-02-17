@@ -12,13 +12,13 @@ export const COLORS = {
   muted: "hsl(var(--muted))",
   accent: "hsl(var(--accent))",
   border: "hsl(var(--border))",
-  
+
   // Status colors
   success: "hsl(var(--success))",
   warning: "hsl(var(--warning))",
   destructive: "hsl(var(--destructive))",
   info: "hsl(var(--info))",
-  
+
   // Chart specific colors (can be matched to hsl vars if needed)
   charts: {
     1: "hsl(var(--chart-1))",
@@ -31,10 +31,10 @@ export const COLORS = {
 
   // Specific data colors used in dashboard
   data: {
-    in: "#22c55e",       // Success green
-    out: "#3b82f6",      // Primary blue/info
-    warning: "#fbbf24",  // Amber/Warning
-    error: "#ef4444",    // Red/Destructive
+    in: "#22c55e", // Success green
+    out: "#3b82f6", // Primary blue/info
+    warning: "#fbbf24", // Amber/Warning
+    error: "#ef4444", // Red/Destructive
     aux: "#3b82f6",
     setpoint: "#eab308",
     cyan: "#21d5ed",
@@ -50,5 +50,5 @@ export const COLORS = {
     tooltip_bg_light: "#ffffff",
     tooltip_text_light: "#000000",
     tooltip_text_dark: "#ffffff",
-  }
+  },
 };

@@ -66,11 +66,32 @@
     --chart-6: 173 80% 40%;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(187 85% 53%) 0%, hsl(199 89% 48%) 100%);
-    --gradient-success: linear-gradient(135deg, hsl(142 76% 46%) 0%, hsl(160 84% 39%) 100%);
-    --gradient-warning: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(25 95% 53%) 100%);
-    --gradient-danger: linear-gradient(135deg, hsl(0 84% 60%) 0%, hsl(350 89% 55%) 100%);
-    --gradient-depth: linear-gradient(180deg, hsl(187 85% 53%) 0%, hsl(142 76% 46%) 50%, hsl(38 92% 50%) 100%);
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(187 85% 53%) 0%,
+      hsl(199 89% 48%) 100%
+    );
+    --gradient-success: linear-gradient(
+      135deg,
+      hsl(142 76% 46%) 0%,
+      hsl(160 84% 39%) 100%
+    );
+    --gradient-warning: linear-gradient(
+      135deg,
+      hsl(38 92% 50%) 0%,
+      hsl(25 95% 53%) 100%
+    );
+    --gradient-danger: linear-gradient(
+      135deg,
+      hsl(0 84% 60%) 0%,
+      hsl(350 89% 55%) 100%
+    );
+    --gradient-depth: linear-gradient(
+      180deg,
+      hsl(187 85% 53%) 0%,
+      hsl(142 76% 46%) 50%,
+      hsl(38 92% 50%) 100%
+    );
 
     /* Sidebar (if needed) */
     --sidebar-background: 222 47% 8%;
@@ -154,7 +175,9 @@
   body {
     min-height: 100%;
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "tnum" on, "lnum" on;
+    font-feature-settings:
+      "tnum" on,
+      "lnum" on;
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
@@ -168,7 +191,9 @@
   }
 
   /* Form inputs: match select/dark theme (override browser defaults) */
-  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]),
+  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(
+      [type="checkbox"]
+    ):not([type="radio"]),
   textarea {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
@@ -237,7 +262,12 @@
     right: 0;
     bottom: 0;
     height: 2px;
-    background: linear-gradient(90deg, transparent, hsl(var(--primary)), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--primary)),
+      transparent
+    );
     opacity: 0;
     transition: opacity 200ms ease;
     pointer-events: none;

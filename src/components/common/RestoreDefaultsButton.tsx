@@ -1,6 +1,10 @@
 import { Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface RestoreDefaultsButtonProps {
   /** Optional click handler; default is no-op. */
@@ -23,7 +27,12 @@ export function RestoreDefaultsButton({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button variant="ghost" size={size} onClick={onClick} aria-label={ariaLabel}>
+        <Button
+          variant="ghost"
+          size={size}
+          onClick={onClick}
+          aria-label={ariaLabel}
+        >
           <Undo2 className="h-4 w-4" />
         </Button>
       </TooltipTrigger>

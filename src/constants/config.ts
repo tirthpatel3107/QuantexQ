@@ -15,4 +15,5 @@ export const TIMER_TICK_MS = 1000;
 export const THEME_STORAGE_KEY = "quantexq-theme";
 
 /** Simulation timer widget position storage key. */
-export const SIMULATION_TIMER_STORAGE_KEY = "quantexq-simulation-timer-position";
+export const SIMULATION_TIMER_STORAGE_KEY =
+  "quantexq-simulation-timer-position";

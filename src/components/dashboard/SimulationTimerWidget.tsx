@@ -20,7 +20,8 @@ function loadPosition(): { x: number; y: number } | null {
     const raw = localStorage.getItem(SIMULATION_TIMER_STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as { x: number; y: number };
-    if (typeof parsed.x === "number" && typeof parsed.y === "number") return parsed;
+    if (typeof parsed.x === "number" && typeof parsed.y === "number")
+      return parsed;
   } catch {
     /* ignore */
   }
@@ -29,7 +30,10 @@ function loadPosition(): { x: number; y: number } | null {
 
 function savePosition(x: number, y: number) {
   try {
-    localStorage.setItem(SIMULATION_TIMER_STORAGE_KEY, JSON.stringify({ x, y }));
+    localStorage.setItem(
+      SIMULATION_TIMER_STORAGE_KEY,
+      JSON.stringify({ x, y }),
+    );
   } catch {
     /* ignore */
   }
@@ -42,11 +46,21 @@ interface SimulationTimerWidgetProps {
   useOwnStopDialog?: boolean;
 }
 
-export function SimulationTimerWidget({ onStopClick, useOwnStopDialog = true }: SimulationTimerWidgetProps) {
+export function SimulationTimerWidget({
+  onStopClick,
+  useOwnStopDialog = true,
+}: SimulationTimerWidgetProps) {
   const { showTimer, formattedElapsed, setRunning } = useSimulation();
-  const [position, setPosition] = useState<{ x: number; y: number } | null>(loadPosition);
+  const [position, setPosition] = useState<{ x: number; y: number } | null>(
+    loadPosition,
+  );
   const [stopDialogOpen, setStopDialogOpen] = useState(false);
-  const dragRef = useRef<{ startX: number; startY: number; startLeft: number; startTop: number } | null>(null);
+  const dragRef = useRef<{
+    startX: number;
+    startY: number;
+    startLeft: number;
+    startTop: number;
+  } | null>(null);
 
   useEffect(() => {
     if (position === null) return;
@@ -75,9 +89,11 @@ export function SimulationTimerWidget({ onStopClick, useOwnStopDialog = true }: 
         startLeft: position?.x ?? rect.left,
         startTop: position?.y ?? rect.top,
       };
-      (el as unknown as { setPointerCapture?: (id: number) => void }).setPointerCapture?.(e.pointerId);
+      (
+        el as unknown as { setPointerCapture?: (id: number) => void }
+      ).setPointerCapture?.(e.pointerId);
     },
-    [position]
+    [position],
   );
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
@@ -136,7 +152,8 @@ export function SimulationTimerWidget({ onStopClick, useOwnStopDialog = true }: 
             <AlertDialogHeader>
               <AlertDialogTitle>Stop operation?</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to stop? This will halt the current operation.
+                Are you sure you want to stop? This will halt the current
+                operation.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

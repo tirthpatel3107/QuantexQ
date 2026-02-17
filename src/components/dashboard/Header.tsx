@@ -1,8 +1,26 @@
 import { useState, useEffect, useCallback } from "react";
-import { Bell, Gauge, Menu, Moon, Sun, Settings, Filter, Check, SlidersHorizontal, Square, Play } from "lucide-react";
+import {
+  Bell,
+  Gauge,
+  Menu,
+  Moon,
+  Sun,
+  Settings,
+  Filter,
+  Check,
+  SlidersHorizontal,
+  Square,
+  Play,
+} from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { SideDrawer } from "@/components/dashboard/SideDrawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -106,15 +124,15 @@ export function Header() {
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-info flex items-center justify-center">
               <Gauge className="h-5 w-5 text-primary-foreground" />
             </div>
-          <div>
-            <h1 className="text-base font-bold tracking-tight text-foreground">
-              QuantexQ<span className="text-primary">™</span>
-            </h1>
-            <p className="text-[10px] text-muted-foreground -mt-0.5 hidden sm:block">
-              Professional Drilling Monitoring
-            </p>
+            <div>
+              <h1 className="text-base font-bold tracking-tight text-foreground">
+                QuantexQ<span className="text-primary">™</span>
+              </h1>
+              <p className="text-[10px] text-muted-foreground -mt-0.5 hidden sm:block">
+                Professional Drilling Monitoring
+              </p>
+            </div>
           </div>
-        </div>
         </Link>
       </div>
 
@@ -122,7 +140,9 @@ export function Header() {
       <div className="hidden lg:flex items-center gap-3 text-sm min-w-0">
         <div className="flex items-center gap-1">
           {/* <span className="text-muted-foreground">Project:</span> */}
-          <span className="font-medium text-foreground">Offshore Block A-7</span>
+          <span className="font-medium text-foreground">
+            Offshore Block A-7
+          </span>
         </div>
         <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1">
@@ -296,7 +316,10 @@ export function Header() {
                 </span>
               </button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[90vw] max-w-[360px] sm:max-w-[420px] p-0">
+            <SheetContent
+              side="right"
+              className="w-[90vw] max-w-[360px] sm:max-w-[420px] p-0"
+            >
               <SheetHeader className="px-4 py-3 border-b border-border text-left">
                 <SheetTitle>Notifications</SheetTitle>
               </SheetHeader>
@@ -313,7 +336,7 @@ export function Header() {
                           notification.type === "info" && "text-info",
                           notification.type === "success" && "text-success",
                           notification.type === "warning" && "text-warning",
-                          notification.type === "error" && "text-destructive"
+                          notification.type === "error" && "text-destructive",
                         )}
                       >
                         <Bell className="h-4 w-4" />
@@ -326,10 +349,14 @@ export function Header() {
                           <span
                             className={cn(
                               "text-[10px] font-medium px-1.5 py-0.5 rounded",
-                              notification.type === "info" && "bg-info/10 text-info",
-                              notification.type === "success" && "bg-success/10 text-success",
-                              notification.type === "warning" && "bg-warning/10 text-warning",
-                              notification.type === "error" && "bg-destructive/10 text-destructive"
+                              notification.type === "info" &&
+                                "bg-info/10 text-info",
+                              notification.type === "success" &&
+                                "bg-success/10 text-success",
+                              notification.type === "warning" &&
+                                "bg-warning/10 text-warning",
+                              notification.type === "error" &&
+                                "bg-destructive/10 text-destructive",
                             )}
                           >
                             {notification.category}
@@ -372,14 +399,18 @@ export function Header() {
         </div>
       </div>
 
-      <SimulationTimerWidget useOwnStopDialog={false} onStopClick={() => setStopConfirmOpen(true)} />
+      <SimulationTimerWidget
+        useOwnStopDialog={false}
+        onStopClick={() => setStopConfirmOpen(true)}
+      />
 
       <AlertDialog open={stopConfirmOpen} onOpenChange={setStopConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Stop operation?</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to stop? This will halt the current operation.
+              Are you sure you want to stop? This will halt the current
+              operation.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

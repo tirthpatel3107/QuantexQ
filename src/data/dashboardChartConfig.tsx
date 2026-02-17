@@ -20,7 +20,7 @@ import { COLORS } from "@/constants/colors";
 /** Build metric rows with values from latest data point; use "—" when no point. */
 export function metricsFromLatestPoint(
   baseMetrics: Omit<VerticalChartMetric, "value">[],
-  latestPoint: ChartDataPoint | undefined
+  latestPoint: ChartDataPoint | undefined,
 ): VerticalChartMetric[] {
   if (!latestPoint) {
     return baseMetrics.map((m) => ({ ...m, value: "—" }));
@@ -41,7 +41,13 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     title: "Flow",
     icon: Droplets,
     metrics: [
-      { label: "IN", unit: "gpm", trend: "down", dataKey: "in", color: COLORS.data.warning },
+      {
+        label: "IN",
+        unit: "gpm",
+        trend: "down",
+        dataKey: "in",
+        color: COLORS.data.warning,
+      },
       {
         label: "OUT",
         unit: "gpm",
@@ -67,8 +73,20 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     title: "Density",
     icon: Gauge,
     metrics: [
-      { label: "IN", unit: "ppg", trend: "stable", dataKey: "in", color: COLORS.data.in },
-      { label: "OUT", unit: "ppg", trend: "stable", dataKey: "out", color: COLORS.data.out },
+      {
+        label: "IN",
+        unit: "ppg",
+        trend: "stable",
+        dataKey: "in",
+        color: COLORS.data.in,
+      },
+      {
+        label: "OUT",
+        unit: "ppg",
+        trend: "stable",
+        dataKey: "out",
+        color: COLORS.data.out,
+      },
     ],
     color: COLORS.success,
   },
@@ -78,8 +96,20 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     title: "Surface Back Pressure",
     icon: Activity,
     metrics: [
-      { label: "SP", unit: "psi", trend: "down", dataKey: "sp", color: COLORS.data.in },
-      { label: "SBP", unit: "psi", trend: "down", dataKey: "sbp", color: COLORS.data.out },
+      {
+        label: "SP",
+        unit: "psi",
+        trend: "down",
+        dataKey: "sp",
+        color: COLORS.data.in,
+      },
+      {
+        label: "SBP",
+        unit: "psi",
+        trend: "down",
+        dataKey: "sbp",
+        color: COLORS.data.out,
+      },
     ],
     color: COLORS.charts[4],
   },
@@ -89,8 +119,20 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     title: "Stand Pipe Pressure",
     icon: CircleDot,
     metrics: [
-      { label: "SP", unit: "psi", trend: "stable", dataKey: "sp", color: COLORS.data.in },
-      { label: "SPP", unit: "psi", trend: "up", dataKey: "spp", color: COLORS.data.out },
+      {
+        label: "SP",
+        unit: "psi",
+        trend: "stable",
+        dataKey: "sp",
+        color: COLORS.data.in,
+      },
+      {
+        label: "SPP",
+        unit: "psi",
+        trend: "up",
+        dataKey: "spp",
+        color: COLORS.data.out,
+      },
     ],
     color: COLORS.charts[4],
   },
@@ -100,8 +142,20 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     title: "Bottom Hole Pressure",
     icon: Thermometer,
     metrics: [
-      { label: "SP", unit: "psi", trend: "stable", dataKey: "sp", color: COLORS.data.in },
-      { label: "BHP", unit: "psi", trend: "stable", dataKey: "bhp", color: COLORS.data.out },
+      {
+        label: "SP",
+        unit: "psi",
+        trend: "stable",
+        dataKey: "sp",
+        color: COLORS.data.in,
+      },
+      {
+        label: "BHP",
+        unit: "psi",
+        trend: "stable",
+        dataKey: "bhp",
+        color: COLORS.data.out,
+      },
     ],
     color: COLORS.charts[5],
   },
@@ -111,7 +165,13 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     title: "Choke",
     icon: SlidersHorizontal,
     metrics: [
-      { label: "Chock A", unit: "%", trend: "up", dataKey: "choke_a", color: COLORS.data.in },
+      {
+        label: "Chock A",
+        unit: "%",
+        trend: "up",
+        dataKey: "choke_a",
+        color: COLORS.data.in,
+      },
       {
         label: "Chock B",
         unit: "%",

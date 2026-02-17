@@ -63,7 +63,8 @@ const CHART_KEYS: ChartDataKey[] = [
 export function SimulationProvider({ children }: { children: ReactNode }) {
   const [isRunning, setRunningState] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [chartData, setChartData] = useState<ChartDataState>(INITIAL_CHART_DATA);
+  const [chartData, setChartData] =
+    useState<ChartDataState>(INITIAL_CHART_DATA);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -84,8 +85,8 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       setChartData((prev) =>
         CHART_KEYS.reduce(
           (acc, key) => ({ ...acc, [key]: appendChartPoint(prev[key], key) }),
-          {} as ChartDataState
-        )
+          {} as ChartDataState,
+        ),
       );
     }, CHART_UPDATE_INTERVAL_MS);
     return () => {
@@ -104,7 +105,10 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       }
       return;
     }
-    timerRef.current = setInterval(() => setElapsedSeconds((prev) => prev + 1), TIMER_TICK_MS);
+    timerRef.current = setInterval(
+      () => setElapsedSeconds((prev) => prev + 1),
+      TIMER_TICK_MS,
+    );
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
@@ -114,7 +118,10 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
   }, [isRunning]);
 
   const showTimer = isRunning;
-  const formattedElapsed = useMemo(() => formatElapsed(elapsedSeconds), [elapsedSeconds]);
+  const formattedElapsed = useMemo(
+    () => formatElapsed(elapsedSeconds),
+    [elapsedSeconds],
+  );
 
   const value: SimulationContextValue = {
     isRunning,

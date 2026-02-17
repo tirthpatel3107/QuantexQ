@@ -28,7 +28,7 @@ const CategoryCard = React.forwardRef<HTMLDivElement, CategoryCardProps>(
         className={cn(
           "dashboard-panel cursor-pointer border-border/80 h-full min-w-0",
           onClick && "hover:border-primary/50 transition-colors",
-          className
+          className,
         )}
         onClick={onClick}
       >
@@ -45,7 +45,7 @@ const CategoryCard = React.forwardRef<HTMLDivElement, CategoryCardProps>(
         </CardContent>
       </Card>
     );
-  }
+  },
 );
 CategoryCard.displayName = "CategoryCard";
 

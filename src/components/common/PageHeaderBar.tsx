@@ -26,7 +26,7 @@ export function PageHeaderBar({
     <div
       className={cn(
         "shrink-0 border-b border-border bg-card/95 backdrop-blur px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2",
-        className
+        className,
       )}
     >
       <div className="flex items-center gap-3 min-w-0">
@@ -38,12 +38,16 @@ export function PageHeaderBar({
         </div>
         {metadata != null && (
           <>
-            <span className="hidden sm:inline text-sm text-muted-foreground">|</span>
+            <span className="hidden sm:inline text-sm text-muted-foreground">
+              |
+            </span>
             <span className="text-sm text-muted-foreground">{metadata}</span>
           </>
         )}
       </div>
-      {actions != null && <div className="flex items-center gap-2">{actions}</div>}
+      {actions != null && (
+        <div className="flex items-center gap-2">{actions}</div>
+      )}
     </div>
   );
 }

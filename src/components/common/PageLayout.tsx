@@ -15,11 +15,17 @@ export interface PageLayoutProps {
  * Standard page shell: full-height background, fixed Header, scrollable main.
  * Use for Dashboard, Profile, Settings, Mud Properties.
  */
-export function PageLayout({ children, className, mainClassName }: PageLayoutProps) {
+export function PageLayout({
+  children,
+  className,
+  mainClassName,
+}: PageLayoutProps) {
   return (
     <div className={cn("min-h-screen bg-background flex flex-col", className)}>
       <Header />
-      <main className={cn("flex-1 overflow-auto", mainClassName)}>{children}</main>
+      <main className={cn("flex-1 overflow-auto", mainClassName)}>
+        {children}
+      </main>
     </div>
   );
 }

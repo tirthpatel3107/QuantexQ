@@ -16,7 +16,13 @@ import {
   Download,
   Upload,
 } from "lucide-react";
-import { PageLayout, SidebarLayout, PageHeaderBar, SearchInput, RestoreDefaultsButton } from "@/components/common";
+import {
+  PageLayout,
+  SidebarLayout,
+  PageHeaderBar,
+  SearchInput,
+  RestoreDefaultsButton,
+} from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -134,7 +140,7 @@ export default function Settings() {
             "w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
             activeSection === item.id
               ? "bg-primary/15 text-primary"
-              : "text-muted-foreground hover:bg-accent hover:text-foreground"
+              : "text-muted-foreground hover:bg-accent hover:text-foreground",
           )}
         >
           <item.icon className="h-4 w-4 shrink-0" />
@@ -148,7 +154,9 @@ export default function Settings() {
     <PageLayout>
       <SidebarLayout
         sidebar={sidebarNav}
-        sidebarFooter={<p className="text-[11px] text-muted-foreground">{SIDEBAR_FOOTER}</p>}
+        sidebarFooter={
+          <p className="text-[11px] text-muted-foreground">{SIDEBAR_FOOTER}</p>
+        }
       >
         <PageHeaderBar
           icon={<SettingsIcon className="h-5 w-5 text-primary-foreground" />}
@@ -180,140 +188,136 @@ export default function Settings() {
             </div>
           </div>
 
-            {/* Project / Well Context + Safety side by side */}
-            <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 mb-4">
-              <PanelCard title="Project / Well Context">
-                <div className="grid gap-5 grid-cols-1 sm:grid-cols-3">
-                    <div className="space-y-2">
-                      <Label>Default Well Name</Label>
-                      <Input
-                        value={general.defaultWellName}
-                        onChange={(e) =>
-                          setGeneral((g) => ({
-                            ...g,
-                            defaultWellName: e.target.value,
-                          }))
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Default Rig name</Label>
-                      <Select
-                        value={general.defaultRigName}
-                        onValueChange={(v) =>
-                          setGeneral((g) => ({ ...g, defaultRigName: v }))
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Rig-01">Rig-01</SelectItem>
-                          <SelectItem value="Rig-02">Rig-02</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Default Scenario</Label>
-                      <Select
-                        value={general.defaultScenario}
-                        onValueChange={(v) =>
-                          setGeneral((g) => ({ ...g, defaultScenario: v }))
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Static">Static</SelectItem>
-                          <SelectItem value="Dynamic">Dynamic</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2 ">
-                      <Label>Startup Screen</Label>
-                      <Select
-                        value={general.startupScreen1}
-                        onValueChange={(v) =>
-                          setGeneral((g) => ({
-                            ...g,
-                            startupScreen1: v,
-                            startupScreen2: v,
-                          }))
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Quantum HUD">
-                            Quantum HUD
-                          </SelectItem>
-                          <SelectItem value="Dashboard">Dashboard</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Startup Screen (secondary)</Label>
-                      <Select
-                        value={general.startupScreen2}
-                        onValueChange={(v) =>
-                          setGeneral((g) => ({ ...g, startupScreen2: v }))
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Quantum HUD">
-                            Quantum HUD
-                          </SelectItem>
-                          <SelectItem value="Dashboard">Dashboard</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-              </PanelCard>
+          {/* Project / Well Context + Safety side by side */}
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 mb-4">
+            <PanelCard title="Project / Well Context">
+              <div className="grid gap-5 grid-cols-1 sm:grid-cols-3">
+                <div className="space-y-2">
+                  <Label>Default Well Name</Label>
+                  <Input
+                    value={general.defaultWellName}
+                    onChange={(e) =>
+                      setGeneral((g) => ({
+                        ...g,
+                        defaultWellName: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Default Rig name</Label>
+                  <Select
+                    value={general.defaultRigName}
+                    onValueChange={(v) =>
+                      setGeneral((g) => ({ ...g, defaultRigName: v }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Rig-01">Rig-01</SelectItem>
+                      <SelectItem value="Rig-02">Rig-02</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Default Scenario</Label>
+                  <Select
+                    value={general.defaultScenario}
+                    onValueChange={(v) =>
+                      setGeneral((g) => ({ ...g, defaultScenario: v }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Static">Static</SelectItem>
+                      <SelectItem value="Dynamic">Dynamic</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2 ">
+                  <Label>Startup Screen</Label>
+                  <Select
+                    value={general.startupScreen1}
+                    onValueChange={(v) =>
+                      setGeneral((g) => ({
+                        ...g,
+                        startupScreen1: v,
+                        startupScreen2: v,
+                      }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Quantum HUD">Quantum HUD</SelectItem>
+                      <SelectItem value="Dashboard">Dashboard</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Startup Screen (secondary)</Label>
+                  <Select
+                    value={general.startupScreen2}
+                    onValueChange={(v) =>
+                      setGeneral((g) => ({ ...g, startupScreen2: v }))
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Quantum HUD">Quantum HUD</SelectItem>
+                      <SelectItem value="Dashboard">Dashboard</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </PanelCard>
 
-              {/* Safety */}
-              <PanelCard
-                title="Safety"
-                headerAction={<RestoreDefaultsButton size="sm" />}
-              >
-                <div className="flex items-center justify-between gap-4">
-                    <div className="space-y-0.5 min-w-0 flex-1 pr-2">
-                      <Label htmlFor="safety-confirm">
-                        Enable safety confirmations
-                      </Label>
-                      <p className="text-xs text-muted-foreground">
-                        Confirmations for Auto Control ON, PRC ON, Mode change,
-                        and Import settings.
-                      </p>
-                    </div>
-                    <Switch
-                      id="safety-confirm"
-                      checked={safetyConfirmations}
-                      onCheckedChange={setSafetyConfirmations}
-                      className="shrink-0"
-                    />
-                  </div>
-              </PanelCard>
-            </div>
-
-            {/* Category cards grid */}
-            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 items-start">
-              {CATEGORY_CARDS.map((cat) => (
-                <CategoryCard
-                  key={cat.id}
-                  title={cat.title}
-                  description={cat.description}
-                  icon={cat.icon}
-                  onClick={() => setActiveSection(cat.id)}
+            {/* Safety */}
+            <PanelCard
+              title="Safety"
+              headerAction={<RestoreDefaultsButton size="sm" />}
+            >
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-0.5 min-w-0 flex-1 pr-2">
+                  <Label htmlFor="safety-confirm">
+                    Enable safety confirmations
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Confirmations for Auto Control ON, PRC ON, Mode change, and
+                    Import settings.
+                  </p>
+                </div>
+                <Switch
+                  id="safety-confirm"
+                  checked={safetyConfirmations}
+                  onCheckedChange={setSafetyConfirmations}
+                  className="shrink-0"
                 />
-              ))}
-            </div>
-          </main>
-        </SidebarLayout>
+              </div>
+            </PanelCard>
+          </div>
+
+          {/* Category cards grid */}
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 items-start">
+            {CATEGORY_CARDS.map((cat) => (
+              <CategoryCard
+                key={cat.id}
+                title={cat.title}
+                description={cat.description}
+                icon={cat.icon}
+                onClick={() => setActiveSection(cat.id)}
+              />
+            ))}
+          </div>
+        </main>
+      </SidebarLayout>
     </PageLayout>
   );
 }

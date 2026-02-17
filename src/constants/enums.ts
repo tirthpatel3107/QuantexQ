@@ -24,7 +24,8 @@ export const NOTIFICATION_TYPE = {
   WARNING: "warning",
   ERROR: "error",
 } as const;
-export type NotificationType = (typeof NOTIFICATION_TYPE)[keyof typeof NOTIFICATION_TYPE];
+export type NotificationType =
+  (typeof NOTIFICATION_TYPE)[keyof typeof NOTIFICATION_TYPE];
 
 /** Metric trend direction for chart badges. */
 export const TREND = {

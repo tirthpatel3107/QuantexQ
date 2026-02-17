@@ -30,7 +30,7 @@ const ChartInner = memo(function ChartInner({
       const w = Math.round(rect.width);
       const h = Math.round(rect.height);
       setSize((prev) =>
-        prev.width === w && prev.height === h ? prev : { width: w, height: h }
+        prev.width === w && prev.height === h ? prev : { width: w, height: h },
       );
     };
     update();
@@ -123,10 +123,7 @@ export const TimeAxisCard = memo(function TimeAxisCard({
   if (showSkeleton) {
     return (
       <div
-        className={cn(
-          "dashboard-panel group h-full flex flex-col",
-          className
-        )}
+        className={cn("dashboard-panel group h-full flex flex-col", className)}
       >
         <div className="panel-header flex items-center justify-center gap-2">
           <div className="skeleton h-8 w-8 rounded-lg" />
@@ -142,7 +139,7 @@ export const TimeAxisCard = memo(function TimeAxisCard({
     <div
       className={cn(
         "dashboard-panel group flex flex-col relative h-full antialiased select-none",
-        className
+        className,
       )}
     >
       {/* Header with Clock Icon */}
@@ -156,7 +153,7 @@ export const TimeAxisCard = memo(function TimeAxisCard({
       <div className="vertical-line-chart flex flex-col px-0 pb-0 flex-1 w-full overflow-hidden relative">
         {/* Empty space to match metrics height */}
         <div className="px-2.5 py-3 h-[60px]" />
-        
+
         {/* Chart area with only Y-axis */}
         <div className="flex-1 min-h-0 px-2 py-2">
           <ChartInner data={data} isDark={isDark} />

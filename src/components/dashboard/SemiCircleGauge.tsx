@@ -106,8 +106,18 @@ export const SemiCircleGauge: React.FC<SemiCircleGaugeProps> = ({
           </text>
 
           {/* End Markers (Decorative) */}
-          <circle cx="15" cy="45" r="1.5" className="fill-muted/50 dark:fill-slate-700" />
-          <circle cx="85" cy="45" r="1.5" className="fill-muted/50 dark:fill-slate-700" />
+          <circle
+            cx="15"
+            cy="45"
+            r="1.5"
+            className="fill-muted/50 dark:fill-slate-700"
+          />
+          <circle
+            cx="85"
+            cy="45"
+            r="1.5"
+            className="fill-muted/50 dark:fill-slate-700"
+          />
         </svg>
       </div>
 

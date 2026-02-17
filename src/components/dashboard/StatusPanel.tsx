@@ -8,7 +8,7 @@ function getDonutPath(
   innerR: number,
   outerR: number,
   startAngle: number,
-  endAngle: number
+  endAngle: number,
 ): string {
   const x1 = cx + outerR * Math.cos(startAngle);
   const y1 = cy + outerR * Math.sin(startAngle);
@@ -40,7 +40,12 @@ function DonutChart({
   const cy = size / 2;
   let acc = -Math.PI / 2; // start from top
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="shrink-0">
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      className="shrink-0"
+    >
       {data.map((slice) => {
         const ratio = Math.max(0, slice.value) / sum;
         const start = acc;
@@ -70,10 +75,20 @@ interface StatusPanelProps {
   title: string;
   items: StatusItem[];
   statusIndicator?: "normal" | "warning" | "critical";
-  pieData?: { label: string; value: number; unit?: string; status?: "normal" | "warning" | "critical" }[];
+  pieData?: {
+    label: string;
+    value: number;
+    unit?: string;
+    status?: "normal" | "warning" | "critical";
+  }[];
 }
 
-export function StatusPanel({ title, items, statusIndicator, pieData }: StatusPanelProps) {
+export function StatusPanel({
+  title,
+  items,
+  statusIndicator,
+  pieData,
+}: StatusPanelProps) {
   const showSkeleton = useInitialSkeleton();
 
   if (showSkeleton) {
@@ -81,7 +96,9 @@ export function StatusPanel({ title, items, statusIndicator, pieData }: StatusPa
       <div className="dashboard-panel">
         <div className="panel-header">
           <div className="flex items-center gap-2">
-            {statusIndicator && <div className="skeleton h-2.5 w-2.5 rounded-full" />}
+            {statusIndicator && (
+              <div className="skeleton h-2.5 w-2.5 rounded-full" />
+            )}
             <div className="skeleton h-4 w-28 rounded-md" />
           </div>
         </div>
@@ -142,7 +159,7 @@ export function StatusPanel({ title, items, statusIndicator, pieData }: StatusPa
                 "status-indicator",
                 statusIndicator === "normal" && "online",
                 statusIndicator === "warning" && "warning",
-                statusIndicator === "critical" && "offline"
+                statusIndicator === "critical" && "offline",
               )}
             />
           )}
@@ -162,12 +179,14 @@ export function StatusPanel({ title, items, statusIndicator, pieData }: StatusPa
                 "text-sm font-medium tabular-nums",
                 item.status === "warning" && "text-warning",
                 item.status === "critical" && "text-destructive",
-                (!item.status || item.status === "normal") && "text-foreground"
+                (!item.status || item.status === "normal") && "text-foreground",
               )}
             >
               {item.value}
               {item.unit && (
-                <span className="text-xs text-muted-foreground ml-1">{item.unit}</span>
+                <span className="text-xs text-muted-foreground ml-1">
+                  {item.unit}
+                </span>
               )}
             </span>
           </div>
@@ -177,17 +196,29 @@ export function StatusPanel({ title, items, statusIndicator, pieData }: StatusPa
       {showPie && (
         <div className="p-3 pt-1 border-t border-border/40">
           <div className="h-40 flex items-center justify-center">
-            <DonutChart data={normalizedPieData} size={120} innerR={35} outerR={60} />
+            <DonutChart
+              data={normalizedPieData}
+              size={120}
+              innerR={35}
+              outerR={60}
+            />
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-muted-foreground">
             {normalizedPieData.map((slice) => (
               <div key={slice.label} className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: slice.color }} />
+                <span
+                  className="h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: slice.color }}
+                />
                 <span className="flex-1 flex items-center justify-between">
                   <span>{slice.label}</span>
                   <span className="tabular-nums text-foreground">
                     {slice.value}
-                    {slice.unit && <span className="text-muted-foreground ml-1">{slice.unit}</span>}
+                    {slice.unit && (
+                      <span className="text-muted-foreground ml-1">
+                        {slice.unit}
+                      </span>
+                    )}
                   </span>
                 </span>
               </div>

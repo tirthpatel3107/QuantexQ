@@ -106,12 +106,18 @@ function LineChartContent({
       ],
       animation: false,
     }),
-    [data, color, threshold]
+    [data, color, threshold],
   );
 
   return (
-    <div className={cn("chart-container h-full w-full min-h-0 min-w-0", className)}>
-      <ReactECharts option={option} style={{ width: "100%", height: "100%" }} opts={{ renderer: "svg" }} />
+    <div
+      className={cn("chart-container h-full w-full min-h-0 min-w-0", className)}
+    >
+      <ReactECharts
+        option={option}
+        style={{ width: "100%", height: "100%" }}
+        opts={{ renderer: "svg" }}
+      />
     </div>
   );
 }
@@ -173,7 +179,12 @@ export const ChartPanel = memo(function ChartPanel({
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <div className="h-[420px] sm:h-[520px]">
-          <LineChartContent data={data} color={color} threshold={threshold} className="h-full" />
+          <LineChartContent
+            data={data}
+            color={color}
+            threshold={threshold}
+            className="h-full"
+          />
         </div>
       </DialogContent>
     </Dialog>

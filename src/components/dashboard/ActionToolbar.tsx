@@ -22,7 +22,9 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export function ActionToolbar() {
-  const [confirmAction, setConfirmAction] = useState<"start" | "stop" | null>(null);
+  const [confirmAction, setConfirmAction] = useState<"start" | "stop" | null>(
+    null,
+  );
 
   const actions = [
     { icon: Settings, label: "Settings" },
@@ -42,7 +44,7 @@ export function ActionToolbar() {
             key={i}
             className={cn(
               "inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium",
-              "text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+              "text-muted-foreground hover:text-foreground hover:bg-accent transition-colors",
             )}
           >
             <action.icon className="h-3.5 w-3.5" />
@@ -71,11 +73,16 @@ export function ActionToolbar() {
         </button>
       </div>
 
-      <AlertDialog open={confirmAction !== null} onOpenChange={(open) => !open && setConfirmAction(null)}>
+      <AlertDialog
+        open={confirmAction !== null}
+        onOpenChange={(open) => !open && setConfirmAction(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {confirmAction === "start" ? "Start operation?" : "Stop operation?"}
+              {confirmAction === "start"
+                ? "Start operation?"
+                : "Stop operation?"}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {confirmAction === "start"
@@ -86,7 +93,11 @@ export function ActionToolbar() {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className={confirmAction === "stop" ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""}
+              className={
+                confirmAction === "stop"
+                  ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  : ""
+              }
               onClick={() => setConfirmAction(null)}
             >
               {confirmAction === "start" ? "Start" : "Stop"}

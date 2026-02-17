@@ -14,7 +14,13 @@ import {
   Cog,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import {
   Collapsible,
   CollapsibleContent,
@@ -63,7 +69,10 @@ const menuSections = [
   },
 ];
 
-export const SideDrawer = memo(function SideDrawer({ open, onOpenChange }: SideDrawerProps) {
+export const SideDrawer = memo(function SideDrawer({
+  open,
+  onOpenChange,
+}: SideDrawerProps) {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     monitoring: true,
     configuration: true,
@@ -96,12 +105,14 @@ export const SideDrawer = memo(function SideDrawer({ open, onOpenChange }: SideD
               <Collapsible
                 key={section.id}
                 open={openSections[section.id]}
-                onOpenChange={(open) => setOpenSections((prev) => ({ ...prev, [section.id]: open }))}
+                onOpenChange={(open) =>
+                  setOpenSections((prev) => ({ ...prev, [section.id]: open }))
+                }
               >
                 <CollapsibleTrigger
                   className={cn(
                     "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium",
-                    "text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                    "text-foreground hover:bg-accent hover:text-accent-foreground transition-colors",
                   )}
                 >
                   <section.icon className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -109,7 +120,7 @@ export const SideDrawer = memo(function SideDrawer({ open, onOpenChange }: SideD
                   <ChevronDown
                     className={cn(
                       "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
-                      openSections[section.id] && "rotate-180"
+                      openSections[section.id] && "rotate-180",
                     )}
                   />
                 </CollapsibleTrigger>
@@ -122,7 +133,7 @@ export const SideDrawer = memo(function SideDrawer({ open, onOpenChange }: SideD
                         onClick={() => onOpenChange(false)}
                         className={cn(
                           "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-xs",
-                          "text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors"
+                          "text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors",
                         )}
                       >
                         <item.icon className="h-3.5 w-3.5 shrink-0" />

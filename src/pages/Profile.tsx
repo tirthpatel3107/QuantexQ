@@ -33,13 +33,30 @@ import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { useTheme } from "@/components/theme-provider";
 
 const sessions = [
-  { device: "Rugged Tablet · Rig Control Room", location: "DW-0347", status: "Active", lastSeen: "Now" },
-  { device: "Laptop · Ops HQ", location: "Houston, TX", status: "Idle", lastSeen: "12m ago" },
-  { device: "Mobile · Field Engineer", location: "Offshore Block A-7", status: "Offline", lastSeen: "3h ago" },
+  {
+    device: "Rugged Tablet · Rig Control Room",
+    location: "DW-0347",
+    status: "Active",
+    lastSeen: "Now",
+  },
+  {
+    device: "Laptop · Ops HQ",
+    location: "Houston, TX",
+    status: "Idle",
+    lastSeen: "12m ago",
+  },
+  {
+    device: "Mobile · Field Engineer",
+    location: "Offshore Block A-7",
+    status: "Offline",
+    lastSeen: "3h ago",
+  },
 ];
 
 const Profile = () => {
-  const [maintenanceOpen, setMaintenanceOpen] = useState<false | "access" | "profile">(false);
+  const [maintenanceOpen, setMaintenanceOpen] = useState<
+    false | "access" | "profile"
+  >(false);
   const { theme, setTheme } = useTheme();
 
   const [prefs, setPrefs] = useState({
@@ -77,7 +94,10 @@ const Profile = () => {
             {/* Grids skeleton */}
             <div className="grid gap-4 lg:grid-cols-3">
               {[0, 1, 2].map((i) => (
-                <Card key={i} className="border-border/60 bg-card/70 backdrop-blur">
+                <Card
+                  key={i}
+                  className="border-border/60 bg-card/70 backdrop-blur"
+                >
                   <CardHeader>
                     <div className="flex items-center gap-2">
                       <div className="skeleton h-4 w-4 rounded-full" />
@@ -99,7 +119,10 @@ const Profile = () => {
 
             <div className="grid gap-4 lg:grid-cols-2">
               {[0, 1].map((i) => (
-                <Card key={i} className="border-border/60 bg-card/70 backdrop-blur">
+                <Card
+                  key={i}
+                  className="border-border/60 bg-card/70 backdrop-blur"
+                >
                   <CardHeader>
                     <div className="flex items-center gap-2">
                       <div className="skeleton h-4 w-4 rounded-full" />
@@ -129,16 +152,23 @@ const Profile = () => {
             <CardContent className="p-6 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-4">
                 <Avatar className="h-16 w-16 ring-2 ring-primary/40 shadow-lg shadow-primary/20">
-                  <AvatarFallback className="text-lg font-semibold">QX</AvatarFallback>
+                  <AvatarFallback className="text-lg font-semibold">
+                    QX
+                  </AvatarFallback>
                 </Avatar>
                 <div>
                   <div className="flex items-center gap-3">
                     <h1 className="text-2xl font-bold">QuantexQ Operator</h1>
-                    <Badge variant="outline" className="border-primary/40 text-primary">
+                    <Badge
+                      variant="outline"
+                      className="border-primary/40 text-primary"
+                    >
                       On Shift
                     </Badge>
                   </div>
-                  <p className="text-muted-foreground">Systems Engineer · Live Monitoring</p>
+                  <p className="text-muted-foreground">
+                    Systems Engineer · Live Monitoring
+                  </p>
                   <div className="flex flex-wrap items-center gap-2 mt-2 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1 rounded-full bg-accent/60 px-2 py-1 text-foreground">
                       <ShieldCheck className="h-3.5 w-3.5" />
@@ -159,7 +189,9 @@ const Profile = () => {
                 >
                   Manage Access
                 </Button>
-                <Button onClick={() => setMaintenanceOpen("profile")}>Update Profile</Button>
+                <Button onClick={() => setMaintenanceOpen("profile")}>
+                  Update Profile
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -205,31 +237,45 @@ const Profile = () => {
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <span className="text-foreground">Theme</span>
-                  <p className="text-xs text-muted-foreground">{theme === "dark" ? "Dark mode active" : "Light mode active"}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {theme === "dark"
+                      ? "Dark mode active"
+                      : "Light mode active"}
+                  </p>
                 </div>
                 <Switch
                   checked={theme === "dark"}
-                  onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+                  onCheckedChange={(checked) =>
+                    setTheme(checked ? "dark" : "light")
+                  }
                 />
               </div>
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <span className="text-foreground">Alerts</span>
-                  <p className="text-xs text-muted-foreground">Critical + Warning</p>
+                  <p className="text-xs text-muted-foreground">
+                    Critical + Warning
+                  </p>
                 </div>
                 <Switch
                   checked={prefs.alerts}
-                  onCheckedChange={(checked) => setPrefs((p) => ({ ...p, alerts: checked }))}
+                  onCheckedChange={(checked) =>
+                    setPrefs((p) => ({ ...p, alerts: checked }))
+                  }
                 />
               </div>
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <span className="text-foreground">Notifications</span>
-                  <p className="text-xs text-muted-foreground">In-app + Email</p>
+                  <p className="text-xs text-muted-foreground">
+                    In-app + Email
+                  </p>
                 </div>
                 <Switch
                   checked={prefs.notifications}
-                  onCheckedChange={(checked) => setPrefs((p) => ({ ...p, notifications: checked }))}
+                  onCheckedChange={(checked) =>
+                    setPrefs((p) => ({ ...p, notifications: checked }))
+                  }
                 />
               </div>
             </PanelCard>
@@ -305,7 +351,10 @@ const Profile = () => {
               <ScrollArea className="max-h-[260px]">
                 <div className="divide-y divide-border/50">
                   {sessions.map((session) => (
-                    <div key={session.device} className="py-3 flex items-center justify-between text-sm">
+                    <div
+                      key={session.device}
+                      className="py-3 flex items-center justify-between text-sm"
+                    >
                       <div className="space-y-0.5">
                         <div className="text-foreground">{session.device}</div>
                         <div className="text-xs text-muted-foreground flex items-center gap-1">
@@ -313,10 +362,16 @@ const Profile = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <Badge variant={session.status === "Active" ? "default" : "outline"}>
+                        <Badge
+                          variant={
+                            session.status === "Active" ? "default" : "outline"
+                          }
+                        >
                           {session.status}
                         </Badge>
-                        <div className="text-xs text-muted-foreground">{session.lastSeen}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {session.lastSeen}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -327,19 +382,24 @@ const Profile = () => {
         </div>
       </main>
 
-      <AlertDialog open={!!maintenanceOpen} onOpenChange={(open) => setMaintenanceOpen(open ? "access" : false)}>
+      <AlertDialog
+        open={!!maintenanceOpen}
+        onOpenChange={(open) => setMaintenanceOpen(open ? "access" : false)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Feature under maintenance</AlertDialogTitle>
             <AlertDialogDescription>
               {maintenanceOpen === "access"
                 ? "Manage Access is temporarily unavailable while we perform maintenance."
-                : "Update Profile is temporarily unavailable while we perform maintenance."}
-              {" "}Please try again later.
+                : "Update Profile is temporarily unavailable while we perform maintenance."}{" "}
+              Please try again later.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setMaintenanceOpen(false)}>OK</AlertDialogAction>
+            <AlertDialogAction onClick={() => setMaintenanceOpen(false)}>
+              OK
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

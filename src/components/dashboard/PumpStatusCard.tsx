@@ -48,7 +48,7 @@ export const PumpStatusCard = memo(function PumpStatusCard({
         "relative p-2 rounded-lg border transition-all",
         config.bg,
         config.border,
-        "hover:shadow-md"
+        "hover:shadow-md",
       )}
     >
       <div className="mb-2">
@@ -61,7 +61,7 @@ export const PumpStatusCard = memo(function PumpStatusCard({
             <span
               className={cn(
                 "h-2 w-2 shrink-0 rounded-full",
-                status === "running" ? "bg-success" : "bg-destructive"
+                status === "running" ? "bg-success" : "bg-destructive",
               )}
               aria-hidden
             />

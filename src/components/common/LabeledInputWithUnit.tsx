@@ -46,11 +46,15 @@ export function LabeledInputWithUnit({
           id={id}
           value={value}
           readOnly={readOnly}
-          onChange={onChange != null ? (e) => onChange(e.target.value) : undefined}
+          onChange={
+            onChange != null ? (e) => onChange(e.target.value) : undefined
+          }
           className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
         />
         {suffix ?? (
-          <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">{unit}</span>
+          <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
+            {unit}
+          </span>
         )}
       </div>
     </div>

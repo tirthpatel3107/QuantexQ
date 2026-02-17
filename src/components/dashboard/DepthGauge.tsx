@@ -21,7 +21,7 @@ export const DepthGauge = memo(function DepthGauge({
 
   const progress = useMemo(
     () => Math.min(100, Math.max(0, (currentDepth / targetDepth) * 100)),
-    [currentDepth, targetDepth]
+    [currentDepth, targetDepth],
   );
 
   // Generate depth markers once per target change to avoid recreating arrays every render.
@@ -82,7 +82,9 @@ export const DepthGauge = memo(function DepthGauge({
         <div className="text-center mb-2">
           <div className="text-2xl font-bold text-primary glow-primary tabular-nums">
             {currentDepth.toLocaleString()}
-            <span className="text-lg font-normal text-muted-foreground ml-1">ft</span>
+            <span className="text-lg font-normal text-muted-foreground ml-1">
+              ft
+            </span>
           </div>
           <div className="flex items-center justify-center gap-1 my-1">
             <span className="text-success text-sm font-medium">
@@ -146,13 +148,17 @@ export const DepthGauge = memo(function DepthGauge({
         {/* Stats Row */}
         <div className="grid grid-cols-1 gap-2 mt-4 px-2 pt-5 border-t border-border">
           <div className="flex justify-between">
-            <div className="text-[13px] font-bold text-muted-foreground">BIT DEPTH</div>
+            <div className="text-[13px] font-bold text-muted-foreground">
+              BIT DEPTH
+            </div>
             <div className="text-[14px] font-bold tabular-nums">
               {bitDepth.toLocaleString()} ft
             </div>
           </div>
           <div className="flex justify-between">
-            <div className="text-[13px] font-bold text-muted-foreground">REMAINING</div>
+            <div className="text-[13px] font-bold text-muted-foreground">
+              REMAINING
+            </div>
             <div className="text-[14px] font-bold tabular-nums text-warning">
               {(targetDepth - currentDepth).toLocaleString()} ft
             </div>

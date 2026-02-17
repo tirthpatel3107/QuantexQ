@@ -15,7 +15,12 @@ const mulberry32 = (seed: number) => {
 export type ChartDataPoint = Record<string, string | number>;
 export type ChartDataset = ChartDataPoint[];
 
-type SeriesConfigItem = { key: string; baseValue: number; variance: number; patternSeed: number };
+type SeriesConfigItem = {
+  key: string;
+  baseValue: number;
+  variance: number;
+  patternSeed: number;
+};
 
 /** Single source of truth for chart series; used for initial data and append. */
 const seriesConfigs: Record<string, SeriesConfigItem[]> = {
@@ -50,12 +55,16 @@ const seriesConfigs: Record<string, SeriesConfigItem[]> = {
 const generateSinglePoint = (
   seriesConfig: SeriesConfigItem[],
   index: number,
-  useNow = false
+  useNow = false,
 ): ChartDataPoint => {
   const now = Date.now();
   const time = useNow ? new Date(now) : new Date(now - index * 3 * 60_000);
   const point: ChartDataPoint = {
-    time: time.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: false }),
+    time: time.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }),
   };
 
   const seedIndex = useNow ? Math.floor(Date.now() / 5000) : index;
@@ -65,12 +74,17 @@ const generateSinglePoint = (
     const secondaryFrequency = 0.6 + (patternSeed % 3) * 0.18;
     const phase = patternSeed * 0.45;
 
-    const primaryWave = Math.sin((seedIndex + 1) * baseFrequency + phase) * variance * 0.38;
-    const secondaryWave = Math.cos((seedIndex + 1.5) * secondaryFrequency) * variance * 0.2;
+    const primaryWave =
+      Math.sin((seedIndex + 1) * baseFrequency + phase) * variance * 0.38;
+    const secondaryWave =
+      Math.cos((seedIndex + 1.5) * secondaryFrequency) * variance * 0.2;
     const jitter = (random() - 0.5) * variance * 0.12;
 
     const rawValue = baseValue + primaryWave + secondaryWave + jitter;
-    const value = Math.max(baseValue - variance * 2, Math.min(baseValue + variance * 2, rawValue));
+    const value = Math.max(
+      baseValue - variance * 2,
+      Math.min(baseValue + variance * 2, rawValue),
+    );
 
     point[key] = Math.round(value * 100) / 100;
   });
@@ -80,7 +94,7 @@ const generateSinglePoint = (
 
 const generateMultiSeriesChartData = (
   config: SeriesConfigItem[],
-  points = 50
+  points = 50,
 ): ChartDataset => {
   const data: ChartDataset = [];
   for (let i = 0; i < points; i++) {
@@ -92,7 +106,7 @@ const generateMultiSeriesChartData = (
 /** Append one new data point and keep last 50 points (sliding window). */
 export function appendChartPoint(
   data: ChartDataset,
-  configKey: keyof typeof seriesConfigs
+  configKey: keyof typeof seriesConfigs,
 ): ChartDataset {
   const config = seriesConfigs[configKey];
   if (!config || data.length === 0) return data;
@@ -104,9 +118,15 @@ export function appendChartPoint(
 /** Initial chart datasets derived from seriesConfigs (no duplicate config). */
 export const flowData = generateMultiSeriesChartData(seriesConfigs.flow);
 export const densityData = generateMultiSeriesChartData(seriesConfigs.density);
-export const surfacePressureData = generateMultiSeriesChartData(seriesConfigs.surfacePressure);
-export const standpipePressureData = generateMultiSeriesChartData(seriesConfigs.standpipePressure);
-export const bottomHolePressureData = generateMultiSeriesChartData(seriesConfigs.bottomHolePressure);
+export const surfacePressureData = generateMultiSeriesChartData(
+  seriesConfigs.surfacePressure,
+);
+export const standpipePressureData = generateMultiSeriesChartData(
+  seriesConfigs.standpipePressure,
+);
+export const bottomHolePressureData = generateMultiSeriesChartData(
+  seriesConfigs.bottomHolePressure,
+);
 export const chokeChartData = generateMultiSeriesChartData(seriesConfigs.choke);
 
 export const notifications = [

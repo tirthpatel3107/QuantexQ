@@ -31,11 +31,14 @@ export function SidebarLayout({
 }: SidebarLayoutProps) {
   return (
     <div className="flex flex-1 pt-14">
-      <div className={cn("hidden lg:block fixed left-0 top-14 bottom-0 z-10 p-4", sidebarWidth)}>
+      <div
+        className={cn(
+          "hidden lg:block fixed left-0 top-14 bottom-0 z-10 p-4",
+          sidebarWidth,
+        )}
+      >
         <aside className="h-full max-h-[calc(100vh-3.5rem)] w-56 border border-border rounded-lg bg-card/50 shadow-sm flex flex-col overflow-hidden">
-          <ScrollArea className="flex-1 min-h-0">
-            {sidebar}
-          </ScrollArea>
+          <ScrollArea className="flex-1 min-h-0">{sidebar}</ScrollArea>
           {sidebarFooter != null && (
             <div className="shrink-0 px-3 pb-3 pt-2 border-t border-border">
               {sidebarFooter}
@@ -46,7 +49,7 @@ export function SidebarLayout({
       <div
         className={cn(
           "flex-1 min-w-0 flex flex-col min-h-0 p-4 pt-4",
-          mainMarginClass
+          mainMarginClass,
         )}
       >
         {children}
