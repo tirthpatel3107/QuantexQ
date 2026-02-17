@@ -2,6 +2,7 @@ import { memo, useMemo } from "react";
 
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DepthGaugeProps {
   currentDepth: number;
@@ -38,26 +39,26 @@ export const DepthGauge = memo(function DepthGauge({
     return (
       <div className={cn("dashboard-panel h-full", className)}>
         <div className="panel-header flex-col items-center gap-1 text-center px-2.5 py-3">
-          <div className="skeleton h-4 w-28 rounded-md" />
+          <Skeleton className="h-4 w-28" />
           <div className="flex items-center justify-center gap-2">
-            <div className="skeleton h-3 w-16 rounded-md" />
-            <div className="skeleton h-4 w-20 rounded-md" />
+            <Skeleton className="h-3 w-16" />
+            <Skeleton className="h-4 w-20" />
           </div>
         </div>
 
         <div className="px-2.5 py-2 flex flex-col gap-0 h-[calc(100%-52px)]">
-          <div className="skeleton h-10 w-40 mx-auto rounded-md mb-3" />
+          <Skeleton className="h-10 w-40 mx-auto mb-3" />
 
-          <div className="skeleton flex-1 min-h-0 rounded-lg" />
+          <Skeleton className="flex-1 min-h-0 rounded-lg" />
 
           <div className="grid gap-2 grid-cols-1 mt-2 pt-2 border-t border-border">
             <div className="space-y-2">
-              <div className="skeleton h-3 w-20 rounded-md" />
-              <div className="skeleton h-4 w-24 rounded-md" />
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-4 w-24" />
             </div>
             <div className="space-y-2">
-              <div className="skeleton h-3 w-20 rounded-md" />
-              <div className="skeleton h-4 w-24 rounded-md" />
+              <Skeleton className="h-3 w-20" />
+              <Skeleton className="h-4 w-24" />
             </div>
           </div>
         </div>
@@ -77,7 +78,9 @@ export const DepthGauge = memo(function DepthGauge({
         </div>
       </div>
 
-      <div className="px-2.5 py-4 flex flex-col flex-1 min-h-0 gap-0">
+      <hr className="px-2"/>
+
+      <div className="chart-card px-2.5 py-4 flex flex-col flex-1 min-h-0 gap-0">
         {/* Current Depth Display */}
         <div className="text-center mb-2">
           <div className="text-2xl font-bold text-primary glow-primary tabular-nums">
@@ -94,7 +97,7 @@ export const DepthGauge = memo(function DepthGauge({
         </div>
 
         {/* Visual Gauge */}
-        <div className="flex-1 flex justify-center gap-4 min-h-0">
+        <div className="flex-1 flex justify-center gap-4 min-h-0 mb-4">
           {/* Depth Scale */}
           <div className="flex flex-col justify-between text-xs text-muted-foreground tabular-nums w-12 py-1">
             {markers.map((depth, i) => (
@@ -144,9 +147,11 @@ export const DepthGauge = memo(function DepthGauge({
             </span>
           </div>
         </div>
+        
+        <hr />
 
         {/* Stats Row */}
-        <div className="grid grid-cols-1 gap-2 mt-4 px-2 pt-5 border-t border-border">
+        <div className="grid grid-cols-1 gap-2 mt-4">
           <div className="flex justify-between">
             <div className="text-[13px] font-bold text-muted-foreground">
               BIT DEPTH

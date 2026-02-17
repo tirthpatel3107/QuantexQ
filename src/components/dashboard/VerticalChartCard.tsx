@@ -14,6 +14,7 @@ import {
 import type { VerticalChartMetric } from "@/types/chart";
 import { COLORS } from "@/constants/colors";
 import { useTheme } from "@/components/theme-provider";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export type { VerticalChartMetric };
 
@@ -266,7 +267,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
     if (theme === "system") {
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
-    return theme === "dark";
+    return theme === "dark" || theme === "midnight";
   }, [theme]);
 
   // Badge colors logic
@@ -300,18 +301,18 @@ export const VerticalChartCard = memo(function VerticalChartCard({
       >
         <div className="panel-header flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <div className="skeleton h-8 w-8 rounded-lg" />
-            <div className="skeleton h-4 w-20 rounded-md" />
+            <Skeleton className="h-8 w-8 rounded-lg" />
+            <Skeleton className="h-4 w-20" />
           </div>
-          <div className="skeleton h-6 w-16 rounded-md" />
+          <Skeleton className="h-6 w-16" />
         </div>
         <div className="p-2.5 pt-0 flex-1">
-          <div className="skeleton h-full w-full rounded-md" />
+          <Skeleton className="h-full w-full" />
         </div>
         <div className="px-3 pt-1.5 pb-2 flex gap-2 justify-center">
-          <div className="skeleton h-5 w-14 rounded-md" />
-          <div className="skeleton h-5 w-14 rounded-md" />
-          <div className="skeleton h-5 w-14 rounded-md" />
+          <Skeleton className="h-5 w-14" />
+          <Skeleton className="h-5 w-14" />
+          <Skeleton className="h-5 w-14" />
         </div>
       </div>
     );
@@ -320,7 +321,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
   return (
     <div
       className={cn(
-        "dashboard-panel group flex flex-col relative h-full antialiased cursor-pointer select-none",
+        "dashboard-panel chart-card group flex flex-col relative h-full antialiased cursor-pointer select-none",
         statusBorderColors[status],
         className,
       )}
@@ -333,7 +334,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
           <button
             type="button"
             onClick={() => setExpandOpen(true)}
-            className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+            className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white dark:bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
             aria-label="Expand chart"
           >
             {Icon && (
@@ -355,6 +356,8 @@ export const VerticalChartCard = memo(function VerticalChartCard({
           </h3>
         </div>
       </div>
+
+      <hr />
 
       {/* Chart area */}
       <div className="vertical-line-chart flex flex-col p-3 flex-1 w-full overflow-hidden relative">

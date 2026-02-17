@@ -30,14 +30,14 @@ export function SidebarLayout({
   mainMarginClass = DEFAULT_MAIN_MARGIN,
 }: SidebarLayoutProps) {
   return (
-    <div className="flex flex-1 pt-14">
+    <div className="flex flex-1">
       <div
         className={cn(
           "hidden lg:block fixed left-0 top-14 bottom-0 z-10 p-4",
           sidebarWidth,
         )}
       >
-        <aside className="h-full max-h-[calc(100vh-3.5rem)] w-56 border border-border rounded-lg bg-card/50 shadow-sm flex flex-col overflow-hidden">
+        <aside className="dashboard-panel h-full max-h-[calc(100vh-3.5rem)] w-56 border-0 shadow-none flex flex-col overflow-hidden">
           <ScrollArea className="flex-1 min-h-0">{sidebar}</ScrollArea>
           {sidebarFooter != null && (
             <div className="shrink-0 px-3 pb-3 pt-2 border-t border-border">

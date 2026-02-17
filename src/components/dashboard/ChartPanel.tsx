@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ChartPanelProps {
   title: string;
@@ -137,14 +138,14 @@ export const ChartPanel = memo(function ChartPanel({
       <div className={cn("dashboard-panel group", statusBorderColors[status])}>
         <div className="panel-header relative">
           <div className="flex items-center gap-3">
-            <div className="skeleton h-4 w-24 rounded-md" />
+            <Skeleton className="h-4 w-24" />
           </div>
           <div className="absolute right-2 top-1/2 -translate-y-1/2">
-            <div className="skeleton h-8 w-8 rounded-full" />
+            <Skeleton className="h-8 w-8 rounded-full" />
           </div>
         </div>
         <div className="p-3">
-          <div className="skeleton h-[140px] w-full rounded-md" />
+          <Skeleton className="h-[140px] w-full" />
         </div>
       </div>
     );

@@ -131,16 +131,16 @@ export default function Settings() {
   );
 
   const sidebarNav = (
-    <nav className="py-4 px-3 space-y-0.5">
+    <nav className="py-4 px-3 space-y-1">
       {SETTINGS_NAV.map((item) => (
         <button
           key={item.id}
           onClick={() => setActiveSection(item.id)}
           className={cn(
-            "w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+            "dashboard-panel w-full flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all duration-200 border-0 shadow-none",
             activeSection === item.id
-              ? "bg-primary/15 text-primary"
-              : "text-muted-foreground hover:bg-accent hover:text-foreground",
+              ? "bg-primary/20 text-primary"
+              : "bg-transparent text-muted-foreground hover:text-foreground",
           )}
         >
           <item.icon className="h-4 w-4 shrink-0" />
@@ -159,32 +159,34 @@ export default function Settings() {
         }
       >
         <PageHeaderBar
-          icon={<SettingsIcon className="h-5 w-5 text-primary-foreground" />}
+          icon={<SettingsIcon className="h-5 w-5" />}
           title="Setting"
           metadata="Active Profile: Rig-01 / NFQ-21-6A Admin"
           actions={headerActions}
         />
 
         <main className="flex-1 min-w-0 py-4 overflow-auto">
-          <div className="w-full flex flex-wrap items-center justify-between gap-4 mb-4 shrink-0">
-            <SearchInput
-              placeholder="Search settings..."
-              value={search}
-              onChange={setSearch}
-            />
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <Button variant="outline" size="sm">
-                <Save className="h-4 w-4" />
-                Save
-              </Button>
-              <Button variant="outline" size="sm">
-                <RotateCcw className="h-4 w-4" />
-                Discard
-              </Button>
-              <Button variant="outline" size="sm">
-                <Upload className="h-4 w-4" />
-                Import
-              </Button>
+          <div className="dashboard-panel border-0 shadow-none bg-card/40 p-3 mb-4 shrink-0">
+            <div className="w-full flex flex-wrap items-center justify-between gap-4">
+              <SearchInput
+                placeholder="Search settings..."
+                value={search}
+                onChange={setSearch}
+              />
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Button variant="outline" size="sm">
+                  <Save className="h-4 w-4" />
+                  Save
+                </Button>
+                <Button variant="outline" size="sm">
+                  <RotateCcw className="h-4 w-4" />
+                  Discard
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Upload className="h-4 w-4" />
+                  Import
+                </Button>
+              </div>
             </div>
           </div>
 

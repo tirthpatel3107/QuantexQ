@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Notification {
   id: string;
@@ -80,23 +81,23 @@ export const NotificationsPanel = memo(function NotificationsPanel({
     return (
       <div className="dashboard-panel h-full flex flex-col">
         <div className="panel-header">
-          <div className="skeleton h-4 w-28 rounded-md" />
-          <div className="skeleton h-3 w-16 rounded-md" />
+          <Skeleton className="h-4 w-28" />
+          <Skeleton className="h-3 w-16" />
         </div>
 
         <div className="flex-1 overflow-hidden p-4 space-y-3">
           {[0, 1, 2, 3].map((i) => (
             <div key={i} className="flex items-start gap-3">
-              <div className="skeleton h-4 w-4 rounded-full" />
+              <Skeleton className="h-4 w-4 rounded-full" />
               <div className="flex-1 space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="skeleton h-3 w-16 rounded-md" />
-                  <div className="skeleton h-3 w-12 rounded-md" />
+                  <Skeleton className="h-3 w-16" />
+                  <Skeleton className="h-3 w-12" />
                 </div>
-                <div className="skeleton h-3 w-full rounded-md" />
-                <div className="skeleton h-3 w-3/5 rounded-md" />
+                <Skeleton className="h-3 w-full" />
+                <Skeleton className="h-3 w-3/5" />
               </div>
-              <div className="skeleton h-5 w-5 rounded-full" />
+              <Skeleton className="h-5 w-5 rounded-full" />
             </div>
           ))}
         </div>

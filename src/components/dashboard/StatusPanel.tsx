@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 /** SVG donut slice: angle in radians, 0 = right, clockwise */
 function getDonutPath(
@@ -97,9 +98,9 @@ export function StatusPanel({
         <div className="panel-header">
           <div className="flex items-center gap-2">
             {statusIndicator && (
-              <div className="skeleton h-2.5 w-2.5 rounded-full" />
+              <Skeleton className="h-2.5 w-2.5 rounded-full" />
             )}
-            <div className="skeleton h-4 w-28 rounded-md" />
+            <Skeleton className="h-4 w-28" />
           </div>
         </div>
 
@@ -109,21 +110,21 @@ export function StatusPanel({
               key={i}
               className="flex items-center justify-between py-1.5 border-b border-border/30 last:border-0"
             >
-              <span className="skeleton h-3 w-24 rounded-md" />
-              <span className="skeleton h-3 w-14 rounded-md" />
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-3 w-14" />
             </div>
           ))}
         </div>
 
         <div className="p-3 pt-1 border-t border-border/40">
-          <div className="skeleton h-40 w-full rounded-md" />
+          <Skeleton className="h-40 w-full" />
           <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-muted-foreground">
             {[0, 1, 2, 3].map((i) => (
               <div key={i} className="flex items-center gap-2">
-                <span className="skeleton h-2.5 w-2.5 rounded-full" />
+                <Skeleton className="h-2.5 w-2.5 rounded-full" />
                 <span className="flex-1 flex items-center justify-between">
-                  <span className="skeleton h-3 w-16 rounded-md" />
-                  <span className="skeleton h-3 w-10 rounded-md" />
+                  <Skeleton className="h-3 w-16" />
+                  <Skeleton className="h-3 w-10" />
                 </span>
               </div>
             ))}

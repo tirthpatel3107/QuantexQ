@@ -104,7 +104,7 @@ export function Header() {
   }, [theme, setTheme]);
 
   return (
-    <header className="z-30 min-h-14 h-auto border-b border-border bg-card px-3 sm:px-4 py-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 backdrop-blur supports-[backdrop-filter]:bg-card/80">
+    <header className="sticky top-0 z-50 min-h-14 h-auto border-b border-border bg-card px-3 sm:px-4 py-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 backdrop-blur-md">
       <SideDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
       {/* Hamburger + Brand */}
       <div className="flex items-center gap-2 shrink-0 min-w-0 w-full sm:w-auto">
@@ -121,12 +121,12 @@ export function Header() {
           className="flex items-center gap-3 hover:text-foreground transition-colors min-w-0"
         >
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-info flex items-center justify-center">
-              <Gauge className="h-5 w-5 text-primary-foreground" />
+            <div className="h-8 w-8 rounded-lg bg-white dark:bg-primary/15 text-primary flex items-center justify-center">
+              <Gauge className="h-5 w-5" />
             </div>
             <div>
               <h1 className="text-base font-bold tracking-tight text-foreground">
-                QuantexQ<span className="text-primary">™</span>
+                QuantexQ<span className="text-foreground/60">™</span>
               </h1>
               <p className="text-[10px] text-muted-foreground -mt-0.5 hidden sm:block">
                 Professional Drilling Monitoring
@@ -197,7 +197,7 @@ export function Header() {
         <div className="hidden sm:block h-8 w-px bg-border" /> */}
 
         <div className="text-right leading-tight">
-          <div className="text-base sm:text-lg font-bold tabular-nums text-primary glow-primary">
+          <div className="text-base sm:text-lg font-bold tabular-nums text-foreground/90">
             {formatTime(time)}
           </div>
           <div className="hidden sm:block text-[10px] text-muted-foreground -mt-0.5">
@@ -307,7 +307,7 @@ export function Header() {
           <Sheet>
             <SheetTrigger asChild>
               <button
-                className="action-btn action-btn-ghost relative bg-accent text-foreground hover:bg-accent/80"
+                className="action-btn action-btn-ghost relative bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
                 aria-label="Notifications"
               >
                 <Bell className="h-4 w-4" />
@@ -375,7 +375,7 @@ export function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className="action-btn action-btn-ghost bg-accent text-foreground hover:bg-accent/80"
+                className="action-btn action-btn-ghost bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
                 aria-label="Settings menu"
               >
                 <Settings className="h-4 w-4" />

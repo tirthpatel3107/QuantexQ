@@ -88,8 +88,8 @@ export const SideDrawer = memo(function SideDrawer({
       >
         <SheetHeader className="px-4 py-3 border-b border-border text-left shrink-0">
           <SheetTitle className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-primary to-info flex items-center justify-center shrink-0">
-              <Gauge className="h-5 w-5 text-primary-foreground" />
+            <div className="h-9 w-9 rounded-lg bg-white dark:bg-primary/15 text-primary flex items-center justify-center shrink-0">
+              <Gauge className="h-5 w-5" />
             </div>
             <span className="text-base font-semibold flex-1">QuantexQ</span>
             <SheetClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-0 disabled:pointer-events-none p-1.5 -m-1.5">

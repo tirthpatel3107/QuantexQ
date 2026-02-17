@@ -26,14 +26,13 @@ const CategoryCard = React.forwardRef<HTMLDivElement, CategoryCardProps>(
       <Card
         ref={ref}
         className={cn(
-          "dashboard-panel cursor-pointer border-border/80 h-full min-w-0",
-          onClick && "hover:border-primary/50 transition-colors",
+          "dashboard-panel cursor-pointer h-full min-w-0 border-0 shadow-none",
           className,
         )}
         onClick={onClick}
       >
         <CardContent className="p-5 flex items-start gap-3 h-full">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white dark:bg-primary/10 text-primary">
             <Icon className="h-5 w-5" />
           </div>
           <div className="min-w-0 flex-1">

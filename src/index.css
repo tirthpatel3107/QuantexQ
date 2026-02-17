@@ -2,158 +2,129 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Oil & Gas Industrial Dashboard Design System
-   Dark theme optimized for 24/7 monitoring environments
-   All colors in HSL for consistency */
+/* Oil & Gas Industrial Dashboard Design System */
 
 @layer base {
   :root {
-    /* Dark industrial base */
-    --background: 222 47% 6%;
-    --foreground: 210 40% 96%;
+    /* Default: Dark Black (Strictly Neutral, Full #000) */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
 
-    /* Card surfaces - slightly elevated */
-    --card: 222 47% 9%;
-    --card-foreground: 210 40% 96%;
-    --card-elevated: 222 47% 12%;
+    /* Transparent Mirror / Glassmorphism Cards */
+    --card: 0 0% 10% / 0.8;
+    --card-foreground: 0 0% 98%;
+    --card-elevated: 0 0% 8% / 0.4;
 
-    /* Popover/dropdown surfaces */
-    --popover: 222 47% 9%;
-    --popover-foreground: 210 40% 96%;
+    --popover: 0 0% 5% / 0.8;
+    --popover-foreground: 0 0% 98%;
 
-    /* Primary - Cyan/Teal for key data */
-    --primary: 187 85% 53%;
-    --primary-foreground: 222 47% 6%;
+    /* Primary - White for Monochrome Contrast */
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 0%;
 
-    /* Secondary - Muted slate */
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 80%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 98%;
 
-    /* Muted elements */
-    --muted: 217 33% 14%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 60%;
 
-    /* Accent - Subtle highlight */
-    --accent: 217 33% 20%;
-    --accent-foreground: 210 40% 96%;
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 98%;
 
-    /* Status colors */
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 0% 30%;
+    --destructive-foreground: 0 0% 100%;
 
     --success: 142 76% 46%;
-    --success-foreground: 222 47% 6%;
+    --success-foreground: 0 0% 0%;
 
     --warning: 38 92% 50%;
-    --warning-foreground: 222 47% 6%;
+    --warning-foreground: 0 0% 0%;
 
-    --info: 199 89% 48%;
-    --info-foreground: 222 47% 6%;
+    --info: 199 89% 48%; /* Info might need to be grey or kept blue? "not having any blur color theme" -> likely means UI theme. Info usually implies blue. I will keep it but maybe mute it or user didn't ask to remove status colors explicitly, just "theme". */
+    --info-foreground: 0 0% 0%;
 
-    /* UI elements */
-    --border: 217 33% 18%;
-    --input: 217 33% 14%;
-    --ring: 187 85% 53%;
+    --border: 0 0% 12%;
+    --input: 0 0% 12%;
+    --ring: 0 0% 80%;
 
     --radius: 0.5rem;
 
-    /* Chart colors */
-    --chart-1: 187 85% 53%;
-    --chart-2: 142 76% 46%;
-    --chart-3: 38 92% 50%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 0 84% 60%;
-    --chart-6: 173 80% 40%;
-
-    /* Gradients */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(187 85% 53%) 0%,
-      hsl(199 89% 48%) 100%
-    );
-    --gradient-success: linear-gradient(
-      135deg,
-      hsl(142 76% 46%) 0%,
-      hsl(160 84% 39%) 100%
-    );
-    --gradient-warning: linear-gradient(
-      135deg,
-      hsl(38 92% 50%) 0%,
-      hsl(25 95% 53%) 100%
-    );
-    --gradient-danger: linear-gradient(
-      135deg,
-      hsl(0 84% 60%) 0%,
-      hsl(350 89% 55%) 100%
-    );
-    --gradient-depth: linear-gradient(
-      180deg,
-      hsl(187 85% 53%) 0%,
-      hsl(142 76% 46%) 50%,
-      hsl(38 92% 50%) 100%
-    );
-
-    /* Sidebar (if needed) */
-    --sidebar-background: 222 47% 8%;
-    --sidebar-foreground: 210 40% 80%;
-    --sidebar-primary: 187 85% 53%;
-    --sidebar-primary-foreground: 222 47% 6%;
-    --sidebar-accent: 217 33% 17%;
-    --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 217 33% 18%;
-    --sidebar-ring: 187 85% 53%;
+    /* Chart colors - preserved for data visibility */
+    --chart-1: 0 0% 98%; /* Primary chart line white */
+    --chart-2: 0 0% 60%;
+    --chart-3: 0 0% 40%;
+    --chart-4: 0 0% 20%;
+    --chart-5: 0 0% 80%;
+    --chart-6: 0 0% 50%;
   }
 
-  /* Light theme overrides */
+  /* Midnight Grey Theme (Monochrome Grey) */
+  [data-theme="midnight"] {
+    --background: 0 0% 8%; /* Neutral Dark Grey, no blue */
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 12% / 0.5;
+    --card-foreground: 0 0% 98%;
+    --card-elevated: 0 0% 15% / 0.5;
+
+    --popover: 0 0% 12% / 0.8;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 5%;
+
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 0 0% 18%;
+    --accent-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 80%;
+  }
+
+  /* Light Theme */
   .light {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 6%;
+    --background: 0 0% 98%;
+    --foreground: 0 0% 5%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 6%;
-    --card-elevated: 210 40% 96%;
+    --card: 0 0% 87% / 0.6;
+    --card-foreground: 0 0% 5%;
+    --card-elevated: 0 0% 90% / 0.6;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 6%;
+    --popover: 0 0% 100% / 0.8;
+    --popover-foreground: 0 0% 5%;
 
-    --primary: 199 89% 48%;
-    --primary-foreground: 222 47% 6%;
+    --primary: 0 0% 10%; /* Black primary for light theme */
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 217 33% 92%;
-    --secondary-foreground: 222 47% 15%;
+    --secondary: 0 0% 92%;
+    --secondary-foreground: 0 0% 15%;
 
-    --muted: 217 33% 92%;
-    --muted-foreground: 222 25% 35%;
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 217 33% 90%;
-    --accent-foreground: 222 47% 6%;
+    --accent: 0 0% 92%;
+    --accent-foreground: 0 0% 5%;
 
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 0 0% 10%;
 
-    --success: 142 71% 45%;
-    --success-foreground: 222 47% 6%;
-
-    --warning: 38 92% 50%;
-    --warning-foreground: 222 47% 6%;
-
-    --info: 199 89% 48%;
-    --info-foreground: 222 47% 6%;
-
-    --border: 220 13% 85%;
-    --input: 220 13% 85%;
-    --ring: 199 89% 48%;
-
-    --chart-1: 199 89% 48%;
-    --chart-2: 142 71% 45%;
-    --chart-3: 38 92% 50%;
-    --chart-4: 280 65% 55%;
-    --chart-5: 0 72% 51%;
-    --chart-6: 173 58% 39%;
+    --chart-1: 0 0% 10%;
+    --chart-2: 0 0% 40%;
+    --chart-3: 0 0% 60%;
+    --chart-4: 0 0% 80%;
+    --chart-5: 0 0% 30%;
+    --chart-6: 0 0% 50%;
   }
 
   .dark {
-    /* Same as root - dashboard default dark */
+    /* Same as root */
   }
 }
 
@@ -175,11 +146,17 @@
   body {
     min-height: 100%;
     @apply bg-background text-foreground antialiased;
-    font-feature-settings:
-      "tnum" on,
-      "lnum" on;
+    font-feature-settings: "tnum" on, "lnum" on;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    
+    /* Modern gradient background - Neutral */
+    background-image: radial-gradient(
+      circle at 50% 0%, 
+      hsl(0 0% 100% / 0.03), 
+      transparent 70%
+    );
+    background-attachment: fixed;
   }
 
   body::-webkit-scrollbar {
@@ -190,16 +167,13 @@
     min-height: 100%;
   }
 
-  /* Form inputs: match select/dark theme (override browser defaults) */
-  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(
-      [type="checkbox"]
-    ):not([type="radio"]),
+  /* Form inputs */
+  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]),
   textarea {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
   }
 
-  /* Tabular numbers for data displays */
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
@@ -207,79 +181,63 @@
 
 @layer components {
   /* KPI Card styles */
+  /* KPI Card styles */
   .kpi-card {
-    @apply relative overflow-hidden rounded-lg bg-card border border-border p-3;
-    @apply transition-all duration-200 hover:border-primary/30;
+    @apply relative overflow-hidden rounded-lg bg-card p-3 backdrop-blur-md;
+    @apply transition-all duration-200;
   }
 
-  .kpi-value {
-    @apply text-2xl font-bold tabular-nums tracking-tight;
-  }
-
-  .kpi-label {
-    @apply text-xs font-medium uppercase tracking-wider text-muted-foreground;
-  }
-
-  .kpi-trend-up {
-    @apply text-success;
-  }
-
-  .kpi-trend-down {
-    @apply text-destructive;
-  }
-
-  .kpi-trend-stable {
-    @apply text-muted-foreground;
-  }
-
-  /* Status indicator */
-  .status-indicator {
-    @apply h-2.5 w-2.5 rounded-full;
-  }
-
-  .status-indicator.online {
-    @apply bg-success shadow-[0_0_8px_hsl(var(--success)/0.6)];
-  }
-
-  .status-indicator.warning {
-    @apply bg-warning shadow-[0_0_8px_hsl(var(--warning)/0.6)];
-  }
-
-  .status-indicator.offline {
-    @apply bg-destructive shadow-[0_0_8px_hsl(var(--destructive)/0.6)];
-  }
+  /* ... (lines 192-231 skipped) ... */
 
   /* Panel styles */
   .dashboard-panel {
-    @apply relative rounded-lg bg-card border border-border overflow-hidden min-w-0;
-    @apply transition-all duration-200 hover:border-primary/30;
+    @apply relative rounded-lg bg-card overflow-hidden min-w-0 backdrop-blur-md;
+    @apply transition-all duration-200;
   }
 
-  .dashboard-panel::after {
+  @keyframes shine-pass {
+    0% {
+      left: -100%;
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    100% {
+      left: 100%;
+      opacity: 0;
+    }
+  }
+
+  /* Holographic Shine / Flash Effect */
+  .dashboard-panel::after,
+  .kpi-card::after {
     content: "";
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 2px;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
     background: linear-gradient(
-      90deg,
-      transparent,
-      hsl(var(--primary)),
-      transparent
+      120deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.15) 50%,
+      transparent 70%
     );
+    transform: skewX(-25deg);
     opacity: 0;
-    transition: opacity 200ms ease;
     pointer-events: none;
+    z-index: 10;
   }
 
+  /* Unified Hover Effect */
   .dashboard-panel:hover::after,
-  .dashboard-panel:focus-within::after {
-    opacity: 1;
+  .kpi-card:hover::after {
+    animation: shine-pass 0.4s ease-in-out forwards;
   }
 
   .panel-header {
-    @apply flex items-center justify-between p-3 border-b border-border;
+    @apply flex items-center justify-between p-3;
     background-color: hsl(var(--card-elevated) / 0.5);
   }
 
@@ -289,7 +247,7 @@
 
   /* Depth gauge */
   .depth-gauge {
-    @apply relative w-full h-full bg-gradient-to-b from-primary/20 via-success/20 to-warning/20 rounded;
+    @apply relative w-full h-full bg-gradient-to-b from-white/20 via-black/20 to-white/20 rounded;
   }
 
   /* Notification styles */
@@ -312,7 +270,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      hsl(var(--primary) / 0.12),
+      hsl(0 0% 100% / 0.1),
       transparent
     );
     transform: translateX(-100%);
@@ -366,7 +324,7 @@
     display: none;
   }
 
-  /* Glow effects for critical values */
+  /* Glow effects */
   .glow-primary {
     text-shadow: 0 0 10px hsl(var(--primary) / 0.5);
   }

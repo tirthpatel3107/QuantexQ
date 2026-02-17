@@ -17,6 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   BellRing,
   Globe2,
@@ -28,6 +29,7 @@ import {
   UserRound,
   Wifi,
   Clock4,
+  Check,
 } from "lucide-react";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { useTheme } from "@/components/theme-provider";
@@ -68,25 +70,25 @@ const Profile = () => {
   if (showSkeleton) {
     return (
       <PageLayout>
-        <main className="flex-1 px-6 py-20 pt-24">
+        <main className="flex-1 px-6 pb-20 pt-24">
           <div className="max-w-6xl mx-auto space-y-8">
             {/* Hero skeleton */}
-            <Card className="overflow-hidden border-border/60 bg-card/60 backdrop-blur">
+            <Card className="dashboard-panel border-0 shadow-none">
               <CardContent className="p-6 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="skeleton h-16 w-16 rounded-full" />
+                  <Skeleton className="h-16 w-16 rounded-full" />
                   <div className="space-y-2">
-                    <div className="skeleton h-5 w-48 rounded-md" />
-                    <div className="skeleton h-3 w-56 rounded-md" />
+                    <Skeleton className="h-5 w-48" />
+                    <Skeleton className="h-3 w-56" />
                     <div className="flex flex-wrap items-center gap-2 mt-2">
-                      <div className="skeleton h-6 w-24 rounded-full" />
-                      <div className="skeleton h-6 w-28 rounded-full" />
+                      <Skeleton className="h-6 w-24 rounded-full" />
+                      <Skeleton className="h-6 w-28 rounded-full" />
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <div className="skeleton h-9 w-32 rounded-md" />
-                  <div className="skeleton h-9 w-32 rounded-md" />
+                  <Skeleton className="h-9 w-32" />
+                  <Skeleton className="h-9 w-32" />
                 </div>
               </CardContent>
             </Card>
@@ -96,19 +98,19 @@ const Profile = () => {
               {[0, 1, 2].map((i) => (
                 <Card
                   key={i}
-                  className="border-border/60 bg-card/70 backdrop-blur"
+                  className="dashboard-panel border-0 shadow-none"
                 >
                   <CardHeader>
                     <div className="flex items-center gap-2">
-                      <div className="skeleton h-4 w-4 rounded-full" />
-                      <div className="skeleton h-4 w-24 rounded-md" />
+                      <Skeleton className="h-4 w-4 rounded-full" />
+                      <Skeleton className="h-4 w-24" />
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     {[0, 1, 2].map((j) => (
                       <div key={j} className="space-y-2">
-                        <div className="skeleton h-3 w-28 rounded-md" />
-                        <div className="skeleton h-3 w-40 rounded-md" />
+                        <Skeleton className="h-3 w-28" />
+                        <Skeleton className="h-3 w-40" />
                         <Separator />
                       </div>
                     ))}
@@ -121,17 +123,17 @@ const Profile = () => {
               {[0, 1].map((i) => (
                 <Card
                   key={i}
-                  className="border-border/60 bg-card/70 backdrop-blur"
+                  className="dashboard-panel border-0 shadow-none"
                 >
                   <CardHeader>
                     <div className="flex items-center gap-2">
-                      <div className="skeleton h-4 w-4 rounded-full" />
-                      <div className="skeleton h-4 w-28 rounded-md" />
+                      <Skeleton className="h-4 w-4 rounded-full" />
+                      <Skeleton className="h-4 w-28" />
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     {[0, 1, 2].map((j) => (
-                      <div key={j} className="skeleton h-3 w-full rounded-md" />
+                      <Skeleton key={j} className="h-3 w-full" />
                     ))}
                   </CardContent>
                 </Card>
@@ -145,10 +147,10 @@ const Profile = () => {
 
   return (
     <PageLayout>
-      <main className="flex-1 px-6 py-20 pt-24 text-foreground">
+      <main className="flex-1 px-6 py-10 text-foreground">
         <div className="max-w-6xl mx-auto space-y-8">
           {/* Hero */}
-          <Card className="overflow-hidden border-border/60 bg-card/60 backdrop-blur">
+          <Card className="dashboard-panel overflow-hidden border-0 shadow-none">
             <CardContent className="p-6 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-4">
                 <Avatar className="h-16 w-16 ring-2 ring-primary/40 shadow-lg shadow-primary/20">
@@ -199,7 +201,6 @@ const Profile = () => {
           {/* Grids */}
           <div className="grid gap-4 lg:grid-cols-3">
             <PanelCard
-              className="border-border/60 bg-card/70 backdrop-blur"
               title={
                 <>
                   <UserRound className="h-4 w-4 text-primary" />
@@ -225,7 +226,6 @@ const Profile = () => {
             </PanelCard>
 
             <PanelCard
-              className="border-border/60 bg-card/70 backdrop-blur"
               title={
                 <>
                   <MoonStar className="h-4 w-4 text-primary" />
@@ -238,17 +238,41 @@ const Profile = () => {
                 <div className="space-y-0.5">
                   <span className="text-foreground">Theme</span>
                   <p className="text-xs text-muted-foreground">
-                    {theme === "dark"
-                      ? "Dark mode active"
-                      : "Light mode active"}
+                    Select interface appearance
                   </p>
                 </div>
-                <Switch
-                  checked={theme === "dark"}
-                  onCheckedChange={(checked) =>
-                    setTheme(checked ? "dark" : "light")
-                  }
-                />
+                <div className="flex items-center gap-2">
+                  <button
+                    className={`h-8 w-8 rounded-full border-2 flex items-center justify-center transition-all ${theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/50"}`}
+                    style={{ backgroundColor: "hsl(0 0% 4%)" }}
+                    onClick={() => setTheme("dark")}
+                    title="Dark Black"
+                  >
+                    {theme === "dark" && (
+                      <Check className="h-4 w-4 text-primary" />
+                    )}
+                  </button>
+                  {/* <button
+                    className={`h-8 w-8 rounded-full border-2 flex items-center justify-center transition-all ${theme === "midnight" ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/50"}`}
+                    style={{ backgroundColor: "hsl(0 0% 12%)" }}
+                    onClick={() => setTheme("midnight")}
+                    title="Midnight Grey"
+                  >
+                    {theme === "midnight" && (
+                      <Check className="h-4 w-4 text-primary" />
+                    )}
+                  </button> */}
+                  <button
+                    className={`h-8 w-8 rounded-full border-2 flex items-center justify-center transition-all ${theme === "light" ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/50"}`}
+                    style={{ backgroundColor: "hsl(0 0% 98%)" }}
+                    onClick={() => setTheme("light")}
+                    title="Light"
+                  >
+                    {theme === "light" && (
+                      <Check className="h-4 w-4 text-primary" />
+                    )}
+                  </button>
+                </div>
               </div>
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
@@ -281,7 +305,6 @@ const Profile = () => {
             </PanelCard>
 
             <PanelCard
-              className="border-border/60 bg-card/70 backdrop-blur"
               title={
                 <>
                   <BellRing className="h-4 w-4 text-primary" />
@@ -312,7 +335,6 @@ const Profile = () => {
 
           <div className="grid gap-4 lg:grid-cols-2">
             <PanelCard
-              className="border-border/60 bg-card/70 backdrop-blur"
               title={
                 <>
                   <Globe2 className="h-4 w-4 text-primary" />
@@ -339,7 +361,6 @@ const Profile = () => {
             </PanelCard>
 
             <PanelCard
-              className="border-border/60 bg-card/70 backdrop-blur"
               title={
                 <>
                   <Smartphone className="h-4 w-4 text-primary" />

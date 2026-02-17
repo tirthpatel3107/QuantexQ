@@ -32,6 +32,7 @@ export function RestoreDefaultsButton({
           size={size}
           onClick={onClick}
           aria-label={ariaLabel}
+          className="bg-white dark:bg-transparent hover:bg-white/90 dark:hover:bg-accent"
         >
           <Undo2 className="h-4 w-4" />
         </Button>

@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { cn } from "@/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const STATUS_CONFIG = {
   running: {
@@ -34,8 +35,8 @@ export const PumpStatusCard = memo(function PumpStatusCard({
   if (showSkeleton) {
     return (
       <div className="relative p-2 rounded-lg border border-border bg-card">
-        <div className="skeleton h-4 w-24 rounded-md mb-2" />
-        <div className="skeleton h-3 w-16 rounded-md" />
+        <Skeleton className="h-4 w-24 mb-2" />
+        <Skeleton className="h-3 w-16" />
       </div>
     );
   }

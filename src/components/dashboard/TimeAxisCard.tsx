@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { COLORS } from "@/constants/colors";
 import { useTheme } from "@/components/theme-provider";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Clock } from "lucide-react";
 
 interface TimeAxisCardProps {
@@ -117,7 +118,7 @@ export const TimeAxisCard = memo(function TimeAxisCard({
     if (theme === "system") {
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
-    return theme === "dark";
+    return theme === "dark" || theme === "midnight";
   }, [theme]);
 
   if (showSkeleton) {
@@ -126,10 +127,10 @@ export const TimeAxisCard = memo(function TimeAxisCard({
         className={cn("dashboard-panel group h-full flex flex-col", className)}
       >
         <div className="panel-header flex items-center justify-center gap-2">
-          <div className="skeleton h-8 w-8 rounded-lg" />
+          <Skeleton className="h-8 w-8 rounded-lg" />
         </div>
         <div className="p-2.5 pt-0 flex-1">
-          <div className="skeleton h-full w-full rounded-md" />
+          <Skeleton className="h-full w-full" />
         </div>
       </div>
     );
@@ -138,17 +139,18 @@ export const TimeAxisCard = memo(function TimeAxisCard({
   return (
     <div
       className={cn(
-        "dashboard-panel group flex flex-col relative h-full antialiased select-none",
+        "dashboard-panel chart-card group flex flex-col relative h-full antialiased select-none",
         className,
       )}
     >
       {/* Header with Clock Icon */}
       <div className="panel-header flex items-center justify-center gap-2 min-w-0">
-        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
+        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white dark:bg-primary/15 text-primary">
           <Clock className="h-4 w-4" aria-hidden />
         </div>
       </div>
 
+      <hr />
       {/* Time axis area - matching the chart height */}
       <div className="vertical-line-chart flex flex-col px-0 pb-0 flex-1 w-full overflow-hidden relative">
         {/* Empty space to match metrics height */}

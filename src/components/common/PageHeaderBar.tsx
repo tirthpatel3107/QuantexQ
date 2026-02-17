@@ -25,13 +25,13 @@ export function PageHeaderBar({
   return (
     <div
       className={cn(
-        "shrink-0 border-b border-border bg-card/95 backdrop-blur px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2",
+        "dashboard-panel shrink-0 border-0 rounded-none shadow-none bg-card/70 px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2 z-10",
         className,
       )}
     >
       <div className="flex items-center gap-3 min-w-0">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-info flex items-center justify-center shrink-0">
+          <div className="h-8 w-8 rounded-lg bg-white dark:bg-primary/15 text-primary flex items-center justify-center shrink-0">
             {icon}
           </div>
           <h1 className="text-base font-bold tracking-tight">{title}</h1>

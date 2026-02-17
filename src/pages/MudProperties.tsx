@@ -103,16 +103,16 @@ export default function MudProperties() {
   );
 
   const sidebarNav = (
-    <nav className="py-4 px-3 space-y-0.5">
+    <nav className="py-4 px-3 space-y-1">
       {MUD_NAV.map((item) => (
         <button
           key={item.id}
           onClick={() => setActiveSection(item.id)}
           className={cn(
-            "w-full flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+            "dashboard-panel w-full flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all duration-200 border-0 shadow-none",
             activeSection === item.id
-              ? "bg-primary/15 text-primary"
-              : "text-muted-foreground hover:bg-accent hover:text-foreground",
+              ? "bg-primary/20 text-primary"
+              : "bg-transparent text-muted-foreground hover:text-foreground",
           )}
         >
           <item.icon className="h-4 w-4 shrink-0" />
@@ -132,7 +132,7 @@ export default function MudProperties() {
     <PageLayout>
       <SidebarLayout sidebar={sidebarNav} sidebarFooter={sidebarFooter}>
         <PageHeaderBar
-          icon={<Gauge className="h-5 w-5 text-primary-foreground" />}
+          icon={<Gauge className="h-5 w-5" />}
           title="Mud Properties"
           metadata={
             <>
@@ -144,33 +144,35 @@ export default function MudProperties() {
         />
 
         <main className="flex-1 min-w-0 py-4 overflow-auto flex flex-col">
-          <div className="w-full flex flex-wrap items-center justify-between gap-4 mb-4 shrink-0">
-            <SearchInput
-              placeholder="Search Mud Properties..."
-              value={search}
-              onChange={setSearch}
-            />
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <Button variant="outline" size="sm">
-                <Save className="h-4 w-4" />
-                Save
-              </Button>
-              <Button variant="outline" size="sm">
-                <RotateCcw className="h-4 w-4" />
-                Discard
-              </Button>
-              <Button variant="outline" size="sm">
-                <FolderOpen className="h-4 w-4" />
-                Load Preset
-              </Button>
-              <Button variant="outline" size="sm">
-                <FolderPlus className="h-4 w-4" />
-                Save Preset
-              </Button>
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4" />
-                Export
-              </Button>
+          <div className="dashboard-panel border-0 shadow-none bg-card/40 p-3 mb-4 shrink-0">
+            <div className="w-full flex flex-wrap items-center justify-between gap-4">
+              <SearchInput
+                placeholder="Search Mud Properties..."
+                value={search}
+                onChange={setSearch}
+              />
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Button variant="outline" size="sm">
+                  <Save className="h-4 w-4" />
+                  Save
+                </Button>
+                <Button variant="outline" size="sm">
+                  <RotateCcw className="h-4 w-4" />
+                  Discard
+                </Button>
+                <Button variant="outline" size="sm">
+                  <FolderOpen className="h-4 w-4" />
+                  Load Preset
+                </Button>
+                <Button variant="outline" size="sm">
+                  <FolderPlus className="h-4 w-4" />
+                  Save Preset
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4" />
+                  Export
+                </Button>
+              </div>
             </div>
           </div>
 

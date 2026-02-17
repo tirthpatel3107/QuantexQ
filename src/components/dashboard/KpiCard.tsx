@@ -2,6 +2,7 @@ import { memo } from "react";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface KpiCardProps {
   title: string;
@@ -39,21 +40,21 @@ export const KpiCard = memo(function KpiCard({
       <div className="kpi-card group h-full min-h-[170px] flex flex-col">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="skeleton h-7 w-7 rounded-md" />
-            <div className="skeleton h-3 w-20 rounded-md" />
+            <Skeleton className="h-7 w-7" />
+            <Skeleton className="h-4 w-20" />
           </div>
         </div>
 
         <div className="flex items-baseline gap-2">
-          <span className="skeleton h-7 w-24 rounded-md" />
-          <span className="skeleton h-4 w-10 rounded-md" />
+          <Skeleton className="h-8 w-24" />
+          <Skeleton className="h-4 w-10" />
         </div>
 
         <div className="mt-3 pt-3 border-t border-border/50 space-y-2">
           {[0, 1, 2].map((i) => (
             <div key={i} className="flex items-center justify-between text-xs">
-              <span className="skeleton h-3 w-24 rounded-md" />
-              <span className="skeleton h-3 w-12 rounded-md" />
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-3 w-12" />
             </div>
           ))}
         </div>

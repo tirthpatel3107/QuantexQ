@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { X, Triangle, Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Header } from "@/components/dashboard/Header";
 import { VerticalChartCard } from "@/components/dashboard/VerticalChartCard";
 import { DepthGauge } from "@/components/dashboard/DepthGauge";
@@ -43,21 +44,21 @@ function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
     return (
       <div className="dashboard-panel h-[72px] w-full flex items-center p-2 gap-4">
         <div className="flex h-full items-center pl-1 pr-3 gap-3 border-r border-border/30 shrink-0">
-          <div className="skeleton h-8 w-4 rounded-sm" />
+          <Skeleton className="h-8 w-4 rounded-sm" />
           <div className="flex items-center gap-4 w-[260px]">
-            <div className="skeleton h-10 w-10 rounded-full shrink-0" />
+            <Skeleton className="h-10 w-10 rounded-full shrink-0" />
             <div className="flex-1 flex flex-col gap-2">
-              <div className="skeleton h-3 w-32 rounded-sm" />
-              <div className="skeleton h-2 w-full rounded-sm" />
+              <Skeleton className="h-3 w-32 rounded-sm" />
+              <Skeleton className="h-2 w-full rounded-sm" />
             </div>
           </div>
         </div>
         <div className="flex items-center px-2 border-r border-border/30 h-full shrink-0">
-          <div className="skeleton h-12 w-24 rounded-md" />
+          <Skeleton className="h-12 w-24" />
         </div>
         <div className="flex-1 flex flex-col gap-3 px-2">
-          <div className="skeleton h-3 w-full rounded-sm" />
-          <div className="skeleton h-3 w-full rounded-sm" />
+          <Skeleton className="h-3 w-full rounded-sm" />
+          <Skeleton className="h-3 w-full rounded-sm" />
         </div>
       </div>
     );

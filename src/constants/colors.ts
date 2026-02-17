@@ -31,13 +31,13 @@ export const COLORS = {
 
   // Specific data colors used in dashboard
   data: {
-    in: "#22c55e", // Success green
-    out: "#3b82f6", // Primary blue/info
+    in: "#22c55e", // Success green (kept for status)
+    out: "#e5e7eb", // Light Grey (was Blue)
     warning: "#fbbf24", // Amber/Warning
     error: "#ef4444", // Red/Destructive
-    aux: "#3b82f6",
+    aux: "#d1d5db", // Grey (was Blue)
     setpoint: "#eab308",
-    cyan: "#21d5ed",
+    cyan: "#f3f4f6", // Very Light Grey (was Cyan)
     orange: "#f59f0a",
   },
 
