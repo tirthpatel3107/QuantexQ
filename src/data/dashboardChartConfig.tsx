@@ -143,14 +143,14 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     icon: Thermometer,
     metrics: [
       {
-        label: "SP",
+        label: "BHP",
         unit: "psi",
         trend: "stable",
         dataKey: "sp",
         color: COLORS.data.in,
       },
       {
-        label: "BHP",
+        label: "PWD BHP",
         unit: "psi",
         trend: "stable",
         dataKey: "bhp",

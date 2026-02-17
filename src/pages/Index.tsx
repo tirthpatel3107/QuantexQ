@@ -1,4 +1,10 @@
-import React, { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import React, {
+  useState,
+  useMemo,
+  useRef,
+  useCallback,
+  useEffect,
+} from "react";
 import {
   Dialog,
   DialogClose,
@@ -40,9 +46,10 @@ function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
 
   // Calculate latest flow difference from simulation
   const latestPoint = chartData.flow?.[chartData.flow.length - 1];
-  const simFlowDiff = (latestPoint && latestPoint.in !== undefined && latestPoint.out !== undefined)
-    ? Math.round((Number(latestPoint.in) - Number(latestPoint.out)) * 10) / 10
-    : 0;
+  const simFlowDiff =
+    latestPoint && latestPoint.in !== undefined && latestPoint.out !== undefined
+      ? Math.round((Number(latestPoint.in) - Number(latestPoint.out)) * 10) / 10
+      : 0;
 
   // Use manual value if dragging, otherwise simulation
   const flowDiff = manualValue !== null ? manualValue : simFlowDiff;
@@ -54,7 +61,10 @@ function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
   const updateValueFromPos = useCallback((clientX: number) => {
     if (!trackRef.current) return;
     const rect = trackRef.current.getBoundingClientRect();
-    const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    const percent = Math.max(
+      0,
+      Math.min(1, (clientX - rect.left) / rect.width),
+    );
     const newVal = Math.round((percent * 200 - 100) * 10) / 10;
     setManualValue(newVal);
   }, []);
@@ -73,7 +83,7 @@ function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
 
     const handleMouseUp = () => {
       setIsDragging(false);
-      // Optional: Reset to simulation after a delay, or keep it manual? 
+      // Optional: Reset to simulation after a delay, or keep it manual?
       // For now, let's keep the manual value until double click or something.
     };
 
@@ -147,7 +157,7 @@ function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
             </PopoverTrigger>
 
             <div className="flex items-center gap-4 w-full">
-              <div className="h-10 w-10 rounded-full bg-muted dark:bg-card-elevated flex items-center justify-center border-2 border-border dark:border-border/50 shadow-sm shrink-0 box-content group-hover/bar:border-primary/50 transition-colors">
+              <div className="h-10 w-10 rounded-full bg-muted dark:bg-card-elevated flex items-center justify-center border-2 border-border shadow-sm shrink-0 box-content border-primary/50 transition-colors">
                 <div
                   className="h-3 w-3 rounded-full shadow-sm transition-colors duration-500"
                   style={{ backgroundColor: statusColor }}
@@ -223,7 +233,7 @@ function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
             </div>
           </div>
 
-          <div className="hidden sm:block h-[60px] w-px bg-border mx-7" />
+          <div className="hidden sm:block h-[60px] w-px bg-black dark:bg-white mx-7" />
 
           <div className="flex">
             <div className="flex items-center pr-5 h-full bg-transparent shrink-0">
@@ -253,7 +263,7 @@ function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
             </div>
           </div>
 
-          <div className="hidden sm:block h-[60px] w-px bg-border mx-7" />
+          <div className="hidden sm:block h-[60px] w-px bg-black dark:bg-white mx-7" />
 
           <div className="flex-[1] flex flex-col justify-center gap-2.5">
             <div className="flex items-center gap-4">
@@ -261,7 +271,12 @@ function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
                 AUTO CONTROL
               </span>
               <div className="flex-1 h-3.5 bg-muted/20 dark:bg-black/40 rounded-[2px] border border-border/20 dark:border-white/5 p-[1px]">
-                <SegmentedBar count={25} fillCount={0} />
+                <SegmentedBar
+                  count={25}
+                  fillCount={2}
+                  emptyColor="bg-black/15 dark:bg-white/20"
+                  color="bg-primary shadow-glow-sm"
+                />
               </div>
             </div>
 
@@ -276,6 +291,7 @@ function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
                     count={25}
                     fillCount={18}
                     color="bg-primary shadow-glow-sm"
+                    emptyColor="bg-black/15 dark:bg-white/20"
                   />
                 </div>
               </div>

@@ -166,6 +166,7 @@ const ChartInner = memo(function ChartInner({
       ],
       xAxis: {
         type: "value",
+        splitNumber: 4,
         splitLine: {
           show: true,
           lineStyle: { color: gridColor },
@@ -176,7 +177,6 @@ const ChartInner = memo(function ChartInner({
           fontWeight: "normal",
           color: axisColor,
           rotate: 90,
-          interval: 0,
         },
         axisLine: { show: false },
         axisTick: { show: true, lineStyle: { color: axisColor } },
