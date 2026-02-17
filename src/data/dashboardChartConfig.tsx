@@ -46,7 +46,7 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
         unit: "gpm",
         trend: "down",
         dataKey: "in",
-        color: COLORS.data.warning,
+        color: COLORS.data.in,
       },
       {
         label: "OUT",
@@ -54,7 +54,7 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
         trend: "stable",
         status: "warning",
         dataKey: "out",
-        color: COLORS.data.error,
+        color: COLORS.data.out,
       },
       {
         label: "AUX",
@@ -62,7 +62,7 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
         trend: "down",
         status: "warning",
         dataKey: "mud",
-        color: COLORS.data.out,
+        color: COLORS.data.aux,
       },
     ],
     color: COLORS.charts[3],
@@ -166,19 +166,19 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     icon: SlidersHorizontal,
     metrics: [
       {
-        label: "Chock A",
+        label: "Choke A",
         unit: "%",
         trend: "up",
         dataKey: "choke_a",
         color: COLORS.data.in,
       },
       {
-        label: "Chock B",
+        label: "Choke B",
         unit: "%",
         trend: "stable",
         status: "critical",
         dataKey: "choke_b",
-        color: COLORS.data.error,
+        color: COLORS.data.out,
       },
       {
         label: "Set point",

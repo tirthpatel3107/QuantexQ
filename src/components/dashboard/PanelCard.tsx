@@ -24,7 +24,10 @@ const PanelCard = React.forwardRef<HTMLDivElement, PanelCardProps>(
     return (
       <Card
         ref={ref}
-        className={cn("dashboard-panel h-full min-w-0 p-5 border-0 shadow-none", className)}
+        className={cn(
+          "dashboard-panel h-full min-w-0 p-5 border-0 shadow-none",
+          className,
+        )}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 min-h-[36px] p-0">
           <CardTitle className="text-base flex items-center gap-2">

@@ -15,7 +15,7 @@
     --card-foreground: 0 0% 98%;
     --card-elevated: 0 0% 8% / 0.4;
 
-    --popover: 0 0% 5% / 0.8;
+    --popover: 0 0% 5%;
     --popover-foreground: 0 0% 98%;
 
     /* Primary - White for Monochrome Contrast */
@@ -31,7 +31,7 @@
     --accent: 0 0% 12%;
     --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 0% 30%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --success: 142 76% 46%;
@@ -67,7 +67,7 @@
     --card-foreground: 0 0% 98%;
     --card-elevated: 0 0% 15% / 0.5;
 
-    --popover: 0 0% 12% / 0.8;
+    --popover: 0 0% 12%;
     --popover-foreground: 0 0% 98%;
 
     --primary: 0 0% 98%;
@@ -96,7 +96,7 @@
     --card-foreground: 0 0% 5%;
     --card-elevated: 0 0% 90% / 0.6;
 
-    --popover: 0 0% 100% / 0.8;
+    --popover: 0 0% 100%;
     --popover-foreground: 0 0% 5%;
 
     --primary: 0 0% 10%; /* Black primary for light theme */
@@ -176,6 +176,13 @@
 
   .tabular-nums {
     font-variant-numeric: tabular-nums;
+  }
+  hr {
+    @apply border-white/20;
+  }
+
+  .light hr {
+    @apply border-black/20;
   }
 }
 
@@ -335,6 +342,15 @@
 
   .glow-danger {
     text-shadow: 0 0 10px hsl(var(--destructive) / 0.5);
+  }
+
+  /* Status Indicators */
+  .status-indicator {
+    @apply h-2 w-2 rounded-full;
+  }
+
+  .status-indicator.online {
+    @apply bg-success shadow-[0_0_8px_hsl(var(--success)/0.6)] animate-pulse;
   }
 }
 

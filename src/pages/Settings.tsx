@@ -139,7 +139,7 @@ export default function Settings() {
           className={cn(
             "dashboard-panel w-full flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all duration-200 border-0 shadow-none",
             activeSection === item.id
-              ? "bg-primary/20 text-primary"
+              ? "bg-white dark:bg-primary/20 text-primary shadow-sm dark:shadow-none"
               : "bg-transparent text-muted-foreground hover:text-foreground",
           )}
         >
@@ -165,8 +165,8 @@ export default function Settings() {
           actions={headerActions}
         />
 
-        <main className="flex-1 min-w-0 py-4 overflow-auto">
-          <div className="dashboard-panel border-0 shadow-none bg-card/40 p-3 mb-4 shrink-0">
+        <main className="flex-1 min-w-0 overflow-auto">
+          <div className="mb-4 shrink-0">
             <div className="w-full flex flex-wrap items-center justify-between gap-4">
               <SearchInput
                 placeholder="Search settings..."

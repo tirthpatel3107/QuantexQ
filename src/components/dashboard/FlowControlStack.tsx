@@ -2,7 +2,7 @@ import { Triangle } from "lucide-react";
 
 export function FlowControlStack() {
   return (
-    <div className="flex flex-col gap-1 p-2 bg-card dark:bg-card-elevated border border-border dark:border-white/5 rounded-sm shadow-xl w-[300px] antialiased">
+    <div className="flex flex-col gap-1 p-2 bg-popover border border-border rounded-sm shadow-2xl w-[300px] antialiased backdrop-blur-xl">
       <div className="bg-muted/30 dark:bg-black/20 border border-border dark:border-white/5 rounded-sm px-3 py-2.5 flex items-center justify-between group cursor-pointer hover:border-primary/30 dark:hover:border-white/10 transition-colors shadow-sm">
         <div className="flex items-center gap-3">
           <Triangle className="h-4 w-4 text-warning fill-transparent stroke-[2.5]" />

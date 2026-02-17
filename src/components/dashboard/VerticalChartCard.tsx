@@ -109,31 +109,8 @@ const ChartInner = memo(function ChartInner({
         smooth: 0.4,
         lineStyle: {
           width: 1.5,
-          color: badgeColors[i] || m.color || COLORS.data.out,
+          color: m.color || COLORS.data.out,
         },
-        ...(threshold && i === metrics.length - 1
-          ? {
-              markLine: {
-                symbol: "none",
-                label: {
-                  formatter: threshold.label,
-                  position: "start",
-                  color: isDark
-                    ? COLORS.charts_ui.axis_dark
-                    : COLORS.charts_ui.axis_light,
-                  fontSize: 11,
-                },
-                lineStyle: {
-                  type: "dashed",
-                  color: isDark
-                    ? COLORS.charts_ui.axis_dark
-                    : COLORS.charts_ui.axis_light,
-                  width: 2,
-                },
-                data: [{ xAxis: threshold.value }],
-              },
-            }
-          : {}),
       }));
 
     return {
@@ -270,20 +247,10 @@ export const VerticalChartCard = memo(function VerticalChartCard({
     return theme === "dark" || theme === "midnight";
   }, [theme]);
 
-  // Badge colors logic
-  const badgeBgColors = [COLORS.data.cyan, COLORS.data.orange] as const;
-
-  // Pre-calculate colors for chart lines to match badges
+  // Use the color property directly defined on each metric
   const seriesLineColors = useMemo(() => {
-    return metrics.map((_, i) => {
-      const isLastBadge = i % 3 === 2;
-      if (isLastBadge)
-        return isDark
-          ? COLORS.charts_ui.axis_dark
-          : COLORS.charts_ui.axis_light;
-      return badgeBgColors[i % badgeBgColors.length];
-    });
-  }, [metrics, isDark]);
+    return metrics.map((m) => m.color || COLORS.data.out);
+  }, [metrics]);
 
   const mainMetric = metrics[0];
   const mainDisplay = mainMetric

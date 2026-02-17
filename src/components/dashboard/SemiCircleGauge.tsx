@@ -128,11 +128,11 @@ export const SemiCircleGauge: React.FC<SemiCircleGaugeProps> = ({
               className="w-1.5 h-1.5 rounded-full"
               style={{ backgroundColor: colorA }}
             />
-            <span className="text-[10px] font-bold text-muted-foreground dark:text-slate-400 uppercase tracking-wider pr-1">
+            <span className="text-[12px] font-bold text-muted-foreground dark:text-slate-400 uppercase tracking-wider pr-1">
               {labelA}
             </span>
           </div>
-          <div className="text-[10px] font-bold text-foreground dark:text-white tabular-nums">
+          <div className="text-[12px] font-bold text-foreground dark:text-white tabular-nums">
             {" "}
             {valueA}%
           </div>
@@ -143,11 +143,11 @@ export const SemiCircleGauge: React.FC<SemiCircleGaugeProps> = ({
               className="w-1.5 h-1.5 rounded-full"
               style={{ backgroundColor: colorB }}
             />
-            <span className="text-[10px] font-bold text-muted-foreground dark:text-slate-400 uppercase tracking-wider pr-1">
+            <span className="text-[12px] font-bold text-muted-foreground dark:text-slate-400 uppercase tracking-wider pr-1">
               {labelB}
             </span>
           </div>
-          <div className="text-[10px] font-bold text-foreground dark:text-white tabular-nums">
+          <div className="text-[12px] font-bold text-foreground dark:text-white tabular-nums">
             {" "}
             {valueB}%
           </div>

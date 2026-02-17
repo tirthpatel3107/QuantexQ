@@ -25,7 +25,7 @@ export function PageHeaderBar({
   return (
     <div
       className={cn(
-        "dashboard-panel shrink-0 border-0 rounded-none shadow-none bg-card/70 px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2 z-10",
+        "dashboard-panel shrink-0 mb-4 px-4 py-3 flex flex-wrap items-center justify-between gap-4 z-10",
         className,
       )}
     >

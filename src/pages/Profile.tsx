@@ -70,7 +70,7 @@ const Profile = () => {
   if (showSkeleton) {
     return (
       <PageLayout>
-        <main className="flex-1 px-6 pb-20 pt-24">
+        <main className="flex-1 px-6 py-10">
           <div className="max-w-6xl mx-auto space-y-8">
             {/* Hero skeleton */}
             <Card className="dashboard-panel border-0 shadow-none">
