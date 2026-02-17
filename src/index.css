@@ -146,14 +146,16 @@
   body {
     min-height: 100%;
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "tnum" on, "lnum" on;
+    font-feature-settings:
+      "tnum" on,
+      "lnum" on;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    
+
     /* Modern gradient background - Neutral */
     background-image: radial-gradient(
-      circle at 50% 0%, 
-      hsl(0 0% 100% / 0.03), 
+      circle at 50% 0%,
+      hsl(0 0% 100% / 0.03),
       transparent 70%
     );
     background-attachment: fixed;
@@ -168,7 +170,9 @@
   }
 
   /* Form inputs */
-  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="checkbox"]):not([type="radio"]),
+  input:not([type="button"]):not([type="submit"]):not([type="reset"]):not(
+      [type="checkbox"]
+    ):not([type="radio"]),
   textarea {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));

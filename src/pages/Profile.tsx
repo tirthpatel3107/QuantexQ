@@ -96,10 +96,7 @@ const Profile = () => {
             {/* Grids skeleton */}
             <div className="grid gap-4 lg:grid-cols-3">
               {[0, 1, 2].map((i) => (
-                <Card
-                  key={i}
-                  className="dashboard-panel border-0 shadow-none"
-                >
+                <Card key={i} className="dashboard-panel border-0 shadow-none">
                   <CardHeader>
                     <div className="flex items-center gap-2">
                       <Skeleton className="h-4 w-4 rounded-full" />
@@ -121,10 +118,7 @@ const Profile = () => {
 
             <div className="grid gap-4 lg:grid-cols-2">
               {[0, 1].map((i) => (
-                <Card
-                  key={i}
-                  className="dashboard-panel border-0 shadow-none"
-                >
+                <Card key={i} className="dashboard-panel border-0 shadow-none">
                   <CardHeader>
                     <div className="flex items-center gap-2">
                       <Skeleton className="h-4 w-4 rounded-full" />

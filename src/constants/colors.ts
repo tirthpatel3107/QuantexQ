@@ -37,7 +37,7 @@ export const COLORS = {
     error: "#ef4444", // Red
     aux: "#ef4444", // Red
     setpoint: "#ef4444", // Red
-    cyan: "#f3f4f6", 
+    cyan: "#f3f4f6",
     orange: "#f59f0a",
   },
 

@@ -78,7 +78,7 @@ export const DepthGauge = memo(function DepthGauge({
         </div>
       </div>
 
-      <hr className="px-2"/>
+      <hr className="px-2" />
 
       <div className="chart-card px-2.5 py-4 flex flex-col flex-1 min-h-0 gap-0">
         {/* Current Depth Display */}
@@ -147,7 +147,7 @@ export const DepthGauge = memo(function DepthGauge({
             </span>
           </div>
         </div>
-        
+
         <hr />
 
         {/* Stats Row */}
