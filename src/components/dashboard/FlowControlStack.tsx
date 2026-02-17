@@ -53,13 +53,24 @@ export function FlowControlStack() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] font-bold text-muted-foreground dark:text-slate-500 w-8 ml-1">
-            AUX
-          </span>
-          <div className="flex flex-wrap bg-muted/50 dark:bg-black/20 rounded-[2px]">
-            <ControlNumberButton label="1" />
-            <ControlNumberButton label="2" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-bold text-muted-foreground dark:text-slate-500 w-8 ml-1">
+              AUX
+            </span>
+            <div className="flex flex-wrap bg-muted/50 dark:bg-black/20 rounded-[2px]">
+              <ControlNumberButton label="1" />
+              <ControlNumberButton label="2" />
+            </div>
+          </div>
+          <div className="flex items-center">
+            <span className="text-[11px] font-bold text-muted-foreground dark:text-slate-500 ml-1 w-16">
+              CEMENT
+            </span>
+            <div className="flex flex-wrap bg-muted/50 dark:bg-black/20 rounded-[2px]">
+              <ControlNumberButton label="1" />
+              {/* <ControlNumberButton label="2" /> */}
+            </div>
           </div>
         </div>
       </div>

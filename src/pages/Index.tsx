@@ -34,6 +34,7 @@ import {
 import { PsiGaugeIcon } from "@/components/dashboard/PsiGaugeIcon";
 import { SegmentedBar } from "@/components/dashboard/SegmentedBar";
 import { FlowControlStack } from "@/components/dashboard/FlowControlStack";
+import { TimeAxisCard } from "@/components/dashboard/TimeAxisCard";
 
 function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
   const [open, setOpen] = useState(false);
@@ -67,12 +68,12 @@ function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
       <div className="flex items-center">
         <div
           className={cn(
-            "dashboard-panel p-4 flex items-center w-full z-10 font-sans overflow-hidden select-none group/bar transition-all duration-300",
+            "dashboard-panel p-4 flex items-center justify-between w-full z-10 font-sans overflow-hidden select-none group/bar transition-all duration-300",
             open &&
               "border-primary/50 shadow-glow ring-1 ring-primary/20 after:opacity-100",
           )}
         >
-          <div className="flex h-full items-center pl-1 pr-3 gap-3 bg-transparent border-r border-border/30 dark:border-white/5 relative shrink-0">
+          <div className="flex-[1] flex h-full items-center gap-3 bg-transparent relative shrink-0">
             <PopoverTrigger asChild>
               <button
                 type="button"
@@ -89,7 +90,7 @@ function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
               </button>
             </PopoverTrigger>
 
-            <div className="flex items-center gap-4 w-[400px]">
+            <div className="flex items-center gap-4 w-full">
               <div className="h-10 w-10 rounded-full bg-muted dark:bg-card-elevated flex items-center justify-center border-2 border-border dark:border-border/50 shadow-sm shrink-0 box-content group-hover/bar:border-primary/50 transition-colors">
                 <div className="h-3 w-3 bg-slate-400 dark:bg-slate-300 rounded-full shadow-sm" />
               </div>
@@ -114,33 +115,39 @@ function FlowDifferenceBar({ showSkeleton }: { showSkeleton?: boolean }) {
             </div>
           </div>
 
-          <div className="flex items-center pl-3 pr-5 border-r border-border/30 dark:border-white/5 h-full bg-transparent shrink-0">
-            <div className="flex items-center justify-center">
-              <SemiCircleGauge
-                labelA="Choke A"
-                valueA={10}
-                colorA="hsl(var(--primary))"
-                labelB="Set Point"
-                valueB={85}
-                colorB="hsl(var(--warning))"
-              />
+          <div className="hidden sm:block h-[60px] w-px bg-border mx-7" />
+
+          <div className="flex">
+            <div className="flex items-center pr-5 h-full bg-transparent shrink-0">
+              <div className="flex items-center justify-center">
+                <SemiCircleGauge
+                  labelA="Choke A"
+                  valueA={10}
+                  colorA="hsl(var(--primary))"
+                  labelB="Set Point"
+                  valueB={85}
+                  colorB="hsl(var(--warning))"
+                />
+              </div>
+            </div>
+
+            <div className=" flex items-center pl-5 h-full bg-transparent shrink-0">
+              <div className="flex items-center justify-center">
+                <SemiCircleGauge
+                  labelA="Choke B"
+                  valueA={78}
+                  colorA="hsl(var(--primary))"
+                  labelB="Set Point"
+                  valueB={85}
+                  colorB="hsl(var(--warning))"
+                />
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center pl-3 pr-5 border-r border-border/30 dark:border-white/5 h-full bg-transparent shrink-0">
-            <div className="flex items-center justify-center">
-              <SemiCircleGauge
-                labelA="Choke B"
-                valueA={78}
-                colorA="hsl(var(--primary))"
-                labelB="Set Point"
-                valueB={85}
-                colorB="hsl(var(--warning))"
-              />
-            </div>
-          </div>
+          <div className="hidden sm:block h-[60px] w-px bg-border mx-7" />
 
-          <div className="flex-[1.3] flex flex-col justify-center gap-2.5 pl-5 ">
+          <div className="flex-[1] flex flex-col justify-center gap-2.5">
             <div className="flex items-center gap-4">
               <span className="text-[10px] font-bold text-muted-foreground dark:text-slate-400 uppercase tracking-wider shrink-0">
                 AUTO CONTROL
@@ -230,6 +237,12 @@ export default function Index() {
           <div className="grid flex-1 min-h-0 gap-3 grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,12%)]">
             <div className="min-w-0 flex flex-col gap-3 overflow-x-hidden">
               <div className="flex gap-2 items-stretch w-full flex-1 min-h-0">
+                {/* Time Axis Card - shows Y-axis for all charts */}
+                <TimeAxisCard
+                  data={chartData.flow || []}
+                  className="w-[80px] flex-shrink-0"
+                />
+
                 {CENTER_CARDS.map((card) => {
                   const data = cardDataMap[card.chartKey];
                   const latestPoint = data?.length
@@ -250,6 +263,7 @@ export default function Index() {
                       data={data || []}
                       threshold={card.threshold}
                       onDoubleClick={() => handleCardDoubleClick(card.id)}
+                      hideYAxis={true}
                       className={cn(
                         "transition-all duration-500 ease-in-out",
                         isExpanded ? "flex-[2.5]" : "flex-1",
