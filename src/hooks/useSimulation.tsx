@@ -8,6 +8,7 @@ import {
   useMemo,
   type ReactNode,
 } from "react";
+import { formatElapsedSeconds } from "@/lib/date-utils";
 import {
   flowData,
   densityData,
@@ -44,12 +45,14 @@ interface SimulationContextValue {
 
 const SimulationContext = createContext<SimulationContextValue | null>(null);
 
-function formatElapsed(seconds: number): string {
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-  return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-}
+/**
+ * Simulation Context Provider
+ * 
+ * Manages the real-time simulation state, including:
+ * - Running status of the operations
+ * - Accumulated chart data for all metrics
+ * - Elapsed mission time
+ */
 
 const CHART_KEYS: ChartDataKey[] = [
   "flow",
@@ -82,12 +85,13 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       return;
     }
     intervalRef.current = setInterval(() => {
-      setChartData((prev) =>
-        CHART_KEYS.reduce(
-          (acc, key) => ({ ...acc, [key]: appendChartPoint(prev[key], key) }),
-          {} as ChartDataState,
-        ),
-      );
+      setChartData((prev) => {
+        const next = { ...prev };
+        for (const key of CHART_KEYS) {
+          next[key] = appendChartPoint(prev[key], key);
+        }
+        return next;
+      });
     }, CHART_UPDATE_INTERVAL_MS);
     return () => {
       if (intervalRef.current) {
@@ -119,7 +123,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
 
   const showTimer = isRunning;
   const formattedElapsed = useMemo(
-    () => formatElapsed(elapsedSeconds),
+    () => formatElapsedSeconds(elapsedSeconds),
     [elapsedSeconds],
   );
 

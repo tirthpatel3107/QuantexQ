@@ -1,16 +1,7 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { AlertTriangle, Info, CheckCircle, XCircle, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { CommonAlertDialog, CommonButton } from "@/components/common";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -110,13 +101,15 @@ export const NotificationsPanel = memo(function NotificationsPanel({
       <div className="dashboard-panel h-full flex flex-col">
         <div className="panel-header">
           <h3 className="panel-title">Notifications</h3>
-          <button
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          <CommonButton
+            variant="link"
+            size="sm"
+            className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => setClearAllOpen(true)}
             disabled={items.length === 0}
           >
             Clear All
-          </button>
+          </CommonButton>
         </div>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -162,13 +155,14 @@ export const NotificationsPanel = memo(function NotificationsPanel({
                       {notification.message}
                     </p>
                   </div>
-                  <button
-                    className="shrink-0 h-5 w-5 rounded hover:bg-accent flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-0"
+                  <CommonButton
+                    variant="ghost"
+                    size="icon"
+                    className="shrink-0 h-5 w-5 rounded hover:bg-accent text-muted-foreground hover:text-foreground focus:ring-0"
                     onClick={() => handleRequestRemove(notification.id)}
                     aria-label="Remove notification"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
+                    icon={X}
+                  />
                 </div>
               );
             })
@@ -176,43 +170,29 @@ export const NotificationsPanel = memo(function NotificationsPanel({
         </div>
       </div>
 
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Remove this notification?</AlertDialogTitle>
-            <AlertDialogDescription>
-              {selectedNotification
-                ? `${selectedNotification.category}: ${selectedNotification.message}`
-                : "This will remove the selected notification."}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setConfirmOpen(false)}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handleRemove}>Remove</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <CommonAlertDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title="Remove this notification?"
+        description={
+          selectedNotification
+            ? `${selectedNotification.category}: ${selectedNotification.message}`
+            : "This will remove the selected notification."
+        }
+        cancelText="Cancel"
+        actionText="Remove"
+        onAction={handleRemove}
+      />
 
-      <AlertDialog open={clearAllOpen} onOpenChange={setClearAllOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Clear all notifications?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will remove every notification in the list.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setClearAllOpen(false)}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handleClearAll}>
-              Clear all
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <CommonAlertDialog
+        open={clearAllOpen}
+        onOpenChange={setClearAllOpen}
+        title="Clear all notifications?"
+        description="This will remove every notification in the list."
+        cancelText="Cancel"
+        actionText="Clear all"
+        onAction={handleClearAll}
+      />
     </>
   );
 });

@@ -2,16 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { Square } from "lucide-react";
 import { useSimulation } from "@/hooks/useSimulation";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { CommonAlertDialog, CommonButton } from "@/components/common";
 
 import { SIMULATION_TIMER_STORAGE_KEY } from "@/constants/config";
 
@@ -132,14 +123,13 @@ export function SimulationTimerWidget({
       <span className="text-base font-bold tabular-nums text-foreground pointer-events-none">
         {formattedElapsed}
       </span>
-      <button
-        type="button"
+      <CommonButton
+        size="icon"
         onClick={handleStopClick}
-        className="h-8 w-8 shrink-0 rounded-full bg-primary flex items-center justify-center text-primary-foreground hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background cursor-pointer"
+        className="h-8 w-8 shrink-0 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
         aria-label="Stop operation"
-      >
-        <Square className="h-3.5 w-3.5 fill-current" />
-      </button>
+        icon={Square}
+      />
     </div>
   );
 
@@ -147,26 +137,16 @@ export function SimulationTimerWidget({
     <>
       {createPortal(widget, document.body)}
       {useOwnStopDialog && (
-        <AlertDialog open={stopDialogOpen} onOpenChange={setStopDialogOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Stop operation?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Are you sure you want to stop? This will halt the current
-                operation.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                onClick={handleConfirmStop}
-              >
-                Stop
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <CommonAlertDialog
+          open={stopDialogOpen}
+          onOpenChange={setStopDialogOpen}
+          title="Stop operation?"
+          description="Are you sure you want to stop? This will halt the current operation."
+          cancelText="Cancel"
+          actionText="Stop"
+          onAction={handleConfirmStop}
+          actionClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+        />
       )}
     </>
   );

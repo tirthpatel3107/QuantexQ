@@ -31,12 +31,14 @@ export const COLORS = {
 
   // Specific data colors used in dashboard
   data: {
-    in: "#1ccd5e", // Green
-    out: "#f59f0a", // Orange
+    safe: "#1ccd5e", // Green
     warning: "#f59f0a", // Orange
-    error: "#ef4444", // Red
-    aux: "#ef4444", // Red
-    setpoint: "#ef4444", // Red
+    danger: "#ef4444", // Red
+    in: "#1ccd5e",
+    out: "#f59f0a",
+    error: "#ef4444",
+    aux: "#ef4444",
+    setpoint: "#ef4444",
     cyan: "#f3f4f6",
     orange: "#f59f0a",
   },

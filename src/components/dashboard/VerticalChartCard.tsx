@@ -1,10 +1,12 @@
 import { memo, useState, useMemo, useEffect, useRef } from "react";
 import type { LucideIcon } from "lucide-react";
-import { Maximize2 } from "lucide-react";
+import { Maximize2, MoreVertical } from "lucide-react";
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
 import { cn } from "@/lib/utils";
+import { useSimulation } from "@/hooks/useSimulation";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+import { CommonButton } from "@/components/common";
 import {
   Dialog,
   DialogContent,
@@ -42,6 +44,41 @@ const trendIcons = {
   down: "↓",
   stable: "=",
 };
+
+/**
+ * Renders a single metric value with its label and unit
+ */
+const MetricDisplay = ({ 
+  label, 
+  value, 
+  unit, 
+  color, 
+  isLarge = false 
+}: { 
+  label: string; 
+  value: string | number; 
+  unit?: string; 
+  color?: string;
+  isLarge?: boolean;
+}) => (
+  <div className="flex flex-col gap-1">
+    <span className={cn(
+      "font-bold uppercase tracking-wider text-muted-foreground",
+      isLarge ? "text-[11px]" : "text-[12px]"
+    )}>
+      {label}
+    </span>
+    <span
+      className={cn(
+        "font-bold tabular-nums leading-tight",
+        isLarge ? "text-[20px]" : "text-[15px]"
+      )}
+      style={{ color }}
+    >
+      {value} <span className={cn("font-medium", isLarge ? "text-[14px]" : "text-[12px]")}>{unit}</span>
+    </span>
+  </div>
+);
 
 interface ChartInnerProps {
   data: any[];
@@ -128,6 +165,7 @@ const ChartInner = memo(function ChartInner({
           fontFamily: "inherit",
           fontWeight: 600,
         },
+        // Modern shadow and rounding for tooltip
         extraCssText:
           "box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border-radius: 6px; z-index: 9999; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;",
         padding: [8, 12],
@@ -154,7 +192,7 @@ const ChartInner = memo(function ChartInner({
         top: 25,
         right: 5,
         bottom: 50, // Fixed bottom margin for rotated labels
-        left: hideYAxis ? 5 : 35,
+        left: hideYAxis ? 5 : 55,
         containLabel: false,
       },
       dataZoom: [
@@ -176,7 +214,7 @@ const ChartInner = memo(function ChartInner({
           fontSize: 11,
           fontWeight: "normal",
           color: axisColor,
-          rotate: 90,
+          rotate: 90, // Vertical chart display requirement
         },
         axisLine: { show: false },
         axisTick: { show: true, lineStyle: { color: axisColor } },
@@ -192,7 +230,7 @@ const ChartInner = memo(function ChartInner({
         axisTick: { show: !hideYAxis, lineStyle: { color: axisColor } },
         axisLabel: {
           show: !hideYAxis,
-          interval: Math.floor(data.length / 10),
+          interval: Math.floor(data.length / 10), // Show roughly 10 labels
           fontSize: 11,
           fontWeight: "normal",
           color: axisColor,
@@ -203,7 +241,7 @@ const ChartInner = memo(function ChartInner({
         },
       },
       series: series as any,
-      animation: false,
+      animation: false, // Performance: disable animations for high-frequency updates
     };
   }, [data, metrics, threshold, badgeColors, isDark, hideYAxis]);
 
@@ -298,10 +336,14 @@ export const VerticalChartCard = memo(function VerticalChartCard({
       {/* Header: left = Icon + Title, right = main count */}
       <div className="panel-header flex items-center justify-between gap-2 min-w-0">
         <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
-          <button
-            type="button"
-            onClick={() => setExpandOpen(true)}
-            className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white dark:bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+          <CommonButton
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              setExpandOpen(true);
+            }}
+            className="flex-shrink-0 bg-white dark:bg-primary/15 text-primary hover:bg-primary/25"
             aria-label="Expand chart"
           >
             {Icon && (
@@ -314,7 +356,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
               className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
               aria-hidden
             />
-          </button>
+          </CommonButton>
           <h3
             className="panel-title min-w-0 truncate text-foreground font-bold uppercase tracking-wide"
             title={title}
@@ -330,18 +372,13 @@ export const VerticalChartCard = memo(function VerticalChartCard({
       <div className="vertical-line-chart flex flex-col p-3 flex-1 w-full overflow-hidden relative">
         <div className="flex justify-between gap-3 pointer-events-none h-[60px]">
           {metrics.map((m, i) => (
-            <div key={i} className="flex flex-col gap-1">
-              <span className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground">
-                {m.label}
-              </span>
-              <span
-                className="text-[15px] font-bold tabular-nums leading-tight"
-                style={{ color: seriesLineColors[i] }}
-              >
-                {m.value}{" "}
-                <span className="text-[12px] font-medium">{m.unit}</span>
-              </span>
-            </div>
+            <MetricDisplay
+              key={i}
+              label={m.label}
+              value={m.value}
+              unit={m.unit}
+              color={seriesLineColors[i]}
+            />
           ))}
         </div>
         <div className="flex-1 min-h-0">
@@ -368,18 +405,14 @@ export const VerticalChartCard = memo(function VerticalChartCard({
           <div className="flex-1 w-full min-h-0 flex flex-col relative">
             <div className="pb-5 flex justify-between gap-4 pointer-events-none">
               {metrics.map((m, i) => (
-                <div key={i} className="flex flex-col gap-1">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-                    {m.label}
-                  </span>
-                  <span
-                    className="text-[20px] font-bold tabular-nums leading-tight"
-                    style={{ color: seriesLineColors[i] }}
-                  >
-                    {m.value}{" "}
-                    <span className="text-[14px] font-medium">{m.unit}</span>
-                  </span>
-                </div>
+                <MetricDisplay
+                  key={i}
+                  label={m.label}
+                  value={m.value}
+                  unit={m.unit}
+                  color={seriesLineColors[i]}
+                  isLarge
+                />
               ))}
             </div>
             <div className="flex-1 min-h-0">

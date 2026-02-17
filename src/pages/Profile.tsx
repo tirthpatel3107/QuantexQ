@@ -1,22 +1,12 @@
 import { useState } from "react";
-import { PageLayout } from "@/components/common";
+import { PageLayout, CommonAlertDialog, CommonButton } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   BellRing,
@@ -177,18 +167,21 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  className="border-border text-foreground"
-                  onClick={() => setMaintenanceOpen("access")}
-                >
-                  Manage Access
-                </Button>
-                <Button onClick={() => setMaintenanceOpen("profile")}>
-                  Update Profile
-                </Button>
-              </div>
+                <div className="flex gap-3">
+                  <CommonButton
+                    variant="outline"
+                    className="border-primary/20 text-primary hover:bg-primary/5 dark:bg-black/20"
+                    onClick={() => setMaintenanceOpen("profile")}
+                  >
+                    Edit Profile
+                  </CommonButton>
+                  <CommonButton
+                    className="bg-primary text-primary-foreground hover:bg-primary/95 shadow-md"
+                    onClick={() => setMaintenanceOpen("access")}
+                  >
+                    Manage Access
+                  </CommonButton>
+                </div>
             </CardContent>
           </Card>
 
@@ -397,27 +390,20 @@ const Profile = () => {
         </div>
       </main>
 
-      <AlertDialog
+      <CommonAlertDialog
         open={!!maintenanceOpen}
         onOpenChange={(open) => setMaintenanceOpen(open ? "access" : false)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Feature under maintenance</AlertDialogTitle>
-            <AlertDialogDescription>
-              {maintenanceOpen === "access"
-                ? "Manage Access is temporarily unavailable while we perform maintenance."
-                : "Update Profile is temporarily unavailable while we perform maintenance."}{" "}
-              Please try again later.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setMaintenanceOpen(false)}>
-              OK
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title="Feature under maintenance"
+        description={
+          maintenanceOpen === "access"
+            ? "Manage Access is temporarily unavailable while we perform maintenance. Please try again later."
+            : maintenanceOpen === "profile"
+              ? "Update Profile is temporarily unavailable while we perform maintenance. Please try again later."
+              : "This feature is currently under maintenance. Please try again later."
+        }
+        actionText="OK"
+        onAction={() => setMaintenanceOpen(false)}
+      />
     </PageLayout>
   );
 };

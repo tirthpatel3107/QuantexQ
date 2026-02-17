@@ -22,19 +22,14 @@ import {
   PageHeaderBar,
   SearchInput,
   RestoreDefaultsButton,
+  CommonButton,
+  CommonSelect,
+  CommonInput,
 } from "@/components/common";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { CategoryCard } from "@/components/dashboard/CategoryCard";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
@@ -115,37 +110,50 @@ export default function Settings() {
 
   const headerActions = (
     <>
-      <Button variant="outline" size="sm">
-        <Save className="h-4 w-4" />
+      <CommonButton variant="outline" size="sm" icon={Save}>
         Save
-      </Button>
-      <Button variant="outline" size="sm">
-        <RotateCcw className="h-4 w-4" />
+      </CommonButton>
+      <CommonButton variant="outline" size="sm" icon={RotateCcw}>
         Discard
-      </Button>
-      <Button variant="outline" size="sm">
-        <Download className="h-4 w-4" />
+      </CommonButton>
+      <CommonButton variant="outline" size="sm" icon={Download}>
         Export
-      </Button>
+      </CommonButton>
     </>
   );
+
+  const rigOptions = [
+    { label: "Rig-01", value: "Rig-01" },
+    { label: "Rig-02", value: "Rig-02" },
+  ];
+
+  const scenarioOptions = [
+    { label: "Static", value: "Static" },
+    { label: "Dynamic", value: "Dynamic" },
+  ];
+
+  const screenOptions = [
+    { label: "Quantum HUD", value: "Quantum HUD" },
+    { label: "Dashboard", value: "Dashboard" },
+  ];
 
   const sidebarNav = (
     <nav className="py-4 px-3 space-y-1">
       {SETTINGS_NAV.map((item) => (
-        <button
+        <CommonButton
           key={item.id}
+          variant="ghost"
           onClick={() => setActiveSection(item.id)}
           className={cn(
-            "dashboard-panel w-full flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all duration-200 border-0 shadow-none",
+            "w-full flex items-center justify-start gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all duration-200 border-0 shadow-none",
             activeSection === item.id
-              ? "bg-white dark:bg-primary/20 text-primary shadow-sm dark:shadow-none"
-              : "bg-transparent text-muted-foreground hover:text-foreground",
+              ? "bg-white dark:bg-primary/20 text-primary shadow-sm dark:shadow-none hover:bg-white dark:hover:bg-primary/30 hover:text-primary"
+              : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent",
           )}
+          icon={item.icon}
         >
-          <item.icon className="h-4 w-4 shrink-0" />
           {item.label}
-        </button>
+        </CommonButton>
       ))}
     </nav>
   );
@@ -174,18 +182,15 @@ export default function Settings() {
                 onChange={setSearch}
               />
               <div className="flex items-center gap-2 flex-shrink-0">
-                <Button variant="outline" size="sm">
-                  <Save className="h-4 w-4" />
+                <CommonButton variant="outline" size="sm" icon={Save}>
                   Save
-                </Button>
-                <Button variant="outline" size="sm">
-                  <RotateCcw className="h-4 w-4" />
+                </CommonButton>
+                <CommonButton variant="outline" size="sm" icon={RotateCcw}>
                   Discard
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Upload className="h-4 w-4" />
+                </CommonButton>
+                <CommonButton variant="outline" size="sm" icon={Upload}>
                   Import
-                </Button>
+                </CommonButton>
               </div>
             </div>
           </div>
@@ -196,7 +201,7 @@ export default function Settings() {
               <div className="grid gap-5 grid-cols-1 sm:grid-cols-3">
                 <div className="space-y-2">
                   <Label>Default Well Name</Label>
-                  <Input
+                  <CommonInput
                     value={general.defaultWellName}
                     onChange={(e) =>
                       setGeneral((g) => ({
@@ -208,41 +213,28 @@ export default function Settings() {
                 </div>
                 <div className="space-y-2">
                   <Label>Default Rig name</Label>
-                  <Select
+                  <CommonSelect
+                    options={rigOptions}
                     value={general.defaultRigName}
                     onValueChange={(v) =>
                       setGeneral((g) => ({ ...g, defaultRigName: v }))
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Rig-01">Rig-01</SelectItem>
-                      <SelectItem value="Rig-02">Rig-02</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Default Scenario</Label>
-                  <Select
+                  <CommonSelect
+                    options={scenarioOptions}
                     value={general.defaultScenario}
                     onValueChange={(v) =>
                       setGeneral((g) => ({ ...g, defaultScenario: v }))
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Static">Static</SelectItem>
-                      <SelectItem value="Dynamic">Dynamic</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
                 </div>
                 <div className="space-y-2 ">
                   <Label>Startup Screen</Label>
-                  <Select
+                  <CommonSelect
+                    options={screenOptions}
                     value={general.startupScreen1}
                     onValueChange={(v) =>
                       setGeneral((g) => ({
@@ -251,32 +243,17 @@ export default function Settings() {
                         startupScreen2: v,
                       }))
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Quantum HUD">Quantum HUD</SelectItem>
-                      <SelectItem value="Dashboard">Dashboard</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Startup Screen (secondary)</Label>
-                  <Select
+                  <CommonSelect
+                    options={screenOptions}
                     value={general.startupScreen2}
                     onValueChange={(v) =>
                       setGeneral((g) => ({ ...g, startupScreen2: v }))
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Quantum HUD">Quantum HUD</SelectItem>
-                      <SelectItem value="Dashboard">Dashboard</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  />
                 </div>
               </div>
             </PanelCard>

@@ -56,7 +56,7 @@ const ChartInner = memo(function ChartInner({
         top: 25,
         right: 2,
         bottom: 50, // Match the bottom margin of content charts
-        left: 35,
+        left: 55,
         containLabel: false,
       },
       xAxis: {

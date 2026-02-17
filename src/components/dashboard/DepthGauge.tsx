@@ -110,8 +110,8 @@ export const DepthGauge = memo(function DepthGauge({
           {/* Gauge Bar */}
           <div className="w-12 shrink-0 relative">
             {/* Background track */}
-            <div className="absolute inset-0 bg-muted rounded-lg overflow-hidden">
-              {/* Grid lines */}
+            <div className="absolute inset-0 bg-muted rounded-lg overflow-hidden border border-border/20">
+              {/* Grid lines - providing visual depth context */}
               {markers.slice(1, -1).map((_, i) => (
                 <div
                   key={i}
@@ -120,20 +120,20 @@ export const DepthGauge = memo(function DepthGauge({
                 />
               ))}
 
-              {/* Progress fill */}
+              {/* Progress fill - interactive gradient representing drilling progress */}
               <div
                 className="absolute left-0 right-0 top-0 bg-gradient-to-b from-primary via-success to-warning transition-all duration-500"
                 style={{ height: `${progress}%` }}
               />
 
-              {/* Current depth indicator */}
+              {/* Current depth indicator thumb */}
               <div
-                className="absolute left-0 right-0 h-1 bg-white shadow-lg transition-all duration-500"
+                className="absolute left-0 right-0 h-1 bg-white shadow-glow-sm transition-all duration-500 z-10"
                 style={{ top: `${progress}%`, transform: "translateY(-50%)" }}
               >
-                <div className="absolute right-full mr-1 top-1/2 -translate-y-1/2">
-                  <div className="bg-white text-background text-[10px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap">
-                    {currentDepth.toLocaleString()} ft
+                <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2">
+                  <div className="bg-card border border-border text-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-sm whitespace-nowrap shadow-sm">
+                    {currentDepth.toLocaleString()}
                   </div>
                 </div>
               </div>
@@ -150,26 +150,41 @@ export const DepthGauge = memo(function DepthGauge({
 
         <hr />
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-1 gap-2 mt-4">
-          <div className="flex justify-between">
-            <div className="text-[13px] font-bold text-muted-foreground">
-              BIT DEPTH
-            </div>
-            <div className="text-[14px] font-bold tabular-nums">
-              {bitDepth.toLocaleString()} ft
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <div className="text-[13px] font-bold text-muted-foreground">
-              REMAINING
-            </div>
-            <div className="text-[14px] font-bold tabular-nums text-warning">
-              {(targetDepth - currentDepth).toLocaleString()} ft
-            </div>
-          </div>
+        {/* Key Metrics Summary */}
+        <div className="grid grid-cols-1 gap-3 mt-4">
+          <DetailRow label="BIT DEPTH" value={bitDepth} unit="ft" />
+          <DetailRow 
+            label="REMAINING" 
+            value={targetDepth - currentDepth} 
+            unit="ft" 
+            valueClassName="text-warning"
+          />
         </div>
       </div>
     </div>
   );
 });
+
+/**
+ * Subcomponent for displaying a labeled value row
+ */
+const DetailRow = ({ 
+  label, 
+  value, 
+  unit, 
+  valueClassName 
+}: { 
+  label: string; 
+  value: number; 
+  unit: string; 
+  valueClassName?: string;
+}) => (
+  <div className="flex justify-between items-baseline">
+    <div className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+      {label}
+    </div>
+    <div className={cn("text-[14px] font-bold tabular-nums", valueClassName)}>
+      {value.toLocaleString()} <span className="text-[11px] font-medium text-muted-foreground ml-0.5">{unit}</span>
+    </div>
+  </div>
+);

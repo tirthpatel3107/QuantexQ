@@ -25,18 +25,13 @@ import {
   SearchInput,
   RestoreDefaultsButton,
   LabeledInputWithUnit,
+  CommonButton,
+  CommonSelect,
+  CommonInput,
 } from "@/components/common";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -87,37 +82,55 @@ export default function MudProperties() {
 
   const headerActions = (
     <>
-      <Button variant="outline" size="sm" onClick={() => setDirty(false)}>
-        <Save className="h-4 w-4" />
+      <CommonButton
+        variant="outline"
+        size="sm"
+        onClick={() => setDirty(false)}
+        icon={Save}
+      >
         Save
-      </Button>
-      <Button variant="outline" size="sm">
-        <RotateCcw className="h-4 w-4" />
+      </CommonButton>
+      <CommonButton variant="outline" size="sm" icon={RotateCcw}>
         Discard
-      </Button>
-      <Button variant="outline" size="sm">
-        <Upload className="h-4 w-4" />
+      </CommonButton>
+      <CommonButton variant="outline" size="sm" icon={Upload}>
         Import
-      </Button>
+      </CommonButton>
     </>
   );
+
+  const typeOptions = [
+    { label: "OBM", value: "OBM" },
+    { label: "WBM", value: "WBM" },
+  ];
+
+  const baseFluidOptions = [
+    { label: "Diesel", value: "Diesel" },
+    { label: "Synthetic", value: "Synthetic" },
+  ];
+
+  const tempOptions = [
+    { label: "85 °F", value: "85" },
+    { label: "90 °F", value: "90" },
+  ];
 
   const sidebarNav = (
     <nav className="py-4 px-3 space-y-1">
       {MUD_NAV.map((item) => (
-        <button
+        <CommonButton
           key={item.id}
+          variant="ghost"
           onClick={() => setActiveSection(item.id)}
           className={cn(
-            "dashboard-panel w-full flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all duration-200 border-0 shadow-none",
+            "w-full flex items-center justify-start gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all duration-200 border-0 shadow-none",
             activeSection === item.id
-              ? "bg-white dark:bg-primary/20 text-primary shadow-sm dark:shadow-none"
-              : "bg-transparent text-muted-foreground hover:text-foreground",
+              ? "bg-white dark:bg-primary/20 text-primary shadow-sm dark:shadow-none hover:bg-white dark:hover:bg-primary/30 hover:text-primary"
+              : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent",
           )}
+          icon={item.icon}
         >
-          <item.icon className="h-4 w-4 shrink-0" />
           {item.label}
-        </button>
+        </CommonButton>
       ))}
     </nav>
   );
@@ -152,26 +165,21 @@ export default function MudProperties() {
                 onChange={setSearch}
               />
               <div className="flex items-center gap-2 flex-shrink-0">
-                <Button variant="outline" size="sm">
-                  <Save className="h-4 w-4" />
+                <CommonButton variant="outline" size="sm" icon={Save}>
                   Save
-                </Button>
-                <Button variant="outline" size="sm">
-                  <RotateCcw className="h-4 w-4" />
+                </CommonButton>
+                <CommonButton variant="outline" size="sm" icon={RotateCcw}>
                   Discard
-                </Button>
-                <Button variant="outline" size="sm">
-                  <FolderOpen className="h-4 w-4" />
+                </CommonButton>
+                <CommonButton variant="outline" size="sm" icon={FolderOpen}>
                   Load Preset
-                </Button>
-                <Button variant="outline" size="sm">
-                  <FolderPlus className="h-4 w-4" />
+                </CommonButton>
+                <CommonButton variant="outline" size="sm" icon={FolderPlus}>
                   Save Preset
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Download className="h-4 w-4" />
+                </CommonButton>
+                <CommonButton variant="outline" size="sm" icon={Download}>
                   Export
-                </Button>
+                </CommonButton>
               </div>
             </div>
           </div>
@@ -203,47 +211,31 @@ export default function MudProperties() {
                             <Label className="h-5 flex items-center text-sm">
                               Type
                             </Label>
-                            <Select
+                            <CommonSelect
+                              options={typeOptions}
                               value={fluid.type}
                               onValueChange={(v) =>
                                 setFluid((f) => ({ ...f, type: v }))
                               }
-                            >
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="OBM">OBM</SelectItem>
-                                <SelectItem value="WBM">WBM</SelectItem>
-                              </SelectContent>
-                            </Select>
+                            />
                           </div>
                           <div className="space-y-2 min-w-0">
                             <Label className="h-5 flex items-center text-sm">
                               Base Fluid
                             </Label>
-                            <Select
+                            <CommonSelect
+                              options={baseFluidOptions}
                               value={fluid.baseFluid}
                               onValueChange={(v) =>
                                 setFluid((f) => ({ ...f, baseFluid: v }))
                               }
-                            >
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Diesel">Diesel</SelectItem>
-                                <SelectItem value="Synthetic">
-                                  Synthetic
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
+                            />
                           </div>
                           <div className="space-y-2 min-w-0">
                             <Label className="h-5 flex items-center text-sm">
                               Active pits volume (bbl)
                             </Label>
-                            <Input
+                            <CommonInput
                               value={fluid.activePitsVolume}
                               onChange={(e) =>
                                 setFluid((f) => ({
@@ -251,27 +243,19 @@ export default function MudProperties() {
                                   activePitsVolume: e.target.value,
                                 }))
                               }
-                              className="h-10 text-sm pl-4"
                             />
                           </div>
                           <div className="space-y-2 min-w-0">
                             <Label className="h-5 flex items-center text-sm">
                               Flowline temperature
                             </Label>
-                            <Select
+                            <CommonSelect
+                              options={tempOptions}
                               value={fluid.flowlineTemp}
                               onValueChange={(v) =>
                                 setFluid((f) => ({ ...f, flowlineTemp: v }))
                               }
-                            >
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="85">85 °F</SelectItem>
-                                <SelectItem value="90">90 °F</SelectItem>
-                              </SelectContent>
-                            </Select>
+                            />
                           </div>
                         </div>
                       </PanelCard>
@@ -306,85 +290,38 @@ export default function MudProperties() {
                         </div>
 
                         <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 items-start">
-                          <div className="space-y-2 min-w-0">
-                            <Label className="h-5 flex items-center text-sm">
-                              PV
-                            </Label>
-                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
-                              <Input
-                                value={fluid.pv}
-                                onChange={(e) =>
-                                  setFluid((f) => ({
-                                    ...f,
-                                    pv: e.target.value,
-                                  }))
-                                }
-                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
-                              />
-                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
-                                cP
-                              </span>
-                            </div>
-                          </div>
-                          <div className="space-y-2 min-w-0">
-                            <Label className="h-5 flex items-center text-sm">
-                              YP
-                            </Label>
-                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
-                              <Input
-                                value={fluid.yp}
-                                onChange={(e) =>
-                                  setFluid((f) => ({
-                                    ...f,
-                                    yp: e.target.value,
-                                  }))
-                                }
-                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
-                              />
-                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
-                                lb/100ft²
-                              </span>
-                            </div>
-                          </div>
-                          <div className="space-y-2 min-w-0">
-                            <Label className="h-5 flex items-center text-sm">
-                              Gel 10s
-                            </Label>
-                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
-                              <Input
-                                value={fluid.gel10s}
-                                onChange={(e) =>
-                                  setFluid((f) => ({
-                                    ...f,
-                                    gel10s: e.target.value,
-                                  }))
-                                }
-                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
-                              />
-                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
-                                lb/100ft²
-                              </span>
-                            </div>
-                          </div>
+                          <LabeledInputWithUnit
+                            label="PV"
+                            value={fluid.pv}
+                            onChange={(v) => setFluid((f) => ({ ...f, pv: v }))}
+                            unit="cP"
+                          />
+                          <LabeledInputWithUnit
+                            label="YP"
+                            value={fluid.yp}
+                            onChange={(v) => setFluid((f) => ({ ...f, yp: v }))}
+                            unit="lb/100ft²"
+                          />
+                          <LabeledInputWithUnit
+                            label="Gel 10s"
+                            value={fluid.gel10s}
+                            onChange={(v) => setFluid((f) => ({ ...f, gel10s: v }))}
+                            unit="lb/100ft²"
+                          />
                           <div className="space-y-2 min-w-0">
                             <Label className="h-5 flex items-center text-sm">
                               Gel 10m
                             </Label>
-                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
-                              <Input
-                                value={fluid.gel10m}
-                                onChange={(e) =>
-                                  setFluid((f) => ({
-                                    ...f,
-                                    gel10m: e.target.value,
-                                  }))
-                                }
-                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
-                              />
-                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
-                                lb/100ft²
-                              </span>
-                            </div>
+                            <CommonInput
+                              value={fluid.gel10m}
+                              onChange={(e) =>
+                                setFluid((f) => ({
+                                  ...f,
+                                  gel10m: e.target.value,
+                                }))
+                              }
+                              suffix="lb/100ft²"
+                            />
                           </div>
                         </div>
                       </PanelCard>
@@ -398,125 +335,53 @@ export default function MudProperties() {
                         headerAction={<RestoreDefaultsButton />}
                       >
                         <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 items-start">
-                          <div className="space-y-2 min-w-0">
-                            <Label className="h-5 flex items-center text-sm">
-                              PV
-                            </Label>
-                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
-                              <Input
-                                value={fluid.pv}
-                                onChange={(e) =>
-                                  setFluid((f) => ({
-                                    ...f,
-                                    pv: e.target.value,
-                                  }))
-                                }
-                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
-                              />
-                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
-                                cP
-                              </span>
-                            </div>
-                          </div>
-                          <div className="space-y-2 min-w-0">
-                            <Label className="h-5 flex items-center text-sm">
-                              YP
-                            </Label>
-                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
-                              <Input
-                                value={fluid.yp}
-                                onChange={(e) =>
-                                  setFluid((f) => ({
-                                    ...f,
-                                    yp: e.target.value,
-                                  }))
-                                }
-                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
-                              />
-                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
-                                lb/100ft²
-                              </span>
-                            </div>
-                          </div>
-                          <div className="space-y-2 min-w-0">
-                            <Label className="h-5 flex items-center text-sm">
-                              Gel 10s
-                            </Label>
-                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
-                              <Input
-                                value={fluid.gel10s}
-                                onChange={(e) =>
-                                  setFluid((f) => ({
-                                    ...f,
-                                    gel10s: e.target.value,
-                                  }))
-                                }
-                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
-                              />
-                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
-                                lb/100ft²
-                              </span>
-                            </div>
-                          </div>
+                          <LabeledInputWithUnit
+                            label="PV"
+                            value={fluid.pv}
+                            onChange={(v) => setFluid((f) => ({ ...f, pv: v }))}
+                            unit="cP"
+                          />
+                          <LabeledInputWithUnit
+                            label="YP"
+                            value={fluid.yp}
+                            onChange={(v) => setFluid((f) => ({ ...f, yp: v }))}
+                            unit="lb/100ft²"
+                          />
+                          <LabeledInputWithUnit
+                            label="Gel 10s"
+                            value={fluid.gel10s}
+                            onChange={(v) => setFluid((f) => ({ ...f, gel10s: v }))}
+                            unit="lb/100ft²"
+                          />
                           <div className="space-y-2 min-w-0">
                             <Label className="h-5 flex items-center text-sm">
                               Oil/Water
                             </Label>
-                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-muted/30 overflow-hidden">
-                              <Input
-                                value={fluid.oilWater}
-                                readOnly
-                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 rounded-none"
-                              />
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-10 w-10 shrink-0"
-                                  >
-                                    <Lock className="h-3.5 w-3.5 text-muted-foreground" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Locked</p>
-                                </TooltipContent>
-                              </Tooltip>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-10 w-10 shrink-0"
-                                  >
-                                    <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Open / pop-out</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </div>
+                            <CommonInput
+                              value={fluid.oilWater}
+                              readOnly
+                              suffix={
+                                <div className="flex items-center gap-1">
+                                  <Lock className="h-3 w-3" />
+                                  <ExternalLink className="h-3 w-3" />
+                                </div>
+                              }
+                            />
                           </div>
                           <div className="space-y-2 min-w-0">
                             <Label className="h-5 flex items-center text-sm">
                               Salinity
                             </Label>
-                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
-                              <Input
-                                value={fluid.salinity}
-                                onChange={(e) =>
-                                  setFluid((f) => ({
-                                    ...f,
-                                    salinity: e.target.value,
-                                  }))
-                                }
-                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
-                              />
-                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
-                                ppk
-                              </span>
-                            </div>
+                            <CommonInput
+                              value={fluid.salinity}
+                              onChange={(e) =>
+                                setFluid((f) => ({
+                                  ...f,
+                                  salinity: e.target.value,
+                                }))
+                              }
+                              suffix="ppk"
+                            />
                           </div>
                         </div>
                       </PanelCard>
@@ -530,61 +395,25 @@ export default function MudProperties() {
                         headerAction={<RestoreDefaultsButton />}
                       >
                         <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 items-start">
-                          <div className="space-y-2 min-w-0">
-                            <Label className="h-5 flex items-center text-sm">
-                              Surface temp
-                            </Label>
-                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
-                              <Input
-                                value={fluid.surfaceTemp}
-                                onChange={(e) =>
-                                  setFluid((f) => ({
-                                    ...f,
-                                    surfaceTemp: e.target.value,
-                                  }))
-                                }
-                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
-                              />
-                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
-                                °F
-                              </span>
-                            </div>
-                          </div>
-                          <div className="space-y-2 min-w-0">
-                            <Label className="h-5 flex items-center gap-1.5 text-sm">
-                              Bottomhole temp
-                            </Label>
-                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-muted/30 overflow-hidden">
-                              <Input
-                                value={fluid.bottomholeTemp}
-                                readOnly
-                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 rounded-none"
-                              />
-                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
-                                °F
-                              </span>
-                            </div>
-                          </div>
-                          <div className="space-y-2 min-w-0 sm:col-span-2">
-                            <Label className="h-5 flex items-center text-sm">
-                              Temperature gradient
-                            </Label>
-                            <div className="flex h-10 items-center rounded-md border border-border/30 bg-accent/10 overflow-hidden focus-within:border-primary/50">
-                              <Input
-                                value={fluid.tempGradient}
-                                onChange={(e) =>
-                                  setFluid((f) => ({
-                                    ...f,
-                                    tempGradient: e.target.value,
-                                  }))
-                                }
-                                className="h-10 flex-1 min-w-0 border-0 bg-transparent pl-4 pr-1 text-left text-sm focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
-                              />
-                              <span className="px-2.5 text-[11px] text-muted-foreground shrink-0">
-                                °F/100 ft
-                              </span>
-                            </div>
-                          </div>
+                          <LabeledInputWithUnit
+                            label="Surface temp"
+                            value={fluid.surfaceTemp}
+                            onChange={(v) => setFluid((f) => ({ ...f, surfaceTemp: v }))}
+                            unit="°F"
+                          />
+                          <LabeledInputWithUnit
+                            label="Bottomhole temp"
+                            value={fluid.bottomholeTemp}
+                            unit="°F"
+                            readOnly
+                          />
+                          <LabeledInputWithUnit
+                            label="Temperature gradient"
+                            value={fluid.tempGradient}
+                            onChange={(v) => setFluid((f) => ({ ...f, tempGradient: v }))}
+                            unit="°F/100 ft"
+                            className="sm:col-span-2"
+                          />
                         </div>
                       </PanelCard>
                     )}
@@ -602,7 +431,7 @@ export default function MudProperties() {
                         <Label className="text-xs text-muted-foreground text-left">
                           Gas solubility
                         </Label>
-                        <Input
+                        <CommonInput
                           value={fluid.gasSolubility}
                           onChange={(e) =>
                             setFluid((f) => ({
@@ -611,7 +440,6 @@ export default function MudProperties() {
                             }))
                           }
                           placeholder="—"
-                          className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
                         />
                         <span className="text-[11px] text-muted-foreground">
                           scf/bbl
@@ -619,7 +447,7 @@ export default function MudProperties() {
                         <Label className="text-xs text-muted-foreground text-left">
                           Compressibility factor
                         </Label>
-                        <Input
+                        <CommonInput
                           value={fluid.compressibilityFactor}
                           onChange={(e) =>
                             setFluid((f) => ({
@@ -628,7 +456,6 @@ export default function MudProperties() {
                             }))
                           }
                           placeholder="—"
-                          className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
                         />
                         <span className="text-[11px] text-muted-foreground">
                           —
@@ -636,7 +463,7 @@ export default function MudProperties() {
                         <Label className="text-xs text-muted-foreground text-left">
                           Gas/oil ratio
                         </Label>
-                        <Input
+                        <CommonInput
                           value={fluid.gasOilRatio}
                           onChange={(e) =>
                             setFluid((f) => ({
@@ -645,7 +472,6 @@ export default function MudProperties() {
                             }))
                           }
                           placeholder="—"
-                          className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
                         />
                         <span className="text-[11px] text-muted-foreground">
                           scf/stb
@@ -666,7 +492,7 @@ export default function MudProperties() {
                         <Label className="text-xs text-muted-foreground text-left">
                           Viscometer cal. date
                         </Label>
-                        <Input
+                        <CommonInput
                           value={fluid.viscometerCalDate}
                           onChange={(e) =>
                             setFluid((f) => ({
@@ -676,12 +502,11 @@ export default function MudProperties() {
                           }
                           placeholder="—"
                           type="date"
-                          className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
                         />
                         <Label className="text-xs text-muted-foreground text-left">
                           Density cal. date
                         </Label>
-                        <Input
+                        <CommonInput
                           value={fluid.densityCalDate}
                           onChange={(e) =>
                             setFluid((f) => ({
@@ -691,12 +516,11 @@ export default function MudProperties() {
                           }
                           placeholder="—"
                           type="date"
-                          className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
                         />
                         <Label className="text-xs text-muted-foreground text-left">
                           Temp. sensor offset
                         </Label>
-                        <Input
+                        <CommonInput
                           value={fluid.tempSensorOffset}
                           onChange={(e) =>
                             setFluid((f) => ({
@@ -705,7 +529,6 @@ export default function MudProperties() {
                             }))
                           }
                           placeholder="°F"
-                          className="h-10 bg-accent/10 border-border/30 text-left text-sm pl-4"
                         />
                       </div>
                     </PanelCard>

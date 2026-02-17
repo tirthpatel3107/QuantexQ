@@ -1,4 +1,5 @@
 import { Triangle } from "lucide-react";
+import { CommonButton } from "@/components/common";
 
 export function FlowControlStack() {
   return (
@@ -80,8 +81,11 @@ export function FlowControlStack() {
 
 function ControlNumberButton({ label }: { label: string }) {
   return (
-    <button className="my-1 mr-1 px-2.5 py-0.5 bg-primary dark:bg-primary/80 text-primary-foreground dark:text-primary-foreground text-[10px] font-bold rounded-[1px] shadow-sm hover:opacity-90 transition-opacity">
+    <CommonButton
+      size="sm"
+      className="h-auto my-1 mr-1 px-2.5 py-0.5 bg-primary dark:bg-primary/80 text-primary-foreground text-[10px] font-bold rounded-[1px] shadow-sm hover:opacity-90"
+    >
       {label}
-    </button>
+    </CommonButton>
   );
 }

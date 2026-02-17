@@ -10,19 +10,15 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { CommonAlertDialog, CommonButton } from "@/components/common";
+import { SimulationAction } from "@/types/dashboard";
 
+/**
+ * ActionToolbar provides quick access to system settings, configuration,
+ * and primary simulation controls (Start/Stop).
+ */
 export function ActionToolbar() {
-  const [confirmAction, setConfirmAction] = useState<"start" | "stop" | null>(
+  const [confirmAction, setConfirmAction] = useState<SimulationAction | null>(
     null,
   );
 
@@ -40,71 +36,50 @@ export function ActionToolbar() {
       {/* Left Actions */}
       <div className="flex items-center gap-2 flex-wrap md:flex-nowrap">
         {actions.map((action, i) => (
-          <button
+          <CommonButton
             key={i}
-            className={cn(
-              "inline-flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium",
-              "text-muted-foreground hover:text-foreground hover:bg-accent transition-colors",
-            )}
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-foreground hover:bg-accent"
+            icon={action.icon}
           >
-            <action.icon className="h-3.5 w-3.5" />
-            <span>{action.label}</span>
-          </button>
+            {action.label}
+          </CommonButton>
         ))}
       </div>
 
       {/* Right Controls */}
       <div className="flex items-center gap-2">
-        <button
-          type="button"
+        <CommonButton
           className="action-btn action-btn-primary"
-          onClick={() => setConfirmAction("start")}
+          onClick={() => setConfirmAction(SimulationAction.START)}
+          icon={Play}
         >
-          <Play className="h-4 w-4" />
-          <span>Start</span>
-        </button>
-        <button
-          type="button"
+          Start
+        </CommonButton>
+        <CommonButton
           className="action-btn action-btn-danger"
-          onClick={() => setConfirmAction("stop")}
+          onClick={() => setConfirmAction(SimulationAction.STOP)}
+          icon={Square}
         >
-          <Square className="h-4 w-4" />
-          <span>Stop</span>
-        </button>
+          Stop
+        </CommonButton>
       </div>
 
-      <AlertDialog
+      <CommonAlertDialog
         open={confirmAction !== null}
         onOpenChange={(open) => !open && setConfirmAction(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {confirmAction === "start"
-                ? "Start operation?"
-                : "Stop operation?"}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {confirmAction === "start"
-                ? "Are you sure you want to start? This will begin the operation."
-                : "Are you sure you want to stop? This will halt the current operation."}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              className={
-                confirmAction === "stop"
-                  ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  : ""
-              }
-              onClick={() => setConfirmAction(null)}
-            >
-              {confirmAction === "start" ? "Start" : "Stop"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title={confirmAction === SimulationAction.START ? "Start operation?" : "Stop operation?"}
+        description={
+          confirmAction === SimulationAction.START
+            ? "Are you sure you want to start? This will begin the operation."
+            : "Are you sure you want to stop? This will halt the current operation."
+        }
+        cancelText="Cancel"
+        actionText={confirmAction === SimulationAction.START ? "Start" : "Stop"}
+        onAction={() => setConfirmAction(null)}
+        actionClassName={confirmAction === SimulationAction.STOP ? "bg-destructive text-destructive-foreground hover:bg-destructive/90" : ""}
+      />
     </div>
   );
 }

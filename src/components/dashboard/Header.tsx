@@ -24,16 +24,6 @@ import {
 import { SideDrawer } from "@/components/dashboard/SideDrawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -44,22 +34,14 @@ import { notifications } from "@/data/mockData";
 import { useSimulation } from "@/hooks/useSimulation";
 import { SimulationTimerWidget } from "@/components/dashboard/SimulationTimerWidget";
 import { useTheme } from "@/components/theme-provider";
+import { CommonAlertDialog, CommonButton } from "@/components/common";
 
-const formatTime = (date: Date) =>
-  date.toLocaleTimeString("en-US", {
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
+import { formatTime, formatDate } from "@/lib/date-utils";
 
-const formatDate = (date: Date) =>
-  date.toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+/**
+ * Header component for the dashboard.
+ * Contains branding, global clock, simulation controls, notifications, and settings.
+ */
 
 const SEVERITY_OPTIONS = [
   { key: "all", label: "All" },
@@ -108,14 +90,14 @@ export function Header() {
       <SideDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
       {/* Hamburger + Brand */}
       <div className="flex items-center gap-2 shrink-0 min-w-0 w-full sm:w-auto">
-        <button
-          type="button"
+        <CommonButton
+          variant="ghost"
+          size="icon"
           onClick={() => setDrawerOpen(true)}
-          className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+          className="text-muted-foreground hover:text-foreground"
           aria-label="Open menu"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
+          icon={Menu}
+        />
         <Link
           to={ROUTES.HOME}
           className="flex items-center gap-3 hover:text-foreground transition-colors min-w-0"
@@ -153,49 +135,6 @@ export function Header() {
 
       {/* Right - Time & Actions */}
       <div className="flex w-full sm:w-auto items-center gap-2 sm:gap-3 justify-between sm:justify-end flex-wrap">
-        {/* Status - top right */}
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              className="action-btn action-btn-ghost bg-accent text-foreground hover:bg-accent/80 inline-flex items-center gap-2"
-              aria-label="Operational status"
-            >
-              <div className="status-indicator online" />
-              <span className="hidden sm:inline text-xs font-medium">Status</span>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 p-0">
-            <div className="px-3 py-2 border-b border-border text-xs font-semibold text-muted-foreground uppercase">
-              Operational Status
-            </div>
-            <div className="p-2 space-y-1">
-              {operationalStatus.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between py-1.5 px-2 rounded-md hover:bg-accent/50 text-xs"
-                >
-                  <span className="text-muted-foreground">{item.label}</span>
-                  <span
-                    className={cn(
-                      "font-medium tabular-nums",
-                      item.status === "warning" && "text-warning",
-                      item.status === "critical" && "text-destructive",
-                      (!item.status || item.status === "normal") && "text-foreground"
-                    )}
-                  >
-                    {item.value}
-                    {item.unit && (
-                      <span className="text-muted-foreground ml-1">{item.unit}</span>
-                    )}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <div className="hidden sm:block h-8 w-px bg-border" /> */}
-
         <div className="text-right leading-tight">
           <div className="text-base sm:text-lg font-bold tabular-nums text-foreground/90">
             {formatTime(time)}
@@ -209,35 +148,34 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           {!isRunning ? (
-            <button
-              type="button"
+            <CommonButton
               onClick={() => setStartConfirmOpen(true)}
-              className="action-btn action-btn-primary inline-flex items-center gap-2"
+              className="action-btn action-btn-primary"
               aria-label="Start operation"
+              icon={Play}
             >
-              <Play className="h-4 w-4" />
               <span className="hidden sm:inline">Start</span>
-            </button>
+            </CommonButton>
           ) : (
-            <button
-              type="button"
+            <CommonButton
               onClick={() => setStopConfirmOpen(true)}
-              className="action-btn action-btn-danger inline-flex items-center gap-2"
+              className="action-btn action-btn-danger"
               aria-label="Stop operation"
+              icon={Square}
             >
-              <Square className="h-4 w-4" />
               <span className="hidden sm:inline">Stop</span>
-            </button>
+            </CommonButton>
           )}
           <div className="hidden sm:block h-8 w-px bg-border" />
           {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button
-                className="action-btn action-btn-ghost bg-accent text-foreground hover:bg-accent/80"
+              <CommonButton
+                variant="ghost"
+                size="icon"
+                className="bg-accent text-foreground hover:bg-accent/80"
                 aria-label="Dashboard filters"
-              >
-                <Filter className="h-4 w-4" />
-              </button>
+                icon={Filter}
+              />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64 p-0 flex flex-col max-h-[min(70vh,320px)]">
               <ScrollArea className="h-[220px] shrink-0">
@@ -286,35 +224,39 @@ export function Header() {
                 </div>
               </ScrollArea>
               <div className="px-3 py-2 border-t border-border shrink-0 bg-card">
-                <button
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-border bg-secondary/40 px-3 py-2 text-sm font-medium hover:bg-secondary/60 transition-colors"
+                <CommonButton
+                  variant="secondary"
+                  className="w-full bg-secondary/40 hover:bg-secondary/60"
                   onClick={() => setFilters(INITIAL_FILTERS)}
+                  icon={SlidersHorizontal}
                 >
-                  <SlidersHorizontal className="h-4 w-4" />
                   Reset filters
-                </button>
+                </CommonButton>
               </div>
             </DropdownMenuContent>
           </DropdownMenu> */}
-          {/* <button
-            className="action-btn action-btn-ghost bg-accent text-foreground hover:bg-accent/80"
+          <CommonButton
+            variant="ghost"
+            size="icon"
+            className="bg-accent text-foreground hover:bg-accent/80"
             aria-label="Toggle theme"
             onClick={toggleTheme}
-          >
-            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button> */}
+            icon={theme === "dark" ? Sun : Moon}
+          />
 
           <Sheet>
             <SheetTrigger asChild>
-              <button
-                className="action-btn action-btn-ghost relative bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
+              <CommonButton
+                variant="ghost"
+                size="icon"
+                className="relative bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
                 aria-label="Notifications"
+                icon={Bell}
               >
-                <Bell className="h-4 w-4" />
                 <span className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-destructive text-[9px] font-bold flex items-center justify-center text-destructive-foreground shadow-sm">
                   {notifications.length}
                 </span>
-              </button>
+              </CommonButton>
             </SheetTrigger>
             <SheetContent
               side="right"
@@ -374,12 +316,13 @@ export function Header() {
           </Sheet>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button
-                className="action-btn action-btn-ghost bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
+              <CommonButton
+                variant="ghost"
+                size="icon"
+                className="bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
                 aria-label="Settings menu"
-              >
-                <Settings className="h-4 w-4" />
-              </button>
+                icon={Settings}
+              />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem
@@ -404,51 +347,32 @@ export function Header() {
         onStopClick={() => setStopConfirmOpen(true)}
       />
 
-      <AlertDialog open={stopConfirmOpen} onOpenChange={setStopConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Stop operation?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to stop? This will halt the current
-              operation.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-              onClick={() => {
-                setRunning(false);
-                setStopConfirmOpen(false);
-              }}
-            >
-              Stop
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <CommonAlertDialog
+        open={stopConfirmOpen}
+        onOpenChange={setStopConfirmOpen}
+        title="Stop operation?"
+        description="Are you sure you want to stop? This will halt the current operation."
+        cancelText="Cancel"
+        actionText="Stop"
+        onAction={() => {
+          setRunning(false);
+          setStopConfirmOpen(false);
+        }}
+        actionClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+      />
 
-      <AlertDialog open={startConfirmOpen} onOpenChange={setStartConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Start operation?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to start? This will begin the operation.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                setRunning(true);
-                setStartConfirmOpen(false);
-              }}
-            >
-              Start
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <CommonAlertDialog
+        open={startConfirmOpen}
+        onOpenChange={setStartConfirmOpen}
+        title="Start operation?"
+        description="Are you sure you want to start? This will begin the operation."
+        cancelText="Cancel"
+        actionText="Start"
+        onAction={() => {
+          setRunning(true);
+          setStartConfirmOpen(false);
+        }}
+      />
     </header>
   );
 }

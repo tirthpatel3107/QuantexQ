@@ -22,7 +22,6 @@ import {
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -34,7 +33,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { PageHeaderBar, PageLayout, SidebarLayout } from "@/components/common";
+import {
+  PageHeaderBar,
+  PageLayout,
+  SidebarLayout,
+  CommonButton,
+} from "@/components/common";
 import { SegmentedBar } from "@/components/dashboard/SegmentedBar";
 import { FlowControlStack } from "@/components/dashboard/FlowControlStack";
 import { StatRow } from "@/components/dashboard/StatRow";
@@ -55,14 +59,13 @@ function Sidebar() {
       {/* Icon Buttons */}
       <div className="flex-1 flex flex-col items-start py-4 gap-2">
         {icons.map((Icon, i) => (
-          <Button
+          <CommonButton
             key={i}
             variant="ghost"
             size="icon"
             className="h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-          >
-            <Icon className="h-5 w-5" />
-          </Button>
+            icon={Icon}
+          />
         ))}
       </div>
     </aside>
@@ -633,27 +636,24 @@ export default function MpdSimulator() {
 
   const headerActions = (
     <div className="flex items-center gap-1">
-      <Button
+      <CommonButton
         variant="ghost"
         size="icon"
         className="h-8 w-8 text-muted-foreground hover:text-foreground"
-      >
-        <Ship className="h-4 w-4" />
-      </Button>
-      <Button
+        icon={Ship}
+      />
+      <CommonButton
         variant="ghost"
         size="icon"
         className="h-8 w-8 text-muted-foreground hover:text-foreground"
-      >
-        <Monitor className="h-4 w-4" />
-      </Button>
-      <Button
+        icon={Monitor}
+      />
+      <CommonButton
         variant="ghost"
         size="icon"
         className="h-8 w-8 text-muted-foreground hover:text-foreground"
-      >
-        <LayoutTemplate className="h-4 w-4" />
-      </Button>
+        icon={LayoutTemplate}
+      />
     </div>
   );
 
@@ -702,10 +702,11 @@ export default function MpdSimulator() {
               <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
                 <div className="panel-header flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
-                    <button
-                      type="button"
+                    <CommonButton
+                      variant="ghost"
+                      size="icon"
                       onClick={() => setExpandedCard("flow")}
-                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer hover:bg-primary/25"
                       aria-label="Flow panel actions"
                     >
                       <Gauge
@@ -716,7 +717,7 @@ export default function MpdSimulator() {
                         className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
                         aria-hidden
                       />
-                    </button>
+                    </CommonButton>
                     <span className="panel-title truncate">Flow</span>
                   </div>
                 </div>
