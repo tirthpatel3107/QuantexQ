@@ -58,9 +58,9 @@ export default function DAQ() {
                 isOverview
                   ? "py-3 text-base font-semibold"
                   : "py-2.5 text-sm font-medium",
-                isActive
+                isActive || isOverview
                   ? "bg-white dark:bg-primary/20 text-primary shadow-sm dark:shadow-none hover:bg-white dark:hover:bg-primary/30 hover:text-primary"
-                  : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent",
+                  : "bg-white/50 dark:bg-white/5 text-muted-foreground hover:text-foreground hover:bg-white/80 dark:hover:bg-white/10",
               )}
             >
               <Icon
@@ -68,7 +68,9 @@ export default function DAQ() {
               />
               {item.label}
             </button>
-            {isOverview && <div className="mx-3 my-1 border-t border-border" />}
+            {isOverview && (
+              <hr className="my-4 border-none h-[3px] bg-white opacity-80 dark:opacity-30" />
+            )}
           </div>
         );
       })}
@@ -113,17 +115,19 @@ export default function DAQ() {
         }
       >
         <PageHeaderBar
-          icon={<Activity className="h-5 w-5" />}
-          title={
-            activeSection === "daq" ? "DAQ" : `DAQ — ${activeNav?.label ?? ""}`
+          icon={
+            activeNav?.icon ? (
+              <activeNav.icon className="h-5 w-5" />
+            ) : (
+              <Activity className="h-5 w-5" />
+            )
           }
+          title={activeNav?.label ?? ""}
           metadata="Active Well/Profile: NFQ-21-6A  |  Mud System: OBM"
           actions={headerActions}
         />
 
-        <main className="flex-1 min-w-0 overflow-auto">
-          {renderSection()}
-        </main>
+        <main className="flex-1 min-w-0 overflow-auto">{renderSection()}</main>
       </SidebarLayout>
     </PageLayout>
   );

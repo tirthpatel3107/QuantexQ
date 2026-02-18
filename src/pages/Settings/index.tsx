@@ -1,9 +1,20 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Settings as SettingsIcon, Save, RotateCcw, Upload } from "lucide-react";
+import {
+  Settings as SettingsIcon,
+  Save,
+  RotateCcw,
+  Upload,
+} from "lucide-react";
 
 import { ROUTES } from "@/constants/routes";
-import { PageLayout, SidebarLayout, PageHeaderBar, SearchInput, CommonButton } from "@/components/common";
+import {
+  PageLayout,
+  SidebarLayout,
+  PageHeaderBar,
+  SearchInput,
+  CommonButton,
+} from "@/components/common";
 import { cn } from "@/lib/utils";
 
 import { SettingsOverview } from "./sections/SettingsOverview";
@@ -25,7 +36,7 @@ export default function Settings() {
   const navigate = useNavigate();
   const activeSection = section || "setting";
   const [search, setSearch] = useState("");
-  
+
   const [general, setGeneral] = useState({
     defaultWellName: "NFQ-21-6A",
     defaultRigName: "Rig-01",
@@ -61,16 +72,22 @@ export default function Settings() {
               onClick={() => navigate(`${ROUTES.SETTINGS}/${item.id}`)}
               className={cn(
                 "w-full flex items-center gap-3 rounded-md px-3 transition-all duration-200 border-0 shadow-none text-left",
-                isOverview ? "py-3 text-base font-semibold" : "py-2.5 text-sm font-medium",
-                isActive
+                isOverview
+                  ? "py-3 text-base font-semibold"
+                  : "py-2.5 text-sm font-medium",
+                isActive || isOverview
                   ? "bg-white dark:bg-primary/20 text-primary shadow-sm dark:shadow-none hover:bg-white dark:hover:bg-primary/30 hover:text-primary"
-                  : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent",
+                  : "bg-white/50 dark:bg-white/5 text-muted-foreground hover:text-foreground hover:bg-white/80 dark:hover:bg-white/10",
               )}
             >
-              <Icon className={cn("shrink-0", isOverview ? "h-5 w-5" : "h-4 w-4")} />
+              <Icon
+                className={cn("shrink-0", isOverview ? "h-5 w-5" : "h-4 w-4")}
+              />
               {item.label}
             </button>
-            {isOverview && <div className="mx-3 my-1 border-t border-border" />}
+            {isOverview && (
+              <hr className="my-4 border-none h-[3px] bg-white opacity-80 dark:opacity-30" />
+            )}
           </div>
         );
       })}
@@ -138,12 +155,14 @@ export default function Settings() {
         }
       >
         <PageHeaderBar
-          icon={<SettingsIcon className="h-5 w-5" />}
-          title={
-            activeSection === "setting"
-              ? "Settings"
-              : `Settings — ${activeNav?.label ?? ""}`
+          icon={
+            activeNav?.icon ? (
+              <activeNav.icon className="h-5 w-5" />
+            ) : (
+              <SettingsIcon className="h-5 w-5" />
+            )
           }
+          title={activeNav?.label ?? ""}
           metadata="Active Profile: Rig-01 / NFQ-21-6A Admin"
           actions={headerActions}
         />
