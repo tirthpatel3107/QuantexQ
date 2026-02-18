@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { PageLayout, CommonAlertDialog, CommonButton } from "@/components/common";
+import { PageLayout, CommonAlertDialog, CommonButton, PageLoader } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   BellRing,
   Globe2,
@@ -58,75 +57,7 @@ const Profile = () => {
   const showSkeleton = useInitialSkeleton();
 
   if (showSkeleton) {
-    return (
-      <PageLayout>
-        <main className="flex-1 px-6 py-10">
-          <div className="max-w-6xl mx-auto space-y-8">
-            {/* Hero skeleton */}
-            <Card className="dashboard-panel border-0 shadow-none">
-              <CardContent className="p-6 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                <div className="flex items-center gap-4">
-                  <Skeleton className="h-16 w-16 rounded-full" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-5 w-48" />
-                    <Skeleton className="h-3 w-56" />
-                    <div className="flex flex-wrap items-center gap-2 mt-2">
-                      <Skeleton className="h-6 w-24 rounded-full" />
-                      <Skeleton className="h-6 w-28 rounded-full" />
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <Skeleton className="h-9 w-32" />
-                  <Skeleton className="h-9 w-32" />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Grids skeleton */}
-            <div className="grid gap-4 lg:grid-cols-3">
-              {[0, 1, 2].map((i) => (
-                <Card key={i} className="dashboard-panel border-0 shadow-none">
-                  <CardHeader>
-                    <div className="flex items-center gap-2">
-                      <Skeleton className="h-4 w-4 rounded-full" />
-                      <Skeleton className="h-4 w-24" />
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    {[0, 1, 2].map((j) => (
-                      <div key={j} className="space-y-2">
-                        <Skeleton className="h-3 w-28" />
-                        <Skeleton className="h-3 w-40" />
-                        <Separator />
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            <div className="grid gap-4 lg:grid-cols-2">
-              {[0, 1].map((i) => (
-                <Card key={i} className="dashboard-panel border-0 shadow-none">
-                  <CardHeader>
-                    <div className="flex items-center gap-2">
-                      <Skeleton className="h-4 w-4 rounded-full" />
-                      <Skeleton className="h-4 w-28" />
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    {[0, 1, 2].map((j) => (
-                      <Skeleton key={j} className="h-3 w-full" />
-                    ))}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </main>
-      </PageLayout>
-    );
+    return <PageLoader />;
   }
 
   return (

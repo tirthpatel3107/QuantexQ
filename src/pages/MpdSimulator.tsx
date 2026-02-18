@@ -28,16 +28,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   PageHeaderBar,
   PageLayout,
   SidebarLayout,
   CommonButton,
+  CommonDialog,
 } from "@/components/common";
 import { SegmentedBar } from "@/components/dashboard/SegmentedBar";
 import { FlowControlStack } from "@/components/dashboard/FlowControlStack";
@@ -81,7 +76,7 @@ function SetpointTransitionChart({
   color: string;
   label: string;
 }) {
-  const option: any = useMemo(
+  const option: EChartsOption = useMemo(
     () => ({
       grid: { top: 18, right: 10, bottom: 2, left: 24 },
       xAxis: {
@@ -204,23 +199,23 @@ function SimulatorChart({
     return () => observer.disconnect();
   }, []);
 
-  const generateTimeLabels = () => {
-    let times = [];
-    let now = new Date();
+  const times = useMemo(() => {
+    const labels = [];
+    const now = new Date();
     for (let i = 0; i < dataPoints; i++) {
-      let time = new Date(now.getTime() - (dataPoints - i - 1) * 60000);
-      let hours = time.getHours().toString().padStart(2, "0");
-      let minutes = time.getMinutes().toString().padStart(2, "0");
-      times.push(`${hours}:${minutes}`);
+      const time = new Date(now.getTime() - (dataPoints - i - 1) * 60000);
+      const hours = time.getHours().toString().padStart(2, "0");
+      const minutes = time.getMinutes().toString().padStart(2, "0");
+      labels.push(`${hours}:${minutes}`);
     }
-    return times;
-  };
-
-  const times = useMemo(() => generateTimeLabels(), [dataPoints]);
+    return labels;
+  }, [dataPoints]);
 
   // Effective series colors and mock multi-series wave data (two traces resembling live signals)
-  const effectiveSeriesColors =
-    seriesColors && seriesColors.length > 0 ? seriesColors : [color];
+  const effectiveSeriesColors = useMemo(
+    () => (seriesColors && seriesColors.length > 0 ? seriesColors : [color]),
+    [seriesColors, color],
+  );
 
   const waveSeries = useMemo(() => {
     const totalRange = maxY - minY || 1;
@@ -281,12 +276,13 @@ function SimulatorChart({
           fontFamily: "inherit",
         },
         renderMode: "html",
-        formatter: (params: any) => {
+        formatter: (params: unknown) => {
           if (!Array.isArray(params) || params.length === 0) return "";
-          const time = params[0].axisValueLabel;
+          const firstParam = params[0] as { axisValueLabel: string };
+          const time = firstParam.axisValueLabel;
           let content = `<div style="font-weight:600;margin-bottom:4px;color:${tooltipText};font-size:12px;">${time}</div>`;
 
-          params.forEach((p: any) => {
+          (params as Array<{ seriesIndex: number; seriesName: string; color: string; value: string | number }>).forEach((p) => {
             const idx = p.seriesIndex ?? 0;
             const label =
               seriesLabels?.[idx] ?? p.seriesName ?? `Series ${idx + 1}`;
@@ -415,6 +411,8 @@ function SimulatorChart({
       tooltipText,
       seriesLabels,
       valueUnit,
+      dataPoints,
+      effectiveSeriesColors,
     ],
   );
 
@@ -1197,163 +1195,162 @@ export default function MpdSimulator() {
         </div>
       </div>
 
-      <Dialog
+      <CommonDialog
         open={!!expandedCard}
         onOpenChange={(open) => !open && setExpandedCard(null)}
+        title={
+          <span className="uppercase tracking-wide">
+            {expandedCard === "flow" && "Flow"}
+            {expandedCard === "density" && "Density"}
+            {expandedCard === "sbp" && "SBP Control"}
+            {expandedCard === "spp" && "SPP Control"}
+            {expandedCard === "well" && "Well"}
+          </span>
+        }
+        maxWidth="max-w-4xl max-h-[90vh] h-[80vh]"
       >
-        <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col h-[80vh]">
-          <DialogHeader>
-            <DialogTitle className="text-foreground font-bold uppercase tracking-wide">
-              {expandedCard === "flow" && "Flow"}
-              {expandedCard === "density" && "Density"}
-              {expandedCard === "sbp" && "SBP Control"}
-              {expandedCard === "spp" && "SPP Control"}
-              {expandedCard === "well" && "Well"}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="flex-1 w-full min-h-0 flex flex-col pt-4">
-            {expandedCard === "flow" && (
-              <>
-                <div className="flex-1 min-h-0">
-                  <SimulatorChart
-                    color="#21d5ed"
-                    seriesColors={["#21d5ed", "#f59f0a"]}
-                    seriesLabels={["Flow In", "Flow Out"]}
-                    valueUnit="gpm"
-                    minY={0}
-                    maxY={1000}
-                    currentValues={[580, 596]}
-                  />
-                </div>
-                <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
-                  {[
-                    { label: "Flow In", value: "580", unit: "gpm" },
-                    { label: "Flow Out", value: "596", unit: "gpm" },
-                  ].map((m, i) => (
-                    <div
-                      key={i}
-                      className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]"
-                    >
-                      <span className="mr-1 opacity-70">{m.label}:</span>
-                      <span>
-                        {m.value} {m.unit}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
-
-            {expandedCard === "density" && (
-              <>
-                <div className="flex-1 min-h-0">
-                  <SimulatorChart
-                    color="#21d5ed"
-                    seriesColors={["#21d5ed", "#f59f0a"]}
-                    seriesLabels={["Density In", "Density Out"]}
-                    valueUnit="ppg"
-                    minY={0}
-                    maxY={800}
-                  />
-                </div>
-                <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
-                  {[
-                    { label: "Density In", value: "12.6", unit: "ppg" },
-                    { label: "Density Out", value: "12.51", unit: "ppg" },
-                  ].map((m, i) => (
-                    <div
-                      key={i}
-                      className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]"
-                    >
-                      <span className="mr-1 opacity-70">{m.label}:</span>
-                      <span>
-                        {m.value} {m.unit}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
-
-            {expandedCard === "sbp" && (
-              <>
-                <div className="flex-1 min-h-0">
-                  <SimulatorChart
-                    color="#21d5ed"
-                    seriesColors={["#21d5ed", "#f59f0a"]}
-                    seriesLabels={["SBP", "SP"]}
-                    valueUnit="psi"
-                    minY={100}
-                    maxY={900}
-                  />
-                </div>
-                <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
-                  {[
-                    { label: "SBP", value: "750", unit: "psi" },
-                    { label: "SP", value: "760", unit: "psi" },
-                  ].map((m, i) => (
-                    <div
-                      key={i}
-                      className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]"
-                    >
-                      <span className="mr-1 opacity-70">{m.label}:</span>
-                      <span>
-                        {m.value} {m.unit}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
-
-            {expandedCard === "spp" && (
-              <>
-                <div className="flex-1 min-h-0">
-                  <SimulatorChart
-                    color="#21d5ed"
-                    seriesColors={["#21d5ed", "#f59f0a"]}
-                    seriesLabels={["SPP", "SP"]}
-                    valueUnit="psi"
-                    minY={0}
-                    maxY={1000}
-                  />
-                </div>
-                <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
-                  {[
-                    { label: "SPP", value: "6146.5", unit: "psi" },
-                    { label: "SP", value: "6150", unit: "psi" },
-                  ].map((m, i) => (
-                    <div
-                      key={i}
-                      className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]"
-                    >
-                      <span className="mr-1 opacity-70">{m.label}:</span>
-                      <span>
-                        {m.value} {m.unit}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
-
-            {expandedCard === "well" && (
-              <div className="flex-1 w-full bg-[#0a0a0a] rounded-lg relative overflow-hidden shadow-inner border border-white/5 group">
-                <div
-                  className="absolute inset-0 opacity-20"
-                  style={{
-                    backgroundImage: `repeating-linear-gradient(0deg, transparent 0, transparent 49px, #333 50px), repeating-linear-gradient(90deg, transparent 0, transparent 49px, #333 50px)`,
-                    backgroundSize: "100% 50px",
-                  }}
+        <div className="flex-1 w-full min-h-0 flex flex-col">
+          {expandedCard === "flow" && (
+            <>
+              <div className="flex-1 min-h-[400px]">
+                <SimulatorChart
+                  color="#21d5ed"
+                  seriesColors={["#21d5ed", "#f59f0a"]}
+                  seriesLabels={["Flow In", "Flow Out"]}
+                  valueUnit="gpm"
+                  minY={0}
+                  maxY={1000}
+                  currentValues={[580, 596]}
                 />
-                <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-48 border-l border-r border-white/10 bg-white/5">
-                  <div className="absolute bottom-1/4 left-0 right-0 h-64 bg-gradient-to-b from-transparent to-primary/20"></div>
-                </div>
               </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+              <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+                {[
+                  { label: "Flow In", value: "580", unit: "gpm" },
+                  { label: "Flow Out", value: "596", unit: "gpm" },
+                ].map((m, i) => (
+                  <div
+                    key={i}
+                    className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]"
+                  >
+                    <span className="mr-1 opacity-70">{m.label}:</span>
+                    <span>
+                      {m.value} {m.unit}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {expandedCard === "density" && (
+            <>
+              <div className="flex-1 min-h-[400px]">
+                <SimulatorChart
+                  color="#21d5ed"
+                  seriesColors={["#21d5ed", "#f59f0a"]}
+                  seriesLabels={["Density In", "Density Out"]}
+                  valueUnit="ppg"
+                  minY={0}
+                  maxY={800}
+                />
+              </div>
+              <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+                {[
+                  { label: "Density In", value: "12.6", unit: "ppg" },
+                  { label: "Density Out", value: "12.51", unit: "ppg" },
+                ].map((m, i) => (
+                  <div
+                    key={i}
+                    className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]"
+                  >
+                    <span className="mr-1 opacity-70">{m.label}:</span>
+                    <span>
+                      {m.value} {m.unit}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {expandedCard === "sbp" && (
+            <>
+              <div className="flex-1 min-h-[400px]">
+                <SimulatorChart
+                  color="#21d5ed"
+                  seriesColors={["#21d5ed", "#f59f0a"]}
+                  seriesLabels={["SBP", "SP"]}
+                  valueUnit="psi"
+                  minY={100}
+                  maxY={900}
+                />
+              </div>
+              <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+                {[
+                  { label: "SBP", value: "750", unit: "psi" },
+                  { label: "SP", value: "760", unit: "psi" },
+                ].map((m, i) => (
+                  <div
+                    key={i}
+                    className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]"
+                  >
+                    <span className="mr-1 opacity-70">{m.label}:</span>
+                    <span>
+                      {m.value} {m.unit}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {expandedCard === "spp" && (
+            <>
+              <div className="flex-1 min-h-[400px]">
+                <SimulatorChart
+                  color="#21d5ed"
+                  seriesColors={["#21d5ed", "#f59f0a"]}
+                  seriesLabels={["SPP", "SP"]}
+                  valueUnit="psi"
+                  minY={0}
+                  maxY={1000}
+                />
+              </div>
+              <div className="px-0 pt-3 pb-1 flex flex-wrap gap-2 justify-center shrink-0">
+                {[
+                  { label: "SPP", value: "6146.5", unit: "psi" },
+                  { label: "SP", value: "6150", unit: "psi" },
+                ].map((m, i) => (
+                  <div
+                    key={i}
+                    className="inline-flex items-center rounded px-2 py-1 text-xs font-bold bg-[#21d5ed] text-black first:bg-[#21d5ed] last:bg-[#f59f0a]"
+                  >
+                    <span className="mr-1 opacity-70">{m.label}:</span>
+                    <span>
+                      {m.value} {m.unit}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {expandedCard === "well" && (
+            <div className="flex-1 w-full min-h-[500px] bg-[#0a0a0a] rounded-lg relative overflow-hidden shadow-inner border border-white/5 group">
+              <div
+                className="absolute inset-0 opacity-20"
+                style={{
+                  backgroundImage: `repeating-linear-gradient(0deg, transparent 0, transparent 49px, #333 50px), repeating-linear-gradient(90deg, transparent 0, transparent 49px, #333 50px)`,
+                  backgroundSize: "100% 50px",
+                }}
+              />
+              <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-48 border-l border-r border-white/10 bg-white/5">
+                <div className="absolute bottom-1/4 left-0 right-0 h-64 bg-gradient-to-b from-transparent to-primary/20"></div>
+              </div>
+            </div>
+          )}
+        </div>
+      </CommonDialog>
       {/* </SidebarLayout> */}
     </PageLayout>
   );

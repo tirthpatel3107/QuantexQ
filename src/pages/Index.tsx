@@ -5,13 +5,7 @@ import React, {
   useCallback,
   useEffect,
 } from "react";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { CommonDialog } from "@/components/common";
 import {
   Popover,
   PopoverContent,
@@ -153,31 +147,24 @@ export default function Index() {
       </main>
 
       {/* Overlays and Dialogs */}
-      <Dialog open={pumpDialogOpen} onOpenChange={setPumpDialogOpen}>
-        <DialogContent
-          className="max-w-2xl max-h-[85vh] overflow-y-auto"
-          hideClose
-          onOpenAutoFocus={(e) => e.preventDefault()}
-        >
-          <DialogHeader className="flex flex-row items-center justify-between space-y-0">
-            <DialogTitle>Pump Status</DialogTitle>
-            <DialogClose className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-0 disabled:pointer-events-none">
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </DialogClose>
-          </DialogHeader>
-          <div className="grid gap-3 grid-cols-4 pt-2">
-            {pumpStatus.map((pump) => (
-              <PumpStatusCard
-                key={pump.name}
-                name={pump.name}
-                status={pump.status}
-                disableInitialSkeleton
-              />
-            ))}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <CommonDialog
+        open={pumpDialogOpen}
+        onOpenChange={setPumpDialogOpen}
+        title="Pump Status"
+        maxWidth="max-w-2xl"
+        hideClose={false} // We can use the default or keep the custom close
+      >
+        <div className="grid gap-3 grid-cols-4">
+          {pumpStatus.map((pump) => (
+            <PumpStatusCard
+              key={pump.name}
+              name={pump.name}
+              status={pump.status}
+              disableInitialSkeleton
+            />
+          ))}
+        </div>
+      </CommonDialog>
     </div>
   );
 }

@@ -2,6 +2,8 @@
  * Mock chart data: deterministic series generation and sliding-window updates.
  * Used by useSimulation for dashboard charts.
  */
+import { ChartDataPoint, ChartDataset } from "@/types/chart";
+
 const mulberry32 = (seed: number) => {
   seed |= 0;
   return () => {
@@ -11,9 +13,6 @@ const mulberry32 = (seed: number) => {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 };
-
-export type ChartDataPoint = Record<string, string | number>;
-export type ChartDataset = ChartDataPoint[];
 
 type SeriesConfigItem = {
   key: string;

@@ -8,6 +8,8 @@ export const ROUTES = {
   MUD_PROPERTIES: "/mud-properties",
   MPD_SIMULATOR: "/mpd-simulator",
   SETTINGS: "/settings",
+  DAQ: "/daq",
+  NETWORK: "/network",
 } as const;
 
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];

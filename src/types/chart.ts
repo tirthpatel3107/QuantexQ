@@ -35,3 +35,12 @@ export interface VerticalCardConfig {
   threshold?: { value: number; label: string };
   status?: "normal" | "warning" | "critical";
 }
+
+/** Data point in custom ECharts datasets. */
+export interface ChartDataPoint {
+  time: string;
+  [key: string]: string | number;
+}
+
+/** Collection of chart data points. */
+export type ChartDataset = ChartDataPoint[];

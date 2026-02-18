@@ -3,15 +3,9 @@ import { Maximize2 } from "lucide-react";
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
 import { cn } from "@/lib/utils";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CommonDialog } from "@/components/common";
+import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 
 interface ChartPanelProps {
   title: string;
@@ -152,21 +146,20 @@ export const ChartPanel = memo(function ChartPanel({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <>
       <div className={cn("dashboard-panel group", statusBorderColors[status])}>
         <div className="panel-header relative">
           <div className="flex items-center gap-3">
             <h3 className="panel-title">{title}</h3>
           </div>
           <div className="absolute right-2 top-1/2 -translate-y-1/2">
-            <DialogTrigger asChild>
-              <button
-                className="h-8 w-8 rounded flex items-center justify-center text-muted-foreground hover:bg-accent hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                aria-label="Expand chart"
-              >
-                <Maximize2 className="h-4 w-4" />
-              </button>
-            </DialogTrigger>
+            <button
+              className="h-8 w-8 rounded flex items-center justify-center text-muted-foreground hover:bg-accent hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              aria-label="Expand chart"
+              onClick={() => setOpen(true)}
+            >
+              <Maximize2 className="h-4 w-4" />
+            </button>
           </div>
         </div>
 
@@ -175,10 +168,12 @@ export const ChartPanel = memo(function ChartPanel({
         </div>
       </div>
 
-      <DialogContent className="max-w-5xl w-[90vw]">
-        <DialogHeader className="mb-2">
-          <DialogTitle>{title}</DialogTitle>
-        </DialogHeader>
+      <CommonDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={title}
+        maxWidth="max-w-5xl w-[90vw]"
+      >
         <div className="h-[420px] sm:h-[520px]">
           <LineChartContent
             data={data}
@@ -187,7 +182,7 @@ export const ChartPanel = memo(function ChartPanel({
             className="h-full"
           />
         </div>
-      </DialogContent>
-    </Dialog>
+      </CommonDialog>
+    </>
   );
 });

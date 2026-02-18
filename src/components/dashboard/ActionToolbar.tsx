@@ -2,11 +2,12 @@ import {
   Settings,
   Network,
   Wrench,
-  Info,
-  Plus,
+  BookOpen,
+  PlusCircle,
   Play,
   Square,
   Sliders,
+  Settings2,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -23,12 +24,12 @@ export function ActionToolbar() {
   );
 
   const actions = [
-    { icon: Settings, label: "Settings" },
+    { icon: Settings2, label: "Settings" },
     { icon: Network, label: "Network" },
     { icon: Sliders, label: "Valve Config" },
     { icon: Wrench, label: "Equipment" },
-    { icon: Info, label: "Well Info" },
-    { icon: Plus, label: "Create" },
+    { icon: BookOpen, label: "Well Info" },
+    { icon: PlusCircle, label: "Create" },
   ];
 
   return (
