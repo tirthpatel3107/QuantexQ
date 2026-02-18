@@ -9,3 +9,4 @@ export { CommonAlertDialog } from "./CommonAlertDialog";
 export { CommonButton } from "./CommonButton";
 export { CommonSelect } from "./CommonSelect";
 export { CommonInput } from "./CommonInput";
+export { PageLoader } from "./PageLoader";
