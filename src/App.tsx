@@ -17,6 +17,8 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Profile = lazy(() => import("./pages/Profile"));
 const MudProperties = lazy(() => import("./pages/MudProperties"));
 const Settings = lazy(() => import("./pages/Settings"));
+const DAQ = lazy(() => import("./pages/DAQ"));
+const Network = lazy(() => import("./pages/Network"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -80,11 +82,19 @@ const App = () => (
                 <Route path={ROUTES.HOME} element={<Index />} />
                 <Route path={ROUTES.PROFILE} element={<Profile />} />
                 <Route
-                  path={ROUTES.MUD_PROPERTIES}
+                  path={`${ROUTES.MUD_PROPERTIES}/:section?`}
                   element={<MudProperties />}
                 />
                 <Route path={ROUTES.MPD_SIMULATOR} element={<MpdSimulator />} />
-                <Route path={ROUTES.SETTINGS} element={<Settings />} />
+                <Route
+                  path={`${ROUTES.SETTINGS}/:section?`}
+                  element={<Settings />}
+                />
+                <Route path={`${ROUTES.DAQ}/:section?`} element={<DAQ />} />
+                <Route
+                  path={`${ROUTES.NETWORK}/:section?`}
+                  element={<Network />}
+                />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

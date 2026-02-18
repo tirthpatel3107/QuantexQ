@@ -16,6 +16,8 @@ import {
   Download,
   Upload,
 } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants/routes";
 import {
   PageLayout,
   SidebarLayout,
@@ -34,6 +36,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
 const SETTINGS_NAV = [
+  { id: "setting", label: "Settings", icon: SettingsIcon, isOverview: true },
   { id: "general", label: "General", icon: SettingsIcon },
   { id: "units", label: "Units", icon: Layers },
   { id: "data-time", label: "Data & Time", icon: Clock },
@@ -97,7 +100,9 @@ const CATEGORY_CARDS = [
 const SIDEBAR_FOOTER = "Modified by adm.tirth | 06 Feb 2026 | 12:21";
 
 export default function Settings() {
-  const [activeSection, setActiveSection] = useState("general");
+  const { section } = useParams();
+  const navigate = useNavigate();
+  const activeSection = section || "setting";
   const [search, setSearch] = useState("");
   const [general, setGeneral] = useState({
     defaultWellName: "NFQ-21-6A",
@@ -138,25 +143,39 @@ export default function Settings() {
   ];
 
   const sidebarNav = (
-    <nav className="py-4 px-3 space-y-1">
-      {SETTINGS_NAV.map((item) => (
-        <CommonButton
-          key={item.id}
-          variant="ghost"
-          onClick={() => setActiveSection(item.id)}
-          className={cn(
-            "w-full flex items-center justify-start gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all duration-200 border-0 shadow-none",
-            activeSection === item.id
-              ? "bg-white dark:bg-primary/20 text-primary shadow-sm dark:shadow-none hover:bg-white dark:hover:bg-primary/30 hover:text-primary"
-              : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent",
-          )}
-          icon={item.icon}
-        >
-          {item.label}
-        </CommonButton>
-      ))}
+    <nav className="py-3 px-3 space-y-1">
+      {SETTINGS_NAV.map((item) => {
+        const Icon = item.icon;
+        const isActive = activeSection === item.id;
+        const isOverview = (item as any).isOverview;
+        return (
+          <>
+            <button
+              key={item.id}
+              onClick={() => navigate(`${ROUTES.SETTINGS}/${item.id}`)}
+              className={cn(
+                "w-full flex items-center gap-3 rounded-md px-3 transition-all duration-200 border-0 shadow-none text-left",
+                isOverview
+                  ? "py-3 text-base font-semibold"
+                  : "py-2.5 text-sm font-medium",
+                isActive
+                  ? "bg-white dark:bg-primary/20 text-primary shadow-sm dark:shadow-none hover:bg-white dark:hover:bg-primary/30 hover:text-primary"
+                  : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent",
+              )}
+            >
+              <Icon className={cn("shrink-0", isOverview ? "h-5 w-5" : "h-4 w-4")} />
+              {item.label}
+            </button>
+            {isOverview && (
+              <div className="mx-3 my-1 border-t border-border" />
+            )}
+          </>
+        );
+      })}
     </nav>
   );
+
+  const activeNav = SETTINGS_NAV.find((n) => n.id === activeSection);
 
   return (
     <PageLayout>
@@ -168,7 +187,11 @@ export default function Settings() {
       >
         <PageHeaderBar
           icon={<SettingsIcon className="h-5 w-5" />}
-          title="Setting"
+          title={
+            activeSection === "setting"
+              ? "Settings"
+              : `Settings — ${activeNav?.label ?? ""}`
+          }
           metadata="Active Profile: Rig-01 / NFQ-21-6A Admin"
           actions={headerActions}
         />
@@ -291,7 +314,7 @@ export default function Settings() {
                 title={cat.title}
                 description={cat.description}
                 icon={cat.icon}
-                onClick={() => setActiveSection(cat.id)}
+                onClick={() => navigate(`${ROUTES.SETTINGS}/${cat.id}`)}
               />
             ))}
           </div>

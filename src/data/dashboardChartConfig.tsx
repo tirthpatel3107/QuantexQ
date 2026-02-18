@@ -10,6 +10,11 @@ import {
   Activity,
   CircleDot,
   SlidersHorizontal,
+  Waves,
+  TrendingUp,
+  ArrowDownToLine,
+  Binary,
+  Tally4,
 } from "lucide-react";
 import type { ChartDataPoint } from "@/data/mockData";
 import type { VerticalCardConfig } from "@/types/chart";
@@ -39,7 +44,7 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     id: "flow",
     chartKey: "flow",
     title: "Flow",
-    icon: Droplets,
+    icon: Waves,
     metrics: [
       {
         label: "IN",
@@ -71,7 +76,7 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     id: "density",
     chartKey: "density",
     title: "Density",
-    icon: Gauge,
+    icon: Tally4,
     metrics: [
       {
         label: "IN",
@@ -94,7 +99,7 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     id: "surface-back-pressure",
     chartKey: "surfacePressure",
     title: "Surface Back Pressure",
-    icon: Activity,
+    icon: TrendingUp,
     metrics: [
       {
         label: "SP",
@@ -140,7 +145,7 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     id: "bottom-hole-pressure",
     chartKey: "bottomHolePressure",
     title: "Bottom Hole Pressure",
-    icon: Thermometer,
+    icon: ArrowDownToLine,
     metrics: [
       {
         label: "BHP",
@@ -163,7 +168,7 @@ export const CENTER_CARDS: VerticalCardConfig[] = [
     id: "choke",
     chartKey: "choke",
     title: "Choke",
-    icon: SlidersHorizontal,
+    icon: Binary,
     metrics: [
       {
         label: "Choke A",

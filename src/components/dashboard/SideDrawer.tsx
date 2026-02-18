@@ -2,16 +2,19 @@ import {
   Settings,
   Network,
   Wrench,
-  Info,
-  Plus,
+  BookOpen,
+  PlusCircle,
   Sliders,
   ChevronDown,
   Gauge,
   LayoutDashboard,
-  BarChart3,
+  LineChart,
   X,
   Droplets,
   Cog,
+  Activity,
+  Settings2,
+  HardHat,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
@@ -42,29 +45,29 @@ const menuSections = [
     label: "Monitoring",
     icon: LayoutDashboard,
     items: [
-      // { label: "MPD Simulator", to: ROUTES.MPD_SIMULATOR, icon: Gauge },
-      { label: "Well Info", to: "#", icon: Info },
-      { label: "Charts & KPIs", to: "#", icon: BarChart3 },
+      { label: "Well Info", to: "#", icon: BookOpen },
+      { label: "Charts & KPIs", to: "#", icon: LineChart },
     ],
   },
   {
     id: "configuration",
     label: "Configuration",
-    icon: Settings,
+    icon: Settings2,
     items: [
       { label: "Settings", to: ROUTES.SETTINGS, icon: Cog },
+      { label: "DAQ", to: ROUTES.DAQ, icon: Activity },
       { label: "Mud Properties", to: ROUTES.MUD_PROPERTIES, icon: Droplets },
-      { label: "Network", to: "#", icon: Network },
+      { label: "Network", to: ROUTES.NETWORK, icon: Network },
       { label: "Valve Config", to: "#", icon: Sliders },
     ],
   },
   {
     id: "equipment",
     label: "Equipment",
-    icon: Wrench,
+    icon: HardHat,
     items: [
       { label: "Equipment", to: "#", icon: Wrench },
-      { label: "Create New", to: "#", icon: Plus },
+      { label: "Create New", to: "#", icon: PlusCircle },
     ],
   },
 ];
@@ -111,11 +114,11 @@ export const SideDrawer = memo(function SideDrawer({
               >
                 <CollapsibleTrigger
                   className={cn(
-                    "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium",
+                    "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-base font-semibold",
                     "text-foreground hover:bg-accent hover:text-accent-foreground transition-colors",
                   )}
                 >
-                  <section.icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <section.icon className="h-5 w-5 shrink-0 text-muted-foreground" />
                   <span className="flex-1 text-left">{section.label}</span>
                   <ChevronDown
                     className={cn(
@@ -132,11 +135,11 @@ export const SideDrawer = memo(function SideDrawer({
                         to={item.to}
                         onClick={() => onOpenChange(false)}
                         className={cn(
-                          "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-xs",
+                          "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm",
                           "text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors",
                         )}
                       >
-                        <item.icon className="h-3.5 w-3.5 shrink-0" />
+                        <item.icon className="h-4 w-4 shrink-0" />
                         {item.label}
                       </Link>
                     ))}

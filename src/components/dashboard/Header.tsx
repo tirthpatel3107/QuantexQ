@@ -11,6 +11,7 @@ import {
   SlidersHorizontal,
   Square,
   Play,
+  CircleUser,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
@@ -321,7 +322,7 @@ export function Header() {
                 size="icon"
                 className="bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
                 aria-label="Settings menu"
-                icon={Settings}
+                icon={CircleUser}
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">

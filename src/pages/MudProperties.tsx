@@ -15,9 +15,14 @@ import {
   Lock,
   Check,
   FolderOpen,
+  Timer,
+  Droplets,
   FolderPlus,
+  Ruler,
   ExternalLink,
 } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants/routes";
 import {
   PageLayout,
   SidebarLayout,
@@ -32,6 +37,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
+import { CategoryCard } from "@/components/dashboard/CategoryCard";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -42,17 +48,20 @@ import {
 import { cn } from "@/lib/utils";
 
 const MUD_NAV = [
-  { id: "overview", label: "Fluid Overview", icon: Clock },
+  { id: "mud-properties", label: "Mud Properties", icon: Droplets, isOverview: true },
+  { id: "overview", label: "Fluid Overview", icon: Timer },
   { id: "rheology", label: "Rheology", icon: Beaker },
   { id: "density", label: "Density & Solids", icon: Layers },
   { id: "temperature", label: "Temperature", icon: Thermometer },
   { id: "gas", label: "Gas / Compressibility", icon: FlaskConical },
-  { id: "calibration", label: "Calibration", icon: Settings },
+  { id: "calibration", label: "Calibration", icon: Ruler },
   { id: "summary", label: "Summary", icon: FileBarChart },
 ];
 
 export default function MudProperties() {
-  const [activeSection, setActiveSection] = useState("overview");
+  const { section } = useParams();
+  const navigate = useNavigate();
+  const activeSection = section || "mud-properties";
   const [search, setSearch] = useState("");
   const [dirty, setDirty] = useState(true);
   const [fluid, setFluid] = useState({
@@ -115,23 +124,35 @@ export default function MudProperties() {
   ];
 
   const sidebarNav = (
-    <nav className="py-4 px-3 space-y-1">
-      {MUD_NAV.map((item) => (
-        <CommonButton
-          key={item.id}
-          variant="ghost"
-          onClick={() => setActiveSection(item.id)}
-          className={cn(
-            "w-full flex items-center justify-start gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all duration-200 border-0 shadow-none",
-            activeSection === item.id
-              ? "bg-white dark:bg-primary/20 text-primary shadow-sm dark:shadow-none hover:bg-white dark:hover:bg-primary/30 hover:text-primary"
-              : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent",
-          )}
-          icon={item.icon}
-        >
-          {item.label}
-        </CommonButton>
-      ))}
+    <nav className="py-3 px-3 space-y-1">
+      {MUD_NAV.map((item) => {
+        const Icon = item.icon;
+        const isActive = activeSection === item.id;
+        const isOverview = (item as any).isOverview;
+        return (
+          <>
+            <button
+              key={item.id}
+              onClick={() => navigate(`${ROUTES.MUD_PROPERTIES}/${item.id}`)}
+              className={cn(
+                "w-full flex items-center gap-3 rounded-md px-3 transition-all duration-200 border-0 shadow-none text-left",
+                isOverview
+                  ? "py-3 text-base font-semibold"
+                  : "py-2.5 text-sm font-medium",
+                isActive
+                  ? "bg-white dark:bg-primary/20 text-primary shadow-sm dark:shadow-none hover:bg-white dark:hover:bg-primary/30 hover:text-primary"
+                  : "bg-transparent text-muted-foreground hover:text-foreground hover:bg-accent",
+              )}
+            >
+              <Icon className={cn("shrink-0", isOverview ? "h-5 w-5" : "h-4 w-4")} />
+              {item.label}
+            </button>
+            {isOverview && (
+              <div className="mx-3 my-1 border-t border-border" />
+            )}
+          </>
+        );
+      })}
     </nav>
   );
 
@@ -141,12 +162,18 @@ export default function MudProperties() {
     </p>
   );
 
+  const activeNav = MUD_NAV.find((n) => n.id === activeSection);
+  
   return (
     <PageLayout>
       <SidebarLayout sidebar={sidebarNav} sidebarFooter={sidebarFooter}>
         <PageHeaderBar
-          icon={<Gauge className="h-5 w-5" />}
-          title="Mud Properties"
+          icon={<Droplets className="h-5 w-5" />}
+          title={
+            activeSection === "mud-properties"
+              ? "Mud Properties"
+              : `Mud Properties — ${activeNav?.label ?? ""}`
+          }
           metadata={
             <>
               Active Well/Profile: NFQ-21-6A
@@ -187,6 +214,29 @@ export default function MudProperties() {
           <div className="flex flex-1 min-w-0 gap-4 overflow-auto">
             <div className="flex-1 min-w-0 space-y-4">
               <div>
+                {/* Mud Properties overview tab */}
+                {activeSection === "mud-properties" && (
+                  <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 items-start mb-4">
+                    {[
+                      { id: "overview", title: "Fluid Overview", description: "Fluid system type, base fluid, active pits volume, flowline temperature, and rheology source.", icon: Timer },
+                      { id: "rheology", title: "Rheology", description: "PV, YP, Gel 10s/10m — derive from viscometer or enter manually.", icon: Beaker },
+                      { id: "density", title: "Density & Solids", description: "Oil/Water ratio, salinity, solids content, and density inputs.", icon: Layers },
+                      { id: "temperature", title: "Temperature", description: "Surface temp, bottomhole temp, and temperature gradient.", icon: Thermometer },
+                      { id: "gas", title: "Gas / Compressibility", description: "Gas solubility, compressibility factor, and gas/oil ratio.", icon: FlaskConical },
+                      { id: "calibration", title: "Calibration", description: "Viscometer cal. date, density cal. date, and temperature sensor offset.", icon: Ruler },
+                      { id: "summary", title: "Summary", description: "Read-only overview of all mud properties — mud system, PV/YP, gel, oil/water, surface/BHT.", icon: FileBarChart },
+                    ].map((card) => (
+                      <CategoryCard
+                        key={card.id}
+                        title={card.title}
+                        description={card.description}
+                        icon={card.icon}
+                        onClick={() => navigate(`${ROUTES.MUD_PROPERTIES}/${card.id}`)}
+                      />
+                    ))}
+                  </div>
+                )}
+
                 {/* Section-specific or overview layout */}
                 {(activeSection === "overview" ||
                   activeSection === "rheology" ||
@@ -588,8 +638,9 @@ export default function MudProperties() {
             </div>
 
             {/* Right sidebar - Calculated outputs & Preset summary */}
-            <aside className="w-72 shrink-0 hidden xl:block space-y-4">
-              <PanelCard title="Calculated Outputs" className="h-auto">
+            {activeSection !== "mud-properties" && (
+              <aside className="w-72 shrink-0 hidden xl:block space-y-4">
+                <PanelCard title="Calculated Outputs" className="h-auto">
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">
@@ -653,6 +704,7 @@ export default function MudProperties() {
                 </div>
               </PanelCard>
             </aside>
+            )}
           </div>
         </main>
       </SidebarLayout>
