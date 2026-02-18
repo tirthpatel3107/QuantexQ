@@ -235,14 +235,14 @@ export function Header() {
               </div>
             </DropdownMenuContent>
           </DropdownMenu> */}
-          <CommonButton
+          {/* <CommonButton
             variant="ghost"
             size="icon"
-            className="bg-accent text-foreground hover:bg-accent/80"
+            className="relative bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
             aria-label="Toggle theme"
             onClick={toggleTheme}
             icon={theme === "dark" ? Sun : Moon}
-          />
+          /> */}
 
           <Sheet>
             <SheetTrigger asChild>
