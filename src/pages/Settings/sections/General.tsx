@@ -2,10 +2,11 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RestoreDefaultsButton, CommonSelect, CommonInput } from "@/components/common";
+import { GeneralSettingsData } from "@/types/settings";
 
 interface GeneralSettingsProps {
-  general: any;
-  setGeneral: (updater: (prev: any) => any) => void;
+  general: GeneralSettingsData;
+  setGeneral: React.Dispatch<React.SetStateAction<GeneralSettingsData>>;
   safetyConfirmations: boolean;
   setSafetyConfirmations: (checked: boolean) => void;
 }
@@ -40,7 +41,7 @@ export function GeneralSettings({
             <CommonInput
               value={general.defaultWellName}
               onChange={(e) =>
-                setGeneral((g: any) => ({
+                setGeneral((g) => ({
                   ...g,
                   defaultWellName: e.target.value,
                 }))
@@ -53,7 +54,7 @@ export function GeneralSettings({
               options={rigOptions}
               value={general.defaultRigName}
               onValueChange={(v) =>
-                setGeneral((g: any) => ({ ...g, defaultRigName: v }))
+                setGeneral((g) => ({ ...g, defaultRigName: v }))
               }
             />
           </div>
@@ -63,7 +64,7 @@ export function GeneralSettings({
               options={scenarioOptions}
               value={general.defaultScenario}
               onValueChange={(v) =>
-                setGeneral((g: any) => ({ ...g, defaultScenario: v }))
+                setGeneral((g) => ({ ...g, defaultScenario: v }))
               }
             />
           </div>
@@ -73,7 +74,7 @@ export function GeneralSettings({
               options={screenOptions}
               value={general.startupScreen1}
               onValueChange={(v) =>
-                setGeneral((g: any) => ({
+                setGeneral((g) => ({
                   ...g,
                   startupScreen1: v,
                   startupScreen2: v,
@@ -87,7 +88,7 @@ export function GeneralSettings({
               options={screenOptions}
               value={general.startupScreen2}
               onValueChange={(v) =>
-                setGeneral((g: any) => ({ ...g, startupScreen2: v }))
+                setGeneral((g) => ({ ...g, startupScreen2: v }))
               }
             />
           </div>

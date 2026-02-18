@@ -10,3 +10,5 @@ export { CommonButton } from "./CommonButton";
 export { CommonSelect } from "./CommonSelect";
 export { CommonInput } from "./CommonInput";
 export { PageLoader } from "./PageLoader";
+export { CommonTable } from "./CommonTable";
+export { CommonDialog } from "./CommonDialog";

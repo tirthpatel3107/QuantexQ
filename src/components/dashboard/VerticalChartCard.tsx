@@ -2,21 +2,16 @@ import { memo, useState, useMemo, useEffect, useRef } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Maximize2, MoreVertical } from "lucide-react";
 import ReactECharts from "echarts-for-react";
-import type { EChartsOption } from "echarts";
+import type { EChartsOption, LineSeriesOption } from "echarts";
 import { cn } from "@/lib/utils";
 import { useSimulation } from "@/hooks/useSimulation";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
-import { CommonButton } from "@/components/common";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CommonDialog, CommonButton } from "@/components/common";
 import type { VerticalChartMetric } from "@/types/chart";
 import { COLORS } from "@/constants/colors";
 import { useTheme } from "@/components/theme-provider";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ChartDataPoint } from "@/types/chart";
 
 export type { VerticalChartMetric };
 
@@ -24,7 +19,7 @@ interface VerticalChartCardProps {
   title: string;
   icon?: LucideIcon;
   metrics: VerticalChartMetric[];
-  data: any[];
+  data: ChartDataPoint[];
   color?: string; // Fallback color
   threshold?: { value: number; label: string };
   status?: "normal" | "warning" | "critical";
@@ -81,7 +76,7 @@ const MetricDisplay = ({
 );
 
 interface ChartInnerProps {
-  data: any[];
+  data: ChartDataPoint[];
   metrics: VerticalChartMetric[];
   threshold?: { value: number; label: string };
   height?: number | string;
@@ -169,11 +164,12 @@ const ChartInner = memo(function ChartInner({
         extraCssText:
           "box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border-radius: 6px; z-index: 9999; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;",
         padding: [8, 12],
-        formatter: (params: any) => {
+        formatter: (params: unknown) => {
           if (!Array.isArray(params) || params.length === 0) return "";
-          const time = params[0].axisValueLabel;
+          const firstParam = params[0] as { axisValueLabel: string };
+          const time = firstParam.axisValueLabel;
           let content = `<div class="font-bold mb-1.5" style="color:${tooltipText}; font-size: 13px;">${time}</div>`;
-          params.forEach((p: any) => {
+          (params as Array<{ seriesName: string; value: number | string; color: string; seriesIndex: number }>).forEach((p) => {
             const metric = metrics.find((m) => m.label === p.seriesName);
             const unit = metric?.unit ? ` ${metric.unit}` : "";
             const circleColor = badgeColors[p.seriesIndex] || p.color;
@@ -240,10 +236,10 @@ const ChartInner = memo(function ChartInner({
           lineStyle: { color: gridColor },
         },
       },
-      series: series as any,
+      series: series as LineSeriesOption[],
       animation: false, // Performance: disable animations for high-frequency updates
     };
-  }, [data, metrics, threshold, badgeColors, isDark, hideYAxis]);
+  }, [data, metrics, badgeColors, isDark, hideYAxis]);
 
   const chartHeight = typeof height === "string" ? size.height : height;
   const chartWidth = size.width;
@@ -393,42 +389,38 @@ export const VerticalChartCard = memo(function VerticalChartCard({
         </div>
       </div>
 
-      {/* Expand popup */}
-      <Dialog open={expandOpen} onOpenChange={setExpandOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col h-[80vh]">
-          <DialogHeader>
-            <DialogTitle className="text-foreground font-bold uppercase tracking-wide">
-              {title}
-            </DialogTitle>
-          </DialogHeader>
-          <hr className="mt-2 mb-3" />
-          <div className="flex-1 w-full min-h-0 flex flex-col relative">
-            <div className="pb-5 flex justify-between gap-4 pointer-events-none">
-              {metrics.map((m, i) => (
-                <MetricDisplay
-                  key={i}
-                  label={m.label}
-                  value={m.value}
-                  unit={m.unit}
-                  color={seriesLineColors[i]}
-                  isLarge
-                />
-              ))}
-            </div>
-            <div className="flex-1 min-h-0">
-              <ChartInner
-                data={data}
-                metrics={metrics}
-                threshold={threshold}
-                badgeColors={seriesLineColors}
-                height="100%"
-                isDark={isDark}
-                hideYAxis={false}
+      <CommonDialog
+        open={expandOpen}
+        onOpenChange={setExpandOpen}
+        title={title}
+        maxWidth="max-w-4xl max-h-[90vh] h-[80vh]"
+      >
+        <div className="flex-1 w-full min-h-0 flex flex-col relative px-4">
+          <div className="pb-5 flex justify-between gap-4 pointer-events-none">
+            {metrics.map((m, i) => (
+              <MetricDisplay
+                key={i}
+                label={m.label}
+                value={m.value}
+                unit={m.unit}
+                color={seriesLineColors[i]}
+                isLarge
               />
-            </div>
+            ))}
           </div>
-        </DialogContent>
-      </Dialog>
+          <div className="flex-1 min-h-[400px]">
+            <ChartInner
+              data={data}
+              metrics={metrics}
+              threshold={threshold}
+              badgeColors={seriesLineColors}
+              height="100%"
+              isDark={isDark}
+              hideYAxis={false}
+            />
+          </div>
+        </div>
+      </CommonDialog>
     </div>
   );
 });

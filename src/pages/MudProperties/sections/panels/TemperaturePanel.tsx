@@ -1,9 +1,10 @@
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RestoreDefaultsButton, LabeledInputWithUnit } from "@/components/common";
+import { FluidData } from "@/types/mud";
 
 interface TemperaturePanelProps {
-  fluid: any;
-  setFluid: (updater: (prev: any) => any) => void;
+  fluid: FluidData;
+  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
 }
 
 export function TemperaturePanel({ fluid, setFluid }: TemperaturePanelProps) {
@@ -13,7 +14,7 @@ export function TemperaturePanel({ fluid, setFluid }: TemperaturePanelProps) {
         <LabeledInputWithUnit
           label="Surface temp"
           value={fluid.surfaceTemp}
-          onChange={(v) => setFluid((f: any) => ({ ...f, surfaceTemp: v }))}
+          onChange={(v) => setFluid((f) => ({ ...f, surfaceTemp: v }))}
           unit="°F"
         />
         <LabeledInputWithUnit
@@ -25,7 +26,7 @@ export function TemperaturePanel({ fluid, setFluid }: TemperaturePanelProps) {
         <LabeledInputWithUnit
           label="Temperature gradient"
           value={fluid.tempGradient}
-          onChange={(v) => setFluid((f: any) => ({ ...f, tempGradient: v }))}
+          onChange={(v) => setFluid((f) => ({ ...f, tempGradient: v }))}
           unit="°F/100 ft"
           className="sm:col-span-2"
         />

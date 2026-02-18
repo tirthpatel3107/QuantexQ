@@ -79,7 +79,7 @@ export const SideDrawer = memo(function SideDrawer({
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     monitoring: true,
     configuration: true,
-    equipment: false,
+    equipment: true,
   });
 
   return (

@@ -1,10 +1,11 @@
 import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RestoreDefaultsButton, CommonInput } from "@/components/common";
+import { FluidData } from "@/types/mud";
 
 interface GasCompressibilityProps {
-  fluid: any;
-  setFluid: (updater: (prev: any) => any) => void;
+  fluid: FluidData;
+  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
 }
 
 export function GasCompressibility({ fluid, setFluid }: GasCompressibilityProps) {
@@ -16,7 +17,7 @@ export function GasCompressibility({ fluid, setFluid }: GasCompressibilityProps)
           <CommonInput
             value={fluid.gasSolubility}
             onChange={(e) =>
-              setFluid((f: any) => ({
+              setFluid((f) => ({
                 ...f,
                 gasSolubility: e.target.value,
               }))
@@ -29,7 +30,7 @@ export function GasCompressibility({ fluid, setFluid }: GasCompressibilityProps)
           <CommonInput
             value={fluid.compressibilityFactor}
             onChange={(e) =>
-              setFluid((f: any) => ({
+              setFluid((f) => ({
                 ...f,
                 compressibilityFactor: e.target.value,
               }))
@@ -42,7 +43,7 @@ export function GasCompressibility({ fluid, setFluid }: GasCompressibilityProps)
           <CommonInput
             value={fluid.gasOilRatio}
             onChange={(e) =>
-              setFluid((f: any) => ({
+              setFluid((f) => ({
                 ...f,
                 gasOilRatio: e.target.value,
               }))

@@ -7,9 +7,10 @@ import { COLORS } from "@/constants/colors";
 import { useTheme } from "@/components/theme-provider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Clock } from "lucide-react";
+import { ChartDataPoint } from "@/types/chart";
 
 interface TimeAxisCardProps {
-  data: any[];
+  data: ChartDataPoint[];
   className?: string;
 }
 
@@ -17,7 +18,7 @@ const ChartInner = memo(function ChartInner({
   data,
   isDark,
 }: {
-  data: any[];
+  data: ChartDataPoint[];
   isDark: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);

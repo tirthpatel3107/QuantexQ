@@ -1,10 +1,11 @@
 import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RestoreDefaultsButton, CommonInput } from "@/components/common";
+import { FluidData } from "@/types/mud";
 
 interface CalibrationProps {
-  fluid: any;
-  setFluid: (updater: (prev: any) => any) => void;
+  fluid: FluidData;
+  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
 }
 
 export function Calibration({ fluid, setFluid }: CalibrationProps) {
@@ -16,7 +17,7 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
           <CommonInput
             value={fluid.viscometerCalDate}
             onChange={(e) =>
-              setFluid((f: any) => ({
+              setFluid((f) => ({
                 ...f,
                 viscometerCalDate: e.target.value,
               }))
@@ -29,7 +30,7 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
           <CommonInput
             value={fluid.densityCalDate}
             onChange={(e) =>
-              setFluid((f: any) => ({
+              setFluid((f) => ({
                 ...f,
                 densityCalDate: e.target.value,
               }))
@@ -42,7 +43,7 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
           <CommonInput
             value={fluid.tempSensorOffset}
             onChange={(e) =>
-              setFluid((f: any) => ({
+              setFluid((f) => ({
                 ...f,
                 tempSensorOffset: e.target.value,
               }))

@@ -30,14 +30,14 @@ import { UiDisplay } from "./sections/UiDisplay";
 import { UsersRoles } from "./sections/UsersRoles";
 import { AboutDiagnostics } from "./sections/AboutDiagnostics";
 import { SETTINGS_NAV } from "./constants";
+import { GeneralSettingsData } from "@/types/settings";
 
 export default function Settings() {
   const { section } = useParams();
   const navigate = useNavigate();
   const activeSection = section || "setting";
   const [search, setSearch] = useState("");
-
-  const [general, setGeneral] = useState({
+  const [general, setGeneral] = useState<GeneralSettingsData>({
     defaultWellName: "NFQ-21-6A",
     defaultRigName: "Rig-01",
     defaultScenario: "Static",

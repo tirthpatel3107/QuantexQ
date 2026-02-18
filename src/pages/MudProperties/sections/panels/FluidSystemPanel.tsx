@@ -1,10 +1,11 @@
 import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RestoreDefaultsButton, CommonSelect, CommonInput } from "@/components/common";
+import { FluidData } from "@/types/mud";
 
 interface FluidSystemPanelProps {
-  fluid: any;
-  setFluid: (updater: (prev: any) => any) => void;
+  fluid: FluidData;
+  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
   typeOptions: { label: string; value: string }[];
   baseFluidOptions: { label: string; value: string }[];
   tempOptions: { label: string; value: string }[];
@@ -25,7 +26,7 @@ export function FluidSystemPanel({
           <CommonSelect
             options={typeOptions}
             value={fluid.type}
-            onValueChange={(v) => setFluid((f: any) => ({ ...f, type: v }))}
+            onValueChange={(v) => setFluid((f) => ({ ...f, type: v }))}
           />
         </div>
         <div className="space-y-2 min-w-0">
@@ -33,7 +34,7 @@ export function FluidSystemPanel({
           <CommonSelect
             options={baseFluidOptions}
             value={fluid.baseFluid}
-            onValueChange={(v) => setFluid((f: any) => ({ ...f, baseFluid: v }))}
+            onValueChange={(v) => setFluid((f) => ({ ...f, baseFluid: v }))}
           />
         </div>
         <div className="space-y-2 min-w-0">
@@ -41,7 +42,7 @@ export function FluidSystemPanel({
           <CommonInput
             value={fluid.activePitsVolume}
             onChange={(e) =>
-              setFluid((f: any) => ({
+              setFluid((f) => ({
                 ...f,
                 activePitsVolume: e.target.value,
               }))
@@ -53,7 +54,7 @@ export function FluidSystemPanel({
           <CommonSelect
             options={tempOptions}
             value={fluid.flowlineTemp}
-            onValueChange={(v) => setFluid((f: any) => ({ ...f, flowlineTemp: v }))}
+            onValueChange={(v) => setFluid((f) => ({ ...f, flowlineTemp: v }))}
           />
         </div>
       </div>

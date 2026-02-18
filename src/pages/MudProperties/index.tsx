@@ -34,6 +34,7 @@ import {
   BASE_FLUID_OPTIONS,
   TEMP_OPTIONS,
 } from "./constants";
+import { FluidData } from "@/types/mud";
 
 export default function MudProperties() {
   const { section } = useParams();
@@ -42,7 +43,7 @@ export default function MudProperties() {
   const [search, setSearch] = useState("");
   const [, setDirty] = useState(true);
 
-  const [fluid, setFluid] = useState({
+  const [fluid, setFluid] = useState<FluidData>({
     type: "OBM",
     baseFluid: "Diesel",
     activePitsVolume: "600",

@@ -2,10 +2,11 @@ import { FluidSystemPanel } from "./panels/FluidSystemPanel";
 import { RheologyPanel } from "./panels/RheologyPanel";
 import { DensitySolidsPanel } from "./panels/DensitySolidsPanel";
 import { TemperaturePanel } from "./panels/TemperaturePanel";
+import { FluidData } from "@/types/mud";
 
 interface FluidOverviewSectionProps {
-  fluid: any;
-  setFluid: (updater: (prev: any) => any) => void;
+  fluid: FluidData;
+  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
   typeOptions: { label: string; value: string }[];
   baseFluidOptions: { label: string; value: string }[];
   tempOptions: { label: string; value: string }[];

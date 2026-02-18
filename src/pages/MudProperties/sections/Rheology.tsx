@@ -1,8 +1,9 @@
 import { RheologyPanel } from "./panels/RheologyPanel";
+import { FluidData } from "@/types/mud";
 
 interface RheologySectionProps {
-  fluid: any;
-  setFluid: (updater: (prev: any) => any) => void;
+  fluid: FluidData;
+  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
 }
 
 export function Rheology({ fluid, setFluid }: RheologySectionProps) {

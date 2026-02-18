@@ -2,10 +2,11 @@ import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { Switch } from "@/components/ui/switch";
 import { RestoreDefaultsButton, LabeledInputWithUnit, CommonInput } from "@/components/common";
+import { FluidData } from "@/types/mud";
 
 interface RheologyPanelProps {
-  fluid: any;
-  setFluid: (updater: (prev: any) => any) => void;
+  fluid: FluidData;
+  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
 }
 
 export function RheologyPanel({ fluid, setFluid }: RheologyPanelProps) {
@@ -22,7 +23,7 @@ export function RheologyPanel({ fluid, setFluid }: RheologyPanelProps) {
           id="rheo-derive-viscometer"
           checked={fluid.rheologySource === "viscometer"}
           onCheckedChange={(checked) =>
-            setFluid((f: any) => ({
+            setFluid((f) => ({
               ...f,
               rheologySource: checked ? "viscometer" : "manual",
             }))
@@ -34,19 +35,19 @@ export function RheologyPanel({ fluid, setFluid }: RheologyPanelProps) {
         <LabeledInputWithUnit
           label="PV"
           value={fluid.pv}
-          onChange={(v) => setFluid((f: any) => ({ ...f, pv: v }))}
+          onChange={(v) => setFluid((f) => ({ ...f, pv: v }))}
           unit="cP"
         />
         <LabeledInputWithUnit
           label="YP"
           value={fluid.yp}
-          onChange={(v) => setFluid((f: any) => ({ ...f, yp: v }))}
+          onChange={(v) => setFluid((f) => ({ ...f, yp: v }))}
           unit="lb/100ft²"
         />
         <LabeledInputWithUnit
           label="Gel 10s"
           value={fluid.gel10s}
-          onChange={(v) => setFluid((f: any) => ({ ...f, gel10s: v }))}
+          onChange={(v) => setFluid((f) => ({ ...f, gel10s: v }))}
           unit="lb/100ft²"
         />
         <div className="space-y-2 min-w-0">
@@ -54,7 +55,7 @@ export function RheologyPanel({ fluid, setFluid }: RheologyPanelProps) {
           <CommonInput
             value={fluid.gel10m}
             onChange={(e) =>
-              setFluid((f: any) => ({
+              setFluid((f) => ({
                 ...f,
                 gel10m: e.target.value,
               }))

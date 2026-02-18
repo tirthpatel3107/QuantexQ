@@ -2,10 +2,11 @@ import { Label } from "@/components/ui/label";
 import { Lock, ExternalLink } from "lucide-react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RestoreDefaultsButton, LabeledInputWithUnit, CommonInput } from "@/components/common";
+import { FluidData } from "@/types/mud";
 
 interface DensitySolidsPanelProps {
-  fluid: any;
-  setFluid: (updater: (prev: any) => any) => void;
+  fluid: FluidData;
+  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
 }
 
 export function DensitySolidsPanel({ fluid, setFluid }: DensitySolidsPanelProps) {
@@ -15,19 +16,19 @@ export function DensitySolidsPanel({ fluid, setFluid }: DensitySolidsPanelProps)
         <LabeledInputWithUnit
           label="PV"
           value={fluid.pv}
-          onChange={(v) => setFluid((f: any) => ({ ...f, pv: v }))}
+          onChange={(v) => setFluid((f) => ({ ...f, pv: v }))}
           unit="cP"
         />
         <LabeledInputWithUnit
           label="YP"
           value={fluid.yp}
-          onChange={(v) => setFluid((f: any) => ({ ...f, yp: v }))}
+          onChange={(v) => setFluid((f) => ({ ...f, yp: v }))}
           unit="lb/100ft²"
         />
         <LabeledInputWithUnit
           label="Gel 10s"
           value={fluid.gel10s}
-          onChange={(v) => setFluid((f: any) => ({ ...f, gel10s: v }))}
+          onChange={(v) => setFluid((f) => ({ ...f, gel10s: v }))}
           unit="lb/100ft²"
         />
         <div className="space-y-2 min-w-0">
@@ -48,7 +49,7 @@ export function DensitySolidsPanel({ fluid, setFluid }: DensitySolidsPanelProps)
           <CommonInput
             value={fluid.salinity}
             onChange={(e) =>
-              setFluid((f: any) => ({
+              setFluid((f) => ({
                 ...f,
                 salinity: e.target.value,
               }))

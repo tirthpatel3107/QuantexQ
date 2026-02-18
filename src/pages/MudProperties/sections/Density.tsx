@@ -1,8 +1,9 @@
 import { DensitySolidsPanel } from "./panels/DensitySolidsPanel";
+import { FluidData } from "@/types/mud";
 
 interface DensitySectionProps {
-  fluid: any;
-  setFluid: (updater: (prev: any) => any) => void;
+  fluid: FluidData;
+  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
 }
 
 export function Density({ fluid, setFluid }: DensitySectionProps) {

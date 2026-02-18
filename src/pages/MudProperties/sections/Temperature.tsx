@@ -1,8 +1,9 @@
 import { TemperaturePanel } from "./panels/TemperaturePanel";
+import { FluidData } from "@/types/mud";
 
 interface TemperatureSectionProps {
-  fluid: any;
-  setFluid: (updater: (prev: any) => any) => void;
+  fluid: FluidData;
+  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
 }
 
 export function Temperature({ fluid, setFluid }: TemperatureSectionProps) {

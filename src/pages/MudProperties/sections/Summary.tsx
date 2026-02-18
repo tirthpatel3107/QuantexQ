@@ -1,7 +1,9 @@
 import { PanelCard } from "@/components/dashboard/PanelCard";
 
+import { FluidData } from "@/types/mud";
+
 interface SummaryProps {
-  fluid: any;
+  fluid: FluidData;
 }
 
 export function Summary({ fluid }: SummaryProps) {
