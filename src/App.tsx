@@ -15,10 +15,10 @@ import MpdSimulator from "./pages/MpdSimulator";
 const Index = lazy(() => import("./pages/Index"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Profile = lazy(() => import("./pages/Profile"));
-const MudProperties = lazy(() => import("./pages/MudProperties"));
-const Settings = lazy(() => import("./pages/Settings"));
-const DAQ = lazy(() => import("./pages/DAQ"));
-const Network = lazy(() => import("./pages/Network"));
+const MudProperties = lazy(() => import("./pages/MudProperties/index"));
+const Settings = lazy(() => import("./pages/Settings/index"));
+const DAQ = lazy(() => import("./pages/DAQ/index"));
+const Network = lazy(() => import("./pages/Network/index"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
