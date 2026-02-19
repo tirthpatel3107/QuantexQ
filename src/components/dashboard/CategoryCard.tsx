@@ -9,7 +9,7 @@ export interface CategoryCardProps {
   /** Short description */
   description: string;
   /** Icon component from lucide-react */
-  icon: LucideIcon;
+  icon: React.ElementType;
   /** Click handler */
   onClick?: () => void;
   /** Extra class names for the root Card */
@@ -31,7 +31,7 @@ const CategoryCard = React.forwardRef<HTMLDivElement, CategoryCardProps>(
         )}
         onClick={onClick}
       >
-        <CardContent className="p-5 flex items-start gap-3 h-full">
+        <CardContent className="p-5 flex items-center gap-3 h-full">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white dark:bg-primary/10 text-primary">
             <Icon className="h-5 w-5" />
           </div>

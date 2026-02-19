@@ -12,3 +12,5 @@ export { CommonInput } from "./CommonInput";
 export { PageLoader } from "./PageLoader";
 export { CommonTable } from "./CommonTable";
 export { CommonDialog } from "./CommonDialog";
+export { SidebarNav } from "./SidebarNav";
+export type { SidebarNavItem } from "./SidebarNav";

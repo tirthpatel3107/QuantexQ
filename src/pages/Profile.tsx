@@ -62,7 +62,7 @@ const Profile = () => {
 
   return (
     <PageLayout>
-      <main className="flex-1 px-6 py-10 text-foreground">
+      <main className="flex-1 p-4 text-foreground">
         <div className="max-w-6xl mx-auto space-y-8">
           {/* Hero */}
           <Card className="dashboard-panel overflow-hidden border-0 shadow-none">
@@ -117,7 +117,7 @@ const Profile = () => {
           </Card>
 
           {/* Grids */}
-          <div className="grid gap-4 lg:grid-cols-3">
+          <div className="grid gap-5 lg:grid-cols-3">
             <PanelCard
               title={
                 <>
@@ -251,7 +251,7 @@ const Profile = () => {
             </PanelCard>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-2">
+          <div className="grid gap-5 lg:grid-cols-2">
             <PanelCard
               title={
                 <>

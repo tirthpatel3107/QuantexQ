@@ -33,9 +33,9 @@ export function GeneralSettings({
   ];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 mb-4">
+    <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3 mb-3">
       <PanelCard title="Project / Well Context">
-        <div className="grid gap-5 grid-cols-1 sm:grid-cols-3">
+        <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
           <div className="space-y-2">
             <Label>Default Well Name</Label>
             <CommonInput
@@ -96,7 +96,7 @@ export function GeneralSettings({
       </PanelCard>
 
       <PanelCard title="Safety" headerAction={<RestoreDefaultsButton size="sm" />}>
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-3">
           <div className="space-y-0.5 min-w-0 flex-1 pr-2">
             <Label htmlFor="safety-confirm">Enable safety confirmations</Label>
             <p className="text-xs text-muted-foreground">
