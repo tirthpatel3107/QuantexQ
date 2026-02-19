@@ -8,6 +8,7 @@ import {
   PageHeaderBar,
   CommonButton,
   SidebarNav,
+  CommonTooltip,
 } from "@/components/common";
 import { cn } from "@/lib/utils";
 import { useSidebarContext } from "@/context/SidebarContext";
@@ -31,15 +32,21 @@ export default function DAQ() {
 
   const headerActions = (
     <>
-      <CommonButton variant="outline" size="sm" icon={Save}>
-        Save
-      </CommonButton>
-      <CommonButton variant="outline" size="sm" icon={RotateCcw}>
-        Discard
-      </CommonButton>
-      <CommonButton variant="outline" size="sm" icon={Upload}>
-        Import
-      </CommonButton>
+      <CommonTooltip content="Save DAQ settings">
+        <CommonButton variant="outline" size="sm" icon={Save}>
+          Save
+        </CommonButton>
+      </CommonTooltip>
+      <CommonTooltip content="Discard changes">
+        <CommonButton variant="outline" size="sm" icon={RotateCcw}>
+          Discard
+        </CommonButton>
+      </CommonTooltip>
+      <CommonTooltip content="Import DAQ configuration">
+        <CommonButton variant="outline" size="sm" icon={Upload}>
+          Import
+        </CommonButton>
+      </CommonTooltip>
     </>
   );
 

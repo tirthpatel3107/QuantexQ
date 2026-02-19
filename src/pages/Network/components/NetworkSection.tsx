@@ -1,7 +1,12 @@
 import { CategoryCard } from "@/components/dashboard/CategoryCard";
 
 interface NetworkSectionProps {
-  cards: { id: string; title: string; description: string; icon: React.ElementType }[];
+  cards: {
+    id: string;
+    title: string;
+    description: string;
+    icon: React.ElementType;
+  }[];
 }
 
 export function NetworkSection({ cards }: NetworkSectionProps) {

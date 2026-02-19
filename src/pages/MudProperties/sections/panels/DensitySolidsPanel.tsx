@@ -1,7 +1,11 @@
 import { Label } from "@/components/ui/label";
 import { Lock, ExternalLink } from "lucide-react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { RestoreDefaultsButton, LabeledInputWithUnit, CommonInput } from "@/components/common";
+import {
+  RestoreDefaultsButton,
+  LabeledInputWithUnit,
+  CommonInput,
+} from "@/components/common";
 import { FluidData } from "@/types/mud";
 
 interface DensitySolidsPanelProps {
@@ -9,9 +13,15 @@ interface DensitySolidsPanelProps {
   setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
 }
 
-export function DensitySolidsPanel({ fluid, setFluid }: DensitySolidsPanelProps) {
+export function DensitySolidsPanel({
+  fluid,
+  setFluid,
+}: DensitySolidsPanelProps) {
   return (
-    <PanelCard title="Density & Solids" headerAction={<RestoreDefaultsButton />}>
+    <PanelCard
+      title="Density & Solids"
+      headerAction={<RestoreDefaultsButton />}
+    >
       <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 items-start">
         <LabeledInputWithUnit
           label="PV"
@@ -32,8 +42,8 @@ export function DensitySolidsPanel({ fluid, setFluid }: DensitySolidsPanelProps)
           unit="lb/100ft²"
         />
         <div className="space-y-2 min-w-0">
-          <Label className="h-5 flex items-center text-sm">Oil/Water</Label>
           <CommonInput
+            label="Oil/Water"
             value={fluid.oilWater}
             readOnly
             suffix={
@@ -45,8 +55,8 @@ export function DensitySolidsPanel({ fluid, setFluid }: DensitySolidsPanelProps)
           />
         </div>
         <div className="space-y-2 min-w-0">
-          <Label className="h-5 flex items-center text-sm">Salinity</Label>
           <CommonInput
+            label="Salinity"
             value={fluid.salinity}
             onChange={(e) =>
               setFluid((f) => ({

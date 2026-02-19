@@ -41,7 +41,9 @@ export function LabeledInputWithUnit({
         id={id}
         value={value}
         readOnly={readOnly}
-        onChange={onChange != null ? (e) => onChange(e.target.value) : undefined}
+        onChange={
+          onChange != null ? (e) => onChange(e.target.value) : undefined
+        }
         suffix={suffix ?? unit}
         className={cn(inputClassName)}
       />

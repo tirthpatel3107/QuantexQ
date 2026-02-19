@@ -35,7 +35,11 @@ import { notifications } from "@/data/mockData";
 import { useSimulation } from "@/hooks/useSimulation";
 import { SimulationTimerWidget } from "@/components/dashboard/SimulationTimerWidget";
 import { useTheme } from "@/components/theme-provider";
-import { CommonAlertDialog, CommonButton } from "@/components/common";
+import {
+  CommonAlertDialog,
+  CommonButton,
+  CommonTooltip,
+} from "@/components/common";
 
 import { formatTime, formatDate } from "@/lib/date-utils";
 
@@ -91,14 +95,16 @@ export function Header() {
       <SideDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
       {/* Hamburger + Brand */}
       <div className="flex items-center gap-2 shrink-0 min-w-0 w-full sm:w-auto">
-        <CommonButton
-          variant="ghost"
-          size="icon"
-          onClick={() => setDrawerOpen(true)}
-          className="text-muted-foreground hover:text-foreground"
-          aria-label="Open menu"
-          icon={Menu}
-        />
+        <CommonTooltip content="Open menu">
+          <CommonButton
+            variant="ghost"
+            size="icon"
+            onClick={() => setDrawerOpen(true)}
+            className="text-muted-foreground hover:text-foreground"
+            aria-label="Open menu"
+            icon={Menu}
+          />
+        </CommonTooltip>
         <Link
           to={ROUTES.HOME}
           className="flex items-center gap-3 hover:text-foreground transition-colors min-w-0"
@@ -149,23 +155,27 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           {!isRunning ? (
-            <CommonButton
-              onClick={() => setStartConfirmOpen(true)}
-              className="action-btn action-btn-primary"
-              aria-label="Start operation"
-              icon={Play}
-            >
-              <span className="hidden sm:inline">Start</span>
-            </CommonButton>
+            <CommonTooltip content="Start operation">
+              <CommonButton
+                onClick={() => setStartConfirmOpen(true)}
+                className="action-btn action-btn-primary"
+                aria-label="Start operation"
+                icon={Play}
+              >
+                <span className="hidden sm:inline">Start</span>
+              </CommonButton>
+            </CommonTooltip>
           ) : (
-            <CommonButton
-              onClick={() => setStopConfirmOpen(true)}
-              className="action-btn action-btn-danger"
-              aria-label="Stop operation"
-              icon={Square}
-            >
-              <span className="hidden sm:inline">Stop</span>
-            </CommonButton>
+            <CommonTooltip content="Stop operation">
+              <CommonButton
+                onClick={() => setStopConfirmOpen(true)}
+                className="action-btn action-btn-danger"
+                aria-label="Stop operation"
+                icon={Square}
+              >
+                <span className="hidden sm:inline">Stop</span>
+              </CommonButton>
+            </CommonTooltip>
           )}
           <div className="hidden sm:block h-8 w-px bg-border" />
           {/* <DropdownMenu>
@@ -236,29 +246,37 @@ export function Header() {
               </div>
             </DropdownMenuContent>
           </DropdownMenu> */}
-          {/* <CommonButton
-            variant="ghost"
-            size="icon"
-            className="relative bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
-            aria-label="Toggle theme"
-            onClick={toggleTheme}
-            icon={theme === "dark" ? Sun : Moon}
-          /> */}
+          <CommonTooltip
+            content={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
+          >
+            <CommonButton
+              variant="ghost"
+              size="icon"
+              className="bg-accent text-foreground hover:bg-accent/80"
+              aria-label="Toggle theme"
+              onClick={toggleTheme}
+              icon={theme === "dark" ? Sun : Moon}
+            />
+          </CommonTooltip>
 
           <Sheet>
-            <SheetTrigger asChild>
-              <CommonButton
-                variant="ghost"
-                size="icon"
-                className="relative bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
-                aria-label="Notifications"
-                icon={Bell}
-              >
-                <span className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-destructive text-[9px] font-bold flex items-center justify-center text-destructive-foreground shadow-sm">
-                  {notifications.length}
-                </span>
-              </CommonButton>
-            </SheetTrigger>
+            <CommonTooltip content="View notifications">
+              <SheetTrigger asChild>
+                <CommonButton
+                  variant="ghost"
+                  size="icon"
+                  className="relative bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
+                  aria-label="Notifications"
+                  icon={Bell}
+                >
+                  <span className="absolute -top-1 -right-1 h-3.5 w-3.5 rounded-full bg-destructive text-[9px] font-bold flex items-center justify-center text-destructive-foreground shadow-sm">
+                    {notifications.length}
+                  </span>
+                </CommonButton>
+              </SheetTrigger>
+            </CommonTooltip>
             <SheetContent
               side="right"
               className="w-[90vw] max-w-[360px] sm:max-w-[420px] p-0"
@@ -316,15 +334,17 @@ export function Header() {
             </SheetContent>
           </Sheet>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <CommonButton
-                variant="ghost"
-                size="icon"
-                className="bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
-                aria-label="Settings menu"
-                icon={CircleUser}
-              />
-            </DropdownMenuTrigger>
+            <CommonTooltip content="User menu">
+              <DropdownMenuTrigger asChild>
+                <CommonButton
+                  variant="ghost"
+                  size="icon"
+                  className="bg-white dark:bg-accent text-foreground hover:bg-white/80 dark:hover:bg-accent/80"
+                  aria-label="Settings menu"
+                  icon={CircleUser}
+                />
+              </DropdownMenuTrigger>
+            </CommonTooltip>
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem
                 onSelect={() => navigate(ROUTES.PROFILE)}

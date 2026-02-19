@@ -1,7 +1,10 @@
-import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { Switch } from "@/components/ui/switch";
-import { RestoreDefaultsButton, LabeledInputWithUnit, CommonInput } from "@/components/common";
+import {
+  RestoreDefaultsButton,
+  LabeledInputWithUnit,
+  CommonInput,
+  CommonToggle,
+} from "@/components/common";
 import { FluidData } from "@/types/mud";
 
 interface RheologyPanelProps {
@@ -12,15 +15,10 @@ interface RheologyPanelProps {
 export function RheologyPanel({ fluid, setFluid }: RheologyPanelProps) {
   return (
     <PanelCard title="Rheology" headerAction={<RestoreDefaultsButton />}>
-      <div className="flex flex-row items-center justify-between gap-2 mb-5">
-        <Label
-          htmlFor="rheo-derive-viscometer"
-          className="font-semibold text-sm tracking-tight shrink-0"
-        >
-          Rheology model. Derive from viscometer
-        </Label>
-        <Switch
+      <div className="mb-5">
+        <CommonToggle
           id="rheo-derive-viscometer"
+          label="Rheology model. Derive from viscometer"
           checked={fluid.rheologySource === "viscometer"}
           onCheckedChange={(checked) =>
             setFluid((f) => ({
@@ -51,8 +49,8 @@ export function RheologyPanel({ fluid, setFluid }: RheologyPanelProps) {
           unit="lb/100ft²"
         />
         <div className="space-y-2 min-w-0">
-          <Label className="h-5 flex items-center text-sm">Gel 10m</Label>
           <CommonInput
+            label="Gel 10m"
             value={fluid.gel10m}
             onChange={(e) =>
               setFluid((f) => ({

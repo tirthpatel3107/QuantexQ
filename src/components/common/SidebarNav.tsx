@@ -33,7 +33,17 @@ export function SidebarNav({
         return (
           <div key={item.id}>
             <button
-              onClick={() => navigate(`${baseRoute}/${item.id}`)}
+              onClick={() =>
+                ![
+                  "ui",
+                  "signals",
+                  "sources",
+                  "protocols",
+                  "routing",
+                  "security",
+                  "diagnostics",
+                ].includes(item.id) && navigate(`${baseRoute}/${item.id}`)
+              }
               title={isCollapsed ? item.label : ""}
               className={cn(
                 "w-full flex items-center gap-3 rounded-md transition-all duration-200 border-0 shadow-none text-left overflow-hidden",
@@ -49,11 +59,11 @@ export function SidebarNav({
                   ? isCollapsed
                     ? isActive
                       ? "bg-white dark:bg-primary/20 text-foreground"
-                      : "bg-white/50 dark:bg-white/5 text-muted-foreground"
+                      : "dark:bg-white/5 text-muted-foreground"
                     : "text-foreground"
                   : isActive
                     ? "bg-white dark:bg-primary/20 text-primary shadow-sm dark:shadow-none hover:bg-white dark:hover:bg-primary/30 hover:text-primary"
-                    : "bg-white/50 dark:bg-white/5 text-muted-foreground hover:text-foreground hover:bg-white/80 dark:hover:bg-white/10",
+                    : "dark:bg-white/5 text-muted-foreground hover:text-foreground hover:bg-white/80 dark:hover:bg-white/10",
               )}
             >
               <Icon
@@ -73,8 +83,8 @@ export function SidebarNav({
                 className={cn(
                   " border-none transition-all duration-300",
                   isCollapsed
-                    ? "my-5 h-[6px] mx-auto bg-border/50"
-                    : "mt-1 mb-4 h-[6px] w-full bg-border/50",
+                    ? "my-5 h-[3px] mx-auto bg-black dark:bg-border/50"
+                    : "mt-1 mb-4 h-[3px] w-full bg-black/30 dark:bg-border/50",
                 )}
               />
             )}

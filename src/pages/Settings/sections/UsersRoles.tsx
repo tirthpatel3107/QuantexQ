@@ -23,24 +23,21 @@ import {
   ChevronRight,
   UserPlus,
   Filter,
-  Check,
 } from "lucide-react";
 import {
   CommonButton,
   CommonSelect,
-  SearchInput,
+  CommonSearchInput,
   CommonTable,
   CommonDialog,
+  CommonTabs,
+  CommonTabsList,
+  CommonTabsTrigger,
+  CommonTabsContent,
+  CommonTabsNav,
+  CommonDropdownMenu,
 } from "@/components/common";
 import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-  DropdownMenuLabel,
-} from "@/components/ui/dropdown-menu";
 import { CommonAlertDialog } from "@/components/common/CommonAlertDialog";
 import { Label } from "@/components/ui/label";
 import { CommonInput } from "@/components/common/CommonInput";
@@ -179,6 +176,14 @@ export function UsersRoles() {
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
   const [deleteType, setDeleteType] = useState<"user" | "role" | null>(null);
 
+  const tabs = useMemo(
+    () => [
+      { value: "users", label: "Users" },
+      { value: "roles", label: "Roles" },
+    ],
+    [],
+  );
+
   // Users table columns
   const usersColumns = useMemo(
     () => [
@@ -214,7 +219,7 @@ export function UsersRoles() {
       }),
       userColumnHelper.accessor("lastModified", {
         header: "Last Modified",
-        size: 220,
+        size: 150,
         cell: (info) => (
           <span className="text-muted-foreground text-[13px]">
             {info.getValue()}
@@ -226,7 +231,7 @@ export function UsersRoles() {
         header: () => <div className="text-right">Actions</div>,
         size: 100,
         cell: (info) => (
-          <div className="flex justify-end gap-1.5 pr-2">
+          <div className="flex justify-end gap-1.5">
             <button
               className="p-1.5 rounded-md text-success/70 hover:text-success hover:bg-success/10 transition-all"
               title="Edit User"
@@ -269,7 +274,7 @@ export function UsersRoles() {
       }),
       roleColumnHelper.accessor("description", {
         header: "Description",
-        size: 500,
+        size: 400,
         cell: (info) => (
           <span className="text-muted-foreground text-[13px] leading-snug block truncate">
             {info.getValue()}
@@ -352,104 +357,38 @@ export function UsersRoles() {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-      {/* Tabs */}
-      <div className="flex items-center gap-1 border-b border-border pb-0 relative">
-        <button
-          onClick={() => setActiveTab("users")}
-          className={cn(
-            "px-6 py-3 text-sm font-semibold transition-all duration-300 relative z-10",
-            activeTab === "users"
-              ? "text-primary bg-primary/5"
-              : "text-muted-foreground hover:text-foreground hover:bg-white/5",
-          )}
-        >
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            Users
-          </div>
-          {activeTab === "users" && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary shadow-glow animate-in fade-in duration-300" />
-          )}
-        </button>
-        <button
-          onClick={() => setActiveTab("roles")}
-          className={cn(
-            "px-6 py-3 text-sm font-semibold transition-all duration-300 relative z-10",
-            activeTab === "roles"
-              ? "text-primary bg-primary/5"
-              : "text-muted-foreground hover:text-foreground hover:bg-white/5",
-          )}
-        >
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="h-4 w-4" />
-            Roles
-          </div>
-          {activeTab === "roles" && (
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary shadow-glow animate-in fade-in duration-300" />
-          )}
-        </button>
-      </div>
+      <CommonTabs value={activeTab} onValueChange={setActiveTab}>
+        <CommonTabsNav items={tabs} />
 
-      {activeTab === "users" ? (
-        <div className="space-y-4">
+        <CommonTabsContent value="users" className="space-y-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-              <SearchInput
+              <CommonSearchInput
                 placeholder="Search users..."
                 value={userSearch}
                 onChange={setUserSearch}
-                className="w-full sm:w-[260px]"
+                className="w-full sm:w-[400px]"
               />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    className={cn(
-                      "h-9 px-2.5 flex items-center justify-center gap-2 rounded-md border border-border bg-white/5 text-foreground hover:border-primary/50 hover:bg-primary/5 shadow-sm transition-all active:scale-95 whitespace-nowrap relative",
-                      roleFilter !== "all" &&
-                        "border-primary/50 text-primary bg-primary/5",
-                    )}
-                    title="Filter by Role"
-                  >
-                    <Filter className="h-4 w-4" />
-                    {roleFilter !== "all" && (
-                      <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-primary text-[8px] text-primary-foreground font-bold shadow-glow">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40"></span>
-                        1
-                      </span>
-                    )}
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="start"
-                  className="w-[200px] bg-background/95 backdrop-blur-md border-white/10"
-                >
-                  <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-muted-foreground/50">
-                    Filter by Role
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-white/5" />
-                  {roleOptions.map((role) => (
-                    <DropdownMenuItem
-                      key={role.value}
-                      onClick={() => setRoleFilter(role.value)}
-                      className="flex items-center justify-between cursor-pointer group"
-                    >
-                      <span
-                        className={cn(
-                          "text-sm transition-colors",
-                          roleFilter === role.value
-                            ? "text-primary font-medium"
-                            : "text-muted-foreground group-hover:text-foreground",
-                        )}
-                      >
-                        {role.label}
-                      </span>
-                      {roleFilter === role.value && (
-                        <Check className="h-4 w-4 text-primary" />
-                      )}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="relative">
+                <CommonDropdownMenu
+                  value={roleFilter}
+                  onValueChange={setRoleFilter}
+                  options={roleOptions}
+                  triggerIcon={Filter}
+                  menuLabel="Filter by Role"
+                  highlightActive={true}
+                  defaultValue="all"
+                  title="Filter by Role"
+                  contentWidth="w-[200px]"
+                  triggerClassName="px-2.5"
+                />
+                {roleFilter !== "all" && (
+                  <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-primary text-[8px] text-primary-foreground font-bold shadow-glow pointer-events-none">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40"></span>
+                    1
+                  </span>
+                )}
+              </div>
             </div>
             <CommonButton
               variant="outline"
@@ -462,20 +401,20 @@ export function UsersRoles() {
             </CommonButton>
           </div>
 
-          <CommonTable
-            table={usersTable}
-            noDataMessage="No users found."
-          />
-        </div>
-      ) : (
-        <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-500">
+          <CommonTable table={usersTable} noDataMessage="No users found." />
+        </CommonTabsContent>
+
+        <CommonTabsContent
+          value="roles"
+          className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-500"
+        >
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3 w-full sm:w-auto">
-              <SearchInput
+              <CommonSearchInput
                 placeholder="Search roles..."
                 value={roleSearch}
                 onChange={setRoleSearch}
-                className="w-full sm:w-[260px]"
+                className="w-full sm:w-[400px]"
               />
             </div>
             <CommonButton
@@ -489,12 +428,9 @@ export function UsersRoles() {
             </CommonButton>
           </div>
 
-          <CommonTable
-            table={rolesTable}
-            noDataMessage="No roles found."
-          />
-        </div>
-      )}
+          <CommonTable table={rolesTable} noDataMessage="No roles found." />
+        </CommonTabsContent>
+      </CommonTabs>
 
       <CommonDialog
         open={isAddUserModalOpen}
@@ -523,16 +459,22 @@ export function UsersRoles() {
       >
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Full Name</Label>
-            <CommonInput id="name" placeholder="Enter full name" />
+            <CommonInput
+              label="Full Name"
+              id="name"
+              placeholder="Enter full name"
+            />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="username">Username</Label>
-            <CommonInput id="username" placeholder="Enter username" />
+            <CommonInput
+              label="Username"
+              id="username"
+              placeholder="Enter username"
+            />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="role">Role</Label>
             <CommonSelect
+              label="Role"
               options={roleOptions.filter((opt) => opt.value !== "all")}
               value=""
               onValueChange={() => {}}
@@ -569,24 +511,24 @@ export function UsersRoles() {
       >
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="edit-name">Full Name</Label>
             <CommonInput
+              label="Full Name"
               id="edit-name"
               defaultValue={selectedUser?.name}
               placeholder="Enter full name"
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="edit-username">Username</Label>
             <CommonInput
+              label="Username"
               id="edit-username"
               defaultValue={selectedUser?.username}
               placeholder="Enter username"
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="edit-role">Role</Label>
             <CommonSelect
+              label="Role"
               options={roleOptions.filter((opt) => opt.value !== "all")}
               value={selectedUser?.role || ""}
               onValueChange={() => {}}
@@ -623,8 +565,11 @@ export function UsersRoles() {
       >
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="role-name">Role Name</Label>
-            <CommonInput id="role-name" placeholder="e.g. Lead Engineer" />
+            <CommonInput
+              label="Role Name"
+              id="role-name"
+              placeholder="e.g. Lead Engineer"
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="role-desc">Description</Label>

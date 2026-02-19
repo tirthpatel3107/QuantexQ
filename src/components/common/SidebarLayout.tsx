@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { useSidebarContext } from "@/context/SidebarContext";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import { CommonButton } from "./CommonButton";
+import { CommonTooltip } from "./CommonTooltip";
 
 export interface SidebarLayoutProps {
   /** Sidebar content (nav list). */
@@ -47,7 +48,7 @@ export function SidebarLayout({
     <div className="flex flex-1">
       <div
         className={cn(
-          "hidden lg:block fixed left-0 top-[66px] bottom-0 z-10 p-3 transition-all duration-300 ease-in-out",
+          "hidden lg:block fixed left-0 top-[68px] bottom-0 z-10 p-3 transition-all duration-300 ease-in-out",
           sidebarWidth,
         )}
       >
@@ -56,21 +57,27 @@ export function SidebarLayout({
           <div
             className={cn(
               "absolute z-20 transition-all duration-300 ease-in-out",
-              isCollapsed ? "top-[20px] left-1/2 -translate-x-1/2" : "top-4 right-4",
+              isCollapsed
+                ? "top-[20px] left-1/2 -translate-x-1/2"
+                : "top-4 right-4",
             )}
           >
-            <CommonButton
-              variant="ghost"
-              size="icon"
-              onClick={toggleSidebar}
-              className={`h-10 w-10 text-primary hover:bg-primary/20  ${isCollapsed ? "bg-white shadow-sm dark:bg-primary/10 " : ""}`}
+            <CommonTooltip
+              content={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
-              {isCollapsed ? (
-                <ChevronsRight className="h-5 w-5" />
-              ) : (
-                <ChevronsLeft className="h-5 w-5" />
-              )}
-            </CommonButton>
+              <CommonButton
+                variant="ghost"
+                size="icon"
+                onClick={toggleSidebar}
+                className={`h-10 w-10 text-primary  ${isCollapsed ? "bg-white shadow-sm dark:bg-primary/10 " : ""}`}
+              >
+                {isCollapsed ? (
+                  <ChevronsRight className="h-5 w-5" />
+                ) : (
+                  <ChevronsLeft className="h-5 w-5" />
+                )}
+              </CommonButton>
+            </CommonTooltip>
           </div>
 
           <ScrollArea className="flex-1 min-h-0">

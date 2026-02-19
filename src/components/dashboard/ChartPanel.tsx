@@ -4,7 +4,7 @@ import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CommonDialog } from "@/components/common";
+import { CommonDialog, CommonTooltip } from "@/components/common";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 
 interface ChartPanelProps {
@@ -153,13 +153,15 @@ export const ChartPanel = memo(function ChartPanel({
             <h3 className="panel-title">{title}</h3>
           </div>
           <div className="absolute right-2 top-1/2 -translate-y-1/2">
-            <button
-              className="h-8 w-8 rounded flex items-center justify-center text-muted-foreground hover:bg-accent hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              aria-label="Expand chart"
-              onClick={() => setOpen(true)}
-            >
-              <Maximize2 className="h-4 w-4" />
-            </button>
+            <CommonTooltip content="Expand chart">
+              <button
+                className="h-8 w-8 rounded flex items-center justify-center text-muted-foreground hover:bg-accent hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                aria-label="Expand chart"
+                onClick={() => setOpen(true)}
+              >
+                <Maximize2 className="h-4 w-4" />
+              </button>
+            </CommonTooltip>
           </div>
         </div>
 

@@ -24,7 +24,7 @@ export function MudPropertiesSidebar() {
           </div>
         </div>
       </PanelCard>
-      
+
       <PanelCard title="Preset Summary" className="h-auto">
         <div className="space-y-3 text-sm">
           {[
@@ -33,7 +33,10 @@ export function MudPropertiesSidebar() {
             { label: "PV", value: "30 cP" },
             { label: "Gel 10s/10m", value: "12/20" },
           ].map((row) => (
-            <div key={row.label} className="flex items-center justify-between gap-2">
+            <div
+              key={row.label}
+              className="flex items-center justify-between gap-2"
+            >
               <span className="text-muted-foreground">{row.label}</span>
               <span className="inline-flex items-center gap-1 font-medium text-success">
                 <Check className="h-4 w-4" />
@@ -43,7 +46,10 @@ export function MudPropertiesSidebar() {
           ))}
           <div className="pt-2 border-t border-border space-y-1">
             {["OW range", "Rheology range", "Temp correction"].map((label) => (
-              <div key={label} className="flex items-center justify-between gap-2">
+              <div
+                key={label}
+                className="flex items-center justify-between gap-2"
+              >
                 <span className="text-muted-foreground">{label}</span>
                 <span className="inline-flex items-center gap-1 text-success">
                   <Check className="h-4 w-4" />

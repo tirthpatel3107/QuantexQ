@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { useSimulation } from "@/hooks/useSimulation";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CommonDialog, CommonButton } from "@/components/common";
+import { CommonDialog, CommonButton, CommonTooltip } from "@/components/common";
 import type { VerticalChartMetric } from "@/types/chart";
 import { COLORS } from "@/constants/colors";
 import { useTheme } from "@/components/theme-provider";
@@ -43,34 +43,41 @@ const trendIcons = {
 /**
  * Renders a single metric value with its label and unit
  */
-const MetricDisplay = ({ 
-  label, 
-  value, 
-  unit, 
-  color, 
-  isLarge = false 
-}: { 
-  label: string; 
-  value: string | number; 
-  unit?: string; 
+const MetricDisplay = ({
+  label,
+  value,
+  unit,
+  color,
+  isLarge = false,
+}: {
+  label: string;
+  value: string | number;
+  unit?: string;
   color?: string;
   isLarge?: boolean;
 }) => (
   <div className="flex flex-col gap-1">
-    <span className={cn(
-      "font-bold uppercase tracking-wider text-muted-foreground",
-      isLarge ? "text-[11px]" : "text-[12px]"
-    )}>
+    <span
+      className={cn(
+        "font-bold uppercase tracking-wider text-muted-foreground",
+        isLarge ? "text-[11px]" : "text-[12px]",
+      )}
+    >
       {label}
     </span>
     <span
       className={cn(
         "font-bold tabular-nums leading-tight",
-        isLarge ? "text-[20px]" : "text-[15px]"
+        isLarge ? "text-[20px]" : "text-[15px]",
       )}
       style={{ color }}
     >
-      {value} <span className={cn("font-medium", isLarge ? "text-[14px]" : "text-[12px]")}>{unit}</span>
+      {value}{" "}
+      <span
+        className={cn("font-medium", isLarge ? "text-[14px]" : "text-[12px]")}
+      >
+        {unit}
+      </span>
     </span>
   </div>
 );
@@ -169,7 +176,14 @@ const ChartInner = memo(function ChartInner({
           const firstParam = params[0] as { axisValueLabel: string };
           const time = firstParam.axisValueLabel;
           let content = `<div class="font-bold mb-1.5" style="color:${tooltipText}; font-size: 13px;">${time}</div>`;
-          (params as Array<{ seriesName: string; value: number | string; color: string; seriesIndex: number }>).forEach((p) => {
+          (
+            params as Array<{
+              seriesName: string;
+              value: number | string;
+              color: string;
+              seriesIndex: number;
+            }>
+          ).forEach((p) => {
             const metric = metrics.find((m) => m.label === p.seriesName);
             const unit = metric?.unit ? ` ${metric.unit}` : "";
             const circleColor = badgeColors[p.seriesIndex] || p.color;
@@ -332,27 +346,29 @@ export const VerticalChartCard = memo(function VerticalChartCard({
       {/* Header: left = Icon + Title, right = main count */}
       <div className="panel-header flex items-center justify-between gap-2 min-w-0">
         <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
-          <CommonButton
-            variant="ghost"
-            size="icon"
-            onClick={(e) => {
-              e.stopPropagation();
-              setExpandOpen(true);
-            }}
-            className="flex-shrink-0 bg-white dark:bg-primary/15 text-primary hover:bg-primary/25"
-            aria-label="Expand chart"
-          >
-            {Icon && (
-              <Icon
-                className="h-4 w-4 transition-opacity group-hover:opacity-0"
+          <CommonTooltip content="Expand chart">
+            <CommonButton
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                setExpandOpen(true);
+              }}
+              className="flex-shrink-0 bg-white dark:bg-primary/15 text-primary hover:bg-primary/25"
+              aria-label="Expand chart"
+            >
+              {Icon && (
+                <Icon
+                  className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                  aria-hidden
+                />
+              )}
+              <Maximize2
+                className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
                 aria-hidden
               />
-            )}
-            <Maximize2
-              className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
-              aria-hidden
-            />
-          </CommonButton>
+            </CommonButton>
+          </CommonTooltip>
           <h3
             className="panel-title min-w-0 truncate text-foreground font-bold uppercase tracking-wide"
             title={title}

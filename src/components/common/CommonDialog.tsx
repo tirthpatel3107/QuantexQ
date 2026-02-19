@@ -59,22 +59,16 @@ export function CommonDialog({
             </DialogDescription>
           )}
         </DialogHeader>
-        
+
         {/* Consistent divider line after header */}
-        {showDivider && (
-          <div className="h-[1px] w-full bg-border" />
-        )}
-        
+        {showDivider && <div className="h-[1px] w-full bg-border" />}
+
         {/* Dialog Body */}
-        <div className="py-2">
-          {children}
-        </div>
+        <div className="py-2">{children}</div>
 
         {/* Dialog Footer */}
         {footer && (
-          <DialogFooter className="gap-2 sm:gap-0 mt-2">
-            {footer}
-          </DialogFooter>
+          <DialogFooter className="gap-2 sm:gap-0 mt-2">{footer}</DialogFooter>
         )}
       </DialogContent>
     </Dialog>

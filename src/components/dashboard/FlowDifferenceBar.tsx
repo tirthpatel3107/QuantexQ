@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useCallback,
-  useEffect,
-} from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { Minus, Plus } from "lucide-react";
 import {
   Popover,
@@ -18,6 +13,7 @@ import { DASHBOARD_LIMITS } from "@/constants/dashboard";
 import { SemiCircleGauge } from "./SemiCircleGauge";
 import { SegmentedBar } from "./SegmentedBar";
 import { FlowControlStack } from "./FlowControlStack";
+import { CommonTooltip } from "@/components/common";
 
 interface FlowDifferenceBarProps {
   /** Whether to show a skeleton loader */
@@ -47,23 +43,27 @@ export function FlowDifferenceBar({ showSkeleton }: FlowDifferenceBarProps) {
   const flowDiff = manualValue !== null ? manualValue : simFlowDiff;
 
   // Map limits to 0..100% for the slider position
-  const { MIN, MAX, SAFE_THRESHOLD, WARNING_THRESHOLD } = DASHBOARD_LIMITS.FLOW_DIFF;
+  const { MIN, MAX, SAFE_THRESHOLD, WARNING_THRESHOLD } =
+    DASHBOARD_LIMITS.FLOW_DIFF;
   const range = MAX - MIN;
   const position = Math.max(0, Math.min(100, ((flowDiff - MIN) / range) * 100));
 
   /**
    * Updates the flow difference value based on mouse position on the track
    */
-  const updateValueFromPos = useCallback((clientX: number) => {
-    if (!trackRef.current) return;
-    const rect = trackRef.current.getBoundingClientRect();
-    const percent = Math.max(
-      0,
-      Math.min(1, (clientX - rect.left) / rect.width),
-    );
-    const newVal = Math.round((percent * range + MIN) * 10) / 10;
-    setManualValue(newVal);
-  }, [MIN, range]);
+  const updateValueFromPos = useCallback(
+    (clientX: number) => {
+      if (!trackRef.current) return;
+      const rect = trackRef.current.getBoundingClientRect();
+      const percent = Math.max(
+        0,
+        Math.min(1, (clientX - rect.left) / rect.width),
+      );
+      const newVal = Math.round((percent * range + MIN) * 10) / 10;
+      setManualValue(newVal);
+    },
+    [MIN, range],
+  );
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);
@@ -138,19 +138,23 @@ export function FlowDifferenceBar({ showSkeleton }: FlowDifferenceBarProps) {
           {/* Left Section: Controls & Flow Meter */}
           <div className="flex-[1] flex h-full items-center gap-3 bg-transparent relative shrink-0">
             <PopoverTrigger asChild>
-              <button
-                type="button"
-                className="h-full w-5 flex items-center justify-center hover:bg-muted dark:hover:bg-white/5 transition-colors -ml-1 mr-1 rounded-sm border border-border dark:border-white/10"
-                aria-label="Toggle flow controls"
+              <CommonTooltip
+                content={open ? "Hide flow controls" : "Show flow controls"}
               >
-                <div className="p-5 rounded-r-md flex items-center justify-center">
-                  {open ? (
-                    <Minus className="h-3 w-3 text-muted-foreground" />
-                  ) : (
-                    <Plus className="h-3 w-3 text-muted-foreground" />
-                  )}
-                </div>
-              </button>
+                <button
+                  type="button"
+                  className="h-full w-5 flex items-center justify-center hover:bg-muted dark:hover:bg-white/5 transition-colors -ml-1 mr-1 rounded-sm border border-border dark:border-white/10"
+                  aria-label="Toggle flow controls"
+                >
+                  <div className="p-5 rounded-r-md flex items-center justify-center">
+                    {open ? (
+                      <Minus className="h-3 w-3 text-muted-foreground" />
+                    ) : (
+                      <Plus className="h-3 w-3 text-muted-foreground" />
+                    )}
+                  </div>
+                </button>
+              </CommonTooltip>
             </PopoverTrigger>
 
             <div className="flex items-center gap-4 w-full">

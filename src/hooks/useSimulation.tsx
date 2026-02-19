@@ -47,7 +47,7 @@ const SimulationContext = createContext<SimulationContextValue | null>(null);
 
 /**
  * Simulation Context Provider
- * 
+ *
  * Manages the real-time simulation state, including:
  * - Running status of the operations
  * - Accumulated chart data for all metrics
