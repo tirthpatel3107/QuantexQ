@@ -33,6 +33,7 @@ import {
   SidebarLayout,
   CommonButton,
   CommonDialog,
+  CommonTooltip,
 } from "@/components/common";
 import { SegmentedBar } from "@/components/dashboard/SegmentedBar";
 import { FlowControlStack } from "@/components/dashboard/FlowControlStack";
@@ -40,27 +41,28 @@ import { StatRow } from "@/components/dashboard/StatRow";
 
 function Sidebar() {
   const icons = [
-    Lock,
-    Database,
-    RotateCw,
-    Play,
-    Thermometer,
-    Triangle,
-    Triangle,
+    { icon: Lock, label: "Lock" },
+    { icon: Database, label: "Database" },
+    { icon: RotateCw, label: "Refresh" },
+    { icon: Play, label: "Play" },
+    { icon: Thermometer, label: "Temperature" },
+    { icon: Triangle, label: "Alert" },
+    { icon: Triangle, label: "Warning" },
   ];
 
   return (
     <aside className="w-20 bg-[#0a0f1a] flex flex-col shrink-0">
       {/* Icon Buttons */}
       <div className="flex-1 flex flex-col items-start py-4 gap-2">
-        {icons.map((Icon, i) => (
-          <CommonButton
-            key={i}
-            variant="ghost"
-            size="icon"
-            className="h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-            icon={Icon}
-          />
+        {icons.map((item, i) => (
+          <CommonTooltip key={i} content={item.label}>
+            <CommonButton
+              variant="ghost"
+              size="icon"
+              className="h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+              icon={item.icon}
+            />
+          </CommonTooltip>
         ))}
       </div>
     </aside>
@@ -282,7 +284,14 @@ function SimulatorChart({
           const time = firstParam.axisValueLabel;
           let content = `<div style="font-weight:600;margin-bottom:4px;color:${tooltipText};font-size:12px;">${time}</div>`;
 
-          (params as Array<{ seriesIndex: number; seriesName: string; color: string; value: string | number }>).forEach((p) => {
+          (
+            params as Array<{
+              seriesIndex: number;
+              seriesName: string;
+              color: string;
+              value: string | number;
+            }>
+          ).forEach((p) => {
             const idx = p.seriesIndex ?? 0;
             const label =
               seriesLabels?.[idx] ?? p.seriesName ?? `Series ${idx + 1}`;
@@ -634,24 +643,30 @@ export default function MpdSimulator() {
 
   const headerActions = (
     <div className="flex items-center gap-1">
-      <CommonButton
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8 text-muted-foreground hover:text-foreground"
-        icon={Ship}
-      />
-      <CommonButton
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8 text-muted-foreground hover:text-foreground"
-        icon={Monitor}
-      />
-      <CommonButton
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8 text-muted-foreground hover:text-foreground"
-        icon={LayoutTemplate}
-      />
+      <CommonTooltip content="Ship view">
+        <CommonButton
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-muted-foreground hover:text-foreground"
+          icon={Ship}
+        />
+      </CommonTooltip>
+      <CommonTooltip content="Monitor view">
+        <CommonButton
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-muted-foreground hover:text-foreground"
+          icon={Monitor}
+        />
+      </CommonTooltip>
+      <CommonTooltip content="Layout template">
+        <CommonButton
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-muted-foreground hover:text-foreground"
+          icon={LayoutTemplate}
+        />
+      </CommonTooltip>
     </div>
   );
 
@@ -700,22 +715,24 @@ export default function MpdSimulator() {
               <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
                 <div className="panel-header flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
-                    <CommonButton
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setExpandedCard("flow")}
-                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer hover:bg-primary/25"
-                      aria-label="Flow panel actions"
-                    >
-                      <Gauge
-                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
-                        aria-hidden
-                      />
-                      <Maximize2
-                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
-                        aria-hidden
-                      />
-                    </CommonButton>
+                    <CommonTooltip content="Expand flow panel">
+                      <CommonButton
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setExpandedCard("flow")}
+                        className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer hover:bg-primary/25"
+                        aria-label="Flow panel actions"
+                      >
+                        <Gauge
+                          className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                          aria-hidden
+                        />
+                        <Maximize2
+                          className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                          aria-hidden
+                        />
+                      </CommonButton>
+                    </CommonTooltip>
                     <span className="panel-title truncate">Flow</span>
                   </div>
                 </div>
@@ -830,21 +847,23 @@ export default function MpdSimulator() {
               <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
                 <div className="panel-header flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
-                    <button
-                      type="button"
-                      onClick={() => setExpandedCard("density")}
-                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
-                      aria-label="Density panel actions"
-                    >
-                      <Thermometer
-                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
-                        aria-hidden
-                      />
-                      <Maximize2
-                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
-                        aria-hidden
-                      />
-                    </button>
+                    <CommonTooltip content="Expand density panel">
+                      <button
+                        type="button"
+                        onClick={() => setExpandedCard("density")}
+                        className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                        aria-label="Density panel actions"
+                      >
+                        <Thermometer
+                          className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                          aria-hidden
+                        />
+                        <Maximize2
+                          className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                          aria-hidden
+                        />
+                      </button>
+                    </CommonTooltip>
                     <span className="panel-title truncate">Density</span>
                   </div>
                 </div>
@@ -936,21 +955,23 @@ export default function MpdSimulator() {
               <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
                 <div className="panel-header flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
-                    <button
-                      type="button"
-                      onClick={() => setExpandedCard("sbp")}
-                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
-                      aria-label="SBP Control panel actions"
-                    >
-                      <Gauge
-                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
-                        aria-hidden
-                      />
-                      <Maximize2
-                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
-                        aria-hidden
-                      />
-                    </button>
+                    <CommonTooltip content="Expand SBP control panel">
+                      <button
+                        type="button"
+                        onClick={() => setExpandedCard("sbp")}
+                        className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                        aria-label="SBP Control panel actions"
+                      >
+                        <Gauge
+                          className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                          aria-hidden
+                        />
+                        <Maximize2
+                          className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                          aria-hidden
+                        />
+                      </button>
+                    </CommonTooltip>
                     <span className="panel-title truncate">SBP Control</span>
                   </div>
                 </div>
@@ -1042,21 +1063,23 @@ export default function MpdSimulator() {
               <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
                 <div className="panel-header flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
-                    <button
-                      type="button"
-                      onClick={() => setExpandedCard("spp")}
-                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
-                      aria-label="SPP Control panel actions"
-                    >
-                      <Gauge
-                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
-                        aria-hidden
-                      />
-                      <Maximize2
-                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
-                        aria-hidden
-                      />
-                    </button>
+                    <CommonTooltip content="Expand SPP control panel">
+                      <button
+                        type="button"
+                        onClick={() => setExpandedCard("spp")}
+                        className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                        aria-label="SPP Control panel actions"
+                      >
+                        <Gauge
+                          className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                          aria-hidden
+                        />
+                        <Maximize2
+                          className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                          aria-hidden
+                        />
+                      </button>
+                    </CommonTooltip>
                     <span className="panel-title truncate">SPP Control</span>
                   </div>
                 </div>
@@ -1148,21 +1171,23 @@ export default function MpdSimulator() {
               <div className="group flex flex-col h-full bg-card rounded-lg border border-border overflow-hidden transition-all duration-200 hover:border-primary/60 hover:shadow-lg hover:-translate-y-[2px]">
                 <div className="panel-header flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
-                    <button
-                      type="button"
-                      onClick={() => setExpandedCard("well")}
-                      className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
-                      aria-label="Well panel actions"
-                    >
-                      <LayoutTemplate
-                        className="h-4 w-4 transition-opacity group-hover:opacity-0"
-                        aria-hidden
-                      />
-                      <Maximize2
-                        className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
-                        aria-hidden
-                      />
-                    </button>
+                    <CommonTooltip content="Expand well visualization panel">
+                      <button
+                        type="button"
+                        onClick={() => setExpandedCard("well")}
+                        className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary cursor-pointer focus:outline-none focus:bg-primary/25 focus:ring-2 focus:ring-primary/40 focus:ring-inset"
+                        aria-label="Well panel actions"
+                      >
+                        <LayoutTemplate
+                          className="h-4 w-4 transition-opacity group-hover:opacity-0"
+                          aria-hidden
+                        />
+                        <Maximize2
+                          className="absolute h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
+                          aria-hidden
+                        />
+                      </button>
+                    </CommonTooltip>
                     <span className="panel-title truncate">Well</span>
                   </div>
                 </div>

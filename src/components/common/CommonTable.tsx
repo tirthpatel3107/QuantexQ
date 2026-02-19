@@ -48,15 +48,21 @@ export function CommonTable<TData>({
 
   return (
     <div className={cn("space-y-4", className)}>
-      <div className={cn(
-        "relative overflow-hidden",
-        isLightTheme && !isDarkTheme && "bg-white dark:bg-transparent border border-border/60 shadow-sm"
-      )}>
+      <div
+        className={cn(
+          "relative overflow-hidden",
+          isLightTheme &&
+            !isDarkTheme &&
+            "bg-white dark:bg-transparent border border-border/60 shadow-sm",
+        )}
+      >
         <Table className="bg-transparent border-collapse table-fixed w-full">
-          <TableHeader className={cn(
-            "bg-muted/50 border-y border-border",
-            isLightTheme && !isDarkTheme && "bg-slate-50 border-y-slate-200"
-          )}>
+          <TableHeader
+            className={cn(
+              "bg-muted/50 border-y border-border",
+              isLightTheme && !isDarkTheme && "bg-slate-50 border-y-slate-200",
+            )}
+          >
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
@@ -112,7 +118,9 @@ export function CommonTable<TData>({
                   key={row.id}
                   className={cn(
                     "border-b border-border/40 hover:bg-primary/5 transition-all duration-300 group",
-                    isLightTheme && !isDarkTheme && "border-slate-100 hover:bg-slate-50/50"
+                    isLightTheme &&
+                      !isDarkTheme &&
+                      "border-slate-100 hover:bg-slate-50/50",
                   )}
                 >
                   {row.getVisibleCells().map((cell) => (

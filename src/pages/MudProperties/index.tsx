@@ -17,6 +17,7 @@ import {
   SearchInput,
   CommonButton,
   SidebarNav,
+  CommonTooltip,
 } from "@/components/common";
 
 import { MudPropertiesOverview } from "./sections/MudPropertiesOverview";
@@ -68,20 +69,26 @@ export default function MudProperties() {
 
   const headerActions = (
     <>
-      <CommonButton
-        variant="outline"
-        size="sm"
-        onClick={() => setDirty(false)}
-        icon={Save}
-      >
-        Save
-      </CommonButton>
-      <CommonButton variant="outline" size="sm" icon={RotateCcw}>
-        Discard
-      </CommonButton>
-      <CommonButton variant="outline" size="sm" icon={Download}>
-        Import
-      </CommonButton>
+      <CommonTooltip content="Save mud properties">
+        <CommonButton
+          variant="outline"
+          size="sm"
+          onClick={() => setDirty(false)}
+          icon={Save}
+        >
+          Save
+        </CommonButton>
+      </CommonTooltip>
+      <CommonTooltip content="Discard changes">
+        <CommonButton variant="outline" size="sm" icon={RotateCcw}>
+          Discard
+        </CommonButton>
+      </CommonTooltip>
+      <CommonTooltip content="Import mud properties">
+        <CommonButton variant="outline" size="sm" icon={Download}>
+          Import
+        </CommonButton>
+      </CommonTooltip>
     </>
   );
 
@@ -163,21 +170,31 @@ export default function MudProperties() {
                 onChange={setSearch}
               />
               <div className="flex items-center gap-2 flex-shrink-0">
-                <CommonButton variant="outline" size="sm" icon={Save}>
-                  Save
-                </CommonButton>
-                <CommonButton variant="outline" size="sm" icon={RotateCcw}>
-                  Discard
-                </CommonButton>
-                <CommonButton variant="outline" size="sm" icon={FolderOpen}>
-                  Load Preset
-                </CommonButton>
-                <CommonButton variant="outline" size="sm" icon={FolderPlus}>
-                  Save Preset
-                </CommonButton>
-                <CommonButton variant="outline" size="sm" icon={Download}>
-                  Export
-                </CommonButton>
+                <CommonTooltip content="Save mud properties">
+                  <CommonButton variant="outline" size="sm" icon={Save}>
+                    Save
+                  </CommonButton>
+                </CommonTooltip>
+                <CommonTooltip content="Discard changes">
+                  <CommonButton variant="outline" size="sm" icon={RotateCcw}>
+                    Discard
+                  </CommonButton>
+                </CommonTooltip>
+                <CommonTooltip content="Load preset configuration">
+                  <CommonButton variant="outline" size="sm" icon={FolderOpen}>
+                    Load Preset
+                  </CommonButton>
+                </CommonTooltip>
+                <CommonTooltip content="Save as preset">
+                  <CommonButton variant="outline" size="sm" icon={FolderPlus}>
+                    Save Preset
+                  </CommonButton>
+                </CommonTooltip>
+                <CommonTooltip content="Export mud properties">
+                  <CommonButton variant="outline" size="sm" icon={Download}>
+                    Export
+                  </CommonButton>
+                </CommonTooltip>
               </div>
             </div>
           </div>

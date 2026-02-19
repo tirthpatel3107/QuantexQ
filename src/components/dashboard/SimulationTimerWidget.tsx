@@ -2,7 +2,11 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { Square } from "lucide-react";
 import { useSimulation } from "@/hooks/useSimulation";
-import { CommonAlertDialog, CommonButton } from "@/components/common";
+import {
+  CommonAlertDialog,
+  CommonButton,
+  CommonTooltip,
+} from "@/components/common";
 
 import { SIMULATION_TIMER_STORAGE_KEY } from "@/constants/config";
 
@@ -123,13 +127,15 @@ export function SimulationTimerWidget({
       <span className="text-base font-bold tabular-nums text-foreground pointer-events-none">
         {formattedElapsed}
       </span>
-      <CommonButton
-        size="icon"
-        onClick={handleStopClick}
-        className="h-8 w-8 shrink-0 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
-        aria-label="Stop operation"
-        icon={Square}
-      />
+      <CommonTooltip content="Stop operation">
+        <CommonButton
+          size="icon"
+          onClick={handleStopClick}
+          className="h-8 w-8 shrink-0 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
+          aria-label="Stop operation"
+          icon={Square}
+        />
+      </CommonTooltip>
     </div>
   );
 

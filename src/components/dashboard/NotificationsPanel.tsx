@@ -1,7 +1,11 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { AlertTriangle, Info, CheckCircle, XCircle, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CommonAlertDialog, CommonButton } from "@/components/common";
+import {
+  CommonAlertDialog,
+  CommonButton,
+  CommonTooltip,
+} from "@/components/common";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -101,15 +105,20 @@ export const NotificationsPanel = memo(function NotificationsPanel({
       <div className="dashboard-panel h-full flex flex-col">
         <div className="panel-header">
           <h3 className="panel-title">Notifications</h3>
-          <CommonButton
-            variant="link"
-            size="sm"
-            className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={() => setClearAllOpen(true)}
+          <CommonTooltip
+            content="Clear all notifications"
             disabled={items.length === 0}
           >
-            Clear All
-          </CommonButton>
+            <CommonButton
+              variant="link"
+              size="sm"
+              className="h-auto p-0 text-xs text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => setClearAllOpen(true)}
+              disabled={items.length === 0}
+            >
+              Clear All
+            </CommonButton>
+          </CommonTooltip>
         </div>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -155,14 +164,16 @@ export const NotificationsPanel = memo(function NotificationsPanel({
                       {notification.message}
                     </p>
                   </div>
-                  <CommonButton
-                    variant="ghost"
-                    size="icon"
-                    className="shrink-0 h-5 w-5 rounded hover:bg-accent text-muted-foreground hover:text-foreground focus:ring-0"
-                    onClick={() => handleRequestRemove(notification.id)}
-                    aria-label="Remove notification"
-                    icon={X}
-                  />
+                  <CommonTooltip content="Remove notification">
+                    <CommonButton
+                      variant="ghost"
+                      size="icon"
+                      className="shrink-0 h-5 w-5 rounded hover:bg-accent text-muted-foreground hover:text-foreground focus:ring-0"
+                      onClick={() => handleRequestRemove(notification.id)}
+                      aria-label="Remove notification"
+                      icon={X}
+                    />
+                  </CommonTooltip>
                 </div>
               );
             })

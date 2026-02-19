@@ -15,6 +15,7 @@ import {
   SearchInput,
   CommonButton,
   SidebarNav,
+  CommonTooltip,
 } from "@/components/common";
 
 import { SettingsOverview } from "./sections/SettingsOverview";
@@ -48,15 +49,21 @@ export default function Settings() {
 
   const headerActions = (
     <>
-      <CommonButton variant="outline" size="sm" icon={Save}>
-        Save
-      </CommonButton>
-      <CommonButton variant="outline" size="sm" icon={RotateCcw}>
-        Discard
-      </CommonButton>
-      <CommonButton variant="outline" size="sm" icon={Upload}>
-        Export
-      </CommonButton>
+      <CommonTooltip content="Save settings">
+        <CommonButton variant="outline" size="sm" icon={Save}>
+          Save
+        </CommonButton>
+      </CommonTooltip>
+      <CommonTooltip content="Discard changes">
+        <CommonButton variant="outline" size="sm" icon={RotateCcw}>
+          Discard
+        </CommonButton>
+      </CommonTooltip>
+      <CommonTooltip content="Export settings">
+        <CommonButton variant="outline" size="sm" icon={Upload}>
+          Export
+        </CommonButton>
+      </CommonTooltip>
     </>
   );
 
@@ -150,15 +157,21 @@ export default function Settings() {
                 onChange={setSearch}
               />
               <div className="flex items-center gap-2 flex-shrink-0">
-                <CommonButton variant="outline" size="sm" icon={Save}>
-                  Save
-                </CommonButton>
-                <CommonButton variant="outline" size="sm" icon={RotateCcw}>
-                  Discard
-                </CommonButton>
-                <CommonButton variant="outline" size="sm" icon={Upload}>
-                  Export
-                </CommonButton>
+                <CommonTooltip content="Save settings">
+                  <CommonButton variant="outline" size="sm" icon={Save}>
+                    Save
+                  </CommonButton>
+                </CommonTooltip>
+                <CommonTooltip content="Discard changes">
+                  <CommonButton variant="outline" size="sm" icon={RotateCcw}>
+                    Discard
+                  </CommonButton>
+                </CommonTooltip>
+                <CommonTooltip content="Export settings">
+                  <CommonButton variant="outline" size="sm" icon={Upload}>
+                    Export
+                  </CommonButton>
+                </CommonTooltip>
               </div>
             </div>
           </div> */}

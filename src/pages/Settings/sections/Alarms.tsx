@@ -88,7 +88,9 @@ export function Alarms() {
   const [activeTab, setActiveTab] = useState("kick");
   const [sensorsData, setSensorsData] = useState(DEFAULT_SENSORS);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [selectedSensor, setSelectedSensor] = useState<SensorLimit | null>(null);
+  const [selectedSensor, setSelectedSensor] = useState<SensorLimit | null>(
+    null,
+  );
 
   const columns = useMemo(
     () => [
@@ -405,7 +407,7 @@ export function Alarms() {
         onAction={() => {
           if (selectedSensor) {
             setSensorsData((prev) =>
-              prev.filter((item) => item.id !== selectedSensor.id)
+              prev.filter((item) => item.id !== selectedSensor.id),
             );
           }
           setIsDeleteConfirmOpen(false);

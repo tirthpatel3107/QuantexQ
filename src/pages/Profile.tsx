@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { PageLayout, CommonAlertDialog, CommonButton, PageLoader } from "@/components/common";
+import {
+  PageLayout,
+  CommonAlertDialog,
+  CommonButton,
+  PageLoader,
+} from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -98,21 +103,21 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-                <div className="flex gap-3">
-                  <CommonButton
-                    variant="outline"
-                    className="border-primary/20 text-primary hover:bg-primary/5 dark:bg-black/20"
-                    onClick={() => setMaintenanceOpen("profile")}
-                  >
-                    Edit Profile
-                  </CommonButton>
-                  <CommonButton
-                    className="bg-primary text-primary-foreground hover:bg-primary/95 shadow-md"
-                    onClick={() => setMaintenanceOpen("access")}
-                  >
-                    Manage Access
-                  </CommonButton>
-                </div>
+              <div className="flex gap-3">
+                <CommonButton
+                  variant="outline"
+                  className="border-primary/20 text-primary hover:bg-primary/5 dark:bg-black/20"
+                  onClick={() => setMaintenanceOpen("profile")}
+                >
+                  Edit Profile
+                </CommonButton>
+                <CommonButton
+                  className="bg-primary text-primary-foreground hover:bg-primary/95 shadow-md"
+                  onClick={() => setMaintenanceOpen("access")}
+                >
+                  Manage Access
+                </CommonButton>
+              </div>
             </CardContent>
           </Card>
 

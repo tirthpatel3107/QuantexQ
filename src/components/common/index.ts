@@ -22,3 +22,4 @@ export {
   CommonTabsNav,
 } from "./CommonTabs";
 export { CommonCheckbox } from "./CommonCheckbox";
+export { CommonTooltip } from "./CommonTooltip";

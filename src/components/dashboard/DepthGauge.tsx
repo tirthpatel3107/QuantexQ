@@ -153,10 +153,10 @@ export const DepthGauge = memo(function DepthGauge({
         {/* Key Metrics Summary */}
         <div className="grid grid-cols-1 gap-3 mt-4">
           <DetailRow label="BIT DEPTH" value={bitDepth} unit="ft" />
-          <DetailRow 
-            label="REMAINING" 
-            value={targetDepth - currentDepth} 
-            unit="ft" 
+          <DetailRow
+            label="REMAINING"
+            value={targetDepth - currentDepth}
+            unit="ft"
             valueClassName="text-warning"
           />
         </div>
@@ -168,15 +168,15 @@ export const DepthGauge = memo(function DepthGauge({
 /**
  * Subcomponent for displaying a labeled value row
  */
-const DetailRow = ({ 
-  label, 
-  value, 
-  unit, 
-  valueClassName 
-}: { 
-  label: string; 
-  value: number; 
-  unit: string; 
+const DetailRow = ({
+  label,
+  value,
+  unit,
+  valueClassName,
+}: {
+  label: string;
+  value: number;
+  unit: string;
   valueClassName?: string;
 }) => (
   <div className="flex justify-between items-baseline">
@@ -184,7 +184,10 @@ const DetailRow = ({
       {label}
     </div>
     <div className={cn("text-[14px] font-bold tabular-nums", valueClassName)}>
-      {value.toLocaleString()} <span className="text-[11px] font-medium text-muted-foreground ml-0.5">{unit}</span>
+      {value.toLocaleString()}{" "}
+      <span className="text-[11px] font-medium text-muted-foreground ml-0.5">
+        {unit}
+      </span>
     </div>
   </div>
 );

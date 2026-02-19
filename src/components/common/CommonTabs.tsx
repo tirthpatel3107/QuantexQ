@@ -13,8 +13,9 @@ export function CommonTabs({ className, ...props }: CommonTabsProps) {
   return <BaseTabs className={className} {...props} />;
 }
 
-export type CommonTabsListProps =
-  React.ComponentPropsWithoutRef<typeof BaseTabsList>;
+export type CommonTabsListProps = React.ComponentPropsWithoutRef<
+  typeof BaseTabsList
+>;
 
 export function CommonTabsList({ className, ...props }: CommonTabsListProps) {
   return (
@@ -28,8 +29,9 @@ export function CommonTabsList({ className, ...props }: CommonTabsListProps) {
   );
 }
 
-export type CommonTabsTriggerProps =
-  React.ComponentPropsWithoutRef<typeof BaseTabsTrigger>;
+export type CommonTabsTriggerProps = React.ComponentPropsWithoutRef<
+  typeof BaseTabsTrigger
+>;
 
 export function CommonTabsTrigger({
   className,
@@ -52,8 +54,9 @@ export function CommonTabsTrigger({
   );
 }
 
-export type CommonTabsContentProps =
-  React.ComponentPropsWithoutRef<typeof BaseTabsContent>;
+export type CommonTabsContentProps = React.ComponentPropsWithoutRef<
+  typeof BaseTabsContent
+>;
 
 export function CommonTabsContent({
   className,
@@ -61,7 +64,10 @@ export function CommonTabsContent({
 }: CommonTabsContentProps) {
   return (
     <BaseTabsContent
-      className={cn("mt-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0", className)}
+      className={cn(
+        "mt-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0",
+        className,
+      )}
       {...props}
     />
   );
@@ -85,9 +91,17 @@ export function CommonTabsNav({ items, className }: CommonTabsNavProps) {
       {items.map((item) => {
         const Icon = item.icon;
         return (
-          <CommonTabsTrigger key={item.value} value={item.value} className={item.className}>
+          <CommonTabsTrigger
+            key={item.value}
+            value={item.value}
+            className={item.className}
+          >
             {Icon && <Icon className="h-4 w-4" />}
-            {typeof item.label === "string" ? <span>{item.label}</span> : item.label}
+            {typeof item.label === "string" ? (
+              <span>{item.label}</span>
+            ) : (
+              item.label
+            )}
           </CommonTabsTrigger>
         );
       })}

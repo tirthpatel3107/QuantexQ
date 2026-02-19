@@ -1,4 +1,16 @@
-import { Layers, Clock, Radio, AlertTriangle, Network, Gauge, Droplets, Monitor, Users, Info, Settings as SettingsIcon } from "lucide-react";
+import {
+  Layers,
+  Clock,
+  Radio,
+  AlertTriangle,
+  Network,
+  Gauge,
+  Droplets,
+  Monitor,
+  Users,
+  Info,
+  Settings as SettingsIcon,
+} from "lucide-react";
 
 export const SETTINGS_NAV = [
   { id: "setting", label: "Settings", icon: SettingsIcon, isOverview: true },
@@ -16,11 +28,48 @@ export const SETTINGS_NAV = [
 ];
 
 export const CATEGORY_CARDS = [
-  { id: "units", title: "Units", description: "Unit system for depth, pressure, flow, density, temperature.", icon: Layers },
-  { id: "data-time", title: "Data & Time", description: "Timezone, format, sampling rate, data source.", icon: Clock },
-  { id: "ui", title: "UI & Display", description: "Themes, chart/animation style, density, layout options.", icon: Monitor },
-  { id: "signals", title: "Signals / Tags", description: "Tag mapping to WITS / EDR systems, scaling, validation status.", icon: Radio },
-  { id: "alarms", title: "Alarms & Limits", description: "Thresholds, alarm logic, notification options for kick/loss, SPP/SPP/etc.", icon: AlertTriangle },
-  { id: "auto-control", title: "Auto Display", description: "Choke configs, response profiles, main/aux pump logic.", icon: Network },
-  { id: "choke-pumps", title: "Chokes & Pumps", description: "Choke configs, response profiles.", icon: Gauge },
+  {
+    id: "units",
+    title: "Units",
+    description: "Unit system for depth, pressure, flow, density, temperature.",
+    icon: Layers,
+  },
+  {
+    id: "data-time",
+    title: "Data & Time",
+    description: "Timezone, format, sampling rate, data source.",
+    icon: Clock,
+  },
+  {
+    id: "ui",
+    title: "UI & Display",
+    description: "Themes, chart/animation style, density, layout options.",
+    icon: Monitor,
+  },
+  {
+    id: "signals",
+    title: "Signals / Tags",
+    description:
+      "Tag mapping to WITS / EDR systems, scaling, validation status.",
+    icon: Radio,
+  },
+  {
+    id: "alarms",
+    title: "Alarms & Limits",
+    description:
+      "Thresholds, alarm logic, notification options for kick/loss, SPP/SPP/etc.",
+    icon: AlertTriangle,
+  },
+  {
+    id: "auto-control",
+    title: "Auto Display",
+    description: "Choke configs, response profiles, main/aux pump logic.",
+    icon: Network,
+  },
+  {
+    id: "choke-pumps",
+    title: "Chokes & Pumps",
+    description: "Choke configs, response profiles.",
+    icon: Gauge,
+  },
 ];

@@ -14,7 +14,9 @@ export function DaqOverview() {
           title={card.title}
           description={card.description}
           icon={card.icon}
-          onClick={() => navigate(`${ROUTES.DAQ}/${card.id.replace("ov-", "")}`)}
+          onClick={() =>
+            navigate(`${ROUTES.DAQ}/${card.id.replace("ov-", "")}`)
+          }
         />
       ))}
     </div>

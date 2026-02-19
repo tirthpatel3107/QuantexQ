@@ -8,6 +8,7 @@ import {
   PageHeaderBar,
   CommonButton,
   SidebarNav,
+  CommonTooltip,
 } from "@/components/common";
 
 import { NETWORK_NAV } from "./constants";
@@ -25,15 +26,21 @@ export default function Network() {
 
   const headerActions = (
     <>
-      <CommonButton variant="outline" size="sm" icon={Save}>
-        Save
-      </CommonButton>
-      <CommonButton variant="outline" size="sm" icon={RotateCcw}>
-        Discard
-      </CommonButton>
-      <CommonButton variant="outline" size="sm" icon={Upload}>
-        Import
-      </CommonButton>
+      <CommonTooltip content="Save network settings">
+        <CommonButton variant="outline" size="sm" icon={Save}>
+          Save
+        </CommonButton>
+      </CommonTooltip>
+      <CommonTooltip content="Discard changes">
+        <CommonButton variant="outline" size="sm" icon={RotateCcw}>
+          Discard
+        </CommonButton>
+      </CommonTooltip>
+      <CommonTooltip content="Import network configuration">
+        <CommonButton variant="outline" size="sm" icon={Upload}>
+          Import
+        </CommonButton>
+      </CommonTooltip>
     </>
   );
 

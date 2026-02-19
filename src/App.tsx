@@ -45,7 +45,10 @@ const App = () => (
                     path={`${ROUTES.MUD_PROPERTIES}/:section?`}
                     element={<MudProperties />}
                   />
-                  <Route path={ROUTES.MPD_SIMULATOR} element={<MpdSimulator />} />
+                  <Route
+                    path={ROUTES.MPD_SIMULATOR}
+                    element={<MpdSimulator />}
+                  />
                   <Route
                     path={`${ROUTES.SETTINGS}/:section?`}
                     element={<Settings />}
