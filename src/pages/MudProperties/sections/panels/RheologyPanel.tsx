@@ -1,7 +1,11 @@
 import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { Switch } from "@/components/ui/switch";
-import { RestoreDefaultsButton, LabeledInputWithUnit, CommonInput } from "@/components/common";
+import {
+  RestoreDefaultsButton,
+  LabeledInputWithUnit,
+  CommonInput,
+} from "@/components/common";
 import { FluidData } from "@/types/mud";
 
 interface RheologyPanelProps {
@@ -51,8 +55,8 @@ export function RheologyPanel({ fluid, setFluid }: RheologyPanelProps) {
           unit="lb/100ft²"
         />
         <div className="space-y-2 min-w-0">
-          <Label className="h-5 flex items-center text-sm">Gel 10m</Label>
           <CommonInput
+            label="Gel 10m"
             value={fluid.gel10m}
             onChange={(e) =>
               setFluid((f) => ({

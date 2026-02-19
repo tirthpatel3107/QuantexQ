@@ -1,4 +1,4 @@
-import { Undo2 } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -32,12 +32,16 @@ export function RestoreDefaultsButton({
           size={size}
           onClick={onClick}
           aria-label={ariaLabel}
-          className="bg-white dark:bg-transparent hover:bg-white/90 dark:hover:bg-accent"
+          className="group relative bg-white dark:bg-transparent hover:bg-primary/10 dark:hover:bg-primary/10 hover:text-primary transition-all duration-200 border border-transparent hover:border-primary/20"
         >
-          <Undo2 className="h-4 w-4" />
+          {/* Animated glow ring on hover */}
+          <span className="absolute inset-0 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-primary/5 blur-sm pointer-events-none" />
+          <RotateCcw
+            className="h-[15px] w-[15px] text-muted-foreground group-hover:text-primary transition-all duration-300 group-hover:scale-110"
+          />
         </Button>
       </TooltipTrigger>
-      <TooltipContent>
+      <TooltipContent side="bottom" className="text-xs">
         <p>Restore defaults</p>
       </TooltipContent>
     </Tooltip>

@@ -35,7 +35,7 @@ const PanelCard = React.forwardRef<HTMLDivElement, PanelCardProps>(
           </CardTitle>
           {headerAction}
         </CardHeader>
-        <hr className="mt-3 mb-4" />
+        <hr className="mt-3 mb-[25px]" />
         <CardContent className={cn("p-0", contentClassName)}>
           {children}
         </CardContent>

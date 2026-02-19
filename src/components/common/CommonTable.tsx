@@ -1,7 +1,4 @@
-import {
-  flexRender,
-  type Table as TanstackTable,
-} from "@tanstack/react-table";
+import { flexRender, type Table as TanstackTable } from "@tanstack/react-table";
 import {
   ChevronDown,
   ChevronUp,
@@ -26,6 +23,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/components/theme-provider";
 
 interface CommonTableProps<TData> {
   table: TanstackTable<TData>;
@@ -33,6 +31,7 @@ interface CommonTableProps<TData> {
   className?: string;
   showPagination?: boolean;
   pageSizeOptions?: number[];
+  isLightTheme?: boolean;
 }
 
 export function CommonTable<TData>({
@@ -41,25 +40,34 @@ export function CommonTable<TData>({
   className,
   showPagination = true,
   pageSizeOptions = [5, 10, 20, 50],
+  isLightTheme = false,
 }: CommonTableProps<TData>) {
   const paginationState = table.getState().pagination;
+  const { theme, setTheme } = useTheme();
+  const isDarkTheme = theme === "dark" ? true : false;
 
   return (
     <div className={cn("space-y-4", className)}>
-      <div className="relative overflow-hidden">
+      <div className={cn(
+        "relative overflow-hidden",
+        isLightTheme && !isDarkTheme && "bg-white dark:bg-transparent border border-border/60 shadow-sm"
+      )}>
         <Table className="bg-transparent border-collapse table-fixed w-full">
-          <TableHeader className="bg-muted/50 border-y border-border">
+          <TableHeader className={cn(
+            "bg-muted/50 border-y border-border",
+            isLightTheme && !isDarkTheme && "bg-slate-50 border-y-slate-200"
+          )}>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
                 className="hover:bg-transparent border-none"
               >
-                {headerGroup.headers.map((header) => (
+                {headerGroup.headers.map((header, index) => (
                   <TableHead
                     key={header.id}
                     style={{ width: header.column.getSize() }}
                     className={cn(
-                      "text-[10px] uppercase tracking-widest font-bold py-3 text-muted-foreground",
+                      "text-[12px] uppercase tracking-widest font-bold py-3 text-muted-foreground",
                     )}
                   >
                     {header.isPlaceholder ? null : (
@@ -68,6 +76,8 @@ export function CommonTable<TData>({
                           header.column.getCanSort() &&
                             "flex items-center gap-2 cursor-pointer group hover:text-foreground transition-colors select-none",
                           !header.column.getCanSort() && "flex items-center",
+                          index === headerGroup.headers.length - 1 &&
+                            "justify-end",
                         )}
                         onClick={header.column.getToggleSortingHandler()}
                       >
@@ -100,7 +110,10 @@ export function CommonTable<TData>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="border-b border-border/40 hover:bg-primary/5 transition-all duration-300 group"
+                  className={cn(
+                    "border-b border-border/40 hover:bg-primary/5 transition-all duration-300 group",
+                    isLightTheme && !isDarkTheme && "border-slate-100 hover:bg-slate-50/50"
+                  )}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
@@ -133,7 +146,7 @@ export function CommonTable<TData>({
         </Table>
       </div>
 
-      {showPagination && (
+      {table.getRowModel().rows.length > 0 && showPagination && (
         <div className="py-6 flex items-center justify-between">
           <div className="flex-1 flex">
             <DropdownMenu>

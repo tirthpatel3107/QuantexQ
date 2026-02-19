@@ -47,7 +47,7 @@ export function SidebarLayout({
     <div className="flex flex-1">
       <div
         className={cn(
-          "hidden lg:block fixed left-0 top-[66px] bottom-0 z-10 p-3 transition-all duration-300 ease-in-out",
+          "hidden lg:block fixed left-0 top-[68px] bottom-0 z-10 p-3 transition-all duration-300 ease-in-out",
           sidebarWidth,
         )}
       >
@@ -63,7 +63,7 @@ export function SidebarLayout({
               variant="ghost"
               size="icon"
               onClick={toggleSidebar}
-              className={`h-10 w-10 text-primary hover:bg-primary/20  ${isCollapsed ? "bg-white shadow-sm dark:bg-primary/10 " : ""}`}
+              className={`h-10 w-10 text-primary  ${isCollapsed ? "bg-white shadow-sm dark:bg-primary/10 " : ""}`}
             >
               {isCollapsed ? (
                 <ChevronsRight className="h-5 w-5" />

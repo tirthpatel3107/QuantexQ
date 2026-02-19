@@ -13,8 +13,8 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
     <div className="grid grid-cols-1 max-w-2xl gap-4 mb-4">
       <PanelCard title="Calibration" headerAction={<RestoreDefaultsButton />}>
         <div className="grid grid-cols-[140px_1fr] gap-3 items-center">
-          <Label className="text-xs text-muted-foreground text-left">Viscometer cal. date</Label>
           <CommonInput
+            label="Viscometer cal. date"
             value={fluid.viscometerCalDate}
             onChange={(e) =>
               setFluid((f) => ({
@@ -25,9 +25,9 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
             placeholder="—"
             type="date"
           />
-          
-          <Label className="text-xs text-muted-foreground text-left">Density cal. date</Label>
+
           <CommonInput
+            label="Density cal. date"
             value={fluid.densityCalDate}
             onChange={(e) =>
               setFluid((f) => ({
@@ -38,9 +38,9 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
             placeholder="—"
             type="date"
           />
-          
-          <Label className="text-xs text-muted-foreground text-left">Temp. sensor offset</Label>
+
           <CommonInput
+            label="Temp. sensor offset"
             value={fluid.tempSensorOffset}
             onChange={(e) =>
               setFluid((f) => ({

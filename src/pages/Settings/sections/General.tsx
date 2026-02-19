@@ -1,7 +1,11 @@
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { RestoreDefaultsButton, CommonSelect, CommonInput } from "@/components/common";
+import {
+  RestoreDefaultsButton,
+  CommonSelect,
+  CommonInput,
+} from "@/components/common";
 import { GeneralSettingsData } from "@/types/settings";
 
 interface GeneralSettingsProps {
@@ -36,71 +40,69 @@ export function GeneralSettings({
     <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3 mb-3">
       <PanelCard title="Project / Well Context">
         <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
-          <div className="space-y-2">
-            <Label>Default Well Name</Label>
-            <CommonInput
-              value={general.defaultWellName}
-              onChange={(e) =>
-                setGeneral((g) => ({
-                  ...g,
-                  defaultWellName: e.target.value,
-                }))
-              }
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Default Rig name</Label>
-            <CommonSelect
-              options={rigOptions}
-              value={general.defaultRigName}
-              onValueChange={(v) =>
-                setGeneral((g) => ({ ...g, defaultRigName: v }))
-              }
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Default Scenario</Label>
-            <CommonSelect
-              options={scenarioOptions}
-              value={general.defaultScenario}
-              onValueChange={(v) =>
-                setGeneral((g) => ({ ...g, defaultScenario: v }))
-              }
-            />
-          </div>
-          <div className="space-y-2 ">
-            <Label>Startup Screen</Label>
-            <CommonSelect
-              options={screenOptions}
-              value={general.startupScreen1}
-              onValueChange={(v) =>
-                setGeneral((g) => ({
-                  ...g,
-                  startupScreen1: v,
-                  startupScreen2: v,
-                }))
-              }
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Startup Screen (secondary)</Label>
-            <CommonSelect
-              options={screenOptions}
-              value={general.startupScreen2}
-              onValueChange={(v) =>
-                setGeneral((g) => ({ ...g, startupScreen2: v }))
-              }
-            />
-          </div>
+          <CommonInput
+            label="Default Well Name"
+            value={general.defaultWellName}
+            onChange={(e) =>
+              setGeneral((g) => ({
+                ...g,
+                defaultWellName: e.target.value,
+              }))
+            }
+          />
+
+          <CommonSelect
+            label="Default Rig name"
+            options={rigOptions}
+            value={general.defaultRigName}
+            onValueChange={(v) =>
+              setGeneral((g) => ({ ...g, defaultRigName: v }))
+            }
+          />
+
+          <CommonSelect
+            label="Default Scenario"
+            options={scenarioOptions}
+            value={general.defaultScenario}
+            onValueChange={(v) =>
+              setGeneral((g) => ({ ...g, defaultScenario: v }))
+            }
+          />
+
+          <CommonSelect
+            label="Startup Screen"
+            options={screenOptions}
+            value={general.startupScreen1}
+            onValueChange={(v) =>
+              setGeneral((g) => ({
+                ...g,
+                startupScreen1: v,
+                startupScreen2: v,
+              }))
+            }
+          />
+
+          <CommonSelect
+            label="Startup Screen (secondary)"
+            options={screenOptions}
+            value={general.startupScreen2}
+            onValueChange={(v) =>
+              setGeneral((g) => ({ ...g, startupScreen2: v }))
+            }
+          />
         </div>
       </PanelCard>
 
-      <PanelCard title="Safety" headerAction={<RestoreDefaultsButton size="sm" />}>
+      <PanelCard
+        title="Safety"
+        headerAction={<RestoreDefaultsButton size="sm" />}
+      >
         <div className="flex items-center justify-between gap-3">
           <div className="space-y-0.5 min-w-0 flex-1 pr-2">
             <Label htmlFor="safety-confirm">Enable safety confirmations</Label>
             <p className="text-xs text-muted-foreground">
-              Confirmations for Auto Control ON, PRC ON, Mode change, and Import settings.
+              Confirmations for Auto Control ON, PRC ON, Mode change, and Import
+              settings.
             </p>
           </div>
           <Switch

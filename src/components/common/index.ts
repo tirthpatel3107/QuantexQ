@@ -14,3 +14,11 @@ export { CommonTable } from "./CommonTable";
 export { CommonDialog } from "./CommonDialog";
 export { SidebarNav } from "./SidebarNav";
 export type { SidebarNavItem } from "./SidebarNav";
+export {
+  CommonTabs,
+  CommonTabsList,
+  CommonTabsTrigger,
+  CommonTabsContent,
+  CommonTabsNav,
+} from "./CommonTabs";
+export { CommonCheckbox } from "./CommonCheckbox";

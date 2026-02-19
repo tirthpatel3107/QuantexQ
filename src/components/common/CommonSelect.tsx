@@ -15,6 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
 
 export interface CommonSelectOption {
   label: string;
@@ -33,6 +34,7 @@ export interface CommonSelectProps {
   className?: string;
   triggerClassName?: string;
   disabled?: boolean;
+  label?: string;
 }
 
 export function CommonSelect({
@@ -45,16 +47,18 @@ export function CommonSelect({
   className,
   triggerClassName,
   disabled = false,
+  label,
 }: CommonSelectProps) {
   const [open, setOpen] = React.useState(false);
 
   const selectedOption = React.useMemo(
     () => options.find((option) => option.value === value),
-    [options, value]
+    [options, value],
   );
 
   return (
-    <div className={cn("w-full", className)}>
+    <div className={cn("w-full mb-5", className)}>
+      {label && <Label className="ml-[3px]">{label}</Label>}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -62,9 +66,9 @@ export function CommonSelect({
             role="combobox"
             aria-expanded={open}
             className={cn(
-              "w-full justify-between bg-background font-normal border-border/50 hover:border-primary/30 transition-all duration-200",
+              "w-full justify-between bg-background font-normal border-border/50 hover:border-primary/30 transition-all duration-200 ml-0 mt-2",
               !value && "text-muted-foreground",
-              triggerClassName
+              triggerClassName,
             )}
             disabled={disabled}
           >
@@ -79,10 +83,13 @@ export function CommonSelect({
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full p-0 border-border/50 shadow-2xl" align="start">
+        <PopoverContent
+          className="w-full p-0 border-border/50 shadow-2xl"
+          align="start"
+        >
           <Command className="bg-popover">
-            <CommandInput 
-              placeholder={searchPlaceholder} 
+            <CommandInput
+              placeholder={searchPlaceholder}
               className="h-10 border-none bg-transparent"
             />
             <CommandList className="max-h-[300px] overflow-y-auto custom-scrollbar">
@@ -108,7 +115,9 @@ export function CommonSelect({
                       <Check
                         className={cn(
                           "ml-auto h-4 w-4 transition-all",
-                          value === option.value ? "opacity-100 scale-100" : "opacity-0 scale-50"
+                          value === option.value
+                            ? "opacity-100 scale-100"
+                            : "opacity-0 scale-50",
                         )}
                       />
                     </div>
