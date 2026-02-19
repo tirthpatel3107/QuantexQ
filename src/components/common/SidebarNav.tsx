@@ -33,7 +33,10 @@ export function SidebarNav({
         return (
           <div key={item.id}>
             <button
-              onClick={() => navigate(`${baseRoute}/${item.id}`)}
+              onClick={() =>
+                !["signals"].includes(item.id) &&
+                navigate(`${baseRoute}/${item.id}`)
+              }
               title={isCollapsed ? item.label : ""}
               className={cn(
                 "w-full flex items-center gap-3 rounded-md transition-all duration-200 border-0 shadow-none text-left overflow-hidden",

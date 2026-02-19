@@ -10,7 +10,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ROUTES } from "@/constants/routes";
 import { THEME_STORAGE_KEY } from "@/constants/config";
-import MpdSimulator from "./pages/MpdSimulator";
 
 const Index = lazy(() => import("./pages/Index"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -44,10 +43,6 @@ const App = () => (
                   <Route
                     path={`${ROUTES.MUD_PROPERTIES}/:section?`}
                     element={<MudProperties />}
-                  />
-                  <Route
-                    path={ROUTES.MPD_SIMULATOR}
-                    element={<MpdSimulator />}
                   />
                   <Route
                     path={`${ROUTES.SETTINGS}/:section?`}

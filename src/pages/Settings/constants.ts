@@ -17,7 +17,7 @@ export const SETTINGS_NAV = [
   { id: "general", label: "General", icon: SettingsIcon },
   { id: "units", label: "Units", icon: Layers },
   { id: "data-time", label: "Data & Time", icon: Clock },
-  { id: "setting", label: "Signals / Tags", icon: Radio }, //signals
+  { id: "signals", label: "Signals / Tags", icon: Radio },
   { id: "alarms", label: "Alarms & Limits", icon: AlertTriangle },
   { id: "auto-control", label: "Auto Control", icon: Network },
   { id: "choke-pumps", label: "Choke & Pumps", icon: Gauge },

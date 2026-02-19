@@ -13,11 +13,6 @@ export const PageLoader: React.FC<PageLoaderProps> = ({ className }) => {
         className,
       )}
     >
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px] animate-pulse [animation-delay:1s]" />
-      </div>
-
       <div className="relative flex items-center justify-center">
         {/* Decorative Rings */}
         <div className="absolute h-48 w-48 rounded-full border border-primary/5 animate-[ping_3s_linear_infinite]" />
