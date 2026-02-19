@@ -23,5 +23,6 @@ export {
 } from "./CommonTabs";
 export { CommonCheckbox } from "./CommonCheckbox";
 export { CommonTooltip } from "./CommonTooltip";
+export { CommonToggle } from "./CommonToggle";
 export { CommonDropdownMenu } from "./CommonDropdownMenu";
 export type { CommonDropdownOption } from "./CommonDropdownMenu";

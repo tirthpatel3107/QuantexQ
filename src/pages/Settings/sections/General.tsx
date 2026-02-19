@@ -1,10 +1,9 @@
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   RestoreDefaultsButton,
   CommonSelect,
   CommonInput,
+  CommonToggle,
 } from "@/components/common";
 import { GeneralSettingsData } from "@/types/settings";
 
@@ -97,21 +96,13 @@ export function GeneralSettings({
         title="Safety"
         headerAction={<RestoreDefaultsButton size="sm" />}
       >
-        <div className="flex items-center justify-between gap-3">
-          <div className="space-y-0.5 min-w-0 flex-1 pr-2">
-            <Label htmlFor="safety-confirm">Enable safety confirmations</Label>
-            <p className="text-xs text-muted-foreground">
-              Confirmations for Auto Control ON, PRC ON, Mode change, and Import
-              settings.
-            </p>
-          </div>
-          <Switch
-            id="safety-confirm"
-            checked={safetyConfirmations}
-            onCheckedChange={setSafetyConfirmations}
-            className="shrink-0"
-          />
-        </div>
+        <CommonToggle
+          id="safety-confirm"
+          label="Enable safety confirmations"
+          description="Confirmations for Auto Control ON, PRC ON, Mode change, and Import settings."
+          checked={safetyConfirmations}
+          onCheckedChange={setSafetyConfirmations}
+        />
       </PanelCard>
     </div>
   );

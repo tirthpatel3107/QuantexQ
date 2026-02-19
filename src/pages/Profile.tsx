@@ -4,13 +4,13 @@ import {
   CommonAlertDialog,
   CommonButton,
   PageLoader,
+  CommonToggle,
 } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   BellRing,
@@ -197,34 +197,22 @@ const Profile = () => {
                   </button>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <span className="text-foreground">Alerts</span>
-                  <p className="text-xs text-muted-foreground">
-                    Critical + Warning
-                  </p>
-                </div>
-                <Switch
-                  checked={prefs.alerts}
-                  onCheckedChange={(checked) =>
-                    setPrefs((p) => ({ ...p, alerts: checked }))
-                  }
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <span className="text-foreground">Notifications</span>
-                  <p className="text-xs text-muted-foreground">
-                    In-app + Email
-                  </p>
-                </div>
-                <Switch
-                  checked={prefs.notifications}
-                  onCheckedChange={(checked) =>
-                    setPrefs((p) => ({ ...p, notifications: checked }))
-                  }
-                />
-              </div>
+              <CommonToggle
+                label="Alerts"
+                description="Critical + Warning"
+                checked={prefs.alerts}
+                onCheckedChange={(checked) =>
+                  setPrefs((p) => ({ ...p, alerts: checked }))
+                }
+              />
+              <CommonToggle
+                label="Notifications"
+                description="In-app + Email"
+                checked={prefs.notifications}
+                onCheckedChange={(checked) =>
+                  setPrefs((p) => ({ ...p, notifications: checked }))
+                }
+              />
             </PanelCard>
 
             <PanelCard
