@@ -12,7 +12,7 @@ import {
   PageLayout,
   SidebarLayout,
   PageHeaderBar,
-  SearchInput,
+  CommonSearchInput,
   CommonButton,
   SidebarNav,
   CommonTooltip,
@@ -151,7 +151,7 @@ export default function Settings() {
         <main className="flex-1 min-w-0 overflow-auto">
           {/* <div className="mb-4 shrink-0">
             <div className="w-full flex flex-wrap items-center justify-between gap-4">
-              <SearchInput
+              <CommonSearchInput
                 placeholder="Search settings..."
                 value={search}
                 onChange={setSearch}

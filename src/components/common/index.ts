@@ -1,7 +1,7 @@
 /** Common layout and form components shared across pages. */
 export { PageLayout } from "./PageLayout";
 export { RestoreDefaultsButton } from "./RestoreDefaultsButton";
-export { SearchInput } from "./SearchInput";
+export { CommonSearchInput } from "./CommonSearchInput";
 export { LabeledInputWithUnit } from "./LabeledInputWithUnit";
 export { PageHeaderBar } from "./PageHeaderBar";
 export { SidebarLayout } from "./SidebarLayout";
@@ -23,3 +23,5 @@ export {
 } from "./CommonTabs";
 export { CommonCheckbox } from "./CommonCheckbox";
 export { CommonTooltip } from "./CommonTooltip";
+export { CommonDropdownMenu } from "./CommonDropdownMenu";
+export type { CommonDropdownOption } from "./CommonDropdownMenu";

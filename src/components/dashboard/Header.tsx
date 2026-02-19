@@ -262,8 +262,8 @@ export function Header() {
           </CommonTooltip>
 
           <Sheet>
-            <SheetTrigger asChild>
-              <CommonTooltip content="View notifications">
+            <CommonTooltip content="View notifications">
+              <SheetTrigger asChild>
                 <CommonButton
                   variant="ghost"
                   size="icon"
@@ -275,8 +275,8 @@ export function Header() {
                     {notifications.length}
                   </span>
                 </CommonButton>
-              </CommonTooltip>
-            </SheetTrigger>
+              </SheetTrigger>
+            </CommonTooltip>
             <SheetContent
               side="right"
               className="w-[90vw] max-w-[360px] sm:max-w-[420px] p-0"
@@ -334,8 +334,8 @@ export function Header() {
             </SheetContent>
           </Sheet>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <CommonTooltip content="User menu">
+            <CommonTooltip content="User menu">
+              <DropdownMenuTrigger asChild>
                 <CommonButton
                   variant="ghost"
                   size="icon"
@@ -343,8 +343,8 @@ export function Header() {
                   aria-label="Settings menu"
                   icon={CircleUser}
                 />
-              </CommonTooltip>
-            </DropdownMenuTrigger>
+              </DropdownMenuTrigger>
+            </CommonTooltip>
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem
                 onSelect={() => navigate(ROUTES.PROFILE)}

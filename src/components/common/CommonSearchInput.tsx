@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { CommonTooltip } from "./CommonTooltip";
 
-export interface SearchInputProps {
+export interface CommonSearchInputProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -15,13 +15,13 @@ export interface SearchInputProps {
 /**
  * Search field with leading search icon. Used in Settings and Mud Properties.
  */
-export function SearchInput({
+export function CommonSearchInput({
   value,
   onChange,
   placeholder = "Search...",
   className,
   id,
-}: SearchInputProps) {
+}: CommonSearchInputProps) {
   return (
     <div
       className={cn("relative flex-1 min-w-[200px] max-w-xl group", className)}
@@ -36,7 +36,7 @@ export function SearchInput({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="pl-9 pr-9 bg-background border-border/50 hover:border-primary/30 focus-visible:border-primary/30 focus-visible:ring-0 focus-visible:ring-offset-0 w-full transition-all"
+        className="pl-9 pr-9 bg-background border-border/50 hover:bg-accent hover:border-primary/30 focus-visible:border-primary/30 focus-visible:ring-0 focus-visible:ring-offset-0 w-full transition-all duration-200"
       />
       {value && (
         <CommonTooltip content="Clear search">

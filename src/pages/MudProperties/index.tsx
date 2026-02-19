@@ -14,7 +14,7 @@ import {
   PageLayout,
   SidebarLayout,
   PageHeaderBar,
-  SearchInput,
+  CommonSearchInput,
   CommonButton,
   SidebarNav,
   CommonTooltip,
@@ -164,7 +164,7 @@ export default function MudProperties() {
         <main className="flex-1 min-w-0 overflow-auto flex flex-col">
           <div className="mb-5 shrink-0">
             <div className="w-full flex flex-wrap items-center justify-between gap-3">
-              <SearchInput
+              <CommonSearchInput
                 placeholder="Search Mud Properties..."
                 value={search}
                 onChange={setSearch}

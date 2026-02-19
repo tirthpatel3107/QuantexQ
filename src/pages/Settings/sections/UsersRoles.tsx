@@ -23,12 +23,11 @@ import {
   ChevronRight,
   UserPlus,
   Filter,
-  Check,
 } from "lucide-react";
 import {
   CommonButton,
   CommonSelect,
-  SearchInput,
+  CommonSearchInput,
   CommonTable,
   CommonDialog,
   CommonTabs,
@@ -36,16 +35,9 @@ import {
   CommonTabsTrigger,
   CommonTabsContent,
   CommonTabsNav,
+  CommonDropdownMenu,
 } from "@/components/common";
 import { cn } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-  DropdownMenuLabel,
-} from "@/components/ui/dropdown-menu";
 import { CommonAlertDialog } from "@/components/common/CommonAlertDialog";
 import { Label } from "@/components/ui/label";
 import { CommonInput } from "@/components/common/CommonInput";
@@ -371,62 +363,32 @@ export function UsersRoles() {
         <CommonTabsContent value="users" className="space-y-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-              <SearchInput
+              <CommonSearchInput
                 placeholder="Search users..."
                 value={userSearch}
                 onChange={setUserSearch}
-                className="w-full sm:w-[260px]"
+                className="w-full sm:w-[400px]"
               />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    className={cn(
-                      "h-9 px-2.5 flex items-center justify-center gap-2 rounded-md border border-border bg-white/5 text-foreground hover:border-primary/50 hover:bg-primary/5 shadow-sm transition-all active:scale-95 whitespace-nowrap relative",
-                      roleFilter !== "all" &&
-                        "border-primary/50 text-primary bg-primary/5",
-                    )}
-                    title="Filter by Role"
-                  >
-                    <Filter className="h-4 w-4" />
-                    {roleFilter !== "all" && (
-                      <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-primary text-[8px] text-primary-foreground font-bold shadow-glow">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40"></span>
-                        1
-                      </span>
-                    )}
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="start"
-                  className="w-[200px] bg-background/95 backdrop-blur-md border-white/10"
-                >
-                  <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-muted-foreground/50">
-                    Filter by Role
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-white/5" />
-                  {roleOptions.map((role) => (
-                    <DropdownMenuItem
-                      key={role.value}
-                      onClick={() => setRoleFilter(role.value)}
-                      className="flex items-center justify-between cursor-pointer group"
-                    >
-                      <span
-                        className={cn(
-                          "text-sm transition-colors",
-                          roleFilter === role.value
-                            ? "text-primary font-medium"
-                            : "text-muted-foreground group-hover:text-foreground",
-                        )}
-                      >
-                        {role.label}
-                      </span>
-                      {roleFilter === role.value && (
-                        <Check className="h-4 w-4 text-primary" />
-                      )}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="relative">
+                <CommonDropdownMenu
+                  value={roleFilter}
+                  onValueChange={setRoleFilter}
+                  options={roleOptions}
+                  triggerIcon={Filter}
+                  menuLabel="Filter by Role"
+                  highlightActive={true}
+                  defaultValue="all"
+                  title="Filter by Role"
+                  contentWidth="w-[200px]"
+                  triggerClassName="px-2.5"
+                />
+                {roleFilter !== "all" && (
+                  <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-primary text-[8px] text-primary-foreground font-bold shadow-glow pointer-events-none">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40"></span>
+                    1
+                  </span>
+                )}
+              </div>
             </div>
             <CommonButton
               variant="outline"
@@ -448,11 +410,11 @@ export function UsersRoles() {
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3 w-full sm:w-auto">
-              <SearchInput
+              <CommonSearchInput
                 placeholder="Search roles..."
                 value={roleSearch}
                 onChange={setRoleSearch}
-                className="w-full sm:w-[260px]"
+                className="w-full sm:w-[400px]"
               />
             </div>
             <CommonButton

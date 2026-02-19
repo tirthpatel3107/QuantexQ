@@ -25,7 +25,6 @@ export function FluidSystemPanel({
   return (
     <PanelCard title="Fluid System" headerAction={<RestoreDefaultsButton />}>
       <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 items-start">
-        <Label className="h-5 flex items-center text-sm">Type</Label>
         <CommonSelect
           label="Type"
           options={typeOptions}
@@ -33,7 +32,6 @@ export function FluidSystemPanel({
           onValueChange={(v) => setFluid((f) => ({ ...f, type: v }))}
         />
 
-        <Label className="h-5 flex items-center text-sm">Base Fluid</Label>
         <CommonSelect
           label="Base Fluid"
           options={baseFluidOptions}
