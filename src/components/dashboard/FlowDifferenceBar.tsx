@@ -103,7 +103,7 @@ export function FlowDifferenceBar({ showSkeleton }: FlowDifferenceBarProps) {
 
   if (showSkeleton) {
     return (
-      <div className="dashboard-panel h-[72px] w-full flex items-center p-2 gap-4">
+      <div className="dashboard-panel h-[80px] w-full flex items-center p-2 gap-4">
         <div className="flex h-full items-center pl-1 pr-3 gap-3 border-r border-border/30 shrink-0">
           <Skeleton className="h-8 w-4 rounded-sm" />
           <div className="flex items-center gap-4 w-[260px]">

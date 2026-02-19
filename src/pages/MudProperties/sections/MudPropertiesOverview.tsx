@@ -7,7 +7,7 @@ export function MudPropertiesOverview() {
   const navigate = useNavigate();
 
   return (
-    <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 items-start mb-4">
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 items-start">
       {MUD_OVERVIEW_CARDS.map((card) => (
         <CategoryCard
           key={card.id}
