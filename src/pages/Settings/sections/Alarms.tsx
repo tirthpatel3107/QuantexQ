@@ -3,20 +3,15 @@ import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
+  getSortedRowModel,
+  SortingState,
 } from "@tanstack/react-table";
 import {
-  AlertTriangle,
   Bell,
-  Settings,
-  RotateCcw,
-  Plus,
   Trash2,
   Activity,
   Zap,
   PlusCircle,
-  Search,
-  Save,
-  Download,
 } from "lucide-react";
 import {
   CommonTable,
@@ -27,12 +22,10 @@ import {
   CommonSelect,
   CommonButton,
   RestoreDefaultsButton,
-  SearchInput,
   CommonCheckbox,
 } from "@/components/common";
 import { CommonAlertDialog } from "@/components/common/CommonAlertDialog";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { cn } from "@/lib/utils";
 
 type SensorLimit = {
   id: string;
@@ -91,6 +84,7 @@ export function Alarms() {
   const [selectedSensor, setSelectedSensor] = useState<SensorLimit | null>(
     null,
   );
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const columns = useMemo(
     () => [
@@ -173,7 +167,12 @@ export function Alarms() {
   const sensorsTable = useReactTable({
     data: sensorsData,
     columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
   const tabs = [
