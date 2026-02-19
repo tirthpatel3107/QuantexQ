@@ -34,8 +34,15 @@ export function SidebarNav({
           <div key={item.id}>
             <button
               onClick={() =>
-                !["signals"].includes(item.id) &&
-                navigate(`${baseRoute}/${item.id}`)
+                ![
+                  "ui",
+                  "signals",
+                  "sources",
+                  "protocols",
+                  "routing",
+                  "security",
+                  "diagnostics",
+                ].includes(item.id) && navigate(`${baseRoute}/${item.id}`)
               }
               title={isCollapsed ? item.label : ""}
               className={cn(
