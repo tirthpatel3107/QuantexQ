@@ -36,7 +36,7 @@ export function SidebarNav({
               onClick={() =>
                 ![
                   "ui",
-                  "signals",
+                  // "signals",
                   "sources",
                   "protocols",
                   "routing",

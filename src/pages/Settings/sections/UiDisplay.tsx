@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { CommonButton, CommonSelect, CommonToggle } from "@/components/common";
-import { Slider } from "@/components/ui/slider";
-import { Label } from "@/components/ui/label";
+import {
+  CommonButton,
+  CommonSelect,
+  CommonToggle,
+  CommonSlider,
+} from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RefreshCw, Download, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTheme, type Theme } from "@/components/theme-provider";
 
 const THEME_OPTIONS = [
   { label: "Dark", value: "dark" },
@@ -37,7 +41,7 @@ const TIME_FORMAT_OPTIONS = [
 ];
 
 export function UiDisplay() {
-  const [theme, setTheme] = useState("dark");
+  const { theme, setTheme } = useTheme();
   const [accentColor, setAccentColor] = useState("blue");
   const [highlightAlerts, setHighlightAlerts] = useState(true);
   const [language, setLanguage] = useState("en");
@@ -45,8 +49,21 @@ export function UiDisplay() {
   const [timeFormat, setTimeFormat] = useState("24h");
   const [uiScale, setUiScale] = useState([100]);
 
+  // Define the allowed UI scale values
+  const uiScaleSteps = [90, 100, 110, 125];
+
+  // Handler to snap to nearest allowed value
+  const handleUiScaleChange = (value: number[]) => {
+    const newValue = value[0];
+    // Find the closest allowed step
+    const closest = uiScaleSteps.reduce((prev, curr) =>
+      Math.abs(curr - newValue) < Math.abs(prev - newValue) ? curr : prev,
+    );
+    setUiScale([closest]);
+  };
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
       {/* Display Preferences Section */}
       <PanelCard title="Display Preferences">
         <div>
@@ -58,16 +75,16 @@ export function UiDisplay() {
               onCheckedChange={setHighlightAlerts}
             />
 
-            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
-              {/* Language */}
-              <CommonSelect
-                label="Language"
-                options={LANGUAGE_OPTIONS}
-                value={language}
-                onValueChange={setLanguage}
-                placeholder="Select language"
-              />
+            {/* Language */}
+            <CommonSelect
+              label="Language"
+              options={LANGUAGE_OPTIONS}
+              value={language}
+              onValueChange={setLanguage}
+              placeholder="Select language"
+            />
 
+            <div className="grid gap-3 grid-cols-2">
               {/* Date Format */}
               <CommonSelect
                 label="Date Format"
@@ -88,26 +105,19 @@ export function UiDisplay() {
             </div>
 
             {/* UI Scale */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <Label className="text-sm font-medium">UI Scale</Label>
-                <span className="text-sm font-medium">{uiScale[0]}%</span>
-              </div>
-              <Slider
-                value={uiScale}
-                onValueChange={setUiScale}
-                min={90}
-                max={125}
-                step={5}
-                className="mb-2"
-              />
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>90%</span>
-                <span>Default</span>
-                <span>110%</span>
-                <span>125%</span>
-              </div>
-            </div>
+            <CommonSlider
+              label="UI Scale"
+              value={uiScale}
+              onValueChange={handleUiScaleChange}
+              min={90}
+              max={125}
+              step={1}
+              showValue={true}
+              valueFormatter={(val) => `${val}%`}
+              showRangeLabels={true}
+              rangeLabels={["90%", "100%", "110%", "125%"]}
+              rangeLabelPositions={[0, 28.57, 57.14, 100]}
+            />
           </div>
         </div>
       </PanelCard>
@@ -116,12 +126,12 @@ export function UiDisplay() {
       <PanelCard title="Theme & Appearance">
         {/* Theme Selection */}
         <div className="mb-6">
-          <Label className="text-sm font-medium mb-3 block">Theme</Label>
+          <p className="text-medium font-medium mb-3 block">Theme</p>
           <div className="grid grid-cols-2 gap-4">
             {THEME_OPTIONS.map((option) => (
               <button
                 key={option.value}
-                onClick={() => setTheme(option.value)}
+                onClick={() => setTheme(option.value as Theme)}
                 className={cn(
                   "relative rounded-lg border-2 p-3 transition-all hover:border-primary/50",
                   theme === option.value
@@ -165,10 +175,10 @@ export function UiDisplay() {
 
         {/* Interface Accent Color */}
         <div>
-          <Label className="text-sm font-medium mb-3 block">
+          <p className="text-medium font-medium mb-3 block">
             Interface Accent Color
-          </Label>
-          <p className="text-xs text-muted-foreground mb-3">
+          </p>
+          <p className="text-sm text-muted-foreground mb-5">
             Select the accent color for the UI highlights.
           </p>
           <div className="flex gap-3">
@@ -177,7 +187,7 @@ export function UiDisplay() {
                 key={color.value}
                 onClick={() => setAccentColor(color.value)}
                 className={cn(
-                  "relative w-10 h-10 rounded-full transition-all hover:scale-110",
+                  "relative w-6 h-6 rounded-full transition-all hover:scale-110",
                   color.color,
                   accentColor === color.value &&
                     "ring-2 ring-offset-2 ring-primary ring-offset-background",
@@ -199,19 +209,14 @@ export function UiDisplay() {
       <PanelCard title="Display Preferences">
         <div>
           <div className="space-y-4">
-            <div className="flex items-start gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5" />
-              <div>
-                <p className="font-medium">
-                  Vision MPD Simulator Update v.3.2.7
-                </p>
-                <p className="text-xs text-muted-foreground">16 Apr 2026</p>
-              </div>
+            <div className="flex items-start flex-col gap-2 mb-5">
+              <p className="font-medium">Vision MPD Simulator Update v.3.2.7</p>
+              <p className="text-sm text-muted-foreground">16 Apr 2026</p>
             </div>
 
             <div>
-              <p className="text-sm font-semibold mb-2">Enhancements:</p>
-              <ul className="space-y-1.5 text-xs text-muted-foreground">
+              <p className="text-medium font-semibold mb-2">Enhancements:</p>
+              <ul className="space-y-1.5 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
                   <span className="text-green-500">•</span>
                   <span>
@@ -238,8 +243,8 @@ export function UiDisplay() {
             </div>
 
             <div>
-              <p className="text-sm font-semibold mb-2">Bug Fixes:</p>
-              <ul className="space-y-1.5 text-xs text-muted-foreground">
+              <p className="text-medium font-semibold mt-5 mb-2">Bug Fixes:</p>
+              <ul className="space-y-1.5 text-sm text-muted-foreground">
                 <li className="flex items-start gap-2">
                   <span className="text-green-500">•</span>
                   <span>
@@ -255,40 +260,33 @@ export function UiDisplay() {
                 </li>
               </ul>
             </div>
-
-            <button className="w-full flex items-center justify-between px-4 py-2 text-sm border border-border/50 rounded-md hover:bg-accent transition-colors mt-4">
-              <span className="text-muted-foreground">PREVIOUS UPDATES</span>
-              <ChevronRight className="h-4 w-4" />
-            </button>
           </div>
         </div>
       </PanelCard>
 
       {/* Display Actions Section */}
       <PanelCard title="Display Actions">
-        <div>
-          <div className="space-y-3">
-            <CommonButton
-              variant="outline"
-              className="w-full justify-start"
-              icon={RefreshCw}
-            >
-              Check for Updates
-            </CommonButton>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <CommonButton
+            variant="outline"
+            className="w-full justify-start"
+            icon={RefreshCw}
+          >
+            Check for Updates
+          </CommonButton>
 
-            <CommonButton
-              variant="outline"
-              className="w-full justify-start"
-              icon={Download}
-            >
-              Install Updates
-            </CommonButton>
+          <CommonButton
+            variant="outline"
+            className="w-full justify-start"
+            icon={Download}
+          >
+            Install Updates
+          </CommonButton>
 
-            <button className="w-full flex items-center justify-between px-4 py-2 text-sm border border-border/50 rounded-md hover:bg-accent transition-colors">
-              <span className="text-muted-foreground">PREVIOUS UPDATES</span>
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
+          <button className="w-full flex items-center justify-between px-4 py-2 text-sm border border-border/50 rounded-md hover:bg-accent transition-colors">
+            <span className="text-muted-foreground">PREVIOUS UPDATES</span>
+            <ChevronRight className="h-4 w-4" />
+          </button>
         </div>
       </PanelCard>
     </div>
