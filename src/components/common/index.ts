@@ -22,6 +22,7 @@ export {
   CommonTabsNav,
 } from "./CommonTabs";
 export { CommonCheckbox } from "./CommonCheckbox";
+export { CommonRadio } from "./CommonRadio";
 export { CommonTooltip } from "./CommonTooltip";
 export { CommonToggle } from "./CommonToggle";
 export { CommonDropdownMenu } from "./CommonDropdownMenu";

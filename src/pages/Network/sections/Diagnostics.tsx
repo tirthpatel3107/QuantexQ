@@ -6,34 +6,16 @@ import { CommonToggle } from "@/components/common/CommonToggle";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Play, FileDown, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
 
 export function Diagnostics() {
   const [packetCaptureDuration, setPacketCaptureDuration] = useState("90");
   const [failoverSimulation, setFailoverSimulation] = useState(false);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold">Diagnostics</h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            Profile: NFQ-21-6A
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <CommonButton>Run Full Diagnostic</CommonButton>
-          <CommonButton variant="outline" icon={FileDown}>
-            Export Report
-          </CommonButton>
-          <CommonButton variant="ghost" size="icon">
-            <Settings className="h-4 w-4" />
-          </CommonButton>
-        </div>
-      </div>
-
+    <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 auto-rows-max">
         {/* Quick Tests */}
         <PanelCard title="Quick Tests">
           <div className="space-y-3">
@@ -80,44 +62,6 @@ export function Diagnostics() {
             />
           </div>
         </PanelCard>
-
-        {/* Connection Log */}
-        <PanelCard title="Connection Log">
-          <div className="space-y-2 text-xs font-mono">
-            <LogEntry
-              icon="info"
-              text="IPV 0, 10.1.0.113 reachable: Port 502 (succeed)"
-              copyable
-            />
-            <LogEntry
-              icon="info"
-              text="IPV 0, 10.1.0.113 reachable: Modbus, connected"
-            />
-            <LogEntry
-              icon="warning"
-              text="Flow-Meter: 0.0.5, choke was out of range"
-            />
-            <LogEntry
-              icon="warning"
-              text="WARN: Sniput pressure was"
-              badge="?"
-            />
-            <LogEntry
-              icon="info"
-              text="Pg PLC Clock: syncval +16 (inc better)"
-              copyable
-            />
-            <LogEntry
-              icon="info"
-              text="PWD connected via: WITS, reading OR"
-              copyable
-            />
-          </div>
-        </PanelCard>
-      </div>
-
-      {/* Second Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Advanced Tools */}
         <PanelCard title="Advanced Tools">
           <div className="space-y-4">
@@ -201,53 +145,6 @@ export function Diagnostics() {
           </div>
         </PanelCard>
 
-        {/* Last Diagnostic Results */}
-        <PanelCard title="Last Diagnostic Results">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <span className="text-lg font-semibold text-red-500">FAIL</span>
-            </div>
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <span>PLC Modbus unresponsive</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <span>5 critical tags missing</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <span>ChokeB_Pos out of range</span>
-              </div>
-            </div>
-
-            <hr className="my-4" />
-
-            <div>
-              <h4 className="text-sm font-semibold mb-2">Suggested actions</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <input type="checkbox" className="rounded" />
-                  <span>Check PLC port 502, reachable</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <input type="checkbox" className="rounded" />
-                  <span>Tag Map segment: Flow_Fr~Flow_Out missing</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <input type="checkbox" className="rounded" />
-                  <span>Check PLC clock drift (~ 574 ms)</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </PanelCard>
-      </div>
-
-      {/* Third Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Critical Tags Watchlist */}
         <PanelCard title="Critical Tags Watchlist">
           <div className="space-y-2">
@@ -339,44 +236,9 @@ export function Diagnostics() {
             </div>
           </div>
         </PanelCard>
-
-        {/* Failover Simulation */}
-        <PanelCard title="Failover Simulation">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <CommonToggle
-                id="failover-sim"
-                label=""
-                checked={failoverSimulation}
-                onCheckedChange={setFailoverSimulation}
-              />
-              <Badge variant={failoverSimulation ? "default" : "secondary"}>
-                {failoverSimulation ? "ON" : "OFF"}
-              </Badge>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              PLC Offline ~ Simulated data enabled
-            </p>
-            <CommonButton variant="outline" size="sm">
-              Force Failover (Test)
-            </CommonButton>
-          </div>
-        </PanelCard>
       </div>
-
-      {/* Footer Info */}
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <span>Report ID: DIAG-000128</span>
-          <span>|</span>
-          <span>Unused range | based at 10:42</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge variant="secondary" className="text-xs">
-            ⚠ Unsaved changes
-          </Badge>
-          <span>Last modified at 12:42</span>
-        </div>
+      <div className="grid grid-cols-1 gap-3 auto-rows-max">
+        <HealthMonitoringPanel />
       </div>
     </div>
   );
