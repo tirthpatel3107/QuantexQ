@@ -5,10 +5,6 @@ import {
   Menu,
   Moon,
   Sun,
-  Settings,
-  Filter,
-  Check,
-  SlidersHorizontal,
   Square,
   Play,
   CircleUser,
@@ -32,9 +28,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { notifications } from "@/data/mockData";
-import { useSimulation } from "@/hooks/useSimulation";
+import { useSimulationState } from "@/hooks/useSimulation";
 import { SimulationTimerWidget } from "@/components/dashboard/SimulationTimerWidget";
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/hooks/useTheme";
 import {
   CommonAlertDialog,
   CommonButton,
@@ -48,34 +44,10 @@ import { formatTime, formatDate } from "@/lib/date-utils";
  * Contains branding, global clock, simulation controls, notifications, and settings.
  */
 
-const SEVERITY_OPTIONS = [
-  { key: "all", label: "All" },
-  { key: "normal", label: "Normal" },
-  { key: "warning", label: "Warnings only" },
-  { key: "critical", label: "Critical only" },
-] as const;
-
-const TIMEFRAME_OPTIONS = [
-  { key: "1h", label: "Last 1 hour" },
-  { key: "6h", label: "Last 6 hours" },
-  { key: "24h", label: "Last 24 hours" },
-  { key: "7d", label: "Last 7 days" },
-] as const;
-
-const SYSTEM_OPTIONS = [
-  { key: "all", label: "All systems" },
-  { key: "pumps", label: "Pumps" },
-  { key: "circulation", label: "Circulation" },
-  { key: "pressure", label: "Pressure" },
-] as const;
-
-const INITIAL_FILTERS = { severity: "all", timeframe: "24h", system: "all" };
-
 export function Header() {
   const [time, setTime] = useState(() => new Date());
-  const { isRunning, setRunning } = useSimulation();
+  const { isRunning, setRunning } = useSimulationState();
   const { theme, setTheme } = useTheme();
-  const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [stopConfirmOpen, setStopConfirmOpen] = useState(false);
   const [startConfirmOpen, setStartConfirmOpen] = useState(false);

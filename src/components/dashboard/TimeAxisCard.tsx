@@ -4,8 +4,8 @@ import type { EChartsOption } from "echarts";
 import { cn } from "@/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { COLORS } from "@/constants/colors";
-import { useTheme } from "@/components/theme-provider";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTheme } from "@/hooks/useTheme";
 import { Clock } from "lucide-react";
 import { ChartDataPoint } from "@/types/chart";
 

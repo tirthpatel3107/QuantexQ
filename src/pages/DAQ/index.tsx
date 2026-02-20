@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Activity, Save, RotateCcw, Upload } from "lucide-react";
 
 import { ROUTES } from "@/constants/routes";
@@ -10,8 +10,6 @@ import {
   SidebarNav,
   CommonTooltip,
 } from "@/components/common";
-import { cn } from "@/lib/utils";
-import { useSidebarContext } from "@/context/SidebarContext";
 
 import { DAQ_NAV } from "./constants";
 import { DaqOverview } from "./sections/DaqOverview";
@@ -27,7 +25,6 @@ import { Downloads } from "./sections/Downloads";
 
 export default function DAQ() {
   const { section } = useParams();
-  const navigate = useNavigate();
   const activeSection = section || "daq";
 
   const headerActions = (
@@ -51,8 +48,6 @@ export default function DAQ() {
   );
 
   const activeNav = DAQ_NAV.find((n) => n.id === activeSection);
-
-  const { isCollapsed } = useSidebarContext();
 
   const sidebarNav = (
     <SidebarNav

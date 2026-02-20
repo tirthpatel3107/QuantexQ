@@ -26,7 +26,7 @@ import {
   Check,
 } from "lucide-react";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/hooks/useTheme";
 
 const sessions = [
   {

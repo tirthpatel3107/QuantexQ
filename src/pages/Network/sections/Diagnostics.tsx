@@ -4,13 +4,12 @@ import { CommonButton } from "@/components/common/CommonButton";
 import { CommonInput } from "@/components/common/CommonInput";
 import { CommonToggle } from "@/components/common/CommonToggle";
 import { Badge } from "@/components/ui/badge";
-import { Settings, Play, FileDown, Copy } from "lucide-react";
+import { Play, FileDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
 
 export function Diagnostics() {
   const [packetCaptureDuration, setPacketCaptureDuration] = useState("90");
-  const [failoverSimulation, setFailoverSimulation] = useState(false);
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
@@ -331,39 +330,6 @@ function DataIntegrityRow({
   );
 }
 
-function LogEntry({
-  icon,
-  text,
-  badge,
-  copyable,
-}: {
-  icon: "info" | "warning";
-  text: string;
-  badge?: string;
-  copyable?: boolean;
-}) {
-  const iconColors = {
-    info: "text-blue-500",
-    warning: "text-orange-500",
-  };
-
-  return (
-    <div className="flex items-start gap-2 py-1">
-      <div className={cn("w-2 h-2 rounded-full mt-1", iconColors[icon])} />
-      <span className="flex-1 text-muted-foreground">{text}</span>
-      {badge && (
-        <Badge variant="secondary" className="text-xs">
-          {badge}
-        </Badge>
-      )}
-      {copyable && (
-        <button className="text-muted-foreground hover:text-foreground">
-          <Copy className="h-3 w-3" />
-        </button>
-      )}
-    </div>
-  );
-}
 
 function MetricChart({
   label,

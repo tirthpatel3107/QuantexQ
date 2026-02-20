@@ -1,34 +1,19 @@
 import React, {
   useState,
   useMemo,
-  useRef,
   useCallback,
-  useEffect,
 } from "react";
-import { CommonDialog } from "@/components/common";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { X, Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Header } from "@/components/dashboard/Header";
 import { VerticalChartCard } from "@/components/dashboard/VerticalChartCard";
 import { DepthGauge } from "@/components/dashboard/DepthGauge";
-import { SemiCircleGauge } from "@/components/dashboard/SemiCircleGauge";
-import { PumpStatusCard } from "@/components/dashboard/PumpStatusCard";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
-import { useSimulation } from "@/hooks/useSimulation";
-import { pumpStatus } from "@/data/mockData";
+import { useSimulationData } from "@/hooks/useSimulation";
 import {
   CENTER_CARDS,
   metricsFromLatestPoint,
 } from "@/data/dashboardChartConfig";
 
-import { SegmentedBar } from "@/components/dashboard/SegmentedBar";
-import { FlowControlStack } from "@/components/dashboard/FlowControlStack";
 import { TimeAxisCard } from "@/components/dashboard/TimeAxisCard";
 import { FlowDifferenceBar } from "@/components/dashboard/FlowDifferenceBar";
 
@@ -43,19 +28,18 @@ import { FlowDifferenceBar } from "@/components/dashboard/FlowDifferenceBar";
  */
 export default function Index() {
   // State for controlling various UI dialogs and interactions
-  const [pumpDialogOpen, setPumpDialogOpen] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
 
   // Custom hooks for application state and simulation logic
   const showSkeleton = useInitialSkeleton();
-  const { chartData } = useSimulation();
+  const { chartData } = useSimulationData();
 
   /**
    * Toggles the expansion state of a chart card
    */
-  const handleCardDoubleClick = (id: string) => {
+  const handleCardDoubleClick = useCallback((id: string) => {
     setExpandedCardId((prev) => (prev === id ? null : id));
-  };
+  }, []);
 
   /**
    * Memoized mapping of chart data keys to their respective datasets
@@ -146,24 +130,6 @@ export default function Index() {
       </main>
 
       {/* Overlays and Dialogs */}
-      <CommonDialog
-        open={pumpDialogOpen}
-        onOpenChange={setPumpDialogOpen}
-        title="Pump Status"
-        maxWidth="max-w-2xl"
-        hideClose={false} // We can use the default or keep the custom close
-      >
-        <div className="grid gap-3 grid-cols-4">
-          {pumpStatus.map((pump) => (
-            <PumpStatusCard
-              key={pump.name}
-              name={pump.name}
-              status={pump.status}
-              disableInitialSkeleton
-            />
-          ))}
-        </div>
-      </CommonDialog>
     </div>
   );
 }

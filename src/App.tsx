@@ -2,12 +2,13 @@ import { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { SimulationProvider } from "@/hooks/useSimulation";
-import { SidebarProvider } from "@/context/SidebarContext";
+import { SimulationProvider } from "@/context/SimulationProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SidebarProvider } from "./context/SidebarContext.tsx";
+import { AccentColorProvider } from "@/hooks/useAccentColor";
 import { ROUTES } from "@/constants/routes";
 import { THEME_STORAGE_KEY } from "@/constants/config";
 
@@ -29,38 +30,40 @@ const queryClient = new QueryClient({
 
 const App = () => (
   <ThemeProvider defaultTheme="dark" storageKey={THEME_STORAGE_KEY}>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider delayDuration={100}>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <SidebarProvider>
-            <SimulationProvider>
-              <Suspense fallback={<PageLoader />}>
-                <Routes>
-                  <Route path={ROUTES.HOME} element={<Index />} />
-                  <Route path={ROUTES.PROFILE} element={<Profile />} />
-                  <Route
-                    path={`${ROUTES.MUD_PROPERTIES}/:section?`}
-                    element={<MudProperties />}
-                  />
-                  <Route
-                    path={`${ROUTES.SETTINGS}/:section?`}
-                    element={<Settings />}
-                  />
-                  <Route path={`${ROUTES.DAQ}/:section?`} element={<DAQ />} />
-                  <Route
-                    path={`${ROUTES.NETWORK}/:section?`}
-                    element={<Network />}
-                  />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </SimulationProvider>
-          </SidebarProvider>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <AccentColorProvider defaultAccentColor="white">
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider delayDuration={100}>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <SidebarProvider>
+              <SimulationProvider>
+                <Suspense fallback={<PageLoader />}>
+                  <Routes>
+                    <Route path={ROUTES.HOME} element={<Index />} />
+                    <Route path={ROUTES.PROFILE} element={<Profile />} />
+                    <Route
+                      path={`${ROUTES.MUD_PROPERTIES}/:section?`}
+                      element={<MudProperties />}
+                    />
+                    <Route
+                      path={`${ROUTES.SETTINGS}/:section?`}
+                      element={<Settings />}
+                    />
+                    <Route path={`${ROUTES.DAQ}/:section?`} element={<DAQ />} />
+                    <Route
+                      path={`${ROUTES.NETWORK}/:section?`}
+                      element={<Network />}
+                    />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </SimulationProvider>
+            </SidebarProvider>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </AccentColorProvider>
   </ThemeProvider>
 );
 

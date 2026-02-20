@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { memo, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export interface PageHeaderBarProps {
@@ -15,7 +15,7 @@ export interface PageHeaderBarProps {
 /**
  * Page header strip: icon + title + metadata + actions. Used on Settings and Mud Properties.
  */
-export function PageHeaderBar({
+export const PageHeaderBar = memo(function PageHeaderBar({
   icon,
   title,
   metadata,
@@ -50,4 +50,4 @@ export function PageHeaderBar({
       )}
     </div>
   );
-}
+});

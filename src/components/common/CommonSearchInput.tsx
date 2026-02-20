@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -15,7 +16,7 @@ export interface CommonSearchInputProps {
 /**
  * Search field with leading search icon. Used in Settings and Mud Properties.
  */
-export function CommonSearchInput({
+export const CommonSearchInput = memo(function CommonSearchInput({
   value,
   onChange,
   placeholder = "Search...",
@@ -52,4 +53,4 @@ export function CommonSearchInput({
       )}
     </div>
   );
-}
+});

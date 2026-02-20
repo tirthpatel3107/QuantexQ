@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Network as NetworkIcon, Save, RotateCcw, Upload } from "lucide-react";
 
 import { ROUTES } from "@/constants/routes";
@@ -21,7 +21,6 @@ import { Diagnostics } from "./sections/Diagnostics";
 
 export default function Network() {
   const { section } = useParams();
-  const navigate = useNavigate();
   const activeSection = section || "network";
 
   const headerActions = (

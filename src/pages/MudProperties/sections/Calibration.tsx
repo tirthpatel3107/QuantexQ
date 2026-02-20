@@ -1,4 +1,3 @@
-import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RestoreDefaultsButton, CommonInput } from "@/components/common";
 import { FluidData } from "@/types/mud";

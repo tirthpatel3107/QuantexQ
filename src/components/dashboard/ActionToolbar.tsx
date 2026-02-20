@@ -1,5 +1,4 @@
 import {
-  Settings,
   Network,
   Wrench,
   BookOpen,
@@ -10,7 +9,6 @@ import {
   Settings2,
 } from "lucide-react";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 import {
   CommonAlertDialog,
   CommonButton,

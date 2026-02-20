@@ -1,5 +1,4 @@
 import {
-  Settings,
   Network,
   Wrench,
   BookOpen,

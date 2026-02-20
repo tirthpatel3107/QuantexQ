@@ -10,7 +10,6 @@ import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
 
 export function Routing() {
   const [modbusEnabled, setModbusEnabled] = useState(true);
-  const [eqmptEmacerEnabled, setEqmptEmacerEnabled] = useState(true);
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">

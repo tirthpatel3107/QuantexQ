@@ -1,6 +1,4 @@
 import {
-  createContext,
-  useContext,
   useState,
   useCallback,
   useEffect,
@@ -9,41 +7,15 @@ import {
   type ReactNode,
 } from "react";
 import { formatElapsedSeconds } from "@/lib/date-utils";
-import {
-  flowData,
-  densityData,
-  surfacePressureData,
-  standpipePressureData,
-  bottomHolePressureData,
-  chokeChartData,
-  appendChartPoint,
-  type ChartDataset,
-} from "@/data/mockData";
+import { appendChartPoint } from "@/data/mockData";
 import { CHART_UPDATE_INTERVAL_MS, TIMER_TICK_MS } from "@/constants/config";
-import type { ChartDataKey } from "@/types/chart";
-
-export type { ChartDataKey };
-export type ChartDataState = Record<ChartDataKey, ChartDataset>;
-
-const INITIAL_CHART_DATA: ChartDataState = {
-  flow: flowData,
-  density: densityData,
-  surfacePressure: surfacePressureData,
-  standpipePressure: standpipePressureData,
-  bottomHolePressure: bottomHolePressureData,
-  choke: chokeChartData,
-};
-
-interface SimulationContextValue {
-  isRunning: boolean;
-  setRunning: (running: boolean) => void;
-  chartData: ChartDataState;
-  elapsedSeconds: number;
-  showTimer: boolean;
-  formattedElapsed: string;
-}
-
-const SimulationContext = createContext<SimulationContextValue | null>(null);
+import {
+  SimulationStateContext,
+  SimulationDataContext,
+  INITIAL_CHART_DATA,
+  CHART_KEYS,
+  ChartDataState,
+} from "./SimulationContext";
 
 /**
  * Simulation Context Provider
@@ -53,16 +25,6 @@ const SimulationContext = createContext<SimulationContextValue | null>(null);
  * - Accumulated chart data for all metrics
  * - Elapsed mission time
  */
-
-const CHART_KEYS: ChartDataKey[] = [
-  "flow",
-  "density",
-  "surfacePressure",
-  "standpipePressure",
-  "bottomHolePressure",
-  "choke",
-];
-
 export function SimulationProvider({ children }: { children: ReactNode }) {
   const [isRunning, setRunningState] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -73,7 +35,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
 
   const setRunning = useCallback((running: boolean) => {
     setRunningState(running);
-    setElapsedSeconds(0); // Reset on both start and stop; hide on stop
+    setElapsedSeconds(0);
   }, []);
 
   useEffect(() => {
@@ -127,26 +89,29 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
     [elapsedSeconds],
   );
 
-  const value: SimulationContextValue = {
-    isRunning,
-    setRunning,
-    chartData,
-    elapsedSeconds,
-    showTimer,
-    formattedElapsed,
-  };
+  const stateValue = useMemo(
+    () => ({
+      isRunning,
+      setRunning,
+      showTimer,
+    }),
+    [isRunning, setRunning, showTimer],
+  );
+
+  const dataValue = useMemo(
+    () => ({
+      chartData,
+      elapsedSeconds,
+      formattedElapsed,
+    }),
+    [chartData, elapsedSeconds, formattedElapsed],
+  );
 
   return (
-    <SimulationContext.Provider value={value}>
-      {children}
-    </SimulationContext.Provider>
+    <SimulationStateContext.Provider value={stateValue}>
+      <SimulationDataContext.Provider value={dataValue}>
+        {children}
+      </SimulationDataContext.Provider>
+    </SimulationStateContext.Provider>
   );
-}
-
-export function useSimulation() {
-  const ctx = useContext(SimulationContext);
-  if (!ctx) {
-    throw new Error("useSimulation must be used within SimulationProvider");
-  }
-  return ctx;
 }

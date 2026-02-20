@@ -1,11 +1,9 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import {
   Droplets,
   Save,
   RotateCcw,
-  FolderOpen,
-  FolderPlus,
   Download,
 } from "lucide-react";
 
@@ -14,7 +12,6 @@ import {
   PageLayout,
   SidebarLayout,
   PageHeaderBar,
-  CommonSearchInput,
   CommonButton,
   SidebarNav,
   CommonTooltip,
@@ -39,9 +36,7 @@ import { FluidData } from "@/types/mud";
 
 export default function MudProperties() {
   const { section } = useParams();
-  const navigate = useNavigate();
   const activeSection = section || "mud-properties";
-  const [search, setSearch] = useState("");
   const [, setDirty] = useState(true);
 
   const [fluid, setFluid] = useState<FluidData>({
@@ -67,7 +62,7 @@ export default function MudProperties() {
     tempSensorOffset: "",
   });
 
-  const headerActions = (
+  const headerActions = useMemo(() => (
     <>
       <CommonTooltip content="Save mud properties">
         <CommonButton
@@ -90,17 +85,19 @@ export default function MudProperties() {
         </CommonButton>
       </CommonTooltip>
     </>
-  );
+  ), []);
 
-  const sidebarNav = (
+  const sidebarNav = useMemo(() => (
     <SidebarNav
       items={MUD_NAV}
       activeSection={activeSection}
       baseRoute={ROUTES.MUD_PROPERTIES}
     />
-  );
+  ), [activeSection]);
 
-  const activeNav = MUD_NAV.find((n) => n.id === activeSection);
+  const activeNav = useMemo(() => 
+    MUD_NAV.find((n) => n.id === activeSection)
+  , [activeSection]);
 
   const renderSection = () => {
     switch (activeSection) {
@@ -162,43 +159,6 @@ export default function MudProperties() {
         />
 
         <main className="flex-1 min-w-0 overflow-auto flex flex-col">
-          <div className="mb-5 shrink-0">
-            <div className="w-full flex flex-wrap items-center justify-between gap-3">
-              <CommonSearchInput
-                placeholder="Search Mud Properties..."
-                value={search}
-                onChange={setSearch}
-              />
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <CommonTooltip content="Save mud properties">
-                  <CommonButton variant="outline" size="sm" icon={Save}>
-                    Save
-                  </CommonButton>
-                </CommonTooltip>
-                <CommonTooltip content="Discard changes">
-                  <CommonButton variant="outline" size="sm" icon={RotateCcw}>
-                    Discard
-                  </CommonButton>
-                </CommonTooltip>
-                <CommonTooltip content="Load preset configuration">
-                  <CommonButton variant="outline" size="sm" icon={FolderOpen}>
-                    Load Preset
-                  </CommonButton>
-                </CommonTooltip>
-                <CommonTooltip content="Save as preset">
-                  <CommonButton variant="outline" size="sm" icon={FolderPlus}>
-                    Save Preset
-                  </CommonButton>
-                </CommonTooltip>
-                <CommonTooltip content="Export mud properties">
-                  <CommonButton variant="outline" size="sm" icon={Download}>
-                    Export
-                  </CommonButton>
-                </CommonTooltip>
-              </div>
-            </div>
-          </div>
-
           <div className="flex flex-1 min-w-0 gap-4 overflow-auto">
             <div className="flex-1 min-w-0 space-y-4">{renderSection()}</div>
 
@@ -209,3 +169,4 @@ export default function MudProperties() {
     </PageLayout>
   );
 }
+

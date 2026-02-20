@@ -1,6 +1,7 @@
+import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { useSidebarContext } from "@/context/SidebarContext";
+import { useSidebarContext } from "@/hooks/useSidebarContext";
 import { LucideIcon } from "lucide-react";
 
 export interface SidebarNavItem {
@@ -16,7 +17,7 @@ interface SidebarNavProps {
   baseRoute: string;
 }
 
-export function SidebarNav({
+export const SidebarNav = memo(function SidebarNav({
   items,
   activeSection,
   baseRoute,
@@ -33,17 +34,7 @@ export function SidebarNav({
         return (
           <div key={item.id}>
             <button
-              onClick={() =>
-                ![
-                  "ui",
-                  // "signals",
-                  // "sources",
-                  // "protocols",
-                  // "routing",
-                  // "security",
-                  // "diagnostics",
-                ].includes(item.id) && navigate(`${baseRoute}/${item.id}`)
-              }
+              onClick={() => navigate(`${baseRoute}/${item.id}`)}
               title={isCollapsed ? item.label : ""}
               className={cn(
                 "w-full flex items-center gap-3 rounded-md transition-all duration-200 border-0 shadow-none text-left overflow-hidden",
@@ -93,4 +84,4 @@ export function SidebarNav({
       })}
     </nav>
   );
-}
+});

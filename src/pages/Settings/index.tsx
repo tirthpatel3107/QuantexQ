@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   Settings as SettingsIcon,
   Save,
@@ -12,7 +12,6 @@ import {
   PageLayout,
   SidebarLayout,
   PageHeaderBar,
-  CommonSearchInput,
   CommonButton,
   SidebarNav,
   CommonTooltip,
@@ -35,9 +34,8 @@ import { GeneralSettingsData } from "@/types/settings";
 
 export default function Settings() {
   const { section } = useParams();
-  const navigate = useNavigate();
   const activeSection = section || "setting";
-  const [search, setSearch] = useState("");
+  
   const [general, setGeneral] = useState<GeneralSettingsData>({
     defaultWellName: "NFQ-21-6A",
     defaultRigName: "Rig-01",
@@ -47,7 +45,7 @@ export default function Settings() {
   });
   const [safetyConfirmations, setSafetyConfirmations] = useState(true);
 
-  const headerActions = (
+  const headerActions = useMemo(() => (
     <>
       <CommonTooltip content="Save settings">
         <CommonButton variant="outline" size="sm" icon={Save}>
@@ -65,17 +63,19 @@ export default function Settings() {
         </CommonButton>
       </CommonTooltip>
     </>
-  );
+  ), []);
 
-  const sidebarNav = (
+  const sidebarNav = useMemo(() => (
     <SidebarNav
       items={SETTINGS_NAV}
       activeSection={activeSection}
       baseRoute={ROUTES.SETTINGS}
     />
-  );
+  ), [activeSection]);
 
-  const activeNav = SETTINGS_NAV.find((n) => n.id === activeSection);
+  const activeNav = useMemo(() => 
+    SETTINGS_NAV.find((n) => n.id === activeSection)
+  , [activeSection]);
 
   const renderSection = () => {
     switch (activeSection) {
@@ -149,36 +149,10 @@ export default function Settings() {
         />
 
         <main className="flex-1 min-w-0 overflow-auto">
-          {/* <div className="mb-4 shrink-0">
-            <div className="w-full flex flex-wrap items-center justify-between gap-4">
-              <CommonSearchInput
-                placeholder="Search settings..."
-                value={search}
-                onChange={setSearch}
-              />
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <CommonTooltip content="Save settings">
-                  <CommonButton variant="outline" size="sm" icon={Save}>
-                    Save
-                  </CommonButton>
-                </CommonTooltip>
-                <CommonTooltip content="Discard changes">
-                  <CommonButton variant="outline" size="sm" icon={RotateCcw}>
-                    Discard
-                  </CommonButton>
-                </CommonTooltip>
-                <CommonTooltip content="Export settings">
-                  <CommonButton variant="outline" size="sm" icon={Upload}>
-                    Export
-                  </CommonButton>
-                </CommonTooltip>
-              </div>
-            </div>
-          </div> */}
-
           {renderSection()}
         </main>
       </SidebarLayout>
     </PageLayout>
   );
 }
+

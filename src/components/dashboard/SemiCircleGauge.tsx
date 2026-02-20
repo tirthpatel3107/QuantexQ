@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 interface SemiCircleGaugeProps {
   valueA: number;
@@ -9,16 +9,14 @@ interface SemiCircleGaugeProps {
   colorB: string;
 }
 
-export const SemiCircleGauge: React.FC<SemiCircleGaugeProps> = ({
+export const SemiCircleGauge = memo(function SemiCircleGauge({
   valueA,
   valueB,
   labelA,
   labelB,
   colorA,
   colorB,
-}) => {
-  const outerRadius = 32;
-  const innerRadius = 22;
+}: SemiCircleGaugeProps) {
   const strokeWidth = 5;
 
   const normalizedA = Math.min(Math.max(valueA, 0), 100);
@@ -155,4 +153,4 @@ export const SemiCircleGauge: React.FC<SemiCircleGaugeProps> = ({
       </div>
     </div>
   );
-};
+});

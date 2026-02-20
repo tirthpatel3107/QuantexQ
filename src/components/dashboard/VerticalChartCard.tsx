@@ -1,16 +1,15 @@
 import { memo, useState, useMemo, useEffect, useRef } from "react";
 import type { LucideIcon } from "lucide-react";
-import { Maximize2, MoreVertical } from "lucide-react";
+import { Maximize2 } from "lucide-react";
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption, LineSeriesOption } from "echarts";
 import { cn } from "@/lib/utils";
-import { useSimulation } from "@/hooks/useSimulation";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CommonDialog, CommonButton, CommonTooltip } from "@/components/common";
 import type { VerticalChartMetric } from "@/types/chart";
 import { COLORS } from "@/constants/colors";
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/hooks/useTheme";
 import { ChartDataPoint } from "@/types/chart";
 
 export type { VerticalChartMetric };
@@ -32,12 +31,6 @@ const statusBorderColors = {
   normal: "border-border",
   warning: "border-warning/50",
   critical: "border-destructive/50",
-};
-
-const trendIcons = {
-  up: "↑",
-  down: "↓",
-  stable: "=",
 };
 
 /**
@@ -95,7 +88,6 @@ interface ChartInnerProps {
 const ChartInner = memo(function ChartInner({
   data,
   metrics,
-  threshold,
   height = "100%",
   badgeColors,
   isDark,
@@ -140,7 +132,7 @@ const ChartInner = memo(function ChartInner({
 
     const series = metrics
       .filter((m) => m.dataKey)
-      .map((m, i) => ({
+      .map((m) => ({
         name: m.label,
         type: "line",
         data: data.map((d) => d[m.dataKey!]),
@@ -277,7 +269,6 @@ export const VerticalChartCard = memo(function VerticalChartCard({
   icon: Icon,
   metrics,
   data,
-  color = "hsl(var(--primary))",
   threshold,
   status = "normal",
   className,
@@ -299,11 +290,6 @@ export const VerticalChartCard = memo(function VerticalChartCard({
   const seriesLineColors = useMemo(() => {
     return metrics.map((m) => m.color || COLORS.data.out);
   }, [metrics]);
-
-  const mainMetric = metrics[0];
-  const mainDisplay = mainMetric
-    ? `${mainMetric.value}${mainMetric.unit != null && mainMetric.unit !== "" ? ` ${mainMetric.unit}` : ""}`
-    : "—";
 
   if (showSkeleton) {
     return (

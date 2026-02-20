@@ -11,9 +11,7 @@ import { Plus } from "lucide-react";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
 
 export function Security() {
-  const [modbusEnabled, setModbusEnabled] = useState(true);
   const [authMethod, setAuthMethod] = useState("certificate");
-  const [pwdAuthMethod, setPwdAuthMethod] = useState("user-pass");
   const [rigPlcEnabled, setRigPlcEnabled] = useState(true);
 
   return (

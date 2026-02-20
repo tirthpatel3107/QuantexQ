@@ -23,7 +23,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/components/theme-provider";
+import { useTheme } from "@/hooks/useTheme";
 
 interface CommonTableProps<TData> {
   table: TanstackTable<TData>;
@@ -43,7 +43,7 @@ export function CommonTable<TData>({
   isLightTheme = false,
 }: CommonTableProps<TData>) {
   const paginationState = table.getState().pagination;
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
   const isDarkTheme = theme === "dark" ? true : false;
 
   return (

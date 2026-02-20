@@ -140,7 +140,6 @@ const signalColumnHelper = createColumnHelper<Signal>();
 export function Signals() {
   const [search, setSearch] = useState("");
   const [filterBy, setFilterBy] = useState("all");
-  const [groupBy, setGroupBy] = useState("subsystem");
   const [subsystemFilters, setSubsystemFilters] = useState<string[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -161,13 +160,6 @@ export function Signals() {
     { label: "Favorites Only", value: "favorites" },
     { label: "In Use", value: "inUse" },
     { label: "Not In Use", value: "notInUse" },
-  ];
-
-  const groupByOptions = [
-    { label: "All Subsystems", value: "all" },
-    { label: "Subsystem", value: "subsystem" },
-    { label: "Unit Type", value: "unit" },
-    { label: "None", value: "none" },
   ];
 
   const subsystemOptions = [

@@ -2,21 +2,15 @@
  * Dashboard center column: vertical chart card configs (Flow, Density, etc.)
  * and helper to derive metric values from latest data point.
  */
-import type { LucideIcon } from "lucide-react";
 import {
-  Droplets,
-  Gauge,
-  Thermometer,
-  Activity,
   CircleDot,
-  SlidersHorizontal,
   Waves,
   TrendingUp,
   ArrowDownToLine,
   Binary,
   Tally4,
 } from "lucide-react";
-import type { ChartDataPoint } from "@/data/mockData";
+import { ChartDataPoint } from "@/types/chart";
 import type { VerticalCardConfig } from "@/types/chart";
 import type { VerticalChartMetric } from "@/types/chart";
 

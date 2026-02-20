@@ -205,7 +205,7 @@ export function Roles() {
         open={isDeleteConfirmOpen}
         onOpenChange={setIsDeleteConfirmOpen}
         title="Delete Role?"
-        description="Are you sure you want to delete this role? This action cannot be undone and will remove all associated permissions."
+        description={`Are you sure you want to delete the role "${selectedRole?.role}"? This action cannot be undone and will remove all associated permissions.`}
         actionText="Delete"
         cancelText="Cancel"
         onAction={() => setIsDeleteConfirmOpen(false)}

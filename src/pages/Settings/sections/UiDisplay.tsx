@@ -8,7 +8,9 @@ import {
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RefreshCw, Download, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useTheme, type Theme } from "@/components/theme-provider";
+import { useTheme } from "@/hooks/useTheme";
+import { type Theme } from "@/context/ThemeContext";
+import { useAccentColor, type AccentColor } from "@/hooks/useAccentColor";
 import { Separator } from "@/components/ui/separator";
 
 const THEME_OPTIONS = [
@@ -17,11 +19,55 @@ const THEME_OPTIONS = [
 ];
 
 const ACCENT_COLORS = [
-  { name: "Blue", value: "blue", color: "bg-blue-500" },
-  { name: "Teal", value: "teal", color: "bg-teal-500" },
-  { name: "Yellow", value: "yellow", color: "bg-yellow-500" },
-  { name: "Orange", value: "orange", color: "bg-orange-500" },
-  { name: "Pink", value: "pink", color: "bg-pink-500" },
+  {
+    name: "White",
+    value: "white",
+    darkModeColor: "#FFFFFF",
+    lightModeColor: "#000000",
+    hsl: "0 0% 98%",
+  },
+  {
+    name: "Blue",
+    value: "blue",
+    darkModeColor: "#3B82F6",
+    lightModeColor: "#3B82F6",
+    hsl: "217 91% 60%",
+  },
+  {
+    name: "Green",
+    value: "green",
+    darkModeColor: "#10B981",
+    lightModeColor: "#10B981",
+    hsl: "158 64% 52%",
+  },
+  {
+    name: "Orange",
+    value: "orange",
+    darkModeColor: "#F59E0B",
+    lightModeColor: "#F59E0B",
+    hsl: "38 92% 50%",
+  },
+  {
+    name: "Pink",
+    value: "pink",
+    darkModeColor: "#EC4899",
+    lightModeColor: "#EC4899",
+    hsl: "330 81% 60%",
+  },
+  {
+    name: "Purple",
+    value: "purple",
+    darkModeColor: "#A855F7",
+    lightModeColor: "#A855F7",
+    hsl: "271 81% 66%",
+  },
+  {
+    name: "Cyan",
+    value: "cyan",
+    darkModeColor: "#06B6D4",
+    lightModeColor: "#06B6D4",
+    hsl: "188 94% 43%",
+  },
 ];
 
 const LANGUAGE_OPTIONS = [
@@ -43,7 +89,7 @@ const TIME_FORMAT_OPTIONS = [
 
 export function UiDisplay() {
   const { theme, setTheme } = useTheme();
-  const [accentColor, setAccentColor] = useState("blue");
+  const { accentColor, setAccentColor } = useAccentColor();
   const [highlightAlerts, setHighlightAlerts] = useState(true);
   const [language, setLanguage] = useState("en");
   const [dateFormat, setDateFormat] = useState("dd-mmm-yyyy");
@@ -179,24 +225,38 @@ export function UiDisplay() {
             Interface Accent Color
           </p>
           <p className="text-sm text-muted-foreground mb-5">
-            Select the accent color for the UI highlights.
+            Select the accent color for the UI highlights. Current:{" "}
+            {ACCENT_COLORS.find((c) => c.value === accentColor)?.name}
           </p>
           <div className="flex gap-3">
             {ACCENT_COLORS.map((color) => (
               <button
                 key={color.value}
-                onClick={() => setAccentColor(color.value)}
+                onClick={() => setAccentColor(color.value as AccentColor)}
+                style={{
+                  backgroundColor:
+                    theme === "light"
+                      ? color.lightModeColor
+                      : color.darkModeColor,
+                }}
                 className={cn(
-                  "relative w-4 h-4 rounded-full transition-all hover:scale-110",
-                  color.color,
-                  accentColor === color.value &&
-                    "ring-2 ring-offset-2 ring-primary ring-offset-background",
+                  "relative w-5 h-5 rounded-full transition-all hover:scale-110 border-2",
+                  accentColor === color.value
+                    ? "border-foreground shadow-lg"
+                    : "border-border/30",
                 )}
                 title={color.name}
               >
                 {accentColor === color.value && (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-3 h-3 rounded-full bg-white/30 border border-white/50" />
+                    <div
+                      className={cn(
+                        "w-3 h-3 rounded-full border",
+                        theme === "light"
+                          ? "bg-white/60 border-white"
+                          : "bg-black/30 border-black/50",
+                      )}
+                    />
                   </div>
                 )}
               </button>

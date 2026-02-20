@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback, useEffect, memo, useMemo } from "react";
 import { Minus, Plus } from "lucide-react";
 import {
   Popover,
@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { useSimulation } from "@/hooks/useSimulation";
+import { useSimulationData } from "@/hooks/useSimulation";
 import { COLORS } from "@/constants/colors";
 import { DASHBOARD_LIMITS } from "@/constants/dashboard";
 import { SemiCircleGauge } from "./SemiCircleGauge";
@@ -25,8 +25,8 @@ interface FlowDifferenceBarProps {
  * Includes interactive slider to manually override flow difference for simulation/testing.
  * Also includes choke gauges and status indicators for auto control/detection.
  */
-export function FlowDifferenceBar({ showSkeleton }: FlowDifferenceBarProps) {
-  const { chartData } = useSimulation();
+export const FlowDifferenceBar = memo(function FlowDifferenceBar({ showSkeleton }: FlowDifferenceBarProps) {
+  const { chartData } = useSimulationData();
   const [open, setOpen] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -92,14 +92,14 @@ export function FlowDifferenceBar({ showSkeleton }: FlowDifferenceBarProps) {
   /**
    * Gets visual color feedback based on the magnitude of flow difference
    */
-  const getColor = (val: number) => {
+  const getColor = useCallback((val: number) => {
     const absVal = Math.abs(val);
     if (absVal <= SAFE_THRESHOLD) return COLORS.data.safe;
     if (absVal <= WARNING_THRESHOLD) return COLORS.data.warning;
     return COLORS.data.danger;
-  };
+  }, [SAFE_THRESHOLD, WARNING_THRESHOLD]);
 
-  const statusColor = getColor(flowDiff);
+  const statusColor = useMemo(() => getColor(flowDiff), [getColor, flowDiff]);
 
   if (showSkeleton) {
     return (
@@ -331,4 +331,4 @@ export function FlowDifferenceBar({ showSkeleton }: FlowDifferenceBarProps) {
       </PopoverContent>
     </Popover>
   );
-}
+});
