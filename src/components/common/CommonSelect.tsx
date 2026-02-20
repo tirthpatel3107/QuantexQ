@@ -84,7 +84,7 @@ export function CommonSelect({
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-full p-0 border-border/50 shadow-2xl"
+          className="w-[var(--radix-popover-trigger-width)] p-0 border-border/50 shadow-2xl"
           align="start"
         >
           <Command className="bg-popover">

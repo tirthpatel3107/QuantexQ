@@ -9,7 +9,16 @@ import {
   type SortingState,
   type PaginationState,
 } from "@tanstack/react-table";
-import { Star, Plus, Settings, Upload, Download, Filter } from "lucide-react";
+import {
+  Star,
+  Plus,
+  Settings,
+  Upload,
+  Download,
+  Filter,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 import {
   CommonButton,
   CommonSelect,
@@ -21,6 +30,7 @@ import {
 } from "@/components/common";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
+import { CommonAlertDialog } from "@/components/common/CommonAlertDialog";
 
 type Signal = {
   id: number;
@@ -131,6 +141,7 @@ export function Signals() {
   const [search, setSearch] = useState("");
   const [filterBy, setFilterBy] = useState("all");
   const [groupBy, setGroupBy] = useState("subsystem");
+  const [subsystemFilters, setSubsystemFilters] = useState<string[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -141,6 +152,9 @@ export function Signals() {
   const [isAddSignalModalOpen, setIsAddSignalModalOpen] = useState(false);
   const [isConfigureTagsModalOpen, setIsConfigureTagsModalOpen] =
     useState(false);
+  const [isEditSignalModalOpen, setIsEditSignalModalOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [selectedSignal, setSelectedSignal] = useState<Signal | null>(null);
 
   const filterOptions = [
     { label: "All Signals", value: "all" },
@@ -184,6 +198,16 @@ export function Signals() {
         signal.id === id ? { ...signal, inUse: !signal.inUse } : signal,
       ),
     );
+  };
+
+  const handleDeleteSignal = () => {
+    if (selectedSignal) {
+      setSignals((prev) =>
+        prev.filter((signal) => signal.id !== selectedSignal.id),
+      );
+      setIsDeleteConfirmOpen(false);
+      setSelectedSignal(null);
+    }
   };
 
   const columns = useMemo(
@@ -252,12 +276,41 @@ export function Signals() {
         ),
       }),
       signalColumnHelper.accessor("valueRange", {
-        header: "Value Range",
+        header: () => <div className="text-center">Value Range</div>,
         size: 150,
         cell: (info) => (
-          <span className="text-[13px] text-muted-foreground flex justify-end">
+          <span className="text-[13px] text-muted-foreground flex justify-start">
             {info.getValue() || "-"}
           </span>
+        ),
+      }),
+      signalColumnHelper.display({
+        id: "actions",
+        header: () => <div className="text-right">Actions</div>,
+        size: 100,
+        cell: (info) => (
+          <div className="flex justify-end gap-1.5">
+            <button
+              className="p-1.5 rounded-md text-success/70 hover:text-success hover:bg-success/10 transition-all"
+              title="Edit Signal"
+              onClick={() => {
+                setSelectedSignal(info.row.original);
+                setIsEditSignalModalOpen(true);
+              }}
+            >
+              <Pencil className="h-4 w-4" />
+            </button>
+            <button
+              className="p-1.5 rounded-md text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+              title="Delete Signal"
+              onClick={() => {
+                setSelectedSignal(info.row.original);
+                setIsDeleteConfirmOpen(true);
+              }}
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
         ),
       }),
     ],
@@ -275,8 +328,13 @@ export function Signals() {
       filtered = filtered.filter((s) => !s.inUse);
     }
 
+    // Apply subsystem filters
+    if (subsystemFilters.length > 0) {
+      filtered = filtered.filter((s) => subsystemFilters.includes(s.subsystem));
+    }
+
     return filtered;
-  }, [signals, filterBy]);
+  }, [signals, filterBy, subsystemFilters]);
 
   const table = useReactTable({
     data: filteredData,
@@ -313,7 +371,7 @@ export function Signals() {
           {/* Filter Dropdown */}
           <CommonDropdownMenu
             value={filterBy}
-            onValueChange={setFilterBy}
+            onValueChange={(value) => setFilterBy(value as string)}
             options={filterOptions}
             triggerLabel={`${filterOptions.find((f) => f.value === filterBy)?.label}`}
             triggerIcon={Filter}
@@ -322,18 +380,25 @@ export function Signals() {
             defaultValue="all"
             title="Filter Signals"
             contentWidth="w-[180px]"
+            searchable={true}
+            searchPlaceholder="Search filters..."
           />
 
-          {/* Group By Dropdown */}
+          {/* Subsystem Filter (Multi-select) */}
           <CommonDropdownMenu
-            value={groupBy}
-            onValueChange={setGroupBy}
-            options={groupByOptions}
-            triggerLabel={`${groupByOptions.find((g) => g.value === groupBy)?.label}`}
+            value={subsystemFilters}
+            onValueChange={(value) => setSubsystemFilters(value as string[])}
+            options={subsystemOptions}
+            triggerLabel="Subsystems"
             triggerIcon={Filter}
-            menuLabel="Group By"
-            title="Group By"
-            contentWidth="w-[160px]"
+            menuLabel="Filter by Subsystem"
+            title="Filter by Subsystem"
+            contentWidth="w-[240px]"
+            searchable={true}
+            searchPlaceholder="Search subsystems..."
+            multiple={true}
+            showBadges={true}
+            showCount={true}
           />
         </div>
 
@@ -437,6 +502,15 @@ export function Signals() {
             id="value-range"
             placeholder="e.g., 0-2400"
           />
+          <div className="flex items-center space-x-2">
+            <Checkbox id="add-in-use" defaultChecked={true} />
+            <label
+              htmlFor="add-in-use"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              In Use
+            </label>
+          </div>
         </div>
       </CommonDialog>
 
@@ -470,6 +544,85 @@ export function Signals() {
           Tag configuration interface will be implemented here.
         </div>
       </CommonDialog>
+
+      {/* Edit Signal Modal */}
+      <CommonDialog
+        open={isEditSignalModalOpen}
+        onOpenChange={setIsEditSignalModalOpen}
+        title="Edit Signal"
+        description={`Modify details for ${selectedSignal?.name}.`}
+        footer={
+          <>
+            <CommonButton
+              variant="outline"
+              size="sm"
+              className="h-9 border-border hover:bg-white/5"
+              onClick={() => setIsEditSignalModalOpen(false)}
+            >
+              Cancel
+            </CommonButton>
+            <CommonButton
+              size="sm"
+              className="h-9"
+              onClick={() => setIsEditSignalModalOpen(false)}
+            >
+              Save Changes
+            </CommonButton>
+          </>
+        }
+      >
+        <div className="grid gap-4">
+          <CommonInput
+            label="Signal Name"
+            id="edit-signal-name"
+            defaultValue={selectedSignal?.name}
+            placeholder="Enter signal name"
+          />
+          <CommonSelect
+            label="Subsystem"
+            options={subsystemOptions}
+            value={selectedSignal?.subsystem || ""}
+            onValueChange={() => {}}
+            placeholder="Select subsystem"
+          />
+          <CommonInput
+            label="Unit"
+            id="edit-unit"
+            defaultValue={selectedSignal?.unit}
+            placeholder="e.g., RPM, psi, %"
+          />
+          <CommonInput
+            label="Value Range"
+            id="edit-value-range"
+            defaultValue={selectedSignal?.valueRange}
+            placeholder="e.g., 0-2400"
+          />
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="edit-in-use"
+              defaultChecked={selectedSignal?.inUse}
+            />
+            <label
+              htmlFor="edit-in-use"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              In Use
+            </label>
+          </div>
+        </div>
+      </CommonDialog>
+
+      {/* Delete Confirmation */}
+      <CommonAlertDialog
+        open={isDeleteConfirmOpen}
+        onOpenChange={setIsDeleteConfirmOpen}
+        title="Delete Signal?"
+        description={`Are you sure you want to delete "${selectedSignal?.name}"? This action cannot be undone and will remove all associated configurations.`}
+        actionText="Delete"
+        cancelText="Cancel"
+        onAction={handleDeleteSignal}
+        actionClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+      />
     </div>
   );
 }
