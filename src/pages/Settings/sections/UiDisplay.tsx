@@ -9,6 +9,7 @@ import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RefreshCw, Download, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme, type Theme } from "@/components/theme-provider";
+import { Separator } from "@/components/ui/separator";
 
 const THEME_OPTIONS = [
   { label: "Dark", value: "dark" },
@@ -63,7 +64,7 @@ export function UiDisplay() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3">
       {/* Display Preferences Section */}
       <PanelCard title="Display Preferences">
         <div>
@@ -75,16 +76,15 @@ export function UiDisplay() {
               onCheckedChange={setHighlightAlerts}
             />
 
-            {/* Language */}
-            <CommonSelect
-              label="Language"
-              options={LANGUAGE_OPTIONS}
-              value={language}
-              onValueChange={setLanguage}
-              placeholder="Select language"
-            />
-
             <div className="grid gap-3 grid-cols-2">
+              {/* Language */}
+              <CommonSelect
+                label="Language"
+                options={LANGUAGE_OPTIONS}
+                value={language}
+                onValueChange={setLanguage}
+                placeholder="Select language"
+              />
               {/* Date Format */}
               <CommonSelect
                 label="Date Format"
@@ -175,7 +175,7 @@ export function UiDisplay() {
 
         {/* Interface Accent Color */}
         <div>
-          <p className="text-medium font-medium mb-3 block">
+          <p className="text-medium font-medium pt-5 mb-3 block">
             Interface Accent Color
           </p>
           <p className="text-sm text-muted-foreground mb-5">
@@ -187,7 +187,7 @@ export function UiDisplay() {
                 key={color.value}
                 onClick={() => setAccentColor(color.value)}
                 className={cn(
-                  "relative w-6 h-6 rounded-full transition-all hover:scale-110",
+                  "relative w-4 h-4 rounded-full transition-all hover:scale-110",
                   color.color,
                   accentColor === color.value &&
                     "ring-2 ring-offset-2 ring-primary ring-offset-background",
@@ -214,51 +214,56 @@ export function UiDisplay() {
               <p className="text-sm text-muted-foreground">16 Apr 2026</p>
             </div>
 
-            <div>
-              <p className="text-medium font-semibold mb-2">Enhancements:</p>
-              <ul className="space-y-1.5 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500">•</span>
-                  <span>
-                    Improved the hydraulics model for better pressure control.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500">•</span>
-                  <span>Updated DAQ engine for faster data acquisition.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500">•</span>
-                  <span>
-                    Enhanced network integration for more stable communication.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500">•</span>
-                  <span>
-                    Improved alarm management for better event handling.
-                  </span>
-                </li>
-              </ul>
-            </div>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <p className="text-medium font-semibold mb-2">Enhancements:</p>
+                <ul className="space-y-1.5 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">•</span>
+                    <span>
+                      Improved the hydraulics model for better pressure control.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">•</span>
+                    <span>Updated DAQ engine for faster data acquisition.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">•</span>
+                    <span>
+                      Enhanced network integration for more stable
+                      communication.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">•</span>
+                    <span>
+                      Improved alarm management for better event handling.
+                    </span>
+                  </li>
+                </ul>
+              </div>
 
-            <div>
-              <p className="text-medium font-semibold mt-5 mb-2">Bug Fixes:</p>
-              <ul className="space-y-1.5 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500">•</span>
-                  <span>
-                    Fixed an issue with auto control engine response times.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-500">•</span>
-                  <span>
-                    Fixed a logging bug where log files were not rotating
-                    properly.
-                  </span>
-                </li>
-              </ul>
+              <Separator orientation="vertical" className="h-auto" />
+
+              <div className="flex-1">
+                <p className="text-medium font-semibold mb-2">Bug Fixes:</p>
+                <ul className="space-y-1.5 text-sm text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">•</span>
+                    <span>
+                      Fixed an issue with auto control engine response times.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-green-500">•</span>
+                    <span>
+                      Fixed a logging bug where log files were not rotating
+                      properly.
+                    </span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -282,12 +287,11 @@ export function UiDisplay() {
           >
             Install Updates
           </CommonButton>
-
-          <button className="w-full flex items-center justify-between px-4 py-2 text-sm border border-border/50 rounded-md hover:bg-accent transition-colors">
-            <span className="text-muted-foreground">PREVIOUS UPDATES</span>
-            <ChevronRight className="h-4 w-4" />
-          </button>
         </div>
+        <button className="flex items-center justify-between px-4 py-2 text-sm border border-border/50 rounded-md hover:bg-accent transition-colors mt-5">
+          <span className="text-muted-foreground mr-2">PREVIOUS UPDATES</span>
+          <ChevronRight className="h-4 w-4" />
+        </button>
       </PanelCard>
     </div>
   );
