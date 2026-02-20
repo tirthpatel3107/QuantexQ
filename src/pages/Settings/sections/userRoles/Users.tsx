@@ -9,13 +9,7 @@ import {
   type SortingState,
   type PaginationState,
 } from "@tanstack/react-table";
-import {
-  ShieldCheck,
-  Pencil,
-  Trash2,
-  UserPlus,
-  Filter,
-} from "lucide-react";
+import { ShieldCheck, Pencil, Trash2, UserPlus, Filter } from "lucide-react";
 import {
   CommonButton,
   CommonSearchInput,

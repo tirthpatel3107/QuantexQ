@@ -6,13 +6,7 @@ import {
   getSortedRowModel,
   SortingState,
 } from "@tanstack/react-table";
-import {
-  Bell,
-  Trash2,
-  Activity,
-  Zap,
-  PlusCircle,
-} from "lucide-react";
+import { Bell, Trash2, Activity, Zap, PlusCircle } from "lucide-react";
 import {
   CommonTable,
   CommonTabs,

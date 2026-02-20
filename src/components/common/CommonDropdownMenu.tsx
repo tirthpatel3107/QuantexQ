@@ -81,7 +81,7 @@ export function CommonDropdownMenu({
   showCount = false,
 }: CommonDropdownMenuProps) {
   const [searchQuery, setSearchQuery] = React.useState("");
-  
+
   // Normalize values to array for easier handling
   const selectedValues = React.useMemo(() => {
     if (multiple) {
@@ -90,13 +90,16 @@ export function CommonDropdownMenu({
     return [];
   }, [value, multiple]);
 
-  const isActive = highlightActive && (
-    multiple 
-      ? selectedValues.length > 0 && JSON.stringify(selectedValues) !== JSON.stringify(defaultValue)
-      : value !== defaultValue
-  );
+  const isActive =
+    highlightActive &&
+    (multiple
+      ? selectedValues.length > 0 &&
+        JSON.stringify(selectedValues) !== JSON.stringify(defaultValue)
+      : value !== defaultValue);
 
-  const selectedOption = !multiple ? options.find((opt) => opt.value === value) : null;
+  const selectedOption = !multiple
+    ? options.find((opt) => opt.value === value)
+    : null;
   const selectedCount = multiple ? selectedValues.length : 0;
 
   const filteredOptions = React.useMemo(() => {
@@ -105,7 +108,7 @@ export function CommonDropdownMenu({
     }
     const query = searchQuery.toLowerCase();
     return options.filter((option) =>
-      option.label.toLowerCase().includes(query)
+      option.label.toLowerCase().includes(query),
     );
   }, [options, searchQuery, searchable]);
 
@@ -136,7 +139,9 @@ export function CommonDropdownMenu({
   };
 
   const isOptionSelected = (optionValue: string) => {
-    return multiple ? selectedValues.includes(optionValue) : value === optionValue;
+    return multiple
+      ? selectedValues.includes(optionValue)
+      : value === optionValue;
   };
 
   return (
@@ -265,9 +270,7 @@ export function CommonDropdownMenu({
                     {option.label}
                   </span>
                 </div>
-                {selected && (
-                  <Check className="h-4 w-4 text-primary" />
-                )}
+                {selected && <Check className="h-4 w-4 text-primary" />}
               </DropdownMenuItem>
             );
           })

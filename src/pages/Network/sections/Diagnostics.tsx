@@ -47,10 +47,7 @@ export function Diagnostics() {
               detail="(Pg PLC 10.1.1.13:502)"
               status="success"
             />
-            <QuickTestItem
-              label="Protocol Handshake Test"
-              status="default"
-            />
+            <QuickTestItem label="Protocol Handshake Test" status="default" />
             <QuickTestItem
               label="Tag Read Test"
               detail="(Pg PLC 10.1.0.113)"
@@ -72,20 +69,9 @@ export function Diagnostics() {
               value="95%"
               detail="(17 / 18)"
             />
-            <DataIntegrityRow
-              label="Missing tags:"
-              value="1"
-              badge="--"
-            />
-            <DataIntegrityRow
-              label="Out-of-range tags:"
-              value="3"
-              badge="--"
-            />
-            <DataIntegrityRow
-              label="Frozen signals:"
-              value="2"
-            />
+            <DataIntegrityRow label="Missing tags:" value="1" badge="--" />
+            <DataIntegrityRow label="Out-of-range tags:" value="3" badge="--" />
+            <DataIntegrityRow label="Frozen signals:" value="2" />
             <DataIntegrityRow
               label="Data rate (current):"
               value="94 / 100 ms"
@@ -336,7 +322,12 @@ export function Diagnostics() {
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Messages/sec: (RSS)</span>
-              <Badge variant="outline" className="bg-green-500/10 text-green-500 border-green-500/20">GOOD</Badge>
+              <Badge
+                variant="outline"
+                className="bg-green-500/10 text-green-500 border-green-500/20"
+              >
+                GOOD
+              </Badge>
             </div>
             <div className="flex gap-2 text-xs">
               <CommonButton variant="ghost" size="sm">
@@ -436,7 +427,12 @@ function DataIntegrityRow({
   value: string;
   detail?: string;
   badge?: string;
-  badgeVariant?: "default" | "secondary" | "success" | "warning" | "destructive";
+  badgeVariant?:
+    | "default"
+    | "secondary"
+    | "success"
+    | "warning"
+    | "destructive";
 }) {
   const getBadgeClassName = () => {
     if (badgeVariant === "success") {
@@ -457,8 +453,12 @@ function DataIntegrityRow({
           <span className="text-xs text-muted-foreground">{detail}</span>
         )}
         {badge && (
-          <Badge 
-            variant={badgeVariant === "success" || badgeVariant === "warning" ? "outline" : badgeVariant} 
+          <Badge
+            variant={
+              badgeVariant === "success" || badgeVariant === "warning"
+                ? "outline"
+                : badgeVariant
+            }
             className={cn("text-xs", getBadgeClassName())}
           >
             {badge}
@@ -512,7 +512,12 @@ function MetricChart({
   label: string;
   value?: string;
   badge?: string;
-  badgeVariant?: "default" | "secondary" | "success" | "warning" | "destructive";
+  badgeVariant?:
+    | "default"
+    | "secondary"
+    | "success"
+    | "warning"
+    | "destructive";
 }) {
   const getBadgeClassName = () => {
     if (badgeVariant === "success") {
@@ -531,8 +536,12 @@ function MetricChart({
         {value && <span className="text-xs">{value}</span>}
       </div>
       {badge && (
-        <Badge 
-          variant={badgeVariant === "success" || badgeVariant === "warning" ? "outline" : badgeVariant}
+        <Badge
+          variant={
+            badgeVariant === "success" || badgeVariant === "warning"
+              ? "outline"
+              : badgeVariant
+          }
           className={cn("text-xs", getBadgeClassName())}
         >
           {badge}
@@ -574,7 +583,11 @@ function WatchlistItem({
       <div className="flex items-center gap-2">
         <span className="text-xs text-muted-foreground">{timestamp}</span>
         <Badge className={cn("text-xs", badgeVariants[status])}>
-          {status === "success" ? "CALC" : status === "warning" ? "WARN" : "Missing"}
+          {status === "success"
+            ? "CALC"
+            : status === "warning"
+              ? "WARN"
+              : "Missing"}
         </Badge>
       </div>
     </div>

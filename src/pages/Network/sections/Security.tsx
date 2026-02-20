@@ -55,21 +55,9 @@ export function Security() {
             <div className="space-y-2">
               <label className="text-sm font-medium">EndPoint:</label>
               <div className="flex items-center gap-2">
-                <CommonInput
-                  value="10.1.0.113"
-                  className="flex-1"
-                  readOnly
-                />
-                <CommonInput
-                  value="0"
-                  className="w-20"
-                  readOnly
-                />
-                <CommonInput
-                  value="502"
-                  className="w-20"
-                  readOnly
-                />
+                <CommonInput value="10.1.0.113" className="flex-1" readOnly />
+                <CommonInput value="0" className="w-20" readOnly />
+                <CommonInput value="502" className="w-20" readOnly />
                 <span className="text-sm text-muted-foreground">Port:</span>
                 <CommonSelect
                   value="502"
@@ -94,7 +82,7 @@ export function Security() {
             {/* Authentication */}
             <div className="space-y-3">
               <h4 className="text-sm font-semibold">Authentication</h4>
-              
+
               <div className="space-y-2">
                 <label className="flex items-center gap-2">
                   <input
@@ -173,7 +161,9 @@ export function Security() {
               <span className="text-sm font-medium">75 / sec</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Clock drift:</span>
+              <span className="text-sm text-muted-foreground">
+                Clock drift:
+              </span>
               <span className="text-sm font-medium">+11 ms ahead</span>
             </div>
 

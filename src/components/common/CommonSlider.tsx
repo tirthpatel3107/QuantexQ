@@ -46,7 +46,9 @@ export function CommonSlider({
           )}
         </div>
         {showValue && (
-          <span className="text-sm font-medium">{valueFormatter(value[0])}</span>
+          <span className="text-sm font-medium">
+            {valueFormatter(value[0])}
+          </span>
         )}
       </div>
       <Slider
@@ -71,7 +73,7 @@ export function CommonSlider({
               } else if (position === 100) {
                 alignClass = "-translate-x-full"; // Right align for last label
               }
-              
+
               return (
                 <span
                   key={index}
