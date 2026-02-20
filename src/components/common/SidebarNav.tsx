@@ -37,11 +37,11 @@ export function SidebarNav({
                 ![
                   "ui",
                   // "signals",
-                  // "sources",
-                  // "protocols",
-                  // "routing",
-                  // "security",
-                  // "diagnostics",
+                  "sources",
+                  "protocols",
+                  "routing",
+                  "security",
+                  "diagnostics",
                 ].includes(item.id) && navigate(`${baseRoute}/${item.id}`)
               }
               title={isCollapsed ? item.label : ""}
