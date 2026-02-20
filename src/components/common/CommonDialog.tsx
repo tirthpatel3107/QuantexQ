@@ -50,7 +50,7 @@ export function CommonDialog({
 }: CommonDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(maxWidth, className)} hideClose={hideClose}>
+      <DialogContent className={cn(maxWidth, "flex flex-col", className)} hideClose={hideClose}>
         <DialogHeader>
           <DialogTitle className="text-foreground">{title}</DialogTitle>
           {description && (
@@ -64,7 +64,7 @@ export function CommonDialog({
         {showDivider && <div className="h-[1px] w-full bg-border" />}
 
         {/* Dialog Body */}
-        <div className="py-2">{children}</div>
+        <div className="flex-1 min-h-0">{children}</div>
 
         {/* Dialog Footer */}
         {footer && (
