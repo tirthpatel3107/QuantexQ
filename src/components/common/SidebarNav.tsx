@@ -35,7 +35,7 @@ export function SidebarNav({
             <button
               onClick={() =>
                 ![
-                  "ui",
+                  // "ui",
                   // "signals",
                   "sources",
                   "protocols",
