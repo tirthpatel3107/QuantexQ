@@ -411,8 +411,8 @@ export const VerticalChartCard = memo(function VerticalChartCard({
         title={title}
         maxWidth="max-w-4xl max-h-[90vh] h-[80vh]"
       >
-        <div className="flex-1 w-full min-h-0 flex flex-col relative px-4">
-          <div className="pb-5 flex justify-between gap-4 pointer-events-none">
+        <div className="flex flex-col h-full w-full gap-4">
+          <div className="flex justify-between gap-4 px-4">
             {metrics.map((m, i) => (
               <MetricDisplay
                 key={i}
@@ -424,7 +424,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
               />
             ))}
           </div>
-          <div className="flex-1 min-h-[400px]">
+          <div className="flex-1 min-h-0 w-full px-4">
             <ChartInner
               data={data}
               metrics={metrics}
