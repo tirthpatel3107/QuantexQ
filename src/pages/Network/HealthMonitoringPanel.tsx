@@ -239,7 +239,7 @@ export function HealthMonitoringPanel({
       </PanelCard>
 
       {/* Last Diagnostic Results */}
-      <PanelCard title="Last Diagnostic Results">
+      {/* <PanelCard title="Last Diagnostic Results">
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-red-500" />
@@ -280,7 +280,7 @@ export function HealthMonitoringPanel({
             </div>
           </div>
         </div>
-      </PanelCard>
+      </PanelCard> */}
     </>
   );
 }

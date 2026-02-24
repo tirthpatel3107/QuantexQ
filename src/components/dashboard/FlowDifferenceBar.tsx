@@ -1,4 +1,11 @@
-import React, { useState, useRef, useCallback, useEffect, memo, useMemo } from "react";
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  memo,
+  useMemo,
+} from "react";
 import { Minus, Plus } from "lucide-react";
 import {
   Popover,
@@ -25,7 +32,9 @@ interface FlowDifferenceBarProps {
  * Includes interactive slider to manually override flow difference for simulation/testing.
  * Also includes choke gauges and status indicators for auto control/detection.
  */
-export const FlowDifferenceBar = memo(function FlowDifferenceBar({ showSkeleton }: FlowDifferenceBarProps) {
+export const FlowDifferenceBar = memo(function FlowDifferenceBar({
+  showSkeleton,
+}: FlowDifferenceBarProps) {
   const { chartData } = useSimulationData();
   const [open, setOpen] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -92,12 +101,15 @@ export const FlowDifferenceBar = memo(function FlowDifferenceBar({ showSkeleton 
   /**
    * Gets visual color feedback based on the magnitude of flow difference
    */
-  const getColor = useCallback((val: number) => {
-    const absVal = Math.abs(val);
-    if (absVal <= SAFE_THRESHOLD) return COLORS.data.safe;
-    if (absVal <= WARNING_THRESHOLD) return COLORS.data.warning;
-    return COLORS.data.danger;
-  }, [SAFE_THRESHOLD, WARNING_THRESHOLD]);
+  const getColor = useCallback(
+    (val: number) => {
+      const absVal = Math.abs(val);
+      if (absVal <= SAFE_THRESHOLD) return COLORS.data.safe;
+      if (absVal <= WARNING_THRESHOLD) return COLORS.data.warning;
+      return COLORS.data.danger;
+    },
+    [SAFE_THRESHOLD, WARNING_THRESHOLD],
+  );
 
   const statusColor = useMemo(() => getColor(flowDiff), [getColor, flowDiff]);
 
@@ -137,10 +149,10 @@ export const FlowDifferenceBar = memo(function FlowDifferenceBar({ showSkeleton 
         >
           {/* Left Section: Controls & Flow Meter */}
           <div className="flex-[1] flex h-full items-center gap-3 bg-transparent relative shrink-0">
-            <PopoverTrigger asChild>
-              <CommonTooltip
-                content={open ? "Hide flow controls" : "Show flow controls"}
-              >
+            <CommonTooltip
+              content={open ? "Hide flow controls" : "Show flow controls"}
+            >
+              <PopoverTrigger asChild>
                 <button
                   type="button"
                   className="h-full w-5 flex items-center justify-center hover:bg-muted dark:hover:bg-white/5 transition-colors -ml-1 mr-1 rounded-sm border border-border dark:border-white/10"
@@ -154,8 +166,8 @@ export const FlowDifferenceBar = memo(function FlowDifferenceBar({ showSkeleton 
                     )}
                   </div>
                 </button>
-              </CommonTooltip>
-            </PopoverTrigger>
+              </PopoverTrigger>
+            </CommonTooltip>
 
             <div className="flex items-center gap-4 w-full">
               {/* Status Indicator Circle */}

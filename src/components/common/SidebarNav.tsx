@@ -36,13 +36,19 @@ export const SidebarNav = memo(function SidebarNav({
             <button
               onClick={() =>
                 ![
+                  // ---- Setting ------
                   // "ui",
                   // "signals",
-                  "sources",
+
+                  // ---- Network ------
+                  // "sources",
                   "protocols",
                   "routing",
                   "security",
                   "diagnostics",
+
+                  // ---- DAQ ------
+                  "downloads"
                 ].includes(item.id) && navigate(`${baseRoute}/${item.id}`)
               }
               title={isCollapsed ? item.label : ""}
