@@ -50,7 +50,7 @@ export function SensorPerms() {
   return (
     <>
       <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-        Sensor Perms DAQ Section - API Connected ({sensors.length} sensors)
+        Sensor Perms DAQ Section ({sensors.length} sensors)
       </div>
 
       <FormSaveDialog form={form} />

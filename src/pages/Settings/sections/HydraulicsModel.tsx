@@ -56,7 +56,6 @@ export function HydraulicsModel() {
       <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
         <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
           Hydraulics Model Settings Section - Implementation Pending
-          <div className="mt-2 text-xs">API Connected: ✓</div>
         </div>
       </div>
 

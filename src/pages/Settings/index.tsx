@@ -51,7 +51,12 @@ function SettingsContent() {
     () => (
       <>
         <CommonTooltip content="Save settings">
-          <CommonButton variant="outline" size="sm" icon={Save} onClick={requestSave}>
+          <CommonButton
+            variant="outline"
+            size="sm"
+            icon={Save}
+            onClick={requestSave}
+          >
             Save
           </CommonButton>
         </CommonTooltip>
@@ -91,12 +96,6 @@ function SettingsContent() {
       case "setting":
         return (
           <>
-            <GeneralSettings
-              general={general}
-              setGeneral={setGeneral}
-              safetyConfirmations={safetyConfirmations}
-              setSafetyConfirmations={setSafetyConfirmations}
-            />
             <SettingsOverview />
           </>
         );

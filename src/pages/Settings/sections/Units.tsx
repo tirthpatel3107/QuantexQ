@@ -56,7 +56,7 @@ export function Units() {
   return (
     <>
       <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-        Units Settings Section - API Connected (Pressure: {formData.pressure})
+        Units Settings Section (Pressure: {formData.pressure})
       </div>
 
       <FormSaveDialog form={form} />

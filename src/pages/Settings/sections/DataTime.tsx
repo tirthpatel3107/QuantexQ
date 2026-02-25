@@ -56,7 +56,7 @@ export function DataTime() {
   return (
     <>
       <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-        Data & Time Settings Section - API Connected (NTP:{" "}
+        Data & Time Settings Section (NTP:{" "}
         {formData.ntpEnabled ? "Enabled" : "Disabled"})
       </div>
 

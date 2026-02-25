@@ -46,7 +46,7 @@ export function Hydraulics() {
   return (
     <>
       <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-        Hydraulics Models DAQ Section - API Connected ({modelsUsed.length} models)
+        Hydraulics Models DAQ Section ({modelsUsed.length} models)
       </div>
 
       <FormSaveDialog form={form} />

@@ -50,7 +50,7 @@ export function Streaming() {
   return (
     <>
       <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-        Streaming & Logging DAQ Section - API Connected (WITS: {witsStream.enabled ? "Enabled" : "Disabled"})
+        Streaming & Logging DAQ Section (WITS: {witsStream.enabled ? "Enabled" : "Disabled"})
       </div>
 
       <FormSaveDialog form={form} />
