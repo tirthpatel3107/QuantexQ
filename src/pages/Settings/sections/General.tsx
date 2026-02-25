@@ -56,16 +56,6 @@ export function GeneralSettings({
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">Error loading general settings</div>
-    );
-  }
-
-  if (!generalData) {
-    return <div className="p-4">No general settings available</div>;
-  }
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3 mb-3">
       <PanelCard title="Project / Well Context">

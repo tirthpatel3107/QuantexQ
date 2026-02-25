@@ -28,7 +28,8 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
   // Initialize form data when calibrationData loads
   useEffect(() => {
     if (calibrationData) {
-      const { viscometerCalDate, densityCalDate, tempSensorOffset } = calibrationData;
+      const { viscometerCalDate, densityCalDate, tempSensorOffset } =
+        calibrationData;
       setFormData({ viscometerCalDate, densityCalDate, tempSensorOffset });
       setFluid((prev) => ({
         ...prev,
@@ -53,16 +54,6 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">Error loading calibration data</div>
-    );
-  }
-
-  if (!calibrationData || !formData) {
-    return <div className="p-4">No calibration data available</div>;
-  }
-
   return (
     <div className="grid grid-cols-1 max-w-2xl gap-4 mb-4">
       <PanelCard title="Calibration" headerAction={<RestoreDefaultsButton />}>
@@ -80,9 +71,7 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
           <CommonInput
             label="Density cal. date"
             value={formData.densityCalDate}
-            onChange={(e) =>
-              handleSaveData({ densityCalDate: e.target.value })
-            }
+            onChange={(e) => handleSaveData({ densityCalDate: e.target.value })}
             placeholder="—"
             type="date"
           />

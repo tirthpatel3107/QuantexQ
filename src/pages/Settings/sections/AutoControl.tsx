@@ -7,7 +7,11 @@ import {
 } from "@/services/api/settings/settings.api";
 
 export function AutoControl() {
-  const { data: autoControlResponse, isLoading, error } = useAutoControlSettings();
+  const {
+    data: autoControlResponse,
+    isLoading,
+    error,
+  } = useAutoControlSettings();
   const { data: optionsResponse } = useAutoControlOptions();
   const { mutate: saveAutoControlData } = useSaveAutoControlSettings();
 
@@ -34,18 +38,6 @@ export function AutoControl() {
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 border border-destructive/50 rounded-lg text-destructive">
-        Error loading settings: {error.message}
-      </div>
-    );
-  }
-
-  if (!autoControlData || !formData) {
-    return <div className="p-4">No auto control data available</div>;
   }
 
   return (

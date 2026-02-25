@@ -16,10 +16,6 @@ export function Summary({ fluid }: SummaryProps) {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return <div className="p-4 text-red-500">Error loading summary data</div>;
-  }
-
   // Use API data if available, otherwise fall back to fluid prop
   const displayData = summaryData || {
     fluidType: fluid.type,

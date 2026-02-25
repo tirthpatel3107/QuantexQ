@@ -39,7 +39,8 @@ export const networkKeys = {
   security: () => [...networkKeys.all, "security"] as const,
   securityOptions: () => [...networkKeys.all, "security", "options"] as const,
   diagnostics: () => [...networkKeys.all, "diagnostics"] as const,
-  diagnosticsOptions: () => [...networkKeys.all, "diagnostics", "options"] as const,
+  diagnosticsOptions: () =>
+    [...networkKeys.all, "diagnostics", "options"] as const,
 };
 
 // ============================================

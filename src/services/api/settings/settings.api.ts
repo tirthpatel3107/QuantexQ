@@ -15,7 +15,8 @@ export const settingsKeys = {
   general: () => [...settingsKeys.all, "general"] as const,
   generalOptions: () => [...settingsKeys.all, "general", "options"] as const,
   uiDisplay: () => [...settingsKeys.all, "uiDisplay"] as const,
-  uiDisplayOptions: () => [...settingsKeys.all, "uiDisplay", "options"] as const,
+  uiDisplayOptions: () =>
+    [...settingsKeys.all, "uiDisplay", "options"] as const,
   units: () => [...settingsKeys.all, "units"] as const,
   unitsOptions: () => [...settingsKeys.all, "units", "options"] as const,
   dataTime: () => [...settingsKeys.all, "dataTime"] as const,
@@ -25,13 +26,17 @@ export const settingsKeys = {
   signals: () => [...settingsKeys.all, "signals"] as const,
   signalsOptions: () => [...settingsKeys.all, "signals", "options"] as const,
   chokePumps: () => [...settingsKeys.all, "chokePumps"] as const,
-  chokePumpsOptions: () => [...settingsKeys.all, "chokePumps", "options"] as const,
+  chokePumpsOptions: () =>
+    [...settingsKeys.all, "chokePumps", "options"] as const,
   autoControl: () => [...settingsKeys.all, "autoControl"] as const,
-  autoControlOptions: () => [...settingsKeys.all, "autoControl", "options"] as const,
+  autoControlOptions: () =>
+    [...settingsKeys.all, "autoControl", "options"] as const,
   hydraulicsModel: () => [...settingsKeys.all, "hydraulicsModel"] as const,
-  hydraulicsModelOptions: () => [...settingsKeys.all, "hydraulicsModel", "options"] as const,
+  hydraulicsModelOptions: () =>
+    [...settingsKeys.all, "hydraulicsModel", "options"] as const,
   aboutDiagnostics: () => [...settingsKeys.all, "aboutDiagnostics"] as const,
-  aboutDiagnosticsOptions: () => [...settingsKeys.all, "aboutDiagnostics", "options"] as const,
+  aboutDiagnosticsOptions: () =>
+    [...settingsKeys.all, "aboutDiagnostics", "options"] as const,
 };
 
 // ============================================
@@ -594,7 +599,10 @@ const fetchSignalsOptions = async (): Promise<ApiResponse<any>> => {
             { label: "Hydraulics", value: "Hydraulics" },
             { label: "Auto Control", value: "Auto Control" },
             { label: "Network", value: "Network" },
-            { label: "Hydraulic Model Validation", value: "Hydraulic Model Validation" },
+            {
+              label: "Hydraulic Model Validation",
+              value: "Hydraulic Model Validation",
+            },
           ],
         },
         timestamp: new Date().toISOString(),

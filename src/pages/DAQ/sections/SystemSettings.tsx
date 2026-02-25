@@ -91,16 +91,6 @@ export function SystemSettings() {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">Error loading system settings data</div>
-    );
-  }
-
-  if (!systemSettingsData || !formData) {
-    return <div className="p-4">No system settings data available</div>;
-  }
-
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* Left Column */}

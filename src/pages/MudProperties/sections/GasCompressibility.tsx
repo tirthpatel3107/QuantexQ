@@ -23,11 +23,13 @@ export function GasCompressibility({
   setFluid,
 }: GasCompressibilityProps) {
   const { data: gasResponse, isLoading, error } = useGasCompressibilityData();
-  const { mutate: saveGasCompressibilityData } = useSaveGasCompressibilityData();
+  const { mutate: saveGasCompressibilityData } =
+    useSaveGasCompressibilityData();
 
   const gasData = gasResponse?.data;
 
-  const [formData, setFormData] = useState<SaveGasCompressibilityPayload | null>(null);
+  const [formData, setFormData] =
+    useState<SaveGasCompressibilityPayload | null>(null);
 
   // Initialize form data when gasData loads
   useEffect(() => {
@@ -44,7 +46,9 @@ export function GasCompressibility({
   }, [gasData, setFluid]);
 
   // Save data to API
-  const handleSaveData = (updatedData: Partial<SaveGasCompressibilityPayload>) => {
+  const handleSaveData = (
+    updatedData: Partial<SaveGasCompressibilityPayload>,
+  ) => {
     if (!formData) return;
 
     const newFormData = { ...formData, ...updatedData };
@@ -55,18 +59,6 @@ export function GasCompressibility({
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">
-        Error loading gas compressibility data
-      </div>
-    );
-  }
-
-  if (!gasData || !formData) {
-    return <div className="p-4">No gas compressibility data available</div>;
   }
 
   return (
@@ -81,9 +73,7 @@ export function GasCompressibility({
           </Label>
           <CommonInput
             value={formData.gasSolubility}
-            onChange={(e) =>
-              handleSaveData({ gasSolubility: e.target.value })
-            }
+            onChange={(e) => handleSaveData({ gasSolubility: e.target.value })}
             placeholder="—"
           />
           <span className="text-[11px] text-muted-foreground">scf/bbl</span>
@@ -105,9 +95,7 @@ export function GasCompressibility({
           </Label>
           <CommonInput
             value={formData.gasOilRatio}
-            onChange={(e) =>
-              handleSaveData({ gasOilRatio: e.target.value })
-            }
+            onChange={(e) => handleSaveData({ gasOilRatio: e.target.value })}
             placeholder="—"
           />
           <span className="text-[11px] text-muted-foreground">scf/stb</span>

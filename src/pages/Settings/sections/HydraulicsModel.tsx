@@ -7,7 +7,11 @@ import {
 } from "@/services/api/settings/settings.api";
 
 export function HydraulicsModel() {
-  const { data: hydraulicsResponse, isLoading, error } = useHydraulicsModelSettings();
+  const {
+    data: hydraulicsResponse,
+    isLoading,
+    error,
+  } = useHydraulicsModelSettings();
   const { data: optionsResponse } = useHydraulicsModelOptions();
   const { mutate: saveHydraulicsModelData } = useSaveHydraulicsModelSettings();
 
@@ -34,18 +38,6 @@ export function HydraulicsModel() {
 
   if (isLoading) {
     return <SectionSkeleton count={1} className="p-4" />;
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 border border-destructive/50 rounded-lg text-destructive">
-        Error loading settings: {error.message}
-      </div>
-    );
-  }
-
-  if (!hydraulicsData || !formData) {
-    return <div className="p-4">No hydraulics model data available</div>;
   }
 
   return (

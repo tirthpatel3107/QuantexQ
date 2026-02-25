@@ -54,16 +54,8 @@ export function Sources() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || !formData) {
     return <SectionSkeleton count={6} />;
-  }
-
-  if (error) {
-    return <div className="p-4 text-red-500">Error loading sources data</div>;
-  }
-
-  if (!sourcesData || !formData) {
-    return <div className="p-4">No sources data available</div>;
   }
 
   const { rigPlc, pwdWits, devices } = formData;
@@ -111,8 +103,8 @@ export function Sources() {
                     })
                   }
                   placeholder="10.1.0.11"
-                  type="text"
                   className="flex-1"
+                  type="number"
                 />
                 <CommonInput
                   label=" "
@@ -123,7 +115,7 @@ export function Sources() {
                     })
                   }
                   placeholder="502"
-                  type="text"
+                  type="number"
                 />
               </div>
               <CommonSelect
@@ -204,7 +196,7 @@ export function Sources() {
                   })
                 }
                 placeholder="10.1.0.11"
-                type="text"
+                type="number"
               />
               <CommonInput
                 label=" "
@@ -215,7 +207,7 @@ export function Sources() {
                   })
                 }
                 placeholder="502"
-                type="text"
+                type="number"
               />
             </div>
             <CommonSelect
@@ -245,7 +237,7 @@ export function Sources() {
                 })
               }
               placeholder="10.1.0.11"
-              type="text"
+              type="number"
             />
           </div>
         </PanelCard>

@@ -111,16 +111,6 @@ export function LogAnalysis() {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">Error loading log analysis data</div>
-    );
-  }
-
-  if (!logAnalysisData || !formData) {
-    return <div className="p-4">No log analysis data available</div>;
-  }
-
   return (
     <div className="space-y-4">
       {/* Log Results Panel */}

@@ -208,12 +208,6 @@ export function Alarms() {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">Error loading alarms settings</div>
-    );
-  }
-
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
       <CommonTabs value={activeTab} onValueChange={setActiveTab}>

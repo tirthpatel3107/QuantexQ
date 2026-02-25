@@ -7,9 +7,14 @@ import {
 } from "@/services/api/settings/settings.api";
 
 export function AboutDiagnostics() {
-  const { data: aboutResponse, isLoading, error } = useAboutDiagnosticsSettings();
+  const {
+    data: aboutResponse,
+    isLoading,
+    error,
+  } = useAboutDiagnosticsSettings();
   const { data: optionsResponse } = useAboutDiagnosticsOptions();
-  const { mutate: saveAboutDiagnosticsData } = useSaveAboutDiagnosticsSettings();
+  const { mutate: saveAboutDiagnosticsData } =
+    useSaveAboutDiagnosticsSettings();
 
   const aboutData = aboutResponse?.data;
   const options = optionsResponse?.data;
@@ -34,18 +39,6 @@ export function AboutDiagnostics() {
 
   if (isLoading) {
     return <SectionSkeleton count={1} className="p-4" />;
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 border border-destructive/50 rounded-lg text-destructive">
-        Error loading settings: {error.message}
-      </div>
-    );
-  }
-
-  if (!aboutData || !formData) {
-    return <div className="p-4">No about & diagnostics data available</div>;
   }
 
   return (

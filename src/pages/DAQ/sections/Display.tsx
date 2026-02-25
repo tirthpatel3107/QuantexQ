@@ -38,18 +38,10 @@ export function Display() {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return <div className="p-4 text-red-500">Error loading display data</div>;
-  }
-
-  if (!displayData || !formData) {
-    return <div className="p-4">No display data available</div>;
-  }
-
   return (
     <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-      Display DAQ Section - API Connected ({formData.sections.length}{" "}
-      sections available)
+      Display DAQ Section - API Connected ({formData.sections.length} sections
+      available)
     </div>
   );
 }

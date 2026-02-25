@@ -115,16 +115,6 @@ export function UiDisplay() {
     return <SectionSkeleton count={4} gridClassName="lg:grid-cols-[2fr_1fr]" />;
   }
 
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">Error loading UI display settings</div>
-    );
-  }
-
-  if (!uiDisplayData || !formData) {
-    return <div className="p-4">No UI display data available</div>;
-  }
-
   // Define the allowed UI scale values
   const uiScaleSteps = [90, 100, 110, 125];
 

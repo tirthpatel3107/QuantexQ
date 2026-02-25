@@ -36,16 +36,6 @@ export function DataTime() {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">Error loading data & time settings</div>
-    );
-  }
-
-  if (!dataTimeData || !formData) {
-    return <div className="p-4">No data & time settings available</div>;
-  }
-
   return (
     <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
       Data & Time Settings Section - API Connected (NTP:{" "}

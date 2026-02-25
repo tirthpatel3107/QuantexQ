@@ -28,17 +28,22 @@ import type {
 export const mudPropertiesKeys = {
   all: ["mudProperties"] as const,
   overview: () => [...mudPropertiesKeys.all, "overview"] as const,
-  overviewOptions: () => [...mudPropertiesKeys.all, "overview", "options"] as const,
+  overviewOptions: () =>
+    [...mudPropertiesKeys.all, "overview", "options"] as const,
   rheology: () => [...mudPropertiesKeys.all, "rheology"] as const,
-  rheologyOptions: () => [...mudPropertiesKeys.all, "rheology", "options"] as const,
+  rheologyOptions: () =>
+    [...mudPropertiesKeys.all, "rheology", "options"] as const,
   density: () => [...mudPropertiesKeys.all, "density"] as const,
-  densityOptions: () => [...mudPropertiesKeys.all, "density", "options"] as const,
+  densityOptions: () =>
+    [...mudPropertiesKeys.all, "density", "options"] as const,
   temperature: () => [...mudPropertiesKeys.all, "temperature"] as const,
-  temperatureOptions: () => [...mudPropertiesKeys.all, "temperature", "options"] as const,
+  temperatureOptions: () =>
+    [...mudPropertiesKeys.all, "temperature", "options"] as const,
   gas: () => [...mudPropertiesKeys.all, "gas"] as const,
   gasOptions: () => [...mudPropertiesKeys.all, "gas", "options"] as const,
   calibration: () => [...mudPropertiesKeys.all, "calibration"] as const,
-  calibrationOptions: () => [...mudPropertiesKeys.all, "calibration", "options"] as const,
+  calibrationOptions: () =>
+    [...mudPropertiesKeys.all, "calibration", "options"] as const,
   summary: () => [...mudPropertiesKeys.all, "summary"] as const,
 };
 

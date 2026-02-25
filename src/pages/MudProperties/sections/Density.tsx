@@ -24,7 +24,8 @@ export function Density({ fluid, setFluid }: DensitySectionProps) {
   // Initialize form data when densityData loads
   useEffect(() => {
     if (densityData) {
-      const { mudWeightIn, mudWeightOut, oilWaterRatio, salinity } = densityData;
+      const { mudWeightIn, mudWeightOut, oilWaterRatio, salinity } =
+        densityData;
       setFormData({ mudWeightIn, mudWeightOut, oilWaterRatio, salinity });
       setFluid((prev) => ({
         ...prev,
@@ -46,14 +47,6 @@ export function Density({ fluid, setFluid }: DensitySectionProps) {
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
-  }
-
-  if (error) {
-    return <div className="p-4 text-red-500">Error loading density data</div>;
-  }
-
-  if (!densityData || !formData) {
-    return <div className="p-4">No density data available</div>;
   }
 
   return (

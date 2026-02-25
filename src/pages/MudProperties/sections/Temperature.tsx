@@ -24,7 +24,8 @@ export function Temperature({ fluid, setFluid }: TemperatureSectionProps) {
   // Initialize form data when temperatureData loads
   useEffect(() => {
     if (temperatureData) {
-      const { surfaceTemp, bottomholeTemp, tempGradient, flowlineTemp } = temperatureData;
+      const { surfaceTemp, bottomholeTemp, tempGradient, flowlineTemp } =
+        temperatureData;
       setFormData({ surfaceTemp, bottomholeTemp, tempGradient, flowlineTemp });
       setFluid((prev) => ({
         ...prev,
@@ -48,16 +49,6 @@ export function Temperature({ fluid, setFluid }: TemperatureSectionProps) {
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">Error loading temperature data</div>
-    );
-  }
-
-  if (!temperatureData || !formData) {
-    return <div className="p-4">No temperature data available</div>;
   }
 
   return (

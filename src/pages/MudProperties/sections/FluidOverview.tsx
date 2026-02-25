@@ -17,10 +17,7 @@ interface FluidOverviewSectionProps {
   setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
 }
 
-export function FluidOverview({
-  fluid,
-  setFluid,
-}: FluidOverviewSectionProps) {
+export function FluidOverview({ fluid, setFluid }: FluidOverviewSectionProps) {
   const { data: overviewResponse, isLoading, error } = useFluidOverviewData();
   const { data: optionsResponse } = useFluidOverviewOptions();
   const { mutate: saveFluidOverviewData } = useSaveFluidOverviewData();
@@ -28,7 +25,9 @@ export function FluidOverview({
   const overviewData = overviewResponse?.data;
   const options = optionsResponse?.data;
 
-  const [formData, setFormData] = useState<SaveFluidOverviewPayload | null>(null);
+  const [formData, setFormData] = useState<SaveFluidOverviewPayload | null>(
+    null,
+  );
 
   // Initialize form data when overviewData loads
   useEffect(() => {
@@ -57,16 +56,6 @@ export function FluidOverview({
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">Error loading fluid overview data</div>
-    );
-  }
-
-  if (!overviewData || !formData) {
-    return <div className="p-4">No fluid overview data available</div>;
   }
 
   return (

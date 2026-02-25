@@ -46,15 +46,6 @@ export function Diagnostics() {
   if (isLoading) {
     return <SectionSkeleton count={6} />;
   }
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">Error loading diagnostics data</div>
-    );
-  }
-
-  if (!diagnosticsData || !formData) {
-    return <div className="p-4">No diagnostics data available</div>;
-  }
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
@@ -119,7 +110,11 @@ export function Diagnostics() {
                   id="packet-capture"
                   label="Enable Packet Capture"
                   checked={false}
-                  onCheckedChange={(checked) => handleSaveData({ diagnosticTools: formData.diagnosticTools })}
+                  onCheckedChange={(checked) =>
+                    handleSaveData({
+                      diagnosticTools: formData.diagnosticTools,
+                    })
+                  }
                 />
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-muted-foreground">
@@ -130,7 +125,9 @@ export function Diagnostics() {
                     value={packetCaptureDuration}
                     onChange={(e) => {
                       setPacketCaptureDuration(e.target.value);
-                      handleSaveData({ diagnosticTools: formData.diagnosticTools });
+                      handleSaveData({
+                        diagnosticTools: formData.diagnosticTools,
+                      });
                     }}
                     suffix="sec"
                     className="w-24 mb-0"

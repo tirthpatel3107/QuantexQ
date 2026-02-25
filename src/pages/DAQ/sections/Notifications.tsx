@@ -44,8 +44,7 @@ export function Notifications() {
   // Initialize form data when notificationsData loads
   useEffect(() => {
     if (notificationsData) {
-      const { alarmRules, channels, escalation, muteRules } =
-        notificationsData;
+      const { alarmRules, channels, escalation, muteRules } = notificationsData;
       setFormData({ alarmRules, channels, escalation, muteRules });
     }
   }, [notificationsData]);
@@ -144,16 +143,6 @@ export function Notifications() {
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">Error loading notifications data</div>
-    );
-  }
-
-  if (!notificationsData || !formData) {
-    return <div className="p-4">No notifications data available</div>;
   }
 
   return (

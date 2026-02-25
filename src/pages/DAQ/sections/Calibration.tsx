@@ -38,20 +38,10 @@ export function Calibration() {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">Error loading calibration data</div>
-    );
-  }
-
-  if (!calibrationData || !formData) {
-    return <div className="p-4">No calibration data available</div>;
-  }
-
   return (
     <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-      Calibration DAQ Section - API Connected (
-      {formData.calibrations.length} calibrations)
+      Calibration DAQ Section - API Connected ({formData.calibrations.length}{" "}
+      calibrations)
     </div>
   );
 }

@@ -44,14 +44,6 @@ export function Protocols() {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return <div className="p-4 text-red-500">Error loading protocols data</div>;
-  }
-
-  if (!protocolsData || !formData) {
-    return <div className="p-4">No protocols data available</div>;
-  }
-
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
       {/* Main Content Grid */}
@@ -92,11 +84,15 @@ export function Protocols() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                       <CommonInput
                         placeholder="10.1.0.1:13:502"
-                        onChange={(e) => handleSaveData({ protocols: formData.protocols })}
+                        onChange={(e) =>
+                          handleSaveData({ protocols: formData.protocols })
+                        }
                       />
                       <CommonInput
                         placeholder="10.1.0.113:502"
-                        onChange={(e) => handleSaveData({ protocols: formData.protocols })}
+                        onChange={(e) =>
+                          handleSaveData({ protocols: formData.protocols })
+                        }
                       />
                     </div>
                   </div>
@@ -112,7 +108,9 @@ export function Protocols() {
                   <div className="ml-6 grid grid-cols-1 lg:grid-cols-2">
                     <CommonInput
                       placeholder="opc.tcp 10.1.0.113:49320"
-                      onChange={(e) => handleSaveData({ protocols: formData.protocols })}
+                      onChange={(e) =>
+                        handleSaveData({ protocols: formData.protocols })
+                      }
                     />
                   </div>
                 </div>
@@ -127,7 +125,9 @@ export function Protocols() {
                   <div className="ml-6 grid grid-cols-1 lg:grid-cols-2">
                     <CommonInput
                       placeholder="100.10.1.14:10.13:40818"
-                      onChange={(e) => handleSaveData({ protocols: formData.protocols })}
+                      onChange={(e) =>
+                        handleSaveData({ protocols: formData.protocols })
+                      }
                     />
                   </div>
                 </div>

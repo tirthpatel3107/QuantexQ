@@ -23,14 +23,6 @@ export function Security() {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return <div className="p-4 text-red-500">Error loading security data</div>;
-  }
-
-  if (!securityData) {
-    return <div className="p-4">No security data available</div>;
-  }
-
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
       {/* Main Content Grid */}

@@ -48,14 +48,6 @@ export function Routing() {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return <div className="p-4 text-red-500">Error loading routing data</div>;
-  }
-
-  if (!routingData || !formData) {
-    return <div className="p-4">No routing data available</div>;
-  }
-
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
       {/* Main Content Grid */}
@@ -99,7 +91,9 @@ export function Routing() {
                     <CommonInput
                       label="Input Data"
                       value="10.1.0.113"
-                      onChange={(e) => handleSaveData({ routes: formData.routes })}
+                      onChange={(e) =>
+                        handleSaveData({ routes: formData.routes })
+                      }
                       placeholder="10.1.0.11"
                       type="text"
                       className="flex-1"
@@ -107,14 +101,18 @@ export function Routing() {
                     <CommonInput
                       label=" "
                       value="0"
-                      onChange={(e) => handleSaveData({ routes: formData.routes })}
+                      onChange={(e) =>
+                        handleSaveData({ routes: formData.routes })
+                      }
                       placeholder="0"
                       type="text"
                     />
                     <CommonInput
                       label=" "
                       value="502"
-                      onChange={(e) => handleSaveData({ routes: formData.routes })}
+                      onChange={(e) =>
+                        handleSaveData({ routes: formData.routes })
+                      }
                       placeholder="502"
                       type="text"
                     />
@@ -122,7 +120,9 @@ export function Routing() {
                   <CommonSelect
                     label="Port"
                     value="502"
-                    onValueChange={(value) => handleSaveData({ routes: formData.routes })}
+                    onValueChange={(value) =>
+                      handleSaveData({ routes: formData.routes })
+                    }
                     options={options?.portOptions || []}
                   />
                 </div>
@@ -145,13 +145,17 @@ export function Routing() {
                   <CommonInput
                     label="Snecron (Dy"
                     value="WITS (TCP)"
-                    onChange={(e) => handleSaveData({ routes: formData.routes })}
+                    onChange={(e) =>
+                      handleSaveData({ routes: formData.routes })
+                    }
                     className="text-sm"
                   />
                   <CommonInput
                     label="Tag"
                     value="1.0.335"
-                    onChange={(e) => handleSaveData({ routes: formData.routes })}
+                    onChange={(e) =>
+                      handleSaveData({ routes: formData.routes })
+                    }
                     className="text-sm"
                   />
                   <CommonButton variant="outline" className="text-sm px-3 mt-8">
@@ -188,7 +192,9 @@ export function Routing() {
                         <CommonToggle
                           label="Tag Mac"
                           checked={true}
-                          onCheckedChange={(checked) => handleSaveData({ routes: formData.routes })}
+                          onCheckedChange={(checked) =>
+                            handleSaveData({ routes: formData.routes })
+                          }
                         />
                       </div>
                     </div>
@@ -197,17 +203,23 @@ export function Routing() {
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2 items-center">
                       <CommonInput
                         value="ChokeA_Pos"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                       <CommonInput
                         value="MPD SBP"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                       <CommonInput
                         value="ChokeB_PS | ChokeB_Pos | Choke_SP"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                     </div>
@@ -216,17 +228,23 @@ export function Routing() {
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2 items-center">
                       <CommonInput
                         value="SBIn Coop (Enbl)"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                       <CommonInput
                         value="SBP_SSP"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                       <CommonInput
                         value="SBP_SSP"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                     </div>
@@ -240,12 +258,16 @@ export function Routing() {
                     <div className="grid grid-cols-[1fr_1fr_2fr] gap-2 items-center">
                       <CommonInput
                         value="MPD Q 0 in"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                       <CommonInput
                         value="(Choke 0.0 0a)"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                       <CommonToggle
@@ -262,17 +284,23 @@ export function Routing() {
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2">
                       <CommonInput
                         value="Flow_Q-In"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                       <CommonInput
                         value="MPD Q in"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                       <CommonInput
                         value="Flow Q Out | Aux Flow"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                     </div>
@@ -281,17 +309,23 @@ export function Routing() {
                     <div className="grid grid-cols-3 xl:grid-cols-[1fr_1fr_2fr] gap-2">
                       <CommonInput
                         value="MPD Q ux"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                       <CommonInput
                         value="MPD Q Set"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                       <CommonInput
                         value="MPD Q aex"
-                        onChange={(e) => handleSaveData({ routes: formData.routes })}
+                        onChange={(e) =>
+                          handleSaveData({ routes: formData.routes })
+                        }
                         className="text-sm"
                       />
                     </div>

@@ -51,14 +51,6 @@ export function Rheology({ fluid, setFluid }: RheologySectionProps) {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return <div className="p-4 text-red-500">Error loading rheology data</div>;
-  }
-
-  if (!rheologyData || !formData) {
-    return <div className="p-4">No rheology data available</div>;
-  }
-
   return (
     <div className="grid gap-4 mb-4 grid-cols-1 max-w-2xl">
       <RheologyPanel fluid={fluid} setFluid={setFluid} />

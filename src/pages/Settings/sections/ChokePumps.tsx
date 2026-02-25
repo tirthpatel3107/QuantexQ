@@ -7,7 +7,11 @@ import {
 } from "@/services/api/settings/settings.api";
 
 export function ChokePumps() {
-  const { data: chokePumpsResponse, isLoading, error } = useChokePumpsSettings();
+  const {
+    data: chokePumpsResponse,
+    isLoading,
+    error,
+  } = useChokePumpsSettings();
   const { data: optionsResponse } = useChokePumpsOptions();
   const { mutate: saveChokePumpsData } = useSaveChokePumpsSettings();
 
@@ -34,18 +38,6 @@ export function ChokePumps() {
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 border border-destructive/50 rounded-lg text-destructive">
-        Error loading settings: {error.message}
-      </div>
-    );
-  }
-
-  if (!chokePumpsData || !formData) {
-    return <div className="p-4">No choke & pumps data available</div>;
   }
 
   return (

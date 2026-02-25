@@ -124,14 +124,6 @@ export function Downloads() {
     return <SectionSkeleton count={6} />;
   }
 
-  if (error) {
-    return <div className="p-4 text-red-500">Error loading downloads data</div>;
-  }
-
-  if (!downloadsData || !formData) {
-    return <div className="p-4">No downloads data available</div>;
-  }
-
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-3">
       <PanelCard

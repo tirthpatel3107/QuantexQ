@@ -97,16 +97,14 @@ export function Signals() {
 
   const toggleFavorite = (id: number) => {
     const updatedSignals = signals.map((signal) =>
-      signal.id === id
-        ? { ...signal, isFavorite: !signal.isFavorite }
-        : signal
+      signal.id === id ? { ...signal, isFavorite: !signal.isFavorite } : signal,
     );
     handleSaveData(updatedSignals);
   };
 
   const toggleInUse = (id: number) => {
     const updatedSignals = signals.map((signal) =>
-      signal.id === id ? { ...signal, inUse: !signal.inUse } : signal
+      signal.id === id ? { ...signal, inUse: !signal.inUse } : signal,
     );
     handleSaveData(updatedSignals);
   };
@@ -114,7 +112,7 @@ export function Signals() {
   const handleDeleteSignal = () => {
     if (selectedSignal) {
       const updatedSignals = signals.filter(
-        (signal) => signal.id !== selectedSignal.id
+        (signal) => signal.id !== selectedSignal.id,
       );
       handleSaveData(updatedSignals);
       setIsDeleteConfirmOpen(false);
@@ -270,14 +268,6 @@ export function Signals() {
 
   if (isLoading) {
     return <SectionSkeleton count={6} className="p-4" />;
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 border border-destructive/50 rounded-lg text-destructive">
-        Error loading signals: {error.message}
-      </div>
-    );
   }
 
   return (
