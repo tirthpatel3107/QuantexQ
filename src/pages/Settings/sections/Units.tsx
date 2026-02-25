@@ -1,42 +1,36 @@
-import { useState, useEffect } from "react";
-import { SectionSkeleton, CommonAlertDialog } from "@/components/common";
+// React & Hooks
+import { useMemo } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Components - UI & Icons
+import { SectionSkeleton, FormSaveDialog } from "@/components/common";
+
+// Services & Types
 import {
   useUnitsSettings,
   useSaveUnitsSettings,
   useUnitsOptions,
 } from "@/services/api/settings/settings.api";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Context
 import { useSettingsContext } from "../SettingsContext";
 
 export function Units() {
-  const { data: unitsResponse, isLoading, error } = useUnitsSettings();
+  const { data: unitsResponse, isLoading } = useUnitsSettings();
   const { data: optionsResponse } = useUnitsOptions();
   const { mutate: saveUnitsData } = useSaveUnitsSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
-  const unitsData = unitsResponse?.data;
   const options = optionsResponse?.data;
 
-  const [formData, setFormData] = useState<any>(null);
+  // Memoize initial data
+  const initialData = useMemo(() => {
+    return unitsResponse?.data;
+  }, [unitsResponse?.data]);
 
-  // Initialize form data when unitsData loads
-  useEffect(() => {
-    if (unitsData) {
-      setFormData(unitsData);
-    }
-  }, [unitsData]);
-
-  // Setup save with confirmation
-  const {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    isSaving,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  } = useSaveWithConfirmation<any>({
+  // Use the reusable form hook
+  const form = useSectionForm<any>({
+    initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
         saveUnitsData(data, {
@@ -45,36 +39,19 @@ export function Units() {
         });
       });
     },
+    registerSaveHandler,
+    unregisterSaveHandler,
     successMessage: "Units settings saved successfully",
     errorMessage: "Failed to save units settings",
     confirmTitle: "Save Units Settings",
     confirmDescription: "Are you sure you want to save these units changes?",
   });
 
-  // Update local state only
-  const handleSaveData = (updatedData: any) => {
-    if (!formData) return;
-
-    const newFormData = { ...formData, ...updatedData };
-    setFormData(newFormData);
-  };
-
-  const handleSave = () => {
-    if (formData) {
-      requestSave(formData);
-    }
-  };
-
-  // Register save handler with parent context
-  useEffect(() => {
-    registerSaveHandler(handleSave);
-    return () => unregisterSaveHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
-
-  if (isLoading) {
+  if (isLoading || !form.formData) {
     return <SectionSkeleton count={1} className="p-4" />;
   }
+
+  const { formData } = form;
 
   return (
     <>
@@ -82,16 +59,7 @@ export function Units() {
         Units Settings Section - API Connected (Pressure: {formData.pressure})
       </div>
 
-      <CommonAlertDialog
-        open={isConfirmOpen}
-        onOpenChange={setIsConfirmOpen}
-        title={confirmTitle}
-        description={confirmDescription}
-        cancelText="Cancel"
-        actionText="Save"
-        onAction={handleConfirmedSave}
-        onCancel={handleCancel}
-      />
+      <FormSaveDialog form={form} />
     </>
   );
 }

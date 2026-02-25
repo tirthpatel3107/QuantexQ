@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   CommonButton,
@@ -6,7 +7,7 @@ import {
   CommonCheckbox,
   CommonSelect,
   SectionSkeleton,
-  CommonAlertDialog,
+  FormSaveDialog,
 } from "@/components/common";
 import { Volume2, Play, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -16,7 +17,6 @@ import {
   useNotificationsOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveNotificationsPayload } from "@/services/api/daq/daq.types";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 import { useDAQContext } from "../DAQContext";
 
 interface NotificationLogEntry {
@@ -29,40 +29,21 @@ interface NotificationLogEntry {
 }
 
 export function Notifications() {
-  const {
-    data: notificationsResponse,
-    isLoading,
-    error,
-  } = useNotificationsData();
+  const { data: notificationsResponse, isLoading } = useNotificationsData();
   const { data: optionsResponse } = useNotificationsOptions();
   const { mutate: saveNotificationsData } = useSaveNotificationsData();
   const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
-  const notificationsData = notificationsResponse?.data;
   const options = optionsResponse?.data;
 
-  const [formData, setFormData] = useState<SaveNotificationsPayload | null>(
-    null,
-  );
+  const initialData = useMemo(() => {
+    if (!notificationsResponse?.data) return undefined;
+    const { alarmRules, channels, escalation, muteRules } = notificationsResponse.data;
+    return { alarmRules, channels, escalation, muteRules };
+  }, [notificationsResponse?.data]);
 
-  // Initialize form data when notificationsData loads
-  useEffect(() => {
-    if (notificationsData) {
-      const { alarmRules, channels, escalation, muteRules } = notificationsData;
-      setFormData({ alarmRules, channels, escalation, muteRules });
-    }
-  }, [notificationsData]);
-
-  // Setup save with confirmation
-  const {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  } = useSaveWithConfirmation<SaveNotificationsPayload>({
+  const form = useSectionForm<SaveNotificationsPayload>({
+    initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
         saveNotificationsData(data, {
@@ -71,32 +52,13 @@ export function Notifications() {
         });
       });
     },
+    registerSaveHandler,
+    unregisterSaveHandler,
     successMessage: "Notifications settings saved successfully",
     errorMessage: "Failed to save notifications settings",
     confirmTitle: "Save Notifications Settings",
     confirmDescription: "Are you sure you want to save these notifications changes?",
   });
-
-  // Save data to API with confirmation
-  const handleSaveData = (updatedData: Partial<SaveNotificationsPayload>) => {
-    if (!formData) return;
-
-    const newFormData = { ...formData, ...updatedData };
-    setFormData(newFormData);
-  };
-
-  const handleSave = () => {
-    if (formData) {
-      requestSave(formData);
-    }
-  };
-
-  // Register save handler with parent context
-  useEffect(() => {
-    registerSaveHandler(handleSave);
-    return () => unregisterSaveHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
 
   // Settings & Summary state
   const [alarmSound, setAlarmSound] = useState("factory_alert.mp3");
@@ -181,9 +143,11 @@ export function Notifications() {
     return "bg-muted text-muted-foreground";
   };
 
-  if (isLoading) {
+  if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;
   }
+
+  const { alarmRules, channels, escalation, muteRules } = form.formData;
 
   return (
     <>
@@ -382,16 +346,7 @@ export function Notifications() {
       </PanelCard>
     </div>
 
-    <CommonAlertDialog
-      open={isConfirmOpen}
-      onOpenChange={setIsConfirmOpen}
-      title={confirmTitle}
-      description={confirmDescription}
-      cancelText="Cancel"
-      actionText="Save"
-      onAction={handleConfirmedSave}
-      onCancel={handleCancel}
-    />
+    <FormSaveDialog form={form} />
   </>
   );
 }

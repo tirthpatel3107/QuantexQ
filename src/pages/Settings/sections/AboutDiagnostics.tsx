@@ -1,52 +1,67 @@
-import { useState, useEffect } from "react";
-import { SectionSkeleton } from "@/components/common";
+// React & Hooks
+import { useMemo } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Components - UI & Icons
+import { SectionSkeleton, FormSaveDialog } from "@/components/common";
+
+// Services & Types
 import {
   useAboutDiagnosticsSettings,
   useSaveAboutDiagnosticsSettings,
   useAboutDiagnosticsOptions,
 } from "@/services/api/settings/settings.api";
 
+// Context
+import { useSettingsContext } from "../SettingsContext";
+
 export function AboutDiagnostics() {
-  const {
-    data: aboutResponse,
-    isLoading,
-    error,
-  } = useAboutDiagnosticsSettings();
+  const { data: aboutResponse, isLoading } = useAboutDiagnosticsSettings();
   const { data: optionsResponse } = useAboutDiagnosticsOptions();
   const { mutate: saveAboutDiagnosticsData } =
     useSaveAboutDiagnosticsSettings();
+  const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
-  const aboutData = aboutResponse?.data;
   const options = optionsResponse?.data;
 
-  const [formData, setFormData] = useState<any>(null);
+  // Memoize initial data
+  const initialData = useMemo(() => {
+    return aboutResponse?.data;
+  }, [aboutResponse?.data]);
 
-  // Initialize form data when aboutData loads
-  useEffect(() => {
-    if (aboutData) {
-      setFormData(aboutData);
-    }
-  }, [aboutData]);
+  // Use the reusable form hook
+  const form = useSectionForm<any>({
+    initialData,
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveAboutDiagnosticsData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    registerSaveHandler,
+    unregisterSaveHandler,
+    successMessage: "About & Diagnostics settings saved successfully",
+    errorMessage: "Failed to save about & diagnostics settings",
+    confirmTitle: "Save About & Diagnostics Settings",
+    confirmDescription: "Are you sure you want to save these changes?",
+  });
 
-  // Save data to API
-  const handleSaveData = (updatedData: any) => {
-    if (!formData) return;
-
-    const newFormData = { ...formData, ...updatedData };
-    setFormData(newFormData);
-    saveAboutDiagnosticsData(newFormData);
-  };
-
-  if (isLoading) {
+  if (isLoading || !form.formData) {
     return <SectionSkeleton count={1} className="p-4" />;
   }
 
   return (
-    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
-      <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-        About / Diagnostics Settings Section - Implementation Pending
-        <div className="mt-2 text-xs">API Connected: ✓</div>
+    <>
+      <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+        <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
+          About / Diagnostics Settings Section - Implementation Pending
+          <div className="mt-2 text-xs">API Connected: ✓</div>
+        </div>
       </div>
-    </div>
+
+      <FormSaveDialog form={form} />
+    </>
   );
 }

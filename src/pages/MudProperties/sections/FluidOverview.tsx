@@ -1,63 +1,45 @@
-import { useState, useEffect } from "react";
-import { SectionSkeleton, CommonAlertDialog } from "@/components/common";
+// React & Hooks
+import { useMemo, useCallback } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Components - UI & Icons
+import { SectionSkeleton, FormSaveDialog } from "@/components/common";
+
+// Components - Local Panels
 import { FluidSystemPanel } from "./panels/FluidSystemPanel";
 import { RheologyPanel } from "./panels/RheologyPanel";
 import { DensitySolidsPanel } from "./panels/DensitySolidsPanel";
 import { TemperaturePanel } from "./panels/TemperaturePanel";
-import { FluidData } from "@/types/mud";
+
+// Services & Types
 import {
   useFluidOverviewData,
   useSaveFluidOverviewData,
   useFluidOverviewOptions,
 } from "@/services/api/mudproperties/mudproperties.api";
 import type { SaveFluidOverviewPayload } from "@/services/api/mudproperties/mudproperties.types";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Context
 import { useMudPropertiesContext } from "../MudPropertiesContext";
 
-interface FluidOverviewSectionProps {
-  fluid: FluidData;
-  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
-}
-
-export function FluidOverview({ fluid, setFluid }: FluidOverviewSectionProps) {
-  const { data: overviewResponse, isLoading, error } = useFluidOverviewData();
+export function FluidOverview() {
+  const { data: overviewResponse, isLoading } = useFluidOverviewData();
   const { data: optionsResponse } = useFluidOverviewOptions();
   const { mutate: saveFluidOverviewData } = useSaveFluidOverviewData();
   const { registerSaveHandler, unregisterSaveHandler } = useMudPropertiesContext();
 
-  const overviewData = overviewResponse?.data;
   const options = optionsResponse?.data;
 
-  const [formData, setFormData] = useState<SaveFluidOverviewPayload | null>(
-    null,
-  );
+  // Memoize initial data
+  const initialData = useMemo(() => {
+    if (!overviewResponse?.data) return undefined;
+    const { type, baseFluid, activePitsVolume, flowlineTemp } = overviewResponse.data;
+    return { type, baseFluid, activePitsVolume, flowlineTemp };
+  }, [overviewResponse?.data]);
 
-  // Initialize form data when overviewData loads
-  useEffect(() => {
-    if (overviewData) {
-      const { type, baseFluid, activePitsVolume, flowlineTemp } = overviewData;
-      setFormData({ type, baseFluid, activePitsVolume, flowlineTemp });
-      setFluid((prev) => ({
-        ...prev,
-        type,
-        baseFluid,
-        activePitsVolume,
-        flowlineTemp,
-      }));
-    }
-  }, [overviewData, setFluid]);
-
-  // Setup save with confirmation
-  const {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    isSaving,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  } = useSaveWithConfirmation<SaveFluidOverviewPayload>({
+  // Use the reusable form hook
+  const form = useSectionForm<SaveFluidOverviewPayload>({
+    initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
         saveFluidOverviewData(data, {
@@ -66,63 +48,47 @@ export function FluidOverview({ fluid, setFluid }: FluidOverviewSectionProps) {
         });
       });
     },
+    registerSaveHandler,
+    unregisterSaveHandler,
     successMessage: "Fluid overview settings saved successfully",
     errorMessage: "Failed to save fluid overview settings",
     confirmTitle: "Save Fluid Overview Settings",
     confirmDescription: "Are you sure you want to save these fluid overview changes?",
   });
 
-  // Update local state only
-  const handleSaveData = (updatedData: Partial<SaveFluidOverviewPayload>) => {
-    if (!formData) return;
-
-    const newFormData = { ...formData, ...updatedData };
-    setFormData(newFormData);
-    setFluid((prev) => ({ ...prev, ...updatedData }));
-  };
-
-  const handleSave = () => {
-    if (formData) {
-      requestSave(formData);
+  // Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter
+  const setFluidAdapter = useCallback((update: any) => {
+    if (typeof update === 'function') {
+      // This is a bit tricky since form.formData might be null initially
+      // But useSectionForm ensures it's populated if initialData is there
+      form.setFormData(update);
+    } else {
+      form.updateLocalField(update);
     }
-  };
+  }, [form]);
 
-  // Register save handler with parent context
-  useEffect(() => {
-    registerSaveHandler(handleSave);
-    return () => unregisterSaveHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
-
-  if (isLoading) {
+  if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;
   }
+
+  const fluid = form.formData;
 
   return (
     <>
       <div className="grid gap-4 mb-4 grid-cols-1 md:grid-cols-2">
         <FluidSystemPanel
-          fluid={fluid}
-          setFluid={setFluid}
+          fluid={fluid as any}
+          setFluid={setFluidAdapter}
           typeOptions={options?.typeOptions || []}
           baseFluidOptions={options?.baseFluidOptions || []}
           tempOptions={options?.tempOptions || []}
         />
-        <RheologyPanel fluid={fluid} setFluid={setFluid} />
-        <DensitySolidsPanel fluid={fluid} setFluid={setFluid} />
-        <TemperaturePanel fluid={fluid} setFluid={setFluid} />
+        <RheologyPanel fluid={fluid as any} setFluid={setFluidAdapter} />
+        <DensitySolidsPanel fluid={fluid as any} setFluid={setFluidAdapter} />
+        <TemperaturePanel fluid={fluid as any} setFluid={setFluidAdapter} />
       </div>
 
-      <CommonAlertDialog
-        open={isConfirmOpen}
-        onOpenChange={setIsConfirmOpen}
-        title={confirmTitle}
-        description={confirmDescription}
-        cancelText="Cancel"
-        actionText="Save"
-        onAction={handleConfirmedSave}
-        onCancel={handleCancel}
-      />
+      <FormSaveDialog form={form} />
     </>
   );
 }

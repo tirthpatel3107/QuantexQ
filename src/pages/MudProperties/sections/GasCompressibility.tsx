@@ -1,65 +1,46 @@
-import { useState, useEffect } from "react";
+// React & Hooks
+import { useMemo } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Components
 import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   RestoreDefaultsButton,
   CommonInput,
   SectionSkeleton,
-  CommonAlertDialog,
+  FormSaveDialog,
 } from "@/components/common";
-import { FluidData } from "@/types/mud";
+
+// Services & Types
 import {
   useGasCompressibilityData,
   useSaveGasCompressibilityData,
+  useGasCompressibilityOptions,
 } from "@/services/api/mudproperties/mudproperties.api";
 import type { SaveGasCompressibilityPayload } from "@/services/api/mudproperties/mudproperties.types";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Context
 import { useMudPropertiesContext } from "../MudPropertiesContext";
 
-interface GasCompressibilityProps {
-  fluid: FluidData;
-  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
-}
-
-export function GasCompressibility({
-  fluid,
-  setFluid,
-}: GasCompressibilityProps) {
-  const { data: gasResponse, isLoading, error } = useGasCompressibilityData();
-  const { mutate: saveGasCompressibilityData } =
-    useSaveGasCompressibilityData();
+export function GasCompressibility() {
+  const { data: gasResponse, isLoading } = useGasCompressibilityData();
+  const { data: optionsResponse } = useGasCompressibilityOptions();
+  const { mutate: saveGasCompressibilityData } = useSaveGasCompressibilityData();
   const { registerSaveHandler, unregisterSaveHandler } = useMudPropertiesContext();
 
-  const gasData = gasResponse?.data;
+  const options = optionsResponse?.data;
 
-  const [formData, setFormData] =
-    useState<SaveGasCompressibilityPayload | null>(null);
+  // Memoize initial data
+  const initialData = useMemo(() => {
+    if (!gasResponse?.data) return undefined;
+    const { gasSolubility, compressibilityFactor, gasOilRatio, gasGravity, criticalPressure, criticalTemp } = gasResponse.data;
+    return { gasSolubility, compressibilityFactor, gasOilRatio, gasGravity, criticalPressure, criticalTemp };
+  }, [gasResponse?.data]);
 
-  // Initialize form data when gasData loads
-  useEffect(() => {
-    if (gasData) {
-      const { gasSolubility, compressibilityFactor, gasOilRatio } = gasData;
-      setFormData({ gasSolubility, compressibilityFactor, gasOilRatio });
-      setFluid((prev) => ({
-        ...prev,
-        gasSolubility,
-        compressibilityFactor,
-        gasOilRatio,
-      }));
-    }
-  }, [gasData, setFluid]);
-
-  // Setup save with confirmation
-  const {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    isSaving,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  } = useSaveWithConfirmation<SaveGasCompressibilityPayload>({
+  // Use the reusable form hook
+  const form = useSectionForm<SaveGasCompressibilityPayload>({
+    initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
         saveGasCompressibilityData(data, {
@@ -68,39 +49,19 @@ export function GasCompressibility({
         });
       });
     },
+    registerSaveHandler,
+    unregisterSaveHandler,
     successMessage: "Gas compressibility settings saved successfully",
     errorMessage: "Failed to save gas compressibility settings",
     confirmTitle: "Save Gas Compressibility Settings",
     confirmDescription: "Are you sure you want to save these gas compressibility changes?",
   });
 
-  // Update local state only
-  const handleSaveData = (
-    updatedData: Partial<SaveGasCompressibilityPayload>,
-  ) => {
-    if (!formData) return;
-
-    const newFormData = { ...formData, ...updatedData };
-    setFormData(newFormData);
-    setFluid((prev) => ({ ...prev, ...updatedData }));
-  };
-
-  const handleSave = () => {
-    if (formData) {
-      requestSave(formData);
-    }
-  };
-
-  // Register save handler with parent context
-  useEffect(() => {
-    registerSaveHandler(handleSave);
-    return () => unregisterSaveHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
-
-  if (isLoading) {
+  if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;
   }
+
+  const { formData } = form;
 
   return (
     <>
@@ -115,7 +76,7 @@ export function GasCompressibility({
             </Label>
             <CommonInput
               value={formData.gasSolubility}
-              onChange={(e) => handleSaveData({ gasSolubility: e.target.value })}
+              onChange={(e) => form.updateLocalField({ gasSolubility: e.target.value })}
               placeholder="—"
             />
             <span className="text-[11px] text-muted-foreground">scf/bbl</span>
@@ -125,9 +86,7 @@ export function GasCompressibility({
             </Label>
             <CommonInput
               value={formData.compressibilityFactor}
-              onChange={(e) =>
-                handleSaveData({ compressibilityFactor: e.target.value })
-              }
+              onChange={(e) => form.updateLocalField({ compressibilityFactor: e.target.value })}
               placeholder="—"
             />
             <span className="text-[11px] text-muted-foreground">—</span>
@@ -137,7 +96,7 @@ export function GasCompressibility({
             </Label>
             <CommonInput
               value={formData.gasOilRatio}
-              onChange={(e) => handleSaveData({ gasOilRatio: e.target.value })}
+              onChange={(e) => form.updateLocalField({ gasOilRatio: e.target.value })}
               placeholder="—"
             />
             <span className="text-[11px] text-muted-foreground">scf/stb</span>
@@ -145,16 +104,7 @@ export function GasCompressibility({
         </PanelCard>
       </div>
 
-      <CommonAlertDialog
-        open={isConfirmOpen}
-        onOpenChange={setIsConfirmOpen}
-        title={confirmTitle}
-        description={confirmDescription}
-        cancelText="Cancel"
-        actionText="Save"
-        onAction={handleConfirmedSave}
-        onCancel={handleCancel}
-      />
+      <FormSaveDialog form={form} />
     </>
   );
 }

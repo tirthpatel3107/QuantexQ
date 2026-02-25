@@ -29,7 +29,7 @@ export const showToast = ({
     duration,
     className:
       variant === "success"
-        ? "border-green-500 bg-green-50 dark:bg-green-950"
+        ? "border-green-500/50 bg-green-50/95 dark:bg-green-950/95 backdrop-blur supports-[backdrop-filter]:bg-green-50/80 dark:supports-[backdrop-filter]:bg-green-950/80"
         : undefined,
   });
 };

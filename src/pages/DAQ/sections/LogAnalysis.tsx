@@ -1,16 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonButton, SectionSkeleton, CommonAlertDialog } from "@/components/common";
-import { Badge } from "@/components/ui/badge";
+import { CommonButton, SectionSkeleton, FormSaveDialog } from "@/components/common";
 import { Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   useLogAnalysisData,
   useSaveLogAnalysisData,
-  useLogAnalysisOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveLogAnalysisPayload } from "@/services/api/daq/daq.types";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 import { useDAQContext } from "../DAQContext";
 
 interface LogEntry {
@@ -23,35 +21,18 @@ interface LogEntry {
 }
 
 export function LogAnalysis() {
-  const { data: logAnalysisResponse, isLoading, error } = useLogAnalysisData();
-  const { data: optionsResponse } = useLogAnalysisOptions();
+  const { data: logAnalysisResponse, isLoading } = useLogAnalysisData();
   const { mutate: saveLogAnalysisData } = useSaveLogAnalysisData();
   const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
-  const logAnalysisData = logAnalysisResponse?.data;
-  const options = optionsResponse?.data;
+  const initialData = useMemo(() => {
+    if (!logAnalysisResponse?.data) return undefined;
+    const { logViewer, trendAnalysis, reportGeneration, logArchive } = logAnalysisResponse.data;
+    return { logViewer, trendAnalysis, reportGeneration, logArchive };
+  }, [logAnalysisResponse?.data]);
 
-  const [formData, setFormData] = useState<SaveLogAnalysisPayload | null>(null);
-
-  // Initialize form data when logAnalysisData loads
-  useEffect(() => {
-    if (logAnalysisData) {
-      const { logViewer, trendAnalysis, reportGeneration, logArchive } =
-        logAnalysisData;
-      setFormData({ logViewer, trendAnalysis, reportGeneration, logArchive });
-    }
-  }, [logAnalysisData]);
-
-  // Setup save with confirmation
-  const {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  } = useSaveWithConfirmation<SaveLogAnalysisPayload>({
+  const form = useSectionForm<SaveLogAnalysisPayload>({
+    initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
         saveLogAnalysisData(data, {
@@ -60,32 +41,13 @@ export function LogAnalysis() {
         });
       });
     },
+    registerSaveHandler,
+    unregisterSaveHandler,
     successMessage: "Log analysis settings saved successfully",
     errorMessage: "Failed to save log analysis settings",
     confirmTitle: "Save Log Analysis Settings",
     confirmDescription: "Are you sure you want to save these log analysis changes?",
   });
-
-  // Save data to API with confirmation
-  const handleSaveData = (updatedData: Partial<SaveLogAnalysisPayload>) => {
-    if (!formData) return;
-
-    const newFormData = { ...formData, ...updatedData };
-    setFormData(newFormData);
-  };
-
-  const handleSave = () => {
-    if (formData) {
-      requestSave(formData);
-    }
-  };
-
-  // Register save handler with parent context
-  useEffect(() => {
-    registerSaveHandler(handleSave);
-    return () => unregisterSaveHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
 
   const [logEntries] = useState<LogEntry[]>([
     {
@@ -131,6 +93,10 @@ export function LogAnalysis() {
     },
   ]);
 
+  if (isLoading || !form.formData) {
+    return <SectionSkeleton count={6} />;
+  }
+
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case "high":
@@ -145,10 +111,6 @@ export function LogAnalysis() {
         return "bg-muted text-muted-foreground";
     }
   };
-
-  if (isLoading) {
-    return <SectionSkeleton count={6} />;
-  }
 
   return (
     <>
@@ -215,16 +177,7 @@ export function LogAnalysis() {
       </PanelCard>
     </div>
 
-    <CommonAlertDialog
-      open={isConfirmOpen}
-      onOpenChange={setIsConfirmOpen}
-      title={confirmTitle}
-      description={confirmDescription}
-      cancelText="Cancel"
-      actionText="Save"
-      onAction={handleConfirmedSave}
-      onCancel={handleCancel}
-    />
+    <FormSaveDialog form={form} />
   </>
   );
 }

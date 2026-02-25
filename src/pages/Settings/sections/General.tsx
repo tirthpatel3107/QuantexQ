@@ -1,4 +1,8 @@
-import { useEffect } from "react";
+// React & Hooks
+import { useMemo } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Components - UI & Icons
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   RestoreDefaultsButton,
@@ -6,61 +10,44 @@ import {
   CommonInput,
   CommonToggle,
   SectionSkeleton,
-  CommonAlertDialog,
+  FormSaveDialog,
 } from "@/components/common";
-import { GeneralSettingsData } from "@/types/settings";
+
+// Services & Types
 import {
   useGeneralSettings,
   useSaveGeneralSettings,
   useGeneralOptions,
 } from "@/services/api/settings/settings.api";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Context
 import { useSettingsContext } from "../SettingsContext";
 
-interface GeneralSettingsProps {
-  general: GeneralSettingsData;
-  setGeneral: React.Dispatch<React.SetStateAction<GeneralSettingsData>>;
-  safetyConfirmations: boolean;
-  setSafetyConfirmations: (checked: boolean) => void;
-}
-
-export function GeneralSettings({
-  general,
-  setGeneral,
-  safetyConfirmations,
-  setSafetyConfirmations,
-}: GeneralSettingsProps) {
-  const { data: generalResponse, isLoading, error } = useGeneralSettings();
+export function GeneralSettings() {
+  const { data: generalResponse, isLoading } = useGeneralSettings();
   const { data: optionsResponse } = useGeneralOptions();
   const { mutate: saveGeneralData } = useSaveGeneralSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
-  const generalData = generalResponse?.data;
   const options = optionsResponse?.data;
 
-  // Update general state when API data loads
-  useEffect(() => {
-    if (generalData) {
-      setGeneral({
-        defaultWellName: generalData.applicationName || general.defaultWellName,
-        defaultRigName: general.defaultRigName,
-        defaultScenario: general.defaultScenario,
-        startupScreen1: general.startupScreen1,
-        startupScreen2: general.startupScreen2,
-      });
-    }
-  }, [generalData]);
+  // Memoize initial data
+  const initialData = useMemo(() => {
+    if (!generalResponse?.data) return undefined;
+    const data = generalResponse.data;
+    return {
+      defaultWellName: data.applicationName,
+      defaultRigName: data.defaultRigName || "",
+      defaultScenario: data.defaultScenario || "",
+      startupScreen1: data.startupScreen1 || "",
+      startupScreen2: data.startupScreen2 || "",
+      safetyConfirmations: true, // Assuming default or from data if available
+    };
+  }, [generalResponse?.data]);
 
-  // Setup save with confirmation
-  const {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  } = useSaveWithConfirmation<any>({
+  // Use the reusable form hook
+  const form = useSectionForm<any>({
+    initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
         saveGeneralData(data, {
@@ -69,130 +56,91 @@ export function GeneralSettings({
         });
       });
     },
+    registerSaveHandler,
+    unregisterSaveHandler,
     successMessage: "General settings saved successfully",
     errorMessage: "Failed to save general settings",
     confirmTitle: "Save General Settings",
     confirmDescription: "Are you sure you want to save these general settings changes?",
   });
 
-  // Save data to API with confirmation
-  const handleSaveData = (updatedData: any) => {
-    requestSave(updatedData);
-  };
-
-  const handleSave = () => {
-    handleSaveData({
-      defaultWellName: general.defaultWellName,
-      defaultRigName: general.defaultRigName,
-      defaultScenario: general.defaultScenario,
-      startupScreen1: general.startupScreen1,
-      startupScreen2: general.startupScreen2,
-      safetyConfirmations,
-    });
-  };
-
-  // Register save handler with parent context
-  useEffect(() => {
-    registerSaveHandler(handleSave);
-    return () => unregisterSaveHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [general, safetyConfirmations]);
-
-  if (isLoading) {
+  if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;
   }
+
+  const { formData } = form;
 
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3 mb-3">
-      <PanelCard title="Project / Well Context">
-        <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
-          <CommonInput
-            label="Default Well Name"
-            value={general.defaultWellName}
-            onChange={(e) => {
-              const newValue = e.target.value;
-              setGeneral((g) => ({
-                ...g,
-                defaultWellName: newValue,
-              }));
-              handleSaveData({ defaultWellName: newValue });
+        <PanelCard title="Project / Well Context">
+          <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
+            <CommonInput
+              label="Default Well Name"
+              value={formData.defaultWellName}
+              onChange={(e) => {
+                form.updateLocalField({ defaultWellName: e.target.value });
+              }}
+            />
+
+            <CommonSelect
+              label="Default Rig name"
+              options={options?.rigOptions || []}
+              value={formData.defaultRigName}
+              onValueChange={(v) => {
+                form.updateLocalField({ defaultRigName: v });
+              }}
+            />
+
+            <CommonSelect
+              label="Default Scenario"
+              options={options?.scenarioOptions || []}
+              value={formData.defaultScenario}
+              onValueChange={(v) => {
+                form.updateLocalField({ defaultScenario: v });
+              }}
+            />
+
+            <CommonSelect
+              label="Startup Screen"
+              options={options?.screenOptions || []}
+              value={formData.startupScreen1}
+              onValueChange={(v) => {
+                form.updateLocalField({
+                  startupScreen1: v,
+                  startupScreen2: v,
+                });
+              }}
+            />
+
+            <CommonSelect
+              label="Startup Screen (secondary)"
+              options={options?.screenOptions || []}
+              value={formData.startupScreen2}
+              onValueChange={(v) => {
+                form.updateLocalField({ startupScreen2: v });
+              }}
+            />
+          </div>
+        </PanelCard>
+
+        <PanelCard
+          title="Safety"
+          headerAction={<RestoreDefaultsButton size="sm" />}
+        >
+          <CommonToggle
+            id="safety-confirm"
+            label="Enable safety confirmations"
+            description="Confirmations for Auto Control ON, PRC ON, Mode change, and Import settings."
+            checked={formData.safetyConfirmations}
+            onCheckedChange={(checked) => {
+              form.updateLocalField({ safetyConfirmations: checked });
             }}
           />
+        </PanelCard>
+      </div>
 
-          <CommonSelect
-            label="Default Rig name"
-            options={options?.rigOptions || []}
-            value={general.defaultRigName}
-            onValueChange={(v) => {
-              setGeneral((g) => ({ ...g, defaultRigName: v }));
-              handleSaveData({ defaultRigName: v });
-            }}
-          />
-
-          <CommonSelect
-            label="Default Scenario"
-            options={options?.scenarioOptions || []}
-            value={general.defaultScenario}
-            onValueChange={(v) => {
-              setGeneral((g) => ({ ...g, defaultScenario: v }));
-              handleSaveData({ defaultScenario: v });
-            }}
-          />
-
-          <CommonSelect
-            label="Startup Screen"
-            options={options?.screenOptions || []}
-            value={general.startupScreen1}
-            onValueChange={(v) => {
-              setGeneral((g) => ({
-                ...g,
-                startupScreen1: v,
-                startupScreen2: v,
-              }));
-              handleSaveData({ startupScreen1: v, startupScreen2: v });
-            }}
-          />
-
-          <CommonSelect
-            label="Startup Screen (secondary)"
-            options={options?.screenOptions || []}
-            value={general.startupScreen2}
-            onValueChange={(v) => {
-              setGeneral((g) => ({ ...g, startupScreen2: v }));
-              handleSaveData({ startupScreen2: v });
-            }}
-          />
-        </div>
-      </PanelCard>
-
-      <PanelCard
-        title="Safety"
-        headerAction={<RestoreDefaultsButton size="sm" />}
-      >
-        <CommonToggle
-          id="safety-confirm"
-          label="Enable safety confirmations"
-          description="Confirmations for Auto Control ON, PRC ON, Mode change, and Import settings."
-          checked={safetyConfirmations}
-          onCheckedChange={(checked) => {
-            setSafetyConfirmations(checked);
-            handleSaveData({ safetyConfirmations: checked });
-          }}
-        />
-      </PanelCard>
-    </div>
-
-    <CommonAlertDialog
-      open={isConfirmOpen}
-      onOpenChange={setIsConfirmOpen}
-      title={confirmTitle}
-      description={confirmDescription}
-      cancelText="Cancel"
-      actionText="Save"
-      onAction={handleConfirmedSave}
-      onCancel={handleCancel}
-    />
-  </>
+      <FormSaveDialog form={form} />
+    </>
   );
 }

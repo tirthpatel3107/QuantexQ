@@ -1,60 +1,45 @@
-import { useState, useEffect } from "react";
+// React & Hooks
+import { useMemo } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Components
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   RestoreDefaultsButton,
   CommonInput,
   SectionSkeleton,
-  CommonAlertDialog,
+  FormSaveDialog,
 } from "@/components/common";
-import { FluidData } from "@/types/mud";
+
+// Services & Types
 import {
   useCalibrationData,
   useSaveCalibrationData,
+  useCalibrationOptions,
 } from "@/services/api/mudproperties/mudproperties.api";
 import type { SaveCalibrationPayload } from "@/services/api/mudproperties/mudproperties.types";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Context
 import { useMudPropertiesContext } from "../MudPropertiesContext";
 
-interface CalibrationProps {
-  fluid: FluidData;
-  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
-}
-
-export function Calibration({ fluid, setFluid }: CalibrationProps) {
-  const { data: calibrationResponse, isLoading, error } = useCalibrationData();
+export function Calibration() {
+  const { data: calibrationResponse, isLoading } = useCalibrationData();
+  const { data: optionsResponse } = useCalibrationOptions();
   const { mutate: saveCalibrationData } = useSaveCalibrationData();
   const { registerSaveHandler, unregisterSaveHandler } = useMudPropertiesContext();
 
-  const calibrationData = calibrationResponse?.data;
+  const options = optionsResponse?.data;
 
-  const [formData, setFormData] = useState<SaveCalibrationPayload | null>(null);
+  // Memoize initial data
+  const initialData = useMemo(() => {
+    if (!calibrationResponse?.data) return undefined;
+    const { viscometerCalDate, densityCalDate, tempSensorOffset, pressureSensorCal, flowMeterCal, lastCalibrationBy, nextCalibrationDue } = calibrationResponse.data;
+    return { viscometerCalDate, densityCalDate, tempSensorOffset, pressureSensorCal, flowMeterCal, lastCalibrationBy, nextCalibrationDue };
+  }, [calibrationResponse?.data]);
 
-  // Initialize form data when calibrationData loads
-  useEffect(() => {
-    if (calibrationData) {
-      const { viscometerCalDate, densityCalDate, tempSensorOffset } =
-        calibrationData;
-      setFormData({ viscometerCalDate, densityCalDate, tempSensorOffset });
-      setFluid((prev) => ({
-        ...prev,
-        viscometerCalDate,
-        densityCalDate,
-        tempSensorOffset,
-      }));
-    }
-  }, [calibrationData, setFluid]);
-
-  // Setup save with confirmation
-  const {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    isSaving,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  } = useSaveWithConfirmation<SaveCalibrationPayload>({
+  // Use the reusable form hook
+  const form = useSectionForm<SaveCalibrationPayload>({
+    initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
         saveCalibrationData(data, {
@@ -63,37 +48,19 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
         });
       });
     },
+    registerSaveHandler,
+    unregisterSaveHandler,
     successMessage: "Calibration settings saved successfully",
     errorMessage: "Failed to save calibration settings",
     confirmTitle: "Save Calibration Settings",
     confirmDescription: "Are you sure you want to save these calibration changes?",
   });
 
-  // Update local state only
-  const handleSaveData = (updatedData: Partial<SaveCalibrationPayload>) => {
-    if (!formData) return;
-
-    const newFormData = { ...formData, ...updatedData };
-    setFormData(newFormData);
-    setFluid((prev) => ({ ...prev, ...updatedData }));
-  };
-
-  const handleSave = () => {
-    if (formData) {
-      requestSave(formData);
-    }
-  };
-
-  // Register save handler with parent context
-  useEffect(() => {
-    registerSaveHandler(handleSave);
-    return () => unregisterSaveHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
-
-  if (isLoading) {
+  if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;
   }
+
+  const { formData } = form;
 
   return (
     <>
@@ -103,9 +70,7 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
             <CommonInput
               label="Viscometer cal. date"
               value={formData.viscometerCalDate}
-              onChange={(e) =>
-                handleSaveData({ viscometerCalDate: e.target.value })
-              }
+              onChange={(e) => form.updateLocalField({ viscometerCalDate: e.target.value })}
               placeholder="—"
               type="date"
             />
@@ -113,7 +78,7 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
             <CommonInput
               label="Density cal. date"
               value={formData.densityCalDate}
-              onChange={(e) => handleSaveData({ densityCalDate: e.target.value })}
+              onChange={(e) => form.updateLocalField({ densityCalDate: e.target.value })}
               placeholder="—"
               type="date"
             />
@@ -121,25 +86,14 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
             <CommonInput
               label="Temp. sensor offset"
               value={formData.tempSensorOffset}
-              onChange={(e) =>
-                handleSaveData({ tempSensorOffset: e.target.value })
-              }
+              onChange={(e) => form.updateLocalField({ tempSensorOffset: e.target.value })}
               placeholder="°F"
             />
           </div>
         </PanelCard>
       </div>
 
-      <CommonAlertDialog
-        open={isConfirmOpen}
-        onOpenChange={setIsConfirmOpen}
-        title={confirmTitle}
-        description={confirmDescription}
-        cancelText="Cancel"
-        actionText="Save"
-        onAction={handleConfirmedSave}
-        onCancel={handleCancel}
-      />
+      <FormSaveDialog form={form} />
     </>
   );
 }

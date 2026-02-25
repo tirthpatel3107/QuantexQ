@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   CommonSelect,
@@ -6,7 +7,7 @@ import {
   CommonButton,
   CommonToggle,
   SectionSkeleton,
-  CommonAlertDialog,
+  FormSaveDialog,
 } from "@/components/common";
 import { RestoreDefaultsButton } from "@/components/common/RestoreDefaultsButton";
 import { Settings } from "lucide-react";
@@ -16,44 +17,24 @@ import {
   useSystemSettingsOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveSystemSettingsPayload } from "@/services/api/daq/daq.types";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 import { useDAQContext } from "../DAQContext";
 
 export function SystemSettings() {
-  const {
-    data: systemSettingsResponse,
-    isLoading,
-    error,
-  } = useSystemSettingsData();
+  const { data: systemSettingsResponse, isLoading } = useSystemSettingsData();
   const { data: optionsResponse } = useSystemSettingsOptions();
   const { mutate: saveSystemSettingsData } = useSaveSystemSettingsData();
   const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
-  const systemSettingsData = systemSettingsResponse?.data;
   const options = optionsResponse?.data;
 
-  const [formData, setFormData] = useState<SaveSystemSettingsPayload | null>(
-    null,
-  );
+  const initialData = useMemo(() => {
+    if (!systemSettingsResponse?.data) return undefined;
+    const { daqPreset, controlMode, hardwareConfig } = systemSettingsResponse.data;
+    return { daqPreset, controlMode, hardwareConfig };
+  }, [systemSettingsResponse?.data]);
 
-  // Initialize form data when systemSettingsData loads
-  useEffect(() => {
-    if (systemSettingsData) {
-      const { daqPreset, controlMode, hardwareConfig } = systemSettingsData;
-      setFormData({ daqPreset, controlMode, hardwareConfig });
-    }
-  }, [systemSettingsData]);
-
-  // Setup save with confirmation
-  const {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  } = useSaveWithConfirmation<SaveSystemSettingsPayload>({
+  const form = useSectionForm<SaveSystemSettingsPayload>({
+    initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
         saveSystemSettingsData(data, {
@@ -62,32 +43,13 @@ export function SystemSettings() {
         });
       });
     },
+    registerSaveHandler,
+    unregisterSaveHandler,
     successMessage: "System settings saved successfully",
     errorMessage: "Failed to save system settings",
     confirmTitle: "Save System Settings",
     confirmDescription: "Are you sure you want to save these system settings changes?",
   });
-
-  // Save data to API with confirmation
-  const handleSaveData = (updatedData: Partial<SaveSystemSettingsPayload>) => {
-    if (!formData) return;
-
-    const newFormData = { ...formData, ...updatedData };
-    setFormData(newFormData);
-  };
-
-  const handleSave = () => {
-    if (formData) {
-      requestSave(formData);
-    }
-  };
-
-  // Register save handler with parent context
-  useEffect(() => {
-    registerSaveHandler(handleSave);
-    return () => unregisterSaveHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
 
   // System Settings state
   const [systemType, setSystemType] = useState("MPD");
@@ -127,9 +89,11 @@ export function SystemSettings() {
   const [autoUTCSync, setAutoUTCSync] = useState(false);
   const [localTime, setLocalTime] = useState("06 Feb 2026 / 16:37");
 
-  if (isLoading) {
+  if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;
   }
+
+  const { daqPreset, hardwareConfig } = form.formData;
 
   return (
     <>
@@ -540,16 +504,7 @@ export function SystemSettings() {
       </div>
     </div>
 
-    <CommonAlertDialog
-      open={isConfirmOpen}
-      onOpenChange={setIsConfirmOpen}
-      title={confirmTitle}
-      description={confirmDescription}
-      cancelText="Cancel"
-      actionText="Save"
-      onAction={handleConfirmedSave}
-      onCancel={handleCancel}
-    />
+    <FormSaveDialog form={form} />
   </>
   );
 }

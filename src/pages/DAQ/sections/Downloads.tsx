@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { CommonButton } from "@/components/common/CommonButton";
 import {
@@ -7,7 +8,7 @@ import {
   CommonTabsList,
   CommonTabsTrigger,
 } from "@/components/common/CommonTabs";
-import { SectionSkeleton, CommonAlertDialog } from "@/components/common";
+import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 import { Download, FolderOpen, FileText, File } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -16,7 +17,6 @@ import {
   useDownloadsOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveDownloadsPayload } from "@/services/api/daq/daq.types";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 import { useDAQContext } from "../DAQContext";
 
 interface FileItem {
@@ -93,34 +93,21 @@ const downloadHistory: DownloadHistoryItem[] = [
 ];
 
 export function Downloads() {
-  const { data: downloadsResponse, isLoading, error } = useDownloadsData();
+  const { data: downloadsResponse, isLoading } = useDownloadsData();
   const { data: optionsResponse } = useDownloadsOptions();
   const { mutate: saveDownloadsData } = useSaveDownloadsData();
   const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
-  const downloadsData = downloadsResponse?.data;
   const options = optionsResponse?.data;
 
-  const [formData, setFormData] = useState<SaveDownloadsPayload | null>(null);
+  const initialData = useMemo(() => {
+    if (!downloadsResponse?.data) return undefined;
+    const { logs, quickExport } = downloadsResponse.data;
+    return { logs, quickExport };
+  }, [downloadsResponse?.data]);
 
-  // Initialize form data when downloadsData loads
-  useEffect(() => {
-    if (downloadsData) {
-      const { logs, quickExport } = downloadsData;
-      setFormData({ logs, quickExport });
-    }
-  }, [downloadsData]);
-
-  // Setup save with confirmation
-  const {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  } = useSaveWithConfirmation<SaveDownloadsPayload>({
+  const form = useSectionForm<SaveDownloadsPayload>({
+    initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
         saveDownloadsData(data, {
@@ -129,39 +116,22 @@ export function Downloads() {
         });
       });
     },
+    registerSaveHandler,
+    unregisterSaveHandler,
     successMessage: "Downloads settings saved successfully",
     errorMessage: "Failed to save downloads settings",
     confirmTitle: "Save Downloads Settings",
     confirmDescription: "Are you sure you want to save these downloads changes?",
   });
 
-  // Save data to API with confirmation
-  const handleSaveData = (updatedData: Partial<SaveDownloadsPayload>) => {
-    if (!formData) return;
-
-    const newFormData = { ...formData, ...updatedData };
-    setFormData(newFormData);
-  };
-
-  const handleSave = () => {
-    if (formData) {
-      requestSave(formData);
-    }
-  };
-
-  // Register save handler with parent context
-  useEffect(() => {
-    registerSaveHandler(handleSave);
-    return () => unregisterSaveHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
-
   const [activeTab, setActiveTab] = useState("downloads");
   const [activeLogFilter, setActiveLogFilter] = useState("all");
 
-  if (isLoading) {
+  if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;
   }
+
+  const { logs, quickExport } = form.formData;
 
   return (
     <>
@@ -339,16 +309,7 @@ export function Downloads() {
       </PanelCard>
     </div>
 
-    <CommonAlertDialog
-      open={isConfirmOpen}
-      onOpenChange={setIsConfirmOpen}
-      title={confirmTitle}
-      description={confirmDescription}
-      cancelText="Cancel"
-      actionText="Save"
-      onAction={handleConfirmedSave}
-      onCancel={handleCancel}
-    />
+    <FormSaveDialog form={form} />
   </>
   );
 }

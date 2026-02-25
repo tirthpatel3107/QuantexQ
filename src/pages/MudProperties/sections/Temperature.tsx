@@ -1,56 +1,40 @@
-import { useState, useEffect } from "react";
-import { SectionSkeleton, CommonAlertDialog } from "@/components/common";
+// React & Hooks
+import { useMemo, useCallback } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Components
+import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 import { TemperaturePanel } from "./panels/TemperaturePanel";
-import { FluidData } from "@/types/mud";
+
+// Services & Types
 import {
   useTemperatureData,
   useSaveTemperatureData,
+  useTemperatureOptions,
 } from "@/services/api/mudproperties/mudproperties.api";
 import type { SaveTemperaturePayload } from "@/services/api/mudproperties/mudproperties.types";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Context
 import { useMudPropertiesContext } from "../MudPropertiesContext";
 
-interface TemperatureSectionProps {
-  fluid: FluidData;
-  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
-}
-
-export function Temperature({ fluid, setFluid }: TemperatureSectionProps) {
-  const { data: temperatureResponse, isLoading, error } = useTemperatureData();
+export function Temperature() {
+  const { data: temperatureResponse, isLoading } = useTemperatureData();
+  const { data: optionsResponse } = useTemperatureOptions();
   const { mutate: saveTemperatureData } = useSaveTemperatureData();
   const { registerSaveHandler, unregisterSaveHandler } = useMudPropertiesContext();
 
-  const temperatureData = temperatureResponse?.data;
+  const options = optionsResponse?.data;
 
-  const [formData, setFormData] = useState<SaveTemperaturePayload | null>(null);
+  // Memoize initial data
+  const initialData = useMemo(() => {
+    if (!temperatureResponse?.data) return undefined;
+    const { surfaceTemp, bottomholeTemp, tempGradient, flowlineTemp, ambientTemp, staticTemp, circulatingTemp } = temperatureResponse.data;
+    return { surfaceTemp, bottomholeTemp, tempGradient, flowlineTemp, ambientTemp, staticTemp, circulatingTemp };
+  }, [temperatureResponse?.data]);
 
-  // Initialize form data when temperatureData loads
-  useEffect(() => {
-    if (temperatureData) {
-      const { surfaceTemp, bottomholeTemp, tempGradient, flowlineTemp } =
-        temperatureData;
-      setFormData({ surfaceTemp, bottomholeTemp, tempGradient, flowlineTemp });
-      setFluid((prev) => ({
-        ...prev,
-        surfaceTemp,
-        bottomholeTemp,
-        tempGradient,
-        flowlineTemp,
-      }));
-    }
-  }, [temperatureData, setFluid]);
-
-  // Setup save with confirmation
-  const {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    isSaving,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  } = useSaveWithConfirmation<SaveTemperaturePayload>({
+  // Use the reusable form hook
+  const form = useSectionForm<SaveTemperaturePayload>({
+    initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
         saveTemperatureData(data, {
@@ -59,54 +43,36 @@ export function Temperature({ fluid, setFluid }: TemperatureSectionProps) {
         });
       });
     },
+    registerSaveHandler,
+    unregisterSaveHandler,
     successMessage: "Temperature settings saved successfully",
     errorMessage: "Failed to save temperature settings",
     confirmTitle: "Save Temperature Settings",
     confirmDescription: "Are you sure you want to save these temperature changes?",
   });
 
-  // Update local state only
-  const handleSaveData = (updatedData: Partial<SaveTemperaturePayload>) => {
-    if (!formData) return;
-
-    const newFormData = { ...formData, ...updatedData };
-    setFormData(newFormData);
-    setFluid((prev) => ({ ...prev, ...updatedData }));
-  };
-
-  const handleSave = () => {
-    if (formData) {
-      requestSave(formData);
+  // Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter
+  const setFluidAdapter = useCallback((update: any) => {
+    if (typeof update === 'function') {
+      form.setFormData(update);
+    } else {
+      form.updateLocalField(update);
     }
-  };
+  }, [form]);
 
-  // Register save handler with parent context
-  useEffect(() => {
-    registerSaveHandler(handleSave);
-    return () => unregisterSaveHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
-
-  if (isLoading) {
+  if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;
   }
+
+  const fluid = form.formData;
 
   return (
     <>
       <div className="grid gap-4 mb-4 grid-cols-1 max-w-2xl">
-        <TemperaturePanel fluid={fluid} setFluid={setFluid} />
+        <TemperaturePanel fluid={fluid as any} setFluid={setFluidAdapter} />
       </div>
 
-      <CommonAlertDialog
-        open={isConfirmOpen}
-        onOpenChange={setIsConfirmOpen}
-        title={confirmTitle}
-        description={confirmDescription}
-        cancelText="Cancel"
-        actionText="Save"
-        onAction={handleConfirmedSave}
-        onCancel={handleCancel}
-      />
+      <FormSaveDialog form={form} />
     </>
   );
 }

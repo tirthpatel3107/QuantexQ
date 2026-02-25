@@ -1,56 +1,40 @@
-import { useState, useEffect } from "react";
-import { SectionSkeleton, CommonAlertDialog } from "@/components/common";
+// React & Hooks
+import { useMemo, useCallback } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Components
+import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 import { RheologyPanel } from "./panels/RheologyPanel";
-import { FluidData } from "@/types/mud";
+
+// Services & Types
 import {
   useRheologyData,
   useSaveRheologyData,
+  useRheologyOptions,
 } from "@/services/api/mudproperties/mudproperties.api";
 import type { SaveRheologyPayload } from "@/services/api/mudproperties/mudproperties.types";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Context
 import { useMudPropertiesContext } from "../MudPropertiesContext";
 
-interface RheologySectionProps {
-  fluid: FluidData;
-  setFluid: React.Dispatch<React.SetStateAction<FluidData>>;
-}
-
-export function Rheology({ fluid, setFluid }: RheologySectionProps) {
-  const { data: rheologyResponse, isLoading, error } = useRheologyData();
+export function Rheology() {
+  const { data: rheologyResponse, isLoading } = useRheologyData();
+  const { data: optionsResponse } = useRheologyOptions();
   const { mutate: saveRheologyData } = useSaveRheologyData();
   const { registerSaveHandler, unregisterSaveHandler } = useMudPropertiesContext();
 
-  const rheologyData = rheologyResponse?.data;
+  const options = optionsResponse?.data;
 
-  const [formData, setFormData] = useState<SaveRheologyPayload | null>(null);
+  // Memoize initial data
+  const initialData = useMemo(() => {
+    if (!rheologyResponse?.data) return undefined;
+    const { rheologySource, pv, yp, gel10s, gel10m, n, k, tau0 } = rheologyResponse.data;
+    return { rheologySource, pv, yp, gel10s, gel10m, n, k, tau0 };
+  }, [rheologyResponse?.data]);
 
-  // Initialize form data when rheologyData loads
-  useEffect(() => {
-    if (rheologyData) {
-      const { rheologySource, pv, yp, gel10s, gel10m } = rheologyData;
-      setFormData({ rheologySource, pv, yp, gel10s, gel10m });
-      setFluid((prev) => ({
-        ...prev,
-        rheologySource,
-        pv,
-        yp,
-        gel10s,
-        gel10m,
-      }));
-    }
-  }, [rheologyData, setFluid]);
-
-  // Setup save with confirmation
-  const {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    isSaving,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  } = useSaveWithConfirmation<SaveRheologyPayload>({
+  // Use the reusable form hook
+  const form = useSectionForm<SaveRheologyPayload>({
+    initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
         saveRheologyData(data, {
@@ -59,54 +43,36 @@ export function Rheology({ fluid, setFluid }: RheologySectionProps) {
         });
       });
     },
+    registerSaveHandler,
+    unregisterSaveHandler,
     successMessage: "Rheology settings saved successfully",
     errorMessage: "Failed to save rheology settings",
     confirmTitle: "Save Rheology Settings",
     confirmDescription: "Are you sure you want to save these rheology changes?",
   });
 
-  // Update local state only
-  const handleSaveData = (updatedData: Partial<SaveRheologyPayload>) => {
-    if (!formData) return;
-
-    const newFormData = { ...formData, ...updatedData };
-    setFormData(newFormData);
-    setFluid((prev) => ({ ...prev, ...updatedData }));
-  };
-
-  const handleSave = () => {
-    if (formData) {
-      requestSave(formData);
+  // Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter
+  const setFluidAdapter = useCallback((update: any) => {
+    if (typeof update === 'function') {
+      form.setFormData(update);
+    } else {
+      form.updateLocalField(update);
     }
-  };
+  }, [form]);
 
-  // Register save handler with parent context
-  useEffect(() => {
-    registerSaveHandler(handleSave);
-    return () => unregisterSaveHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
-
-  if (isLoading) {
+  if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;
   }
+
+  const fluid = form.formData;
 
   return (
     <>
       <div className="grid gap-4 mb-4 grid-cols-1 max-w-2xl">
-        <RheologyPanel fluid={fluid} setFluid={setFluid} />
+        <RheologyPanel fluid={fluid as any} setFluid={setFluidAdapter} />
       </div>
 
-      <CommonAlertDialog
-        open={isConfirmOpen}
-        onOpenChange={setIsConfirmOpen}
-        title={confirmTitle}
-        description={confirmDescription}
-        cancelText="Cancel"
-        actionText="Save"
-        onAction={handleConfirmedSave}
-        onCancel={handleCancel}
-      />
+      <FormSaveDialog form={form} />
     </>
   );
 }
