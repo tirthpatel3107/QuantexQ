@@ -35,7 +35,7 @@ import { GeneralSettingsData } from "@/types/settings";
 export default function Settings() {
   const { section } = useParams();
   const activeSection = section || "setting";
-  
+
   const [general, setGeneral] = useState<GeneralSettingsData>({
     defaultWellName: "NFQ-21-6A",
     defaultRigName: "Rig-01",
@@ -45,37 +45,44 @@ export default function Settings() {
   });
   const [safetyConfirmations, setSafetyConfirmations] = useState(true);
 
-  const headerActions = useMemo(() => (
-    <>
-      <CommonTooltip content="Save settings">
-        <CommonButton variant="outline" size="sm" icon={Save}>
-          Save
-        </CommonButton>
-      </CommonTooltip>
-      <CommonTooltip content="Discard changes">
-        <CommonButton variant="outline" size="sm" icon={RotateCcw}>
-          Discard
-        </CommonButton>
-      </CommonTooltip>
-      <CommonTooltip content="Export settings">
-        <CommonButton variant="outline" size="sm" icon={Upload}>
-          Export
-        </CommonButton>
-      </CommonTooltip>
-    </>
-  ), []);
+  const headerActions = useMemo(
+    () => (
+      <>
+        <CommonTooltip content="Save settings">
+          <CommonButton variant="outline" size="sm" icon={Save}>
+            Save
+          </CommonButton>
+        </CommonTooltip>
+        <CommonTooltip content="Discard changes">
+          <CommonButton variant="outline" size="sm" icon={RotateCcw}>
+            Discard
+          </CommonButton>
+        </CommonTooltip>
+        <CommonTooltip content="Export settings">
+          <CommonButton variant="outline" size="sm" icon={Upload}>
+            Export
+          </CommonButton>
+        </CommonTooltip>
+      </>
+    ),
+    [],
+  );
 
-  const sidebarNav = useMemo(() => (
-    <SidebarNav
-      items={SETTINGS_NAV}
-      activeSection={activeSection}
-      baseRoute={ROUTES.SETTINGS}
-    />
-  ), [activeSection]);
+  const sidebarNav = useMemo(
+    () => (
+      <SidebarNav
+        items={SETTINGS_NAV}
+        activeSection={activeSection}
+        baseRoute={ROUTES.SETTINGS}
+      />
+    ),
+    [activeSection],
+  );
 
-  const activeNav = useMemo(() => 
-    SETTINGS_NAV.find((n) => n.id === activeSection)
-  , [activeSection]);
+  const activeNav = useMemo(
+    () => SETTINGS_NAV.find((n) => n.id === activeSection),
+    [activeSection],
+  );
 
   const renderSection = () => {
     switch (activeSection) {
@@ -148,11 +155,8 @@ export default function Settings() {
           actions={headerActions}
         />
 
-        <main className="flex-1 min-w-0 overflow-auto">
-          {renderSection()}
-        </main>
+        <main className="flex-1 min-w-0 overflow-auto">{renderSection()}</main>
       </SidebarLayout>
     </PageLayout>
   );
 }
-

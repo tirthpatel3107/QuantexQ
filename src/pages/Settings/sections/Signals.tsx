@@ -27,6 +27,8 @@ import {
   CommonDialog,
   CommonInput,
   CommonDropdownMenu,
+  CommonSkeleton,
+  SectionSkeleton,
 } from "@/components/common";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -266,11 +268,7 @@ export function Signals() {
   const usedSignals = signals.filter((s) => s.inUse).length;
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-sm text-muted-foreground">Loading signals...</div>
-      </div>
-    );
+    return <SectionSkeleton count={6} className="p-4" />;
   }
 
   if (error) {

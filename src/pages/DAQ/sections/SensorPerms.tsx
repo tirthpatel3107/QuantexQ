@@ -1,3 +1,4 @@
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { useSensorPermsData } from "@/services/api/daq/daq.api";
 
 export function SensorPerms() {
@@ -5,11 +6,15 @@ export function SensorPerms() {
   const sensorPermsData = sensorPermsResponse?.data;
 
   if (isLoading) {
-    return <div className="p-4">Loading sensor permissions data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">Error loading sensor permissions data</div>;
+    return (
+      <div className="p-4 text-red-500">
+        Error loading sensor permissions data
+      </div>
+    );
   }
 
   if (!sensorPermsData) {
@@ -18,7 +23,8 @@ export function SensorPerms() {
 
   return (
     <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-      Sensor Perms DAQ Section - API Connected ({sensorPermsData.sensors.length} sensors)
+      Sensor Perms DAQ Section - API Connected ({sensorPermsData.sensors.length}{" "}
+      sensors)
     </div>
   );
 }

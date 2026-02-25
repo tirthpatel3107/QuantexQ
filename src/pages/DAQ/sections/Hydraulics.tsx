@@ -1,3 +1,4 @@
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { useHydraulicsData } from "@/services/api/daq/daq.api";
 
 export function Hydraulics() {
@@ -5,11 +6,13 @@ export function Hydraulics() {
   const hydraulicsData = hydraulicsResponse?.data;
 
   if (isLoading) {
-    return <div className="p-4">Loading hydraulics data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">Error loading hydraulics data</div>;
+    return (
+      <div className="p-4 text-red-500">Error loading hydraulics data</div>
+    );
   }
 
   if (!hydraulicsData) {
@@ -18,7 +21,8 @@ export function Hydraulics() {
 
   return (
     <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-      Hydraulics Models DAQ Section - API Connected ({hydraulicsData.modelsUsed.length} models)
+      Hydraulics Models DAQ Section - API Connected (
+      {hydraulicsData.modelsUsed.length} models)
     </div>
   );
 }

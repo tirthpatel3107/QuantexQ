@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Play, FileDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { useDiagnosticsData } from "@/services/api/network/network.api";
 
 export function Diagnostics() {
@@ -16,11 +17,12 @@ export function Diagnostics() {
   const [packetCaptureDuration, setPacketCaptureDuration] = useState("90");
 
   if (isLoading) {
-    return <div className="p-4">Loading diagnostics data...</div>;
+    return <SectionSkeleton count={6} />;
   }
-
   if (error) {
-    return <div className="p-4 text-red-500">Error loading diagnostics data</div>;
+    return (
+      <div className="p-4 text-red-500">Error loading diagnostics data</div>
+    );
   }
 
   if (!diagnosticsData) {

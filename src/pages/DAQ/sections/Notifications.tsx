@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonButton } from "@/components/common/CommonButton";
-import { CommonToggle } from "@/components/common/CommonToggle";
-import { CommonCheckbox } from "@/components/common/CommonCheckbox";
-import { CommonSelect } from "@/components/common/CommonSelect";
+import {
+  CommonButton,
+  CommonToggle,
+  CommonCheckbox,
+  CommonSelect,
+  CommonSkeleton,
+  SectionSkeleton,
+} from "@/components/common";
 import { Volume2, Play, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNotificationsData } from "@/services/api/daq/daq.api";
@@ -18,7 +22,11 @@ interface NotificationLogEntry {
 }
 
 export function Notifications() {
-  const { data: notificationsResponse, isLoading, error } = useNotificationsData();
+  const {
+    data: notificationsResponse,
+    isLoading,
+    error,
+  } = useNotificationsData();
   const notificationsData = notificationsResponse?.data;
 
   // Settings & Summary state
@@ -111,11 +119,13 @@ export function Notifications() {
   };
 
   if (isLoading) {
-    return <div className="p-4">Loading notifications data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">Error loading notifications data</div>;
+    return (
+      <div className="p-4 text-red-500">Error loading notifications data</div>
+    );
   }
 
   return (

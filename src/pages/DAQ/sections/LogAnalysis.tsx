@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonButton } from "@/components/common/CommonButton";
+import {
+  CommonButton,
+  CommonSkeleton,
+  SectionSkeleton,
+} from "@/components/common";
 import { Badge } from "@/components/ui/badge";
 import { Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -79,11 +83,13 @@ export function LogAnalysis() {
   };
 
   if (isLoading) {
-    return <div className="p-4">Loading log analysis data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">Error loading log analysis data</div>;
+    return (
+      <div className="p-4 text-red-500">Error loading log analysis data</div>
+    );
   }
 
   return (

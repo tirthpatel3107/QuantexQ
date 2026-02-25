@@ -1,15 +1,23 @@
 import { useState } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonSelect } from "@/components/common/CommonSelect";
-import { CommonInput } from "@/components/common/CommonInput";
-import { CommonButton } from "@/components/common/CommonButton";
-import { CommonToggle } from "@/components/common/CommonToggle";
+import {
+  CommonSelect,
+  CommonInput,
+  CommonButton,
+  CommonToggle,
+  CommonSkeleton,
+  SectionSkeleton,
+} from "@/components/common";
 import { RestoreDefaultsButton } from "@/components/common/RestoreDefaultsButton";
 import { Settings } from "lucide-react";
 import { useSystemSettingsData } from "@/services/api/daq/daq.api";
 
 export function SystemSettings() {
-  const { data: systemSettingsResponse, isLoading, error } = useSystemSettingsData();
+  const {
+    data: systemSettingsResponse,
+    isLoading,
+    error,
+  } = useSystemSettingsData();
   const systemSettingsData = systemSettingsResponse?.data;
 
   // System Settings state
@@ -51,11 +59,13 @@ export function SystemSettings() {
   const [localTime, setLocalTime] = useState("06 Feb 2026 / 16:37");
 
   if (isLoading) {
-    return <div className="p-4">Loading system settings data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">Error loading system settings data</div>;
+    return (
+      <div className="p-4 text-red-500">Error loading system settings data</div>
+    );
   }
 
   return (

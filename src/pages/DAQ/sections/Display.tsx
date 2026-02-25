@@ -1,3 +1,4 @@
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { useDisplayData } from "@/services/api/daq/daq.api";
 
 export function Display() {
@@ -5,7 +6,7 @@ export function Display() {
   const displayData = displayResponse?.data;
 
   if (isLoading) {
-    return <div className="p-4">Loading display data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
@@ -18,7 +19,8 @@ export function Display() {
 
   return (
     <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-      Display DAQ Section - API Connected ({displayData.sections.length} sections available)
+      Display DAQ Section - API Connected ({displayData.sections.length}{" "}
+      sections available)
     </div>
   );
 }

@@ -4,6 +4,8 @@ import {
   CommonSelect,
   CommonInput,
   CommonToggle,
+  CommonSkeleton,
+  SectionSkeleton,
 } from "@/components/common";
 import { GeneralSettingsData } from "@/types/settings";
 import { useGeneralSettings } from "@/services/api/settings/settings.api";
@@ -39,11 +41,13 @@ export function GeneralSettings({
   }, [generalData]);
 
   if (isLoading) {
-    return <div className="p-4">Loading general settings...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">Error loading general settings</div>;
+    return (
+      <div className="p-4 text-red-500">Error loading general settings</div>
+    );
   }
 
   const rigOptions = [

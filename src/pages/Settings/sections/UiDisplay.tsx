@@ -4,6 +4,8 @@ import {
   CommonSelect,
   CommonToggle,
   CommonSlider,
+  CommonSkeleton,
+  SectionSkeleton,
 } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RefreshCw, Download, ChevronRight } from "lucide-react";
@@ -113,11 +115,13 @@ export function UiDisplay() {
   }, [uiDisplayData, setTheme, setAccentColor]);
 
   if (isLoading) {
-    return <div className="p-4">Loading UI display settings...</div>;
+    return <SectionSkeleton count={4} gridClassName="lg:grid-cols-[2fr_1fr]" />;
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">Error loading UI display settings</div>;
+    return (
+      <div className="p-4 text-red-500">Error loading UI display settings</div>
+    );
   }
 
   // Define the allowed UI scale values

@@ -1,3 +1,4 @@
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { useUnitsSettings } from "@/services/api/settings/settings.api";
 
 export function Units() {
@@ -5,7 +6,7 @@ export function Units() {
   const unitsData = unitsResponse?.data;
 
   if (isLoading) {
-    return <div className="p-4">Loading units settings...</div>;
+    return <SectionSkeleton count={1} className="p-4" />;
   }
 
   if (error) {

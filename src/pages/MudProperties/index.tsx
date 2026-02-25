@@ -1,11 +1,6 @@
 import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Droplets,
-  Save,
-  RotateCcw,
-  Download,
-} from "lucide-react";
+import { Droplets, Save, RotateCcw, Download } from "lucide-react";
 
 import { ROUTES } from "@/constants/routes";
 import {
@@ -63,42 +58,49 @@ export default function MudProperties() {
     tempSensorOffset: "",
   });
 
-  const headerActions = useMemo(() => (
-    <>
-      <CommonTooltip content="Save mud properties">
-        <CommonButton
-          variant="outline"
-          size="sm"
-          onClick={() => setDirty(false)}
-          icon={Save}
-        >
-          Save
-        </CommonButton>
-      </CommonTooltip>
-      <CommonTooltip content="Discard changes">
-        <CommonButton variant="outline" size="sm" icon={RotateCcw}>
-          Discard
-        </CommonButton>
-      </CommonTooltip>
-      <CommonTooltip content="Import mud properties">
-        <CommonButton variant="outline" size="sm" icon={Download}>
-          Import
-        </CommonButton>
-      </CommonTooltip>
-    </>
-  ), []);
+  const headerActions = useMemo(
+    () => (
+      <>
+        <CommonTooltip content="Save mud properties">
+          <CommonButton
+            variant="outline"
+            size="sm"
+            onClick={() => setDirty(false)}
+            icon={Save}
+          >
+            Save
+          </CommonButton>
+        </CommonTooltip>
+        <CommonTooltip content="Discard changes">
+          <CommonButton variant="outline" size="sm" icon={RotateCcw}>
+            Discard
+          </CommonButton>
+        </CommonTooltip>
+        <CommonTooltip content="Import mud properties">
+          <CommonButton variant="outline" size="sm" icon={Download}>
+            Import
+          </CommonButton>
+        </CommonTooltip>
+      </>
+    ),
+    [],
+  );
 
-  const sidebarNav = useMemo(() => (
-    <SidebarNav
-      items={MUD_NAV}
-      activeSection={activeSection}
-      baseRoute={ROUTES.MUD_PROPERTIES}
-    />
-  ), [activeSection]);
+  const sidebarNav = useMemo(
+    () => (
+      <SidebarNav
+        items={MUD_NAV}
+        activeSection={activeSection}
+        baseRoute={ROUTES.MUD_PROPERTIES}
+      />
+    ),
+    [activeSection],
+  );
 
-  const activeNav = useMemo(() => 
-    MUD_NAV.find((n) => n.id === activeSection)
-  , [activeSection]);
+  const activeNav = useMemo(
+    () => MUD_NAV.find((n) => n.id === activeSection),
+    [activeSection],
+  );
 
   const renderSection = () => {
     switch (activeSection) {
@@ -170,4 +172,3 @@ export default function MudProperties() {
     </PageLayout>
   );
 }
-

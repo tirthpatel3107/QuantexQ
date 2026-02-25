@@ -36,3 +36,4 @@ export {
   SkeletonListItem,
   SkeletonForm,
 } from "./CommonSkeleton";
+export { SectionSkeleton } from "./SectionSkeleton";

@@ -1,5 +1,8 @@
 import { useContext } from "react";
-import { SimulationStateContext, SimulationDataContext } from "../context/SimulationContext";
+import {
+  SimulationStateContext,
+  SimulationDataContext,
+} from "../context/SimulationContext";
 
 export function useSimulation() {
   const state = useContext(SimulationStateContext);
@@ -15,7 +18,9 @@ export function useSimulation() {
 export function useSimulationState() {
   const state = useContext(SimulationStateContext);
   if (!state) {
-    throw new Error("useSimulationState must be used within SimulationProvider");
+    throw new Error(
+      "useSimulationState must be used within SimulationProvider",
+    );
   }
   return state;
 }

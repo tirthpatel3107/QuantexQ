@@ -4,6 +4,7 @@ import { CommonRadio } from "@/components/common/CommonRadio";
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { useProtocolsData } from "@/services/api/network/network.api";
 
 export function Protocols() {
@@ -11,7 +12,7 @@ export function Protocols() {
   const protocolsData = protocolsResponse?.data;
 
   if (isLoading) {
-    return <div className="p-4">Loading protocols data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {

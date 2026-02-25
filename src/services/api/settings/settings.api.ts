@@ -3,32 +3,32 @@
  * TanStack Query hooks for Settings section - Each tab has its own GET API endpoint
  */
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { ApiResponse, SaveResult } from '../types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { ApiResponse, SaveResult } from "../types";
 
 // ============================================
 // Query Keys
 // ============================================
 
 export const settingsKeys = {
-  all: ['settings'] as const,
-  general: () => [...settingsKeys.all, 'general'] as const,
-  uiDisplay: () => [...settingsKeys.all, 'uiDisplay'] as const,
-  units: () => [...settingsKeys.all, 'units'] as const,
-  dataTime: () => [...settingsKeys.all, 'dataTime'] as const,
-  alarms: () => [...settingsKeys.all, 'alarms'] as const,
-  signals: () => [...settingsKeys.all, 'signals'] as const,
-  chokePumps: () => [...settingsKeys.all, 'chokePumps'] as const,
-  autoControl: () => [...settingsKeys.all, 'autoControl'] as const,
-  hydraulicsModel: () => [...settingsKeys.all, 'hydraulicsModel'] as const,
-  aboutDiagnostics: () => [...settingsKeys.all, 'aboutDiagnostics'] as const,
+  all: ["settings"] as const,
+  general: () => [...settingsKeys.all, "general"] as const,
+  uiDisplay: () => [...settingsKeys.all, "uiDisplay"] as const,
+  units: () => [...settingsKeys.all, "units"] as const,
+  dataTime: () => [...settingsKeys.all, "dataTime"] as const,
+  alarms: () => [...settingsKeys.all, "alarms"] as const,
+  signals: () => [...settingsKeys.all, "signals"] as const,
+  chokePumps: () => [...settingsKeys.all, "chokePumps"] as const,
+  autoControl: () => [...settingsKeys.all, "autoControl"] as const,
+  hydraulicsModel: () => [...settingsKeys.all, "hydraulicsModel"] as const,
+  aboutDiagnostics: () => [...settingsKeys.all, "aboutDiagnostics"] as const,
 };
 
 // ============================================
 // API Base URL
 // ============================================
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
 
 // ============================================
 // GET: General Settings Tab
@@ -46,11 +46,11 @@ const fetchGeneralSettings = async (): Promise<ApiResponse<any>> => {
       resolve({
         success: true,
         data: {
-          applicationName: 'Quantex Q',
-          language: 'en',
-          timezone: 'America/New_York',
-          dateFormat: 'MM/DD/YYYY',
-          timeFormat: '12h',
+          applicationName: "Quantex Q",
+          language: "en",
+          timezone: "America/New_York",
+          dateFormat: "MM/DD/YYYY",
+          timeFormat: "12h",
           autoSave: true,
           autoSaveInterval: 300,
         },
@@ -84,13 +84,13 @@ const fetchUiDisplaySettings = async (): Promise<ApiResponse<any>> => {
       resolve({
         success: true,
         data: {
-          theme: 'dark',
-          accentColor: '#3b82f6',
-          fontSize: 'medium',
+          theme: "dark",
+          accentColor: "#3b82f6",
+          fontSize: "medium",
           compactMode: false,
           showGridLines: true,
           animationsEnabled: true,
-          dashboardLayout: 'default',
+          dashboardLayout: "default",
           chartRefreshRate: 1000,
         },
         timestamp: new Date().toISOString(),
@@ -123,13 +123,13 @@ const fetchUnitsSettings = async (): Promise<ApiResponse<any>> => {
       resolve({
         success: true,
         data: {
-          pressure: 'psi',
-          temperature: 'fahrenheit',
-          length: 'feet',
-          volume: 'gallons',
-          flow: 'gpm',
-          density: 'ppg',
-          weight: 'pounds',
+          pressure: "psi",
+          temperature: "fahrenheit",
+          length: "feet",
+          volume: "gallons",
+          flow: "gpm",
+          density: "ppg",
+          weight: "pounds",
         },
         timestamp: new Date().toISOString(),
       });
@@ -162,12 +162,12 @@ const fetchDataTimeSettings = async (): Promise<ApiResponse<any>> => {
         success: true,
         data: {
           ntpEnabled: true,
-          ntpServer: 'pool.ntp.org',
-          timezone: 'America/New_York',
-          dateFormat: 'MM/DD/YYYY',
-          timeFormat: '12h',
+          ntpServer: "pool.ntp.org",
+          timezone: "America/New_York",
+          dateFormat: "MM/DD/YYYY",
+          timeFormat: "12h",
           syncInterval: 3600,
-          lastSync: '2026-02-25T10:30:00Z',
+          lastSync: "2026-02-25T10:30:00Z",
         },
         timestamp: new Date().toISOString(),
       });
@@ -201,18 +201,18 @@ const fetchAlarmsSettings = async (): Promise<ApiResponse<any>> => {
         data: {
           alarmProfiles: [
             {
-              id: 'alarm-1',
-              name: 'High Pressure',
+              id: "alarm-1",
+              name: "High Pressure",
               threshold: 5000,
               enabled: true,
-              priority: 'high',
+              priority: "high",
             },
             {
-              id: 'alarm-2',
-              name: 'Low Flow',
+              id: "alarm-2",
+              name: "Low Flow",
               threshold: 100,
               enabled: true,
-              priority: 'medium',
+              priority: "medium",
             },
           ],
           soundEnabled: true,
@@ -399,7 +399,7 @@ const fetchChokePumpsSettings = async (): Promise<ApiResponse<any>> => {
               efficiency: 0.93,
             },
           },
-          controlMode: 'auto',
+          controlMode: "auto",
         },
         timestamp: new Date().toISOString(),
       });
@@ -482,7 +482,7 @@ const fetchHydraulicsModelSettings = async (): Promise<ApiResponse<any>> => {
       resolve({
         success: true,
         data: {
-          activeModel: 'bingham-plastic',
+          activeModel: "bingham-plastic",
           modelParameters: {
             plasticViscosity: 25,
             yieldPoint: 15,
@@ -495,7 +495,7 @@ const fetchHydraulicsModelSettings = async (): Promise<ApiResponse<any>> => {
           },
           calculationSettings: {
             updateInterval: 1000,
-            precision: 'high',
+            precision: "high",
           },
         },
         timestamp: new Date().toISOString(),
@@ -529,23 +529,23 @@ const fetchAboutDiagnosticsSettings = async (): Promise<ApiResponse<any>> => {
         success: true,
         data: {
           systemInfo: {
-            version: '2.5.1',
-            buildDate: '2026-02-15',
-            serialNumber: 'QX-2026-001234',
-            licenseType: 'Enterprise',
-            licenseExpiry: '2027-02-15',
+            version: "2.5.1",
+            buildDate: "2026-02-15",
+            serialNumber: "QX-2026-001234",
+            licenseType: "Enterprise",
+            licenseExpiry: "2027-02-15",
           },
           diagnostics: {
             cpuUsage: 45,
             memoryUsage: 62,
             diskUsage: 38,
-            networkStatus: 'connected',
-            lastDiagnostic: '2026-02-25T09:00:00Z',
+            networkStatus: "connected",
+            lastDiagnostic: "2026-02-25T09:00:00Z",
           },
           support: {
-            contactEmail: 'support@quantex.com',
-            contactPhone: '+1-800-QUANTEX',
-            documentationUrl: 'https://docs.quantex.com',
+            contactEmail: "support@quantex.com",
+            contactPhone: "+1-800-QUANTEX",
+            documentationUrl: "https://docs.quantex.com",
           },
         },
         timestamp: new Date().toISOString(),
@@ -567,15 +567,17 @@ export const useAboutDiagnosticsSettings = () => {
 // ============================================
 
 // General Settings
-const saveGeneralSettings = async (payload: any): Promise<ApiResponse<SaveResult>> => {
+const saveGeneralSettings = async (
+  payload: any,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving General Settings:', payload);
+      console.log("Saving General Settings:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'General settings saved successfully',
+          message: "General settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -594,15 +596,17 @@ export const useSaveGeneralSettings = () => {
 };
 
 // UI Display Settings
-const saveUiDisplaySettings = async (payload: any): Promise<ApiResponse<SaveResult>> => {
+const saveUiDisplaySettings = async (
+  payload: any,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving UI Display Settings:', payload);
+      console.log("Saving UI Display Settings:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'UI display settings saved successfully',
+          message: "UI display settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -621,15 +625,17 @@ export const useSaveUiDisplaySettings = () => {
 };
 
 // Units Settings
-const saveUnitsSettings = async (payload: any): Promise<ApiResponse<SaveResult>> => {
+const saveUnitsSettings = async (
+  payload: any,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Units Settings:', payload);
+      console.log("Saving Units Settings:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Units settings saved successfully',
+          message: "Units settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -648,15 +654,17 @@ export const useSaveUnitsSettings = () => {
 };
 
 // Data & Time Settings
-const saveDataTimeSettings = async (payload: any): Promise<ApiResponse<SaveResult>> => {
+const saveDataTimeSettings = async (
+  payload: any,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Data & Time Settings:', payload);
+      console.log("Saving Data & Time Settings:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Data & time settings saved successfully',
+          message: "Data & time settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -675,15 +683,17 @@ export const useSaveDataTimeSettings = () => {
 };
 
 // Alarms Settings
-const saveAlarmsSettings = async (payload: any): Promise<ApiResponse<SaveResult>> => {
+const saveAlarmsSettings = async (
+  payload: any,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Alarms Settings:', payload);
+      console.log("Saving Alarms Settings:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Alarms settings saved successfully',
+          message: "Alarms settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -702,15 +712,17 @@ export const useSaveAlarmsSettings = () => {
 };
 
 // Signals Settings
-const saveSignalsSettings = async (payload: any): Promise<ApiResponse<SaveResult>> => {
+const saveSignalsSettings = async (
+  payload: any,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Signals Settings:', payload);
+      console.log("Saving Signals Settings:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Signals settings saved successfully',
+          message: "Signals settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -729,15 +741,17 @@ export const useSaveSignalsSettings = () => {
 };
 
 // Choke & Pumps Settings
-const saveChokePumpsSettings = async (payload: any): Promise<ApiResponse<SaveResult>> => {
+const saveChokePumpsSettings = async (
+  payload: any,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Choke & Pumps Settings:', payload);
+      console.log("Saving Choke & Pumps Settings:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Choke & pumps settings saved successfully',
+          message: "Choke & pumps settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -756,15 +770,17 @@ export const useSaveChokePumpsSettings = () => {
 };
 
 // Auto Control Settings
-const saveAutoControlSettings = async (payload: any): Promise<ApiResponse<SaveResult>> => {
+const saveAutoControlSettings = async (
+  payload: any,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Auto Control Settings:', payload);
+      console.log("Saving Auto Control Settings:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Auto control settings saved successfully',
+          message: "Auto control settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -783,15 +799,17 @@ export const useSaveAutoControlSettings = () => {
 };
 
 // Hydraulics Model Settings
-const saveHydraulicsModelSettings = async (payload: any): Promise<ApiResponse<SaveResult>> => {
+const saveHydraulicsModelSettings = async (
+  payload: any,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Hydraulics Model Settings:', payload);
+      console.log("Saving Hydraulics Model Settings:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Hydraulics model settings saved successfully',
+          message: "Hydraulics model settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -804,21 +822,25 @@ export const useSaveHydraulicsModelSettings = () => {
   return useMutation({
     mutationFn: saveHydraulicsModelSettings,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: settingsKeys.hydraulicsModel() });
+      queryClient.invalidateQueries({
+        queryKey: settingsKeys.hydraulicsModel(),
+      });
     },
   });
 };
 
 // About & Diagnostics Settings (typically read-only, but including for completeness)
-const saveAboutDiagnosticsSettings = async (payload: any): Promise<ApiResponse<SaveResult>> => {
+const saveAboutDiagnosticsSettings = async (
+  payload: any,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving About & Diagnostics Settings:', payload);
+      console.log("Saving About & Diagnostics Settings:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'About & diagnostics settings saved successfully',
+          message: "About & diagnostics settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -831,7 +853,9 @@ export const useSaveAboutDiagnosticsSettings = () => {
   return useMutation({
     mutationFn: saveAboutDiagnosticsSettings,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: settingsKeys.aboutDiagnostics() });
+      queryClient.invalidateQueries({
+        queryKey: settingsKeys.aboutDiagnostics(),
+      });
     },
   });
 };

@@ -52,7 +52,7 @@ export interface StreamingTabData {
 
 export interface WitsStreamConfig {
   enabled: boolean;
-  level: '0' | '1';
+  level: "0" | "1";
   endpoint: string;
   baudRate: number;
 }
@@ -61,7 +61,7 @@ export interface EdrLoggingConfig {
   enabled: boolean;
   rate: number;
   channels: string[];
-  format: 'csv' | 'json' | 'binary';
+  format: "csv" | "json" | "binary";
 }
 
 export interface DataRateConfig {
@@ -73,7 +73,7 @@ export interface DataRateConfig {
 export interface LiveExportConfig {
   enabled: boolean;
   targets: string[];
-  format: 'csv' | 'json';
+  format: "csv" | "json";
 }
 
 export interface SaveStreamingPayload {
@@ -104,7 +104,7 @@ export interface AlarmRule {
 
 export interface NotificationChannel {
   id: string;
-  type: 'email' | 'sms' | 'in-app';
+  type: "email" | "sms" | "in-app";
   address: string;
   enabled: boolean;
 }
@@ -159,7 +159,7 @@ export interface TrendAnalysisConfig {
 }
 
 export interface ReportGenerationConfig {
-  format: 'pdf' | 'csv';
+  format: "pdf" | "csv";
   schedule: string;
 }
 
@@ -196,7 +196,7 @@ export interface SensorChannel {
 export interface DefaultPermissionList {
   id: string;
   name: string;
-  type: 'hydraulic' | 'perm-group';
+  type: "hydraulic" | "perm-group";
   autoAssign: boolean;
 }
 
@@ -222,7 +222,7 @@ export interface CalibrationProfile {
   zeroPoint: number;
   span: number;
   lastCalibrated: string;
-  status: 'valid' | 'expired' | 'pending';
+  status: "valid" | "expired" | "pending";
 }
 
 export interface CalibrationHistory {
@@ -257,7 +257,7 @@ export interface HydraulicsTabData {
 export interface HydraulicModel {
   id: string;
   name: string;
-  type: 'mw-rheological' | 'friction-loss' | 'standing-pressure';
+  type: "mw-rheological" | "friction-loss" | "standing-pressure";
   active: boolean;
 }
 
@@ -307,7 +307,7 @@ export interface DaqPresetConfig {
 }
 
 export interface ControlModeConfig {
-  mode: 'manual' | 'auto';
+  mode: "manual" | "auto";
   mpdSystemState: string;
 }
 
@@ -323,7 +323,7 @@ export interface SystemValidationData {
   kop: string;
   surfaceTemp: string;
   flowlineTemp: string;
-  status: 'OK' | 'Warning' | 'Error';
+  status: "OK" | "Warning" | "Error";
 }
 
 export interface HardwareConfigData {
@@ -368,14 +368,14 @@ export interface DownloadablePreset {
 }
 
 export interface LogFilter {
-  timeRange: 'last-hour' | 'last-day' | 'last-week' | 'custom';
+  timeRange: "last-hour" | "last-day" | "last-week" | "custom";
   customStart?: string;
   customEnd?: string;
 }
 
 export interface QuickExportConfig {
-  exportType: 'preset' | 'logfile' | 'daq-summary';
-  format: 'csv' | 'witsml' | 'ipf';
+  exportType: "preset" | "logfile" | "daq-summary";
+  format: "csv" | "witsml" | "ipf";
 }
 
 export interface DownloadHistoryItem {

@@ -5,6 +5,7 @@ import { CommonSelect } from "@/components/common/CommonSelect";
 import { CommonInput, CommonAccordionItem } from "@/components/common";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
 import { Badge } from "@/components/ui/badge";
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { useSourcesData } from "@/services/api/network/network.api";
 
 export function Sources() {
@@ -12,8 +13,12 @@ export function Sources() {
   const sourcesData = sourcesResponse?.data;
 
   const [devicesExpanded, setDevicesExpanded] = useState(true);
-  const [rigPlcEnabled, setRigPlcEnabled] = useState(sourcesData?.rigPlc?.enabled ?? true);
-  const [pwdEnabled, setPwdEnabled] = useState(sourcesData?.pwdWits?.enabled ?? true);
+  const [rigPlcEnabled, setRigPlcEnabled] = useState(
+    sourcesData?.rigPlc?.enabled ?? true,
+  );
+  const [pwdEnabled, setPwdEnabled] = useState(
+    sourcesData?.pwdWits?.enabled ?? true,
+  );
 
   const getStatusBadgeColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -29,7 +34,7 @@ export function Sources() {
   };
 
   if (isLoading) {
-    return <div className="p-4">Loading sources data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {

@@ -28,7 +28,7 @@ export interface SourcesTabData {
 
 export interface RigPlcSource {
   enabled: boolean;
-  connectionStatus: 'Primary' | 'Connected' | 'Disconnected';
+  connectionStatus: "Primary" | "Connected" | "Disconnected";
   sourceType: string;
   endpoint: string;
   port: string;
@@ -49,7 +49,7 @@ export interface DeviceSource {
   id: string;
   name: string;
   tags: string;
-  healthStatus: 'OK' | 'Warning' | 'Error';
+  healthStatus: "OK" | "Warning" | "Error";
   healthCount: string;
 }
 
@@ -59,7 +59,7 @@ export interface HealthMonitoringData {
 
 export interface HealthSource {
   name: string;
-  status: 'Connected' | 'Disconnected' | 'Validating';
+  status: "Connected" | "Disconnected" | "Validating";
   lastSeen?: string;
   latency?: string;
 }
@@ -81,7 +81,7 @@ export interface ProtocolsTabData {
 export interface ProtocolConfig {
   id: string;
   name: string;
-  type: 'modbus' | 'witsml' | 'opcua' | 'mqtt' | 'custom';
+  type: "modbus" | "witsml" | "opcua" | "mqtt" | "custom";
   description: string;
   enabled: boolean;
   settings: Record<string, unknown>;
@@ -102,7 +102,7 @@ export interface RoutingTabData {
 export interface RoutingConfig {
   id: string;
   name: string;
-  type: 'tag-mapping' | 'dualq-control' | 'slc-logic';
+  type: "tag-mapping" | "dualq-control" | "slc-logic";
   description: string;
   enabled: boolean;
   settings: Record<string, unknown>;
@@ -123,7 +123,7 @@ export interface SecurityTabData {
 export interface SecurityProfile {
   id: string;
   name: string;
-  type: 'tls' | 'auth' | 'firewall';
+  type: "tls" | "auth" | "firewall";
   description: string;
   enabled: boolean;
   settings: Record<string, unknown>;
@@ -145,15 +145,15 @@ export interface DiagnosticsTabData {
 export interface DiagnosticTool {
   id: string;
   name: string;
-  type: 'jitter' | 'integrity' | 'advanced' | 'report';
+  type: "jitter" | "integrity" | "advanced" | "report";
   description: string;
-  status: 'idle' | 'running' | 'completed';
+  status: "idle" | "running" | "completed";
 }
 
 export interface DiagnosticReport {
   id: string;
   timestamp: string;
-  status: 'OK' | 'Warning' | 'Error';
+  status: "OK" | "Warning" | "Error";
 }
 
 export interface SaveDiagnosticsPayload {

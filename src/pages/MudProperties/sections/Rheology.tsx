@@ -1,3 +1,4 @@
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { RheologyPanel } from "./panels/RheologyPanel";
 import { FluidData } from "@/types/mud";
 import { useRheologyData } from "@/services/api/mudproperties/mudproperties.api";
@@ -27,7 +28,7 @@ export function Rheology({ fluid, setFluid }: RheologySectionProps) {
   }, [rheologyData, setFluid]);
 
   if (isLoading) {
-    return <div className="p-4">Loading rheology data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {

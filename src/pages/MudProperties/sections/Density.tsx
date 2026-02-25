@@ -1,3 +1,4 @@
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { DensitySolidsPanel } from "./panels/DensitySolidsPanel";
 import { FluidData } from "@/types/mud";
 import { useDensityData } from "@/services/api/mudproperties/mudproperties.api";
@@ -24,7 +25,7 @@ export function Density({ fluid, setFluid }: DensitySectionProps) {
   }, [densityData, setFluid]);
 
   if (isLoading) {
-    return <div className="p-4">Loading density data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {

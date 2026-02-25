@@ -32,12 +32,10 @@ export interface SimulationDataContextValue {
   formattedElapsed: string;
 }
 
-export const SimulationStateContext = createContext<SimulationStateContextValue | null>(
-  null,
-);
-export const SimulationDataContext = createContext<SimulationDataContextValue | null>(
-  null,
-);
+export const SimulationStateContext =
+  createContext<SimulationStateContextValue | null>(null);
+export const SimulationDataContext =
+  createContext<SimulationDataContextValue | null>(null);
 
 export const CHART_KEYS: ChartDataKey[] = [
   "flow",

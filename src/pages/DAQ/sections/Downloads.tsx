@@ -1,3 +1,4 @@
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { useState } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { CommonButton } from "@/components/common/CommonButton";
@@ -92,7 +93,7 @@ export function Downloads() {
   const [activeLogFilter, setActiveLogFilter] = useState("all");
 
   if (isLoading) {
-    return <div className="p-4">Loading downloads data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {

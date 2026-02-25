@@ -17,6 +17,8 @@ import {
   CommonButton,
   RestoreDefaultsButton,
   CommonCheckbox,
+  CommonSkeleton,
+  SectionSkeleton,
 } from "@/components/common";
 import { CommonAlertDialog } from "@/components/common/CommonAlertDialog";
 import { PanelCard } from "@/components/dashboard/PanelCard";
@@ -179,11 +181,13 @@ export function Alarms() {
   ];
 
   if (isLoading) {
-    return <div className="p-4">Loading alarms settings...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">Error loading alarms settings</div>;
+    return (
+      <div className="p-4 text-red-500">Error loading alarms settings</div>
+    );
   }
 
   return (

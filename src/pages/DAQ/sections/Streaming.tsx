@@ -1,3 +1,4 @@
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { useStreamingData } from "@/services/api/daq/daq.api";
 
 export function Streaming() {
@@ -5,7 +6,7 @@ export function Streaming() {
   const streamingData = streamingResponse?.data;
 
   if (isLoading) {
-    return <div className="p-4">Loading streaming data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
@@ -18,7 +19,8 @@ export function Streaming() {
 
   return (
     <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-      Streaming & Logging DAQ Section - API Connected (WITS: {streamingData.witsStream.enabled ? 'Enabled' : 'Disabled'})
+      Streaming & Logging DAQ Section - API Connected (WITS:{" "}
+      {streamingData.witsStream.enabled ? "Enabled" : "Disabled"})
     </div>
   );
 }

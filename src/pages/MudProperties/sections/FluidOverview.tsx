@@ -1,3 +1,4 @@
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { FluidSystemPanel } from "./panels/FluidSystemPanel";
 import { RheologyPanel } from "./panels/RheologyPanel";
 import { DensitySolidsPanel } from "./panels/DensitySolidsPanel";
@@ -38,11 +39,12 @@ export function FluidOverview({
   }, [overviewData, setFluid]);
 
   if (isLoading) {
-    return <div className="p-4">Loading fluid overview data...</div>;
+    return <SectionSkeleton count={6} />;
   }
-
   if (error) {
-    return <div className="p-4 text-red-500">Error loading fluid overview data</div>;
+    return (
+      <div className="p-4 text-red-500">Error loading fluid overview data</div>
+    );
   }
 
   return (

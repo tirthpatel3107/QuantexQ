@@ -1,3 +1,4 @@
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { FluidData } from "@/types/mud";
 import { useSummaryData } from "@/services/api/mudproperties/mudproperties.api";
@@ -11,7 +12,7 @@ export function Summary({ fluid }: SummaryProps) {
   const summaryData = summaryResponse?.data;
 
   if (isLoading) {
-    return <div className="p-4">Loading summary data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
@@ -22,14 +23,14 @@ export function Summary({ fluid }: SummaryProps) {
   const displayData = summaryData || {
     fluidType: fluid.type,
     baseFluid: fluid.baseFluid,
-    mudWeight: 'N/A',
+    mudWeight: "N/A",
     viscosity: `${fluid.pv} cP`,
     yieldPoint: `${fluid.yp} lb/100ft²`,
     gelStrength: `${fluid.gel10s}/${fluid.gel10m} lb/100ft²`,
     temperature: `${fluid.surfaceTemp}°F / ${fluid.bottomholeTemp}°F`,
     oilWaterRatio: fluid.oilWater,
     lastUpdated: new Date().toISOString(),
-    updatedBy: 'System',
+    updatedBy: "System",
   };
 
   return (

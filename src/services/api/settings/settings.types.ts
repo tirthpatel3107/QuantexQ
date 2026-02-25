@@ -22,7 +22,7 @@ export interface GeneralSettingsTabData {
   language: string;
   timezone: string;
   dateFormat: string;
-  timeFormat: '12h' | '24h';
+  timeFormat: "12h" | "24h";
   autoSave: boolean;
   autoSaveInterval: number; // in seconds
 }
@@ -32,7 +32,7 @@ export interface SaveGeneralSettingsPayload {
   language: string;
   timezone: string;
   dateFormat: string;
-  timeFormat: '12h' | '24h';
+  timeFormat: "12h" | "24h";
   autoSave: boolean;
   autoSaveInterval: number;
 }
@@ -42,18 +42,18 @@ export interface SaveGeneralSettingsPayload {
 // ============================================
 
 export interface DisplaySettingsTabData {
-  theme: 'light' | 'dark' | 'auto';
+  theme: "light" | "dark" | "auto";
   accentColor: string;
-  fontSize: 'small' | 'medium' | 'large';
+  fontSize: "small" | "medium" | "large";
   compactMode: boolean;
   showGridLines: boolean;
   animationsEnabled: boolean;
 }
 
 export interface SaveDisplaySettingsPayload {
-  theme: 'light' | 'dark' | 'auto';
+  theme: "light" | "dark" | "auto";
   accentColor: string;
-  fontSize: 'small' | 'medium' | 'large';
+  fontSize: "small" | "medium" | "large";
   compactMode: boolean;
   showGridLines: boolean;
   animationsEnabled: boolean;
@@ -74,7 +74,7 @@ export interface NotificationType {
   id: string;
   name: string;
   enabled: boolean;
-  priority: 'low' | 'medium' | 'high';
+  priority: "low" | "medium" | "high";
 }
 
 export interface SaveNotificationsSettingsPayload {

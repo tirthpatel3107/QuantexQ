@@ -1,3 +1,4 @@
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { TemperaturePanel } from "./panels/TemperaturePanel";
 import { FluidData } from "@/types/mud";
 import { useTemperatureData } from "@/services/api/mudproperties/mudproperties.api";
@@ -26,11 +27,13 @@ export function Temperature({ fluid, setFluid }: TemperatureSectionProps) {
   }, [temperatureData, setFluid]);
 
   if (isLoading) {
-    return <div className="p-4">Loading temperature data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">Error loading temperature data</div>;
+    return (
+      <div className="p-4 text-red-500">Error loading temperature data</div>
+    );
   }
 
   return (

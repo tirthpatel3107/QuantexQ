@@ -1,12 +1,12 @@
 /**
  * Socket Integration Hook
  * Integrates WebSocket events with TanStack Query cache
- * 
+ *
  * This hook:
  * - Subscribes to socket events
  * - Updates TanStack Query cache when events arrive
  * - Automatically cleans up subscriptions on unmount
- * 
+ *
  * Usage in components:
  * useSocketIntegration('network:sources:update', networkKeys.data(), (event) => {
  *   // Optional: custom handler before cache update
@@ -14,10 +14,10 @@
  * });
  */
 
-import { useEffect } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import SocketService from './socket.service';
-import type { SocketEvent, SocketEventType } from './socket.types';
+import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import SocketService from "./socket.service";
+import type { SocketEvent, SocketEventType } from "./socket.types";
 
 interface UseSocketIntegrationOptions {
   /**
@@ -51,7 +51,7 @@ interface UseSocketIntegrationOptions {
 export const useSocketIntegration = (
   eventType: SocketEventType,
   queryKey: readonly unknown[],
-  options: UseSocketIntegrationOptions = {}
+  options: UseSocketIntegrationOptions = {},
 ) => {
   const queryClient = useQueryClient();
   const {
@@ -85,7 +85,15 @@ export const useSocketIntegration = (
     return () => {
       subscription.unsubscribe();
     };
-  }, [eventType, queryKey, queryClient, invalidateQuery, updateCache, cacheUpdater, enabled]);
+  }, [
+    eventType,
+    queryKey,
+    queryClient,
+    invalidateQuery,
+    updateCache,
+    cacheUpdater,
+    enabled,
+  ]);
 };
 
 /**

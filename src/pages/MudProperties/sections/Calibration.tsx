@@ -1,5 +1,10 @@
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { RestoreDefaultsButton, CommonInput } from "@/components/common";
+import {
+  RestoreDefaultsButton,
+  CommonInput,
+  CommonSkeleton,
+  SectionSkeleton,
+} from "@/components/common";
 import { FluidData } from "@/types/mud";
 import { useCalibrationData } from "@/services/api/mudproperties/mudproperties.api";
 import { useEffect } from "react";
@@ -26,11 +31,13 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
   }, [calibrationData, setFluid]);
 
   if (isLoading) {
-    return <div className="p-4">Loading calibration data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">Error loading calibration data</div>;
+    return (
+      <div className="p-4 text-red-500">Error loading calibration data</div>
+    );
   }
 
   return (

@@ -1,3 +1,4 @@
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { useDataTimeSettings } from "@/services/api/settings/settings.api";
 
 export function DataTime() {
@@ -5,11 +6,13 @@ export function DataTime() {
   const dataTimeData = dataTimeResponse?.data;
 
   if (isLoading) {
-    return <div className="p-4">Loading data & time settings...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {
-    return <div className="p-4 text-red-500">Error loading data & time settings</div>;
+    return (
+      <div className="p-4 text-red-500">Error loading data & time settings</div>
+    );
   }
 
   if (!dataTimeData) {
@@ -18,7 +21,8 @@ export function DataTime() {
 
   return (
     <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-      Data & Time Settings Section - API Connected (NTP: {dataTimeData.ntpEnabled ? 'Enabled' : 'Disabled'})
+      Data & Time Settings Section - API Connected (NTP:{" "}
+      {dataTimeData.ntpEnabled ? "Enabled" : "Disabled"})
     </div>
   );
 }

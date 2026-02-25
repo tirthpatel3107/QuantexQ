@@ -7,6 +7,7 @@ import { CommonToggle } from "@/components/common/CommonToggle";
 import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
+import { CommonSkeleton, SectionSkeleton } from "@/components/common";
 import { useRoutingData } from "@/services/api/network/network.api";
 
 export function Routing() {
@@ -17,7 +18,7 @@ export function Routing() {
   const [eqmptEmacerEnabled, setEqmptEmacerEnabled] = useState(true);
 
   if (isLoading) {
-    return <div className="p-4">Loading routing data...</div>;
+    return <SectionSkeleton count={6} />;
   }
 
   if (error) {

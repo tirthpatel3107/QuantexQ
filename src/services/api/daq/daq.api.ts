@@ -3,8 +3,8 @@
  * TanStack Query hooks for DAQ section - Each tab has its own GET API endpoint
  */
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { ApiResponse, SaveResult } from '../types';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { ApiResponse, SaveResult } from "../types";
 import type {
   DisplayTabData,
   StreamingTabData,
@@ -24,30 +24,30 @@ import type {
   SaveHydraulicsPayload,
   SaveSystemSettingsPayload,
   SaveDownloadsPayload,
-} from './daq.types';
+} from "./daq.types";
 
 // ============================================
 // Query Keys
 // ============================================
 
 export const daqKeys = {
-  all: ['daq'] as const,
-  display: () => [...daqKeys.all, 'display'] as const,
-  streaming: () => [...daqKeys.all, 'streaming'] as const,
-  notifications: () => [...daqKeys.all, 'notifications'] as const,
-  logAnalysis: () => [...daqKeys.all, 'logAnalysis'] as const,
-  sensorPerms: () => [...daqKeys.all, 'sensorPerms'] as const,
-  calibration: () => [...daqKeys.all, 'calibration'] as const,
-  hydraulics: () => [...daqKeys.all, 'hydraulics'] as const,
-  systemSettings: () => [...daqKeys.all, 'systemSettings'] as const,
-  downloads: () => [...daqKeys.all, 'downloads'] as const,
+  all: ["daq"] as const,
+  display: () => [...daqKeys.all, "display"] as const,
+  streaming: () => [...daqKeys.all, "streaming"] as const,
+  notifications: () => [...daqKeys.all, "notifications"] as const,
+  logAnalysis: () => [...daqKeys.all, "logAnalysis"] as const,
+  sensorPerms: () => [...daqKeys.all, "sensorPerms"] as const,
+  calibration: () => [...daqKeys.all, "calibration"] as const,
+  hydraulics: () => [...daqKeys.all, "hydraulics"] as const,
+  systemSettings: () => [...daqKeys.all, "systemSettings"] as const,
+  downloads: () => [...daqKeys.all, "downloads"] as const,
 };
 
 // ============================================
 // API Base URL
 // ============================================
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
 
 // ============================================
 // GET: Display Tab
@@ -67,17 +67,17 @@ const fetchDisplayData = async (): Promise<ApiResponse<DisplayTabData>> => {
         data: {
           sections: [
             {
-              id: 'sec-1',
-              title: 'Real-time Monitoring',
-              description: 'Live sensor data display',
-              type: 'monitoring',
+              id: "sec-1",
+              title: "Real-time Monitoring",
+              description: "Live sensor data display",
+              type: "monitoring",
               enabled: true,
             },
             {
-              id: 'sec-2',
-              title: 'Historical Trends',
-              description: 'Time-series data visualization',
-              type: 'trends',
+              id: "sec-2",
+              title: "Historical Trends",
+              description: "Time-series data visualization",
+              type: "trends",
               enabled: true,
             },
           ],
@@ -114,15 +114,15 @@ const fetchStreamingData = async (): Promise<ApiResponse<StreamingTabData>> => {
         data: {
           witsStream: {
             enabled: true,
-            level: '1',
-            endpoint: 'tcp://192.168.1.100:5000',
+            level: "1",
+            endpoint: "tcp://192.168.1.100:5000",
             baudRate: 9600,
           },
           edrLogging: {
             enabled: true,
             rate: 1000,
-            channels: ['pressure', 'temperature', 'flow'],
-            format: 'csv',
+            channels: ["pressure", "temperature", "flow"],
+            format: "csv",
           },
           dataRate: {
             frequency: 100,
@@ -132,7 +132,7 @@ const fetchStreamingData = async (): Promise<ApiResponse<StreamingTabData>> => {
           liveExport: {
             enabled: false,
             targets: [],
-            format: 'json',
+            format: "json",
           },
         },
         timestamp: new Date().toISOString(),
@@ -153,7 +153,9 @@ export const useStreamingData = () => {
 // GET: Notifications Tab
 // ============================================
 
-const fetchNotificationsData = async (): Promise<ApiResponse<NotificationsTabData>> => {
+const fetchNotificationsData = async (): Promise<
+  ApiResponse<NotificationsTabData>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/daq/notifications`);
   // if (!response.ok) throw new Error('Failed to fetch notifications data');
@@ -167,18 +169,18 @@ const fetchNotificationsData = async (): Promise<ApiResponse<NotificationsTabDat
         data: {
           alarmRules: [
             {
-              id: 'alarm-1',
-              name: 'High Pressure Alert',
-              channel: 'pressure-1',
+              id: "alarm-1",
+              name: "High Pressure Alert",
+              channel: "pressure-1",
               threshold: 500,
               enabled: true,
             },
           ],
           channels: [
             {
-              id: 'ch-1',
-              type: 'email',
-              address: 'operator@example.com',
+              id: "ch-1",
+              type: "email",
+              address: "operator@example.com",
               enabled: true,
             },
           ],
@@ -188,7 +190,7 @@ const fetchNotificationsData = async (): Promise<ApiResponse<NotificationsTabDat
               {
                 level: 1,
                 delay: 300,
-                contacts: ['operator@example.com'],
+                contacts: ["operator@example.com"],
               },
             ],
           },
@@ -212,7 +214,9 @@ export const useNotificationsData = () => {
 // GET: Log Analysis Tab
 // ============================================
 
-const fetchLogAnalysisData = async (): Promise<ApiResponse<LogAnalysisTabData>> => {
+const fetchLogAnalysisData = async (): Promise<
+  ApiResponse<LogAnalysisTabData>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/daq/log-analysis`);
   // if (!response.ok) throw new Error('Failed to fetch log analysis data');
@@ -225,18 +229,18 @@ const fetchLogAnalysisData = async (): Promise<ApiResponse<LogAnalysisTabData>> 
         success: true,
         data: {
           logViewer: {
-            timeRange: 'last-24h',
-            channels: ['pressure', 'temperature'],
+            timeRange: "last-24h",
+            channels: ["pressure", "temperature"],
             filters: {},
           },
           trendAnalysis: {
             enabled: true,
-            channels: ['pressure'],
+            channels: ["pressure"],
             anomalyDetection: true,
           },
           reportGeneration: {
-            format: 'pdf',
-            schedule: 'daily',
+            format: "pdf",
+            schedule: "daily",
           },
           logArchive: {
             retentionDays: 90,
@@ -262,7 +266,9 @@ export const useLogAnalysisData = () => {
 // GET: Sensor Permissions Tab
 // ============================================
 
-const fetchSensorPermsData = async (): Promise<ApiResponse<SensorPermsTabData>> => {
+const fetchSensorPermsData = async (): Promise<
+  ApiResponse<SensorPermsTabData>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/daq/sensor-perms`);
   // if (!response.ok) throw new Error('Failed to fetch sensor permissions data');
@@ -276,15 +282,15 @@ const fetchSensorPermsData = async (): Promise<ApiResponse<SensorPermsTabData>> 
         data: {
           sensors: [
             {
-              id: 'sensor-1',
-              name: 'Pressure Sensor 1',
+              id: "sensor-1",
+              name: "Pressure Sensor 1",
               primary: true,
               secondary: false,
               validation: true,
             },
             {
-              id: 'sensor-2',
-              name: 'Flow Meter 1',
+              id: "sensor-2",
+              name: "Flow Meter 1",
               primary: true,
               secondary: true,
               validation: false,
@@ -292,9 +298,9 @@ const fetchSensorPermsData = async (): Promise<ApiResponse<SensorPermsTabData>> 
           ],
           defaultPermissions: [
             {
-              id: 'perm-1',
-              name: 'Hydraulic Sensors',
-              type: 'hydraulic',
+              id: "perm-1",
+              name: "Hydraulic Sensors",
+              type: "hydraulic",
               autoAssign: true,
             },
           ],
@@ -317,7 +323,9 @@ export const useSensorPermsData = () => {
 // GET: Calibration Tab
 // ============================================
 
-const fetchCalibrationData = async (): Promise<ApiResponse<CalibrationTabData>> => {
+const fetchCalibrationData = async (): Promise<
+  ApiResponse<CalibrationTabData>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/daq/calibration`);
   // if (!response.ok) throw new Error('Failed to fetch calibration data');
@@ -331,27 +339,27 @@ const fetchCalibrationData = async (): Promise<ApiResponse<CalibrationTabData>> 
         data: {
           calibrations: [
             {
-              id: 'cal-1',
-              sensorId: 'sensor-1',
-              sensorName: 'Pressure Sensor 1',
+              id: "cal-1",
+              sensorId: "sensor-1",
+              sensorName: "Pressure Sensor 1",
               zeroPoint: 0.0,
               span: 500.0,
-              lastCalibrated: '2026-02-20T10:30:00Z',
-              status: 'valid',
+              lastCalibrated: "2026-02-20T10:30:00Z",
+              status: "valid",
             },
           ],
           history: [
             {
-              id: 'hist-1',
-              sensorId: 'sensor-1',
-              timestamp: '2026-02-20T10:30:00Z',
-              performedBy: 'John Doe',
+              id: "hist-1",
+              sensorId: "sensor-1",
+              timestamp: "2026-02-20T10:30:00Z",
+              performedBy: "John Doe",
               drift: 0.05,
             },
           ],
           permissions: {
-            canPerform: ['technician', 'engineer'],
-            canApprove: ['engineer', 'supervisor'],
+            canPerform: ["technician", "engineer"],
+            canApprove: ["engineer", "supervisor"],
           },
         },
         timestamp: new Date().toISOString(),
@@ -372,7 +380,9 @@ export const useCalibrationData = () => {
 // GET: Hydraulics Tab
 // ============================================
 
-const fetchHydraulicsData = async (): Promise<ApiResponse<HydraulicsTabData>> => {
+const fetchHydraulicsData = async (): Promise<
+  ApiResponse<HydraulicsTabData>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/daq/hydraulics`);
   // if (!response.ok) throw new Error('Failed to fetch hydraulics data');
@@ -386,18 +396,18 @@ const fetchHydraulicsData = async (): Promise<ApiResponse<HydraulicsTabData>> =>
         data: {
           modelsUsed: [
             {
-              id: 'model-1',
-              name: 'Bingham Plastic',
-              type: 'mw-rheological',
+              id: "model-1",
+              name: "Bingham Plastic",
+              type: "mw-rheological",
               active: true,
             },
           ],
           parameterLists: [
             {
-              id: 'param-1',
-              name: 'Standard Mud',
+              id: "param-1",
+              name: "Standard Mud",
               mudOut: 12.5,
-              mudType: 'WBM',
+              mudType: "WBM",
               temp: 75,
               bbt: 150,
             },
@@ -432,7 +442,9 @@ export const useHydraulicsData = () => {
 // GET: System Settings Tab
 // ============================================
 
-const fetchSystemSettingsData = async (): Promise<ApiResponse<SystemSettingsTabData>> => {
+const fetchSystemSettingsData = async (): Promise<
+  ApiResponse<SystemSettingsTabData>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/daq/system-settings`);
   // if (!response.ok) throw new Error('Failed to fetch system settings data');
@@ -445,41 +457,41 @@ const fetchSystemSettingsData = async (): Promise<ApiResponse<SystemSettingsTabD
         success: true,
         data: {
           daqPreset: {
-            active: 'preset-1',
-            name: 'Standard Configuration',
+            active: "preset-1",
+            name: "Standard Configuration",
             profileOverrides: {},
           },
           controlMode: {
-            mode: 'auto',
-            mpdSystemState: 'active',
+            mode: "auto",
+            mpdSystemState: "active",
           },
           systemState: {
-            flowControlMode: 'auto',
+            flowControlMode: "auto",
             depth: 5000,
-            chokeStatus: 'open',
-            gasDetectorHP: 'normal',
+            chokeStatus: "open",
+            gasDetectorHP: "normal",
           },
           systemValidation: {
-            ds: 'OK',
-            kop: 'OK',
-            surfaceTemp: 'OK',
-            flowlineTemp: 'OK',
-            status: 'OK',
+            ds: "OK",
+            kop: "OK",
+            surfaceTemp: "OK",
+            flowlineTemp: "OK",
+            status: "OK",
           },
           hardwareConfig: {
             sensors: [
               {
-                id: 'hw-1',
-                name: 'Pressure Transducer',
-                type: 'analog',
-                firmware: 'v2.1.0',
+                id: "hw-1",
+                name: "Pressure Transducer",
+                type: "analog",
+                firmware: "v2.1.0",
               },
             ],
             ioChannels: [
               {
-                id: 'io-1',
-                channel: 'AI-01',
-                assignment: 'Pressure Sensor 1',
+                id: "io-1",
+                channel: "AI-01",
+                assignment: "Pressure Sensor 1",
               },
             ],
           },
@@ -515,24 +527,24 @@ const fetchDownloadsData = async (): Promise<ApiResponse<DownloadsTabData>> => {
         success: true,
         data: {
           daqPreset: {
-            name: 'Standard Configuration',
-            filename: 'standard-config.json',
-            size: '2.5 MB',
+            name: "Standard Configuration",
+            filename: "standard-config.json",
+            size: "2.5 MB",
           },
           logs: {
-            timeRange: 'last-day',
+            timeRange: "last-day",
           },
           quickExport: {
-            exportType: 'logfile',
-            format: 'csv',
+            exportType: "logfile",
+            format: "csv",
           },
           downloadHistory: [
             {
-              id: 'dl-1',
-              filename: 'log-2026-02-25.csv',
-              timestamp: '2026-02-25T14:30:00Z',
-              size: '15.2 MB',
-              type: 'logfile',
+              id: "dl-1",
+              filename: "log-2026-02-25.csv",
+              timestamp: "2026-02-25T14:30:00Z",
+              size: "15.2 MB",
+              type: "logfile",
             },
           ],
         },
@@ -555,15 +567,17 @@ export const useDownloadsData = () => {
 // ============================================
 
 // Display Tab
-const saveDisplayData = async (payload: SaveDisplayPayload): Promise<ApiResponse<SaveResult>> => {
+const saveDisplayData = async (
+  payload: SaveDisplayPayload,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Display Tab:', payload);
+      console.log("Saving Display Tab:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Display settings saved successfully',
+          message: "Display settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -582,15 +596,17 @@ export const useSaveDisplayData = () => {
 };
 
 // Streaming Tab
-const saveStreamingData = async (payload: SaveStreamingPayload): Promise<ApiResponse<SaveResult>> => {
+const saveStreamingData = async (
+  payload: SaveStreamingPayload,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Streaming Tab:', payload);
+      console.log("Saving Streaming Tab:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Streaming settings saved successfully',
+          message: "Streaming settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -609,15 +625,17 @@ export const useSaveStreamingData = () => {
 };
 
 // Notifications Tab
-const saveNotificationsData = async (payload: SaveNotificationsPayload): Promise<ApiResponse<SaveResult>> => {
+const saveNotificationsData = async (
+  payload: SaveNotificationsPayload,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Notifications Tab:', payload);
+      console.log("Saving Notifications Tab:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Notifications saved successfully',
+          message: "Notifications saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -636,15 +654,17 @@ export const useSaveNotificationsData = () => {
 };
 
 // Log Analysis Tab
-const saveLogAnalysisData = async (payload: SaveLogAnalysisPayload): Promise<ApiResponse<SaveResult>> => {
+const saveLogAnalysisData = async (
+  payload: SaveLogAnalysisPayload,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Log Analysis Tab:', payload);
+      console.log("Saving Log Analysis Tab:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Log analysis settings saved successfully',
+          message: "Log analysis settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -663,15 +683,17 @@ export const useSaveLogAnalysisData = () => {
 };
 
 // Sensor Permissions Tab
-const saveSensorPermsData = async (payload: SaveSensorPermsPayload): Promise<ApiResponse<SaveResult>> => {
+const saveSensorPermsData = async (
+  payload: SaveSensorPermsPayload,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Sensor Permissions Tab:', payload);
+      console.log("Saving Sensor Permissions Tab:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Sensor permissions saved successfully',
+          message: "Sensor permissions saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -690,15 +712,17 @@ export const useSaveSensorPermsData = () => {
 };
 
 // Calibration Tab
-const saveCalibrationData = async (payload: SaveCalibrationPayload): Promise<ApiResponse<SaveResult>> => {
+const saveCalibrationData = async (
+  payload: SaveCalibrationPayload,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Calibration Tab:', payload);
+      console.log("Saving Calibration Tab:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Calibration saved successfully',
+          message: "Calibration saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -717,15 +741,17 @@ export const useSaveCalibrationData = () => {
 };
 
 // Hydraulics Tab
-const saveHydraulicsData = async (payload: SaveHydraulicsPayload): Promise<ApiResponse<SaveResult>> => {
+const saveHydraulicsData = async (
+  payload: SaveHydraulicsPayload,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Hydraulics Tab:', payload);
+      console.log("Saving Hydraulics Tab:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Hydraulics settings saved successfully',
+          message: "Hydraulics settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -744,15 +770,17 @@ export const useSaveHydraulicsData = () => {
 };
 
 // System Settings Tab
-const saveSystemSettingsData = async (payload: SaveSystemSettingsPayload): Promise<ApiResponse<SaveResult>> => {
+const saveSystemSettingsData = async (
+  payload: SaveSystemSettingsPayload,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving System Settings Tab:', payload);
+      console.log("Saving System Settings Tab:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'System settings saved successfully',
+          message: "System settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
@@ -771,15 +799,17 @@ export const useSaveSystemSettingsData = () => {
 };
 
 // Downloads Tab
-const saveDownloadsData = async (payload: SaveDownloadsPayload): Promise<ApiResponse<SaveResult>> => {
+const saveDownloadsData = async (
+  payload: SaveDownloadsPayload,
+): Promise<ApiResponse<SaveResult>> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving Downloads Tab:', payload);
+      console.log("Saving Downloads Tab:", payload);
       resolve({
         success: true,
         data: {
           success: true,
-          message: 'Downloads settings saved successfully',
+          message: "Downloads settings saved successfully",
           updatedAt: new Date().toISOString(),
         },
       });
