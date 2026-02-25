@@ -20,7 +20,7 @@ export interface CommonInputProps
 const CommonInput = React.forwardRef<HTMLInputElement, CommonInputProps>(
   ({ className, icon: Icon, suffix, disabled, label, ...props }, ref) => {
     return (
-      <div className="w-full mb-5">
+      <div className="w-full my-2">
         {label && <Label className="ml-[3px]">{label}</Label>}
         <div className="relative w-full group mt-2">
           {Icon && (

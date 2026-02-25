@@ -57,7 +57,7 @@ export function CommonSelect({
   );
 
   return (
-    <div className={cn("w-full mb-5", className)}>
+    <div className={cn("w-full my-2", className)}>
       {label && <Label className="ml-[3px]">{label}</Label>}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

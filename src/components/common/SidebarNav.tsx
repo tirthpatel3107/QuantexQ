@@ -42,10 +42,10 @@ export const SidebarNav = memo(function SidebarNav({
 
                   // ---- Network ------
                   // "sources",
-                  "protocols",
-                  "routing",
-                  "security",
-                  "diagnostics",
+                  // "protocols",
+                  // "routing",
+                  // "security",
+                  // "diagnostics",
 
                   // ---- DAQ ------
                   "notifications",

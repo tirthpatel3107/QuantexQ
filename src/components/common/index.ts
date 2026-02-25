@@ -1,4 +1,5 @@
 /** Common layout and form components shared across pages. */
+export { CommonAccordionItem } from "./CommonAccordion";
 export { PageLayout } from "./PageLayout";
 export { RestoreDefaultsButton } from "./RestoreDefaultsButton";
 export { CommonSearchInput } from "./CommonSearchInput";

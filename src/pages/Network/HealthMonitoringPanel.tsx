@@ -174,7 +174,7 @@ export function HealthMonitoringPanel({
       >
         <div className="space-y-1">
           {deviceHealthItems.map((device, index) => (
-            <div key={index} className="flex items-center justify-between py-2">
+            <div key={index} className="flex items-center justify-between py-1">
               <div className="flex items-center gap-2">
                 <div
                   className={`w-3 h-3 rounded-full ${getDeviceStatusColor(device.statusColor)}`}

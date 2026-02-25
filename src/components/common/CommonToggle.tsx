@@ -20,9 +20,9 @@ export function CommonToggle({
 }: CommonToggleProps) {
   return (
     <div
-      className={`flex items-center justify-between gap-3 ${className || ""}`}
+      className={`flex items-center justify-end gap-3 ${className || ""}`}
     >
-      <div className="space-y-0.5 min-w-0 flex-1 pr-2">
+      <div className="space-y-0.5 min-w-0 pr-2">
         <Label htmlFor={id} className="cursor-pointer">
           {label}
         </Label>
