@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonButton, SectionSkeleton } from "@/components/common";
+import { CommonButton, SectionSkeleton, CommonAlertDialog } from "@/components/common";
 import { Badge } from "@/components/ui/badge";
 import { Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,8 @@ import {
   useLogAnalysisOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveLogAnalysisPayload } from "@/services/api/daq/daq.types";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useDAQContext } from "../DAQContext";
 
 interface LogEntry {
   id: string;
@@ -24,6 +26,7 @@ export function LogAnalysis() {
   const { data: logAnalysisResponse, isLoading, error } = useLogAnalysisData();
   const { data: optionsResponse } = useLogAnalysisOptions();
   const { mutate: saveLogAnalysisData } = useSaveLogAnalysisData();
+  const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
   const logAnalysisData = logAnalysisResponse?.data;
   const options = optionsResponse?.data;
@@ -39,14 +42,50 @@ export function LogAnalysis() {
     }
   }, [logAnalysisData]);
 
-  // Save data to API
+  // Setup save with confirmation
+  const {
+    isConfirmOpen,
+    setIsConfirmOpen,
+    requestSave,
+    handleConfirmedSave,
+    handleCancel,
+    confirmTitle,
+    confirmDescription,
+  } = useSaveWithConfirmation<SaveLogAnalysisPayload>({
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveLogAnalysisData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "Log analysis settings saved successfully",
+    errorMessage: "Failed to save log analysis settings",
+    confirmTitle: "Save Log Analysis Settings",
+    confirmDescription: "Are you sure you want to save these log analysis changes?",
+  });
+
+  // Save data to API with confirmation
   const handleSaveData = (updatedData: Partial<SaveLogAnalysisPayload>) => {
     if (!formData) return;
 
     const newFormData = { ...formData, ...updatedData };
     setFormData(newFormData);
-    saveLogAnalysisData(newFormData);
   };
+
+  const handleSave = () => {
+    if (formData) {
+      requestSave(formData);
+    }
+  };
+
+  // Register save handler with parent context
+  useEffect(() => {
+    registerSaveHandler(handleSave);
+    return () => unregisterSaveHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData]);
 
   const [logEntries] = useState<LogEntry[]>([
     {
@@ -112,7 +151,8 @@ export function LogAnalysis() {
   }
 
   return (
-    <div className="space-y-4">
+    <>
+      <div className="space-y-4">
       {/* Log Results Panel */}
       <PanelCard
         title="Log Results"
@@ -174,5 +214,17 @@ export function LogAnalysis() {
         </div>
       </PanelCard>
     </div>
+
+    <CommonAlertDialog
+      open={isConfirmOpen}
+      onOpenChange={setIsConfirmOpen}
+      title={confirmTitle}
+      description={confirmDescription}
+      cancelText="Cancel"
+      actionText="Save"
+      onAction={handleConfirmedSave}
+      onCancel={handleCancel}
+    />
+  </>
   );
 }

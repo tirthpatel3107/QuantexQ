@@ -7,7 +7,7 @@ import {
   CommonTabsList,
   CommonTabsTrigger,
 } from "@/components/common/CommonTabs";
-import { SectionSkeleton } from "@/components/common";
+import { SectionSkeleton, CommonAlertDialog } from "@/components/common";
 import { Download, FolderOpen, FileText, File } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -16,6 +16,8 @@ import {
   useDownloadsOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveDownloadsPayload } from "@/services/api/daq/daq.types";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useDAQContext } from "../DAQContext";
 
 interface FileItem {
   name: string;
@@ -94,6 +96,7 @@ export function Downloads() {
   const { data: downloadsResponse, isLoading, error } = useDownloadsData();
   const { data: optionsResponse } = useDownloadsOptions();
   const { mutate: saveDownloadsData } = useSaveDownloadsData();
+  const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
   const downloadsData = downloadsResponse?.data;
   const options = optionsResponse?.data;
@@ -108,14 +111,50 @@ export function Downloads() {
     }
   }, [downloadsData]);
 
-  // Save data to API
+  // Setup save with confirmation
+  const {
+    isConfirmOpen,
+    setIsConfirmOpen,
+    requestSave,
+    handleConfirmedSave,
+    handleCancel,
+    confirmTitle,
+    confirmDescription,
+  } = useSaveWithConfirmation<SaveDownloadsPayload>({
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveDownloadsData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "Downloads settings saved successfully",
+    errorMessage: "Failed to save downloads settings",
+    confirmTitle: "Save Downloads Settings",
+    confirmDescription: "Are you sure you want to save these downloads changes?",
+  });
+
+  // Save data to API with confirmation
   const handleSaveData = (updatedData: Partial<SaveDownloadsPayload>) => {
     if (!formData) return;
 
     const newFormData = { ...formData, ...updatedData };
     setFormData(newFormData);
-    saveDownloadsData(newFormData);
   };
+
+  const handleSave = () => {
+    if (formData) {
+      requestSave(formData);
+    }
+  };
+
+  // Register save handler with parent context
+  useEffect(() => {
+    registerSaveHandler(handleSave);
+    return () => unregisterSaveHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData]);
 
   const [activeTab, setActiveTab] = useState("downloads");
   const [activeLogFilter, setActiveLogFilter] = useState("all");
@@ -125,7 +164,8 @@ export function Downloads() {
   }
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-3">
+    <>
+      <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-3">
       <PanelCard
         title={
           <div className="flex items-center gap-2">
@@ -298,6 +338,18 @@ export function Downloads() {
         </div>
       </PanelCard>
     </div>
+
+    <CommonAlertDialog
+      open={isConfirmOpen}
+      onOpenChange={setIsConfirmOpen}
+      title={confirmTitle}
+      description={confirmDescription}
+      cancelText="Cancel"
+      actionText="Save"
+      onAction={handleConfirmedSave}
+      onCancel={handleCancel}
+    />
+  </>
   );
 }
 

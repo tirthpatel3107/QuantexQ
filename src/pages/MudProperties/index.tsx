@@ -23,11 +23,13 @@ import { Summary } from "./sections/Summary";
 import { MudPropertiesSidebar } from "./components/MudPropertiesSidebar";
 import { MUD_NAV } from "./constants";
 import { FluidData } from "@/types/mud";
+import { MudPropertiesProvider, useMudPropertiesContext } from "./MudPropertiesContext";
 
-export default function MudProperties() {
+function MudPropertiesContent() {
   const { section } = useParams();
   const activeSection = section || "mud-properties";
   const [, setDirty] = useState(true);
+  const { requestSave } = useMudPropertiesContext();
 
   // Local fluid state - will be populated by individual tab API calls
   const [fluid, setFluid] = useState<FluidData>({
@@ -60,7 +62,10 @@ export default function MudProperties() {
           <CommonButton
             variant="outline"
             size="sm"
-            onClick={() => setDirty(false)}
+            onClick={() => {
+              setDirty(false);
+              requestSave();
+            }}
             icon={Save}
           >
             Save
@@ -78,7 +83,7 @@ export default function MudProperties() {
         </CommonTooltip>
       </>
     ),
-    [],
+    [requestSave],
   );
 
   const sidebarNav = useMemo(
@@ -157,5 +162,13 @@ export default function MudProperties() {
         </main>
       </SidebarLayout>
     </PageLayout>
+  );
+}
+
+export default function MudProperties() {
+  return (
+    <MudPropertiesProvider>
+      <MudPropertiesContent />
+    </MudPropertiesProvider>
   );
 }

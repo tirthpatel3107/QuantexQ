@@ -6,6 +6,7 @@ import {
   CommonButton,
   CommonToggle,
   SectionSkeleton,
+  CommonAlertDialog,
 } from "@/components/common";
 import { RestoreDefaultsButton } from "@/components/common/RestoreDefaultsButton";
 import { Settings } from "lucide-react";
@@ -15,6 +16,8 @@ import {
   useSystemSettingsOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveSystemSettingsPayload } from "@/services/api/daq/daq.types";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useDAQContext } from "../DAQContext";
 
 export function SystemSettings() {
   const {
@@ -24,6 +27,7 @@ export function SystemSettings() {
   } = useSystemSettingsData();
   const { data: optionsResponse } = useSystemSettingsOptions();
   const { mutate: saveSystemSettingsData } = useSaveSystemSettingsData();
+  const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
   const systemSettingsData = systemSettingsResponse?.data;
   const options = optionsResponse?.data;
@@ -40,14 +44,50 @@ export function SystemSettings() {
     }
   }, [systemSettingsData]);
 
-  // Save data to API
+  // Setup save with confirmation
+  const {
+    isConfirmOpen,
+    setIsConfirmOpen,
+    requestSave,
+    handleConfirmedSave,
+    handleCancel,
+    confirmTitle,
+    confirmDescription,
+  } = useSaveWithConfirmation<SaveSystemSettingsPayload>({
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveSystemSettingsData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "System settings saved successfully",
+    errorMessage: "Failed to save system settings",
+    confirmTitle: "Save System Settings",
+    confirmDescription: "Are you sure you want to save these system settings changes?",
+  });
+
+  // Save data to API with confirmation
   const handleSaveData = (updatedData: Partial<SaveSystemSettingsPayload>) => {
     if (!formData) return;
 
     const newFormData = { ...formData, ...updatedData };
     setFormData(newFormData);
-    saveSystemSettingsData(newFormData);
   };
+
+  const handleSave = () => {
+    if (formData) {
+      requestSave(formData);
+    }
+  };
+
+  // Register save handler with parent context
+  useEffect(() => {
+    registerSaveHandler(handleSave);
+    return () => unregisterSaveHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData]);
 
   // System Settings state
   const [systemType, setSystemType] = useState("MPD");
@@ -92,7 +132,8 @@ export function SystemSettings() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <>
+      <div className="grid grid-cols-1 gap-4">
       {/* Left Column */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
         {/* System Settings Panel */}
@@ -498,5 +539,17 @@ export function SystemSettings() {
         </PanelCard>
       </div>
     </div>
+
+    <CommonAlertDialog
+      open={isConfirmOpen}
+      onOpenChange={setIsConfirmOpen}
+      title={confirmTitle}
+      description={confirmDescription}
+      cancelText="Cancel"
+      actionText="Save"
+      onAction={handleConfirmedSave}
+      onCancel={handleCancel}
+    />
+  </>
   );
 }

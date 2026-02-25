@@ -6,6 +6,7 @@ import {
   CommonInput,
   CommonToggle,
   SectionSkeleton,
+  CommonAlertDialog,
 } from "@/components/common";
 import { GeneralSettingsData } from "@/types/settings";
 import {
@@ -13,6 +14,8 @@ import {
   useSaveGeneralSettings,
   useGeneralOptions,
 } from "@/services/api/settings/settings.api";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useSettingsContext } from "../SettingsContext";
 
 interface GeneralSettingsProps {
   general: GeneralSettingsData;
@@ -30,6 +33,7 @@ export function GeneralSettings({
   const { data: generalResponse, isLoading, error } = useGeneralSettings();
   const { data: optionsResponse } = useGeneralOptions();
   const { mutate: saveGeneralData } = useSaveGeneralSettings();
+  const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
   const generalData = generalResponse?.data;
   const options = optionsResponse?.data;
@@ -47,17 +51,60 @@ export function GeneralSettings({
     }
   }, [generalData]);
 
-  // Save data to API
+  // Setup save with confirmation
+  const {
+    isConfirmOpen,
+    setIsConfirmOpen,
+    requestSave,
+    handleConfirmedSave,
+    handleCancel,
+    confirmTitle,
+    confirmDescription,
+  } = useSaveWithConfirmation<any>({
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveGeneralData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "General settings saved successfully",
+    errorMessage: "Failed to save general settings",
+    confirmTitle: "Save General Settings",
+    confirmDescription: "Are you sure you want to save these general settings changes?",
+  });
+
+  // Save data to API with confirmation
   const handleSaveData = (updatedData: any) => {
-    saveGeneralData(updatedData);
+    requestSave(updatedData);
   };
+
+  const handleSave = () => {
+    handleSaveData({
+      defaultWellName: general.defaultWellName,
+      defaultRigName: general.defaultRigName,
+      defaultScenario: general.defaultScenario,
+      startupScreen1: general.startupScreen1,
+      startupScreen2: general.startupScreen2,
+      safetyConfirmations,
+    });
+  };
+
+  // Register save handler with parent context
+  useEffect(() => {
+    registerSaveHandler(handleSave);
+    return () => unregisterSaveHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [general, safetyConfirmations]);
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3 mb-3">
+    <>
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3 mb-3">
       <PanelCard title="Project / Well Context">
         <div className="grid gap-3 grid-cols-1 sm:grid-cols-3">
           <CommonInput
@@ -135,5 +182,17 @@ export function GeneralSettings({
         />
       </PanelCard>
     </div>
+
+    <CommonAlertDialog
+      open={isConfirmOpen}
+      onOpenChange={setIsConfirmOpen}
+      title={confirmTitle}
+      description={confirmDescription}
+      cancelText="Cancel"
+      actionText="Save"
+      onAction={handleConfirmedSave}
+      onCancel={handleCancel}
+    />
+  </>
   );
 }

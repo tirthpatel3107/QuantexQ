@@ -31,10 +31,12 @@ import { UsersRoles } from "./sections/userRoles";
 import { AboutDiagnostics } from "./sections/AboutDiagnostics";
 import { SETTINGS_NAV } from "./constants";
 import { GeneralSettingsData } from "@/types/settings";
+import { SettingsProvider, useSettingsContext } from "./SettingsContext";
 
-export default function Settings() {
+function SettingsContent() {
   const { section } = useParams();
   const activeSection = section || "setting";
+  const { requestSave } = useSettingsContext();
 
   const [general, setGeneral] = useState<GeneralSettingsData>({
     defaultWellName: "NFQ-21-6A",
@@ -49,7 +51,7 @@ export default function Settings() {
     () => (
       <>
         <CommonTooltip content="Save settings">
-          <CommonButton variant="outline" size="sm" icon={Save}>
+          <CommonButton variant="outline" size="sm" icon={Save} onClick={requestSave}>
             Save
           </CommonButton>
         </CommonTooltip>
@@ -65,7 +67,7 @@ export default function Settings() {
         </CommonTooltip>
       </>
     ),
-    [],
+    [requestSave],
   );
 
   const sidebarNav = useMemo(
@@ -158,5 +160,13 @@ export default function Settings() {
         <main className="flex-1 min-w-0 overflow-auto">{renderSection()}</main>
       </SidebarLayout>
     </PageLayout>
+  );
+}
+
+export default function Settings() {
+  return (
+    <SettingsProvider>
+      <SettingsContent />
+    </SettingsProvider>
   );
 }

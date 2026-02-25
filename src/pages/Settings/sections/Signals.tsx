@@ -28,15 +28,17 @@ import {
   CommonInput,
   CommonDropdownMenu,
   SectionSkeleton,
+  CommonAlertDialog,
 } from "@/components/common";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CommonAlertDialog } from "@/components/common/CommonAlertDialog";
 import {
   useSignalsSettings,
   useSaveSignalsSettings,
   useSignalsOptions,
 } from "@/services/api/settings/settings.api";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useSettingsContext } from "../SettingsContext";
 
 type Signal = {
   id: number;
@@ -54,6 +56,7 @@ export function Signals() {
   const { data: signalsResponse, isLoading, error } = useSignalsSettings();
   const { data: optionsResponse } = useSignalsOptions();
   const { mutate: saveSignalsData } = useSaveSignalsSettings();
+  const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
   const signalsData = signalsResponse?.data;
   const options = optionsResponse?.data;
@@ -75,11 +78,46 @@ export function Signals() {
     }
   }, [signalsData]);
 
-  // Save data to API
+  // Setup save with confirmation
+  const {
+    isConfirmOpen,
+    setIsConfirmOpen,
+    isSaving,
+    requestSave,
+    handleConfirmedSave,
+    handleCancel,
+    confirmTitle,
+    confirmDescription,
+  } = useSaveWithConfirmation<{ signals: Signal[] }>({
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveSignalsData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "Signals settings saved successfully",
+    errorMessage: "Failed to save signals settings",
+    confirmTitle: "Save Signals Settings",
+    confirmDescription: "Are you sure you want to save these signals changes?",
+  });
+
+  // Update local state only
   const handleSaveData = (updatedSignals: Signal[]) => {
     setSignals(updatedSignals);
-    saveSignalsData({ signals: updatedSignals });
   };
+
+  const handleSave = () => {
+    requestSave({ signals });
+  };
+
+  // Register save handler with parent context
+  useEffect(() => {
+    registerSaveHandler(handleSave);
+    return () => unregisterSaveHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signals]);
 
   const [isAddSignalModalOpen, setIsAddSignalModalOpen] = useState(false);
   const [isConfigureTagsModalOpen, setIsConfigureTagsModalOpen] =
@@ -271,7 +309,8 @@ export function Signals() {
   }
 
   return (
-    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
+    <>
+      <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
       {/* Top Bar with Search and Actions */}
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
@@ -534,6 +573,18 @@ export function Signals() {
         onAction={handleDeleteSignal}
         actionClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
       />
-    </div>
+
+      {/* Save Confirmation */}
+      <CommonAlertDialog
+        open={isConfirmOpen}
+        onOpenChange={setIsConfirmOpen}
+        title={confirmTitle}
+        description={confirmDescription}
+        cancelText="Cancel"
+        actionText="Save"
+        onAction={handleConfirmedSave}
+        onCancel={handleCancel}
+      />
+    </>
   );
 }

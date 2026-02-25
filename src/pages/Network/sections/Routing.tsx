@@ -7,18 +7,21 @@ import { CommonToggle } from "@/components/common/CommonToggle";
 import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
-import { SectionSkeleton } from "@/components/common";
+import { SectionSkeleton, CommonAlertDialog } from "@/components/common";
 import {
   useRoutingData,
   useSaveRoutingData,
   useRoutingOptions,
 } from "@/services/api/network/network.api";
 import type { SaveRoutingPayload } from "@/services/api/network/network.types";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useNetworkContext } from "../NetworkContext";
 
 export function Routing() {
   const { data: routingResponse, isLoading, error } = useRoutingData();
   const { data: optionsResponse } = useRoutingOptions();
   const { mutate: saveRoutingData } = useSaveRoutingData();
+  const { registerSaveHandler, unregisterSaveHandler } = useNetworkContext();
 
   const routingData = routingResponse?.data;
   const options = optionsResponse?.data;
@@ -35,21 +38,58 @@ export function Routing() {
     }
   }, [routingData]);
 
-  // Save data to API
+  // Setup save with confirmation
+  const {
+    isConfirmOpen,
+    setIsConfirmOpen,
+    requestSave,
+    handleConfirmedSave,
+    handleCancel,
+    confirmTitle,
+    confirmDescription,
+  } = useSaveWithConfirmation<SaveRoutingPayload>({
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveRoutingData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "Routing settings saved successfully",
+    errorMessage: "Failed to save routing settings",
+    confirmTitle: "Save Routing Settings",
+    confirmDescription: "Are you sure you want to save these routing changes?",
+  });
+
+  // Save data to API with confirmation
   const handleSaveData = (updatedData: Partial<SaveRoutingPayload>) => {
     if (!formData) return;
 
     const newFormData = { ...formData, ...updatedData };
     setFormData(newFormData);
-    saveRoutingData(newFormData);
   };
+
+  const handleSave = () => {
+    if (formData) {
+      requestSave(formData);
+    }
+  };
+
+  // Register save handler with parent context
+  useEffect(() => {
+    registerSaveHandler(handleSave);
+    return () => unregisterSaveHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData]);
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
   }
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
+    <>
+      <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 gap-3 auto-rows-max">
         <div className="hidden">
@@ -342,5 +382,17 @@ export function Routing() {
         <HealthMonitoringPanel />
       </div>
     </div>
+
+    <CommonAlertDialog
+      open={isConfirmOpen}
+      onOpenChange={setIsConfirmOpen}
+      title={confirmTitle}
+      description={confirmDescription}
+      cancelText="Cancel"
+      actionText="Save"
+      onAction={handleConfirmedSave}
+      onCancel={handleCancel}
+    />
+  </>
   );
 }

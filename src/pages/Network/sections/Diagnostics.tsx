@@ -7,18 +7,21 @@ import { Badge } from "@/components/ui/badge";
 import { Play, FileDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
-import { SectionSkeleton } from "@/components/common";
+import { SectionSkeleton, CommonAlertDialog } from "@/components/common";
 import {
   useDiagnosticsData,
   useSaveDiagnosticsData,
   useDiagnosticsOptions,
 } from "@/services/api/network/network.api";
 import type { SaveDiagnosticsPayload } from "@/services/api/network/network.types";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useNetworkContext } from "../NetworkContext";
 
 export function Diagnostics() {
   const { data: diagnosticsResponse, isLoading, error } = useDiagnosticsData();
   const { data: optionsResponse } = useDiagnosticsOptions();
   const { mutate: saveDiagnosticsData } = useSaveDiagnosticsData();
+  const { registerSaveHandler, unregisterSaveHandler } = useNetworkContext();
 
   const diagnosticsData = diagnosticsResponse?.data;
   const options = optionsResponse?.data;
@@ -34,21 +37,58 @@ export function Diagnostics() {
     }
   }, [diagnosticsData]);
 
-  // Save data to API
+  // Setup save with confirmation
+  const {
+    isConfirmOpen,
+    setIsConfirmOpen,
+    requestSave,
+    handleConfirmedSave,
+    handleCancel,
+    confirmTitle,
+    confirmDescription,
+  } = useSaveWithConfirmation<SaveDiagnosticsPayload>({
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveDiagnosticsData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "Diagnostics settings saved successfully",
+    errorMessage: "Failed to save diagnostics settings",
+    confirmTitle: "Save Diagnostics Settings",
+    confirmDescription: "Are you sure you want to save these diagnostics changes?",
+  });
+
+  // Save data to API with confirmation
   const handleSaveData = (updatedData: Partial<SaveDiagnosticsPayload>) => {
     if (!formData) return;
 
     const newFormData = { ...formData, ...updatedData };
     setFormData(newFormData);
-    saveDiagnosticsData(newFormData);
   };
+
+  const handleSave = () => {
+    if (formData) {
+      requestSave(formData);
+    }
+  };
+
+  // Register save handler with parent context
+  useEffect(() => {
+    registerSaveHandler(handleSave);
+    return () => unregisterSaveHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData]);
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
   }
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
+    <>
+      <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 auto-rows-max">
         <div className="hidden">
@@ -295,6 +335,18 @@ export function Diagnostics() {
         <HealthMonitoringPanel />
       </div>
     </div>
+
+    <CommonAlertDialog
+      open={isConfirmOpen}
+      onOpenChange={setIsConfirmOpen}
+      title={confirmTitle}
+      description={confirmDescription}
+      cancelText="Cancel"
+      actionText="Save"
+      onAction={handleConfirmedSave}
+      onCancel={handleCancel}
+    />
+  </>
   );
 }
 

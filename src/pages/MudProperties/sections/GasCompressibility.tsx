@@ -5,6 +5,7 @@ import {
   RestoreDefaultsButton,
   CommonInput,
   SectionSkeleton,
+  CommonAlertDialog,
 } from "@/components/common";
 import { FluidData } from "@/types/mud";
 import {
@@ -12,6 +13,8 @@ import {
   useSaveGasCompressibilityData,
 } from "@/services/api/mudproperties/mudproperties.api";
 import type { SaveGasCompressibilityPayload } from "@/services/api/mudproperties/mudproperties.types";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useMudPropertiesContext } from "../MudPropertiesContext";
 
 interface GasCompressibilityProps {
   fluid: FluidData;
@@ -25,6 +28,7 @@ export function GasCompressibility({
   const { data: gasResponse, isLoading, error } = useGasCompressibilityData();
   const { mutate: saveGasCompressibilityData } =
     useSaveGasCompressibilityData();
+  const { registerSaveHandler, unregisterSaveHandler } = useMudPropertiesContext();
 
   const gasData = gasResponse?.data;
 
@@ -45,7 +49,32 @@ export function GasCompressibility({
     }
   }, [gasData, setFluid]);
 
-  // Save data to API
+  // Setup save with confirmation
+  const {
+    isConfirmOpen,
+    setIsConfirmOpen,
+    isSaving,
+    requestSave,
+    handleConfirmedSave,
+    handleCancel,
+    confirmTitle,
+    confirmDescription,
+  } = useSaveWithConfirmation<SaveGasCompressibilityPayload>({
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveGasCompressibilityData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "Gas compressibility settings saved successfully",
+    errorMessage: "Failed to save gas compressibility settings",
+    confirmTitle: "Save Gas Compressibility Settings",
+    confirmDescription: "Are you sure you want to save these gas compressibility changes?",
+  });
+
+  // Update local state only
   const handleSaveData = (
     updatedData: Partial<SaveGasCompressibilityPayload>,
   ) => {
@@ -54,53 +83,78 @@ export function GasCompressibility({
     const newFormData = { ...formData, ...updatedData };
     setFormData(newFormData);
     setFluid((prev) => ({ ...prev, ...updatedData }));
-    saveGasCompressibilityData(newFormData);
   };
+
+  const handleSave = () => {
+    if (formData) {
+      requestSave(formData);
+    }
+  };
+
+  // Register save handler with parent context
+  useEffect(() => {
+    registerSaveHandler(handleSave);
+    return () => unregisterSaveHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData]);
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
   }
 
   return (
-    <div className="grid grid-cols-1 max-w-2xl gap-4 mb-4">
-      <PanelCard
-        title="Gas / Compressibility"
-        headerAction={<RestoreDefaultsButton />}
-      >
-        <div className="grid grid-cols-[140px_120px_auto] gap-3 items-center">
-          <Label className="text-xs text-muted-foreground text-left">
-            Gas solubility
-          </Label>
-          <CommonInput
-            value={formData.gasSolubility}
-            onChange={(e) => handleSaveData({ gasSolubility: e.target.value })}
-            placeholder="—"
-          />
-          <span className="text-[11px] text-muted-foreground">scf/bbl</span>
+    <>
+      <div className="grid grid-cols-1 max-w-2xl gap-4 mb-4">
+        <PanelCard
+          title="Gas / Compressibility"
+          headerAction={<RestoreDefaultsButton />}
+        >
+          <div className="grid grid-cols-[140px_120px_auto] gap-3 items-center">
+            <Label className="text-xs text-muted-foreground text-left">
+              Gas solubility
+            </Label>
+            <CommonInput
+              value={formData.gasSolubility}
+              onChange={(e) => handleSaveData({ gasSolubility: e.target.value })}
+              placeholder="—"
+            />
+            <span className="text-[11px] text-muted-foreground">scf/bbl</span>
 
-          <Label className="text-xs text-muted-foreground text-left">
-            Compressibility factor
-          </Label>
-          <CommonInput
-            value={formData.compressibilityFactor}
-            onChange={(e) =>
-              handleSaveData({ compressibilityFactor: e.target.value })
-            }
-            placeholder="—"
-          />
-          <span className="text-[11px] text-muted-foreground">—</span>
+            <Label className="text-xs text-muted-foreground text-left">
+              Compressibility factor
+            </Label>
+            <CommonInput
+              value={formData.compressibilityFactor}
+              onChange={(e) =>
+                handleSaveData({ compressibilityFactor: e.target.value })
+              }
+              placeholder="—"
+            />
+            <span className="text-[11px] text-muted-foreground">—</span>
 
-          <Label className="text-xs text-muted-foreground text-left">
-            Gas/oil ratio
-          </Label>
-          <CommonInput
-            value={formData.gasOilRatio}
-            onChange={(e) => handleSaveData({ gasOilRatio: e.target.value })}
-            placeholder="—"
-          />
-          <span className="text-[11px] text-muted-foreground">scf/stb</span>
-        </div>
-      </PanelCard>
-    </div>
+            <Label className="text-xs text-muted-foreground text-left">
+              Gas/oil ratio
+            </Label>
+            <CommonInput
+              value={formData.gasOilRatio}
+              onChange={(e) => handleSaveData({ gasOilRatio: e.target.value })}
+              placeholder="—"
+            />
+            <span className="text-[11px] text-muted-foreground">scf/stb</span>
+          </div>
+        </PanelCard>
+      </div>
+
+      <CommonAlertDialog
+        open={isConfirmOpen}
+        onOpenChange={setIsConfirmOpen}
+        title={confirmTitle}
+        description={confirmDescription}
+        cancelText="Cancel"
+        actionText="Save"
+        onAction={handleConfirmedSave}
+        onCancel={handleCancel}
+      />
+    </>
   );
 }

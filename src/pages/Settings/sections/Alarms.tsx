@@ -26,6 +26,8 @@ import {
   useSaveAlarmsSettings,
   useAlarmsOptions,
 } from "@/services/api/settings/settings.api";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useSettingsContext } from "../SettingsContext";
 
 type SensorLimit = {
   id: string;
@@ -81,6 +83,7 @@ export function Alarms() {
   const { data: alarmsResponse, isLoading, error } = useAlarmsSettings();
   const { data: optionsResponse } = useAlarmsOptions();
   const { mutate: saveAlarmsData } = useSaveAlarmsSettings();
+  const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
   const alarmsData = alarmsResponse?.data;
   const options = optionsResponse?.data;
@@ -101,14 +104,50 @@ export function Alarms() {
     }
   }, [alarmsData]);
 
-  // Save data to API
+  // Setup save with confirmation
+  const {
+    isConfirmOpen,
+    setIsConfirmOpen,
+    requestSave,
+    handleConfirmedSave,
+    handleCancel,
+    confirmTitle,
+    confirmDescription,
+  } = useSaveWithConfirmation<any>({
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveAlarmsData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "Alarms settings saved successfully",
+    errorMessage: "Failed to save alarms settings",
+    confirmTitle: "Save Alarms Settings",
+    confirmDescription: "Are you sure you want to save these alarms changes?",
+  });
+
+  // Save data to API with confirmation
   const handleSaveData = (updatedData: any) => {
     if (!formData) return;
 
     const newFormData = { ...formData, ...updatedData };
     setFormData(newFormData);
-    saveAlarmsData(newFormData);
   };
+
+  const handleSave = () => {
+    if (formData) {
+      requestSave(formData);
+    }
+  };
+
+  // Register save handler with parent context
+  useEffect(() => {
+    registerSaveHandler(handleSave);
+    return () => unregisterSaveHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData]);
 
   const columns = useMemo(
     () => [
@@ -414,6 +453,18 @@ export function Alarms() {
           </PanelCard>
         </CommonTabsContent>
       </CommonTabs>
+
+      {/* Save Confirmation */}
+      <CommonAlertDialog
+        open={isConfirmOpen}
+        onOpenChange={setIsConfirmOpen}
+        title={confirmTitle}
+        description={confirmDescription}
+        cancelText="Cancel"
+        actionText="Save"
+        onAction={handleConfirmedSave}
+        onCancel={handleCancel}
+      />
 
       {/* Delete Confirmation */}
       <CommonAlertDialog

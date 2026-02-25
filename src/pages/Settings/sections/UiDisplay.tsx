@@ -5,6 +5,7 @@ import {
   CommonToggle,
   CommonSlider,
   SectionSkeleton,
+  CommonAlertDialog,
 } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RefreshCw, Download, ChevronRight } from "lucide-react";
@@ -18,6 +19,8 @@ import {
   useSaveUiDisplaySettings,
   useUiDisplayOptions,
 } from "@/services/api/settings/settings.api";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useSettingsContext } from "../SettingsContext";
 
 const THEME_OPTIONS = [
   { label: "Dark", value: "dark" },
@@ -80,6 +83,7 @@ export function UiDisplay() {
   const { data: uiDisplayResponse, isLoading, error } = useUiDisplaySettings();
   const { data: optionsResponse } = useUiDisplayOptions();
   const { mutate: saveUiDisplayData } = useSaveUiDisplaySettings();
+  const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
   const uiDisplayData = uiDisplayResponse?.data;
   const options = optionsResponse?.data;
@@ -102,14 +106,51 @@ export function UiDisplay() {
     }
   }, [uiDisplayData, setTheme, setAccentColor]);
 
-  // Save data to API
+  // Setup save with confirmation
+  const {
+    isConfirmOpen,
+    setIsConfirmOpen,
+    isSaving,
+    requestSave,
+    handleConfirmedSave,
+    handleCancel,
+    confirmTitle,
+    confirmDescription,
+  } = useSaveWithConfirmation<any>({
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveUiDisplayData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "UI Display settings saved successfully",
+    errorMessage: "Failed to save UI display settings",
+    confirmTitle: "Save UI Display Settings",
+    confirmDescription: "Are you sure you want to save these UI display changes?",
+  });
+
+  // Update local state only
   const handleSaveData = (updatedData: any) => {
     if (!formData) return;
 
     const newFormData = { ...formData, ...updatedData };
     setFormData(newFormData);
-    saveUiDisplayData(newFormData);
   };
+
+  const handleSave = () => {
+    if (formData) {
+      requestSave(formData);
+    }
+  };
+
+  // Register save handler with parent context
+  useEffect(() => {
+    registerSaveHandler(handleSave);
+    return () => unregisterSaveHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData]);
 
   if (isLoading) {
     return <SectionSkeleton count={4} gridClassName="lg:grid-cols-[2fr_1fr]" />;
@@ -129,7 +170,8 @@ export function UiDisplay() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3">
+    <>
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3">
       {/* Display Preferences Section */}
       <PanelCard title="Display Preferences">
         <div>
@@ -375,5 +417,17 @@ export function UiDisplay() {
         </button>
       </PanelCard>
     </div>
+
+    <CommonAlertDialog
+      open={isConfirmOpen}
+      onOpenChange={setIsConfirmOpen}
+      title={confirmTitle}
+      description={confirmDescription}
+      cancelText="Cancel"
+      actionText="Save"
+      onAction={handleConfirmedSave}
+      onCancel={handleCancel}
+    />
+  </>
   );
 }

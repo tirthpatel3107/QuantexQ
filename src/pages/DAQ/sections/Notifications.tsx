@@ -6,6 +6,7 @@ import {
   CommonCheckbox,
   CommonSelect,
   SectionSkeleton,
+  CommonAlertDialog,
 } from "@/components/common";
 import { Volume2, Play, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -15,6 +16,8 @@ import {
   useNotificationsOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveNotificationsPayload } from "@/services/api/daq/daq.types";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useDAQContext } from "../DAQContext";
 
 interface NotificationLogEntry {
   id: string;
@@ -33,6 +36,7 @@ export function Notifications() {
   } = useNotificationsData();
   const { data: optionsResponse } = useNotificationsOptions();
   const { mutate: saveNotificationsData } = useSaveNotificationsData();
+  const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
   const notificationsData = notificationsResponse?.data;
   const options = optionsResponse?.data;
@@ -49,14 +53,50 @@ export function Notifications() {
     }
   }, [notificationsData]);
 
-  // Save data to API
+  // Setup save with confirmation
+  const {
+    isConfirmOpen,
+    setIsConfirmOpen,
+    requestSave,
+    handleConfirmedSave,
+    handleCancel,
+    confirmTitle,
+    confirmDescription,
+  } = useSaveWithConfirmation<SaveNotificationsPayload>({
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveNotificationsData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "Notifications settings saved successfully",
+    errorMessage: "Failed to save notifications settings",
+    confirmTitle: "Save Notifications Settings",
+    confirmDescription: "Are you sure you want to save these notifications changes?",
+  });
+
+  // Save data to API with confirmation
   const handleSaveData = (updatedData: Partial<SaveNotificationsPayload>) => {
     if (!formData) return;
 
     const newFormData = { ...formData, ...updatedData };
     setFormData(newFormData);
-    saveNotificationsData(newFormData);
   };
+
+  const handleSave = () => {
+    if (formData) {
+      requestSave(formData);
+    }
+  };
+
+  // Register save handler with parent context
+  useEffect(() => {
+    registerSaveHandler(handleSave);
+    return () => unregisterSaveHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData]);
 
   // Settings & Summary state
   const [alarmSound, setAlarmSound] = useState("factory_alert.mp3");
@@ -146,7 +186,8 @@ export function Notifications() {
   }
 
   return (
-    <div className="space-y-4">
+    <>
+      <div className="space-y-4">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Settings & Summary Panel */}
         <PanelCard title="Settings & Summary">
@@ -340,5 +381,17 @@ export function Notifications() {
         </div>
       </PanelCard>
     </div>
+
+    <CommonAlertDialog
+      open={isConfirmOpen}
+      onOpenChange={setIsConfirmOpen}
+      title={confirmTitle}
+      description={confirmDescription}
+      cancelText="Cancel"
+      actionText="Save"
+      onAction={handleConfirmedSave}
+      onCancel={handleCancel}
+    />
+  </>
   );
 }

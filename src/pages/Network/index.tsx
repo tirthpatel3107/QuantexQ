@@ -18,15 +18,17 @@ import { Protocols } from "./sections/Protocols";
 import { Routing } from "./sections/Routing";
 import { Security } from "./sections/Security";
 import { Diagnostics } from "./sections/Diagnostics";
+import { NetworkProvider, useNetworkContext } from "./NetworkContext";
 
-export default function Network() {
+function NetworkContent() {
   const { section } = useParams();
   const activeSection = section || "network";
+  const { requestSave } = useNetworkContext();
 
   const headerActions = (
     <>
       <CommonTooltip content="Save network settings">
-        <CommonButton variant="outline" size="sm" icon={Save}>
+        <CommonButton variant="outline" size="sm" icon={Save} onClick={requestSave}>
           Save
         </CommonButton>
       </CommonTooltip>
@@ -98,5 +100,13 @@ export default function Network() {
         <main className="flex-1 min-w-0 overflow-auto">{renderSection()}</main>
       </SidebarLayout>
     </PageLayout>
+  );
+}
+
+export default function Network() {
+  return (
+    <NetworkProvider>
+      <NetworkContent />
+    </NetworkProvider>
   );
 }

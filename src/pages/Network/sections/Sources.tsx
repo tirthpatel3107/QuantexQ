@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { CommonToggle } from "@/components/common/CommonToggle";
 import { CommonSelect } from "@/components/common/CommonSelect";
-import { CommonInput, CommonAccordionItem } from "@/components/common";
+import { CommonInput, CommonAccordionItem, CommonAlertDialog } from "@/components/common";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
 import { Badge } from "@/components/ui/badge";
 import { SectionSkeleton } from "@/components/common";
@@ -12,11 +12,14 @@ import {
   useSourcesOptions,
 } from "@/services/api/network/network.api";
 import type { SaveSourcesPayload } from "@/services/api/network/network.types";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useNetworkContext } from "../NetworkContext";
 
 export function Sources() {
   const { data: sourcesResponse, isLoading, error } = useSourcesData();
   const { data: optionsResponse } = useSourcesOptions();
   const { mutate: saveSourcesData } = useSaveSourcesData();
+  const { registerSaveHandler, unregisterSaveHandler } = useNetworkContext();
 
   const sourcesData = sourcesResponse?.data;
   const options = optionsResponse?.data;
@@ -32,14 +35,51 @@ export function Sources() {
     }
   }, [sourcesData]);
 
-  // Save data to API
+  // Setup save with confirmation
+  const {
+    isConfirmOpen,
+    setIsConfirmOpen,
+    isSaving,
+    requestSave,
+    handleConfirmedSave,
+    handleCancel,
+    confirmTitle,
+    confirmDescription,
+  } = useSaveWithConfirmation<SaveSourcesPayload>({
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveSourcesData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "Sources settings saved successfully",
+    errorMessage: "Failed to save sources settings",
+    confirmTitle: "Save Sources Settings",
+    confirmDescription: "Are you sure you want to save these sources changes?",
+  });
+
+  // Save data to API with confirmation
   const handleSaveData = (updatedData: Partial<SaveSourcesPayload>) => {
     if (!formData) return;
 
     const newFormData = { ...formData, ...updatedData };
     setFormData(newFormData);
-    saveSourcesData(newFormData);
   };
+
+  const handleSave = () => {
+    if (formData) {
+      requestSave(formData);
+    }
+  };
+
+  // Register save handler with parent context
+  useEffect(() => {
+    registerSaveHandler(handleSave);
+    return () => unregisterSaveHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData]);
 
   const getStatusBadgeColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -62,7 +102,8 @@ export function Sources() {
   const { connectionStatus, sourceType } = sourcesData.rigPlc;
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
+    <>
+      <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
         {/* Rig PLC Source */}
         <PanelCard
@@ -246,5 +287,17 @@ export function Sources() {
         <HealthMonitoringPanel />
       </div>
     </div>
+
+    <CommonAlertDialog
+      open={isConfirmOpen}
+      onOpenChange={setIsConfirmOpen}
+      title={confirmTitle}
+      description={confirmDescription}
+      cancelText="Cancel"
+      actionText="Save"
+      onAction={handleConfirmedSave}
+      onCancel={handleCancel}
+    />
+  </>
   );
 }
