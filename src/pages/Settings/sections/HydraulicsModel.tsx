@@ -44,11 +44,12 @@ export function HydraulicsModel() {
     successMessage: "Hydraulics Model settings saved successfully",
     errorMessage: "Failed to save hydraulics model settings",
     confirmTitle: "Save Hydraulics Model Settings",
-    confirmDescription: "Are you sure you want to save these hydraulics model changes?",
+    confirmDescription:
+      "Are you sure you want to save these hydraulics model changes?",
   });
 
   if (isLoading || !form.formData) {
-    return <SectionSkeleton count={1} className="p-4" />;
+    return <SectionSkeleton count={6} />;
   }
 
   return (

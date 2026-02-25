@@ -47,9 +47,9 @@ export function AboutDiagnostics() {
     confirmTitle: "Save About & Diagnostics Settings",
     confirmDescription: "Are you sure you want to save these changes?",
   });
-
-  if (isLoading || !form.formData) {
-    return <SectionSkeleton count={1} className="p-4" />;
+  
+if (isLoading || !form.formData) {
+    return <SectionSkeleton count={6} />;
   }
 
   return (

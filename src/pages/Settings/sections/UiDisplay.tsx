@@ -128,11 +128,12 @@ export function UiDisplay() {
     successMessage: "UI Display settings saved successfully",
     errorMessage: "Failed to save UI display settings",
     confirmTitle: "Save UI Display Settings",
-    confirmDescription: "Are you sure you want to save these UI display changes?",
+    confirmDescription:
+      "Are you sure you want to save these UI display changes?",
   });
 
   if (isLoading || !form.formData) {
-    return <SectionSkeleton count={4} gridClassName="lg:grid-cols-[2fr_1fr]" />;
+    return <SectionSkeleton count={6} />;
   }
 
   const { formData } = form;
@@ -172,14 +173,18 @@ export function UiDisplay() {
                 label="Language"
                 options={options?.languageOptions || []}
                 value={formData.language}
-                onValueChange={(language) => form.updateLocalField({ language })}
+                onValueChange={(language) =>
+                  form.updateLocalField({ language })
+                }
                 placeholder="Select language"
               />
               <CommonSelect
                 label="Date Format"
                 options={options?.dateFormatOptions || []}
                 value={formData.dateFormat}
-                onValueChange={(dateFormat) => form.updateLocalField({ dateFormat })}
+                onValueChange={(dateFormat) =>
+                  form.updateLocalField({ dateFormat })
+                }
                 placeholder="Select date format"
               />
 
@@ -187,7 +192,9 @@ export function UiDisplay() {
                 label="Time Format"
                 options={options?.timeFormatOptions || []}
                 value={formData.timeFormat}
-                onValueChange={(timeFormat) => form.updateLocalField({ timeFormat })}
+                onValueChange={(timeFormat) =>
+                  form.updateLocalField({ timeFormat })
+                }
                 placeholder="Select time format"
               />
             </div>
@@ -323,7 +330,9 @@ export function UiDisplay() {
                 <ul className="space-y-1.5 text-sm text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-green-500">•</span>
-                    <span>Improved the hydraulics model for better pressure control.</span>
+                    <span>
+                      Improved the hydraulics model for better pressure control.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-500">•</span>
@@ -331,11 +340,16 @@ export function UiDisplay() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-500">•</span>
-                    <span>Enhanced network integration for more stable communication.</span>
+                    <span>
+                      Enhanced network integration for more stable
+                      communication.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-500">•</span>
-                    <span>Improved alarm management for better event handling.</span>
+                    <span>
+                      Improved alarm management for better event handling.
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -347,11 +361,16 @@ export function UiDisplay() {
                 <ul className="space-y-1.5 text-sm text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-green-500">•</span>
-                    <span>Fixed an issue with auto control engine response times.</span>
+                    <span>
+                      Fixed an issue with auto control engine response times.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-green-500">•</span>
-                    <span>Fixed a logging bug where log files were not rotating properly.</span>
+                    <span>
+                      Fixed a logging bug where log files were not rotating
+                      properly.
+                    </span>
                   </li>
                 </ul>
               </div>

@@ -109,11 +109,7 @@ export function Signals() {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [selectedSignal, setSelectedSignal] = useState<Signal | null>(null);
 
-  if (isLoading || !form.formData) {
-    return <SectionSkeleton count={6} className="p-4" />;
-  }
-
-  const { signals } = form.formData;
+  const signals = form.formData?.signals || [];
 
   const toggleFavorite = (id: number) => {
     const updatedSignals = signals.map((signal) =>
@@ -283,6 +279,10 @@ export function Signals() {
     { label: "In Use", value: "inUse" },
     { label: "Not In Use", value: "notInUse" },
   ];
+
+  if (isLoading || !form.formData) {
+    return <SectionSkeleton count={6} className="p-4" />;
+  }
 
   return (
     <>

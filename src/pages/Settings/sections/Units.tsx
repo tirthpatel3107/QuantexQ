@@ -48,7 +48,7 @@ export function Units() {
   });
 
   if (isLoading || !form.formData) {
-    return <SectionSkeleton count={1} className="p-4" />;
+    return <SectionSkeleton count={6} />;
   }
 
   const { formData } = form;
