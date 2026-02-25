@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import type { SourcesTabData, SaveSourcesPayload, NetworkSource } from '@/services/api/network.types';
+import type { SourcesTabData, SaveSourcesPayload, NetworkSource } from '@/services/api/network/network.types';
 
 interface SourcesTabProps {
   data?: SourcesTabData;

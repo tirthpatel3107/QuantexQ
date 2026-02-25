@@ -29,3 +29,10 @@ export { CommonToggle } from "./CommonToggle";
 export { CommonDropdownMenu } from "./CommonDropdownMenu";
 export type { CommonDropdownOption } from "./CommonDropdownMenu";
 export { CommonSlider } from "./CommonSlider";
+export {
+  CommonSkeleton,
+  SkeletonCard,
+  SkeletonTable,
+  SkeletonListItem,
+  SkeletonForm,
+} from "./CommonSkeleton";

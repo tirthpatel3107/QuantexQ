@@ -9,6 +9,7 @@ import {
 } from "@/components/common/CommonTabs";
 import { Download, FolderOpen, FileText, File } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useDownloadsData } from "@/services/api/daq/daq.api";
 
 interface FileItem {
   name: string;
@@ -84,8 +85,19 @@ const downloadHistory: DownloadHistoryItem[] = [
 ];
 
 export function Downloads() {
+  const { data: downloadsResponse, isLoading, error } = useDownloadsData();
+  const downloadsData = downloadsResponse?.data;
+
   const [activeTab, setActiveTab] = useState("downloads");
   const [activeLogFilter, setActiveLogFilter] = useState("all");
+
+  if (isLoading) {
+    return <div className="p-4">Loading downloads data...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-500">Error loading downloads data</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-3">

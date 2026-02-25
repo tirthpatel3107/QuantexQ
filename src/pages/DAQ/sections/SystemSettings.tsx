@@ -6,8 +6,12 @@ import { CommonButton } from "@/components/common/CommonButton";
 import { CommonToggle } from "@/components/common/CommonToggle";
 import { RestoreDefaultsButton } from "@/components/common/RestoreDefaultsButton";
 import { Settings } from "lucide-react";
+import { useSystemSettingsData } from "@/services/api/daq/daq.api";
 
 export function SystemSettings() {
+  const { data: systemSettingsResponse, isLoading, error } = useSystemSettingsData();
+  const systemSettingsData = systemSettingsResponse?.data;
+
   // System Settings state
   const [systemType, setSystemType] = useState("MPD");
   const [mudSystem, setMudSystem] = useState("OBM");
@@ -45,6 +49,14 @@ export function SystemSettings() {
   // Schedule & Time state
   const [autoUTCSync, setAutoUTCSync] = useState(false);
   const [localTime, setLocalTime] = useState("06 Feb 2026 / 16:37");
+
+  if (isLoading) {
+    return <div className="p-4">Loading system settings data...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-500">Error loading system settings data</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 gap-4">

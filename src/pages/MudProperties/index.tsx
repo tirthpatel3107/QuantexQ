@@ -39,6 +39,7 @@ export default function MudProperties() {
   const activeSection = section || "mud-properties";
   const [, setDirty] = useState(true);
 
+  // Local fluid state - will be populated by individual tab API calls
   const [fluid, setFluid] = useState<FluidData>({
     type: "OBM",
     baseFluid: "Diesel",

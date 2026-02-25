@@ -1,7 +1,24 @@
+import { useUnitsSettings } from "@/services/api/settings/settings.api";
+
 export function Units() {
+  const { data: unitsResponse, isLoading, error } = useUnitsSettings();
+  const unitsData = unitsResponse?.data;
+
+  if (isLoading) {
+    return <div className="p-4">Loading units settings...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-500">Error loading units settings</div>;
+  }
+
+  if (!unitsData) {
+    return <div className="p-4">No units settings available</div>;
+  }
+
   return (
     <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-      Units Settings Section - Implementation Pending
+      Units Settings Section - API Connected (Pressure: {unitsData.pressure})
     </div>
   );
 }

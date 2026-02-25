@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   CommonButton,
   CommonSelect,
@@ -12,6 +12,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { type Theme } from "@/context/ThemeContext";
 import { useAccentColor, type AccentColor } from "@/hooks/useAccentColor";
 import { Separator } from "@/components/ui/separator";
+import { useUiDisplaySettings } from "@/services/api/settings/settings.api";
 
 const THEME_OPTIONS = [
   { label: "Dark", value: "dark" },
@@ -88,6 +89,9 @@ const TIME_FORMAT_OPTIONS = [
 ];
 
 export function UiDisplay() {
+  const { data: uiDisplayResponse, isLoading, error } = useUiDisplaySettings();
+  const uiDisplayData = uiDisplayResponse?.data;
+
   const { theme, setTheme } = useTheme();
   const { accentColor, setAccentColor } = useAccentColor();
   const [highlightAlerts, setHighlightAlerts] = useState(true);
@@ -95,6 +99,26 @@ export function UiDisplay() {
   const [dateFormat, setDateFormat] = useState("dd-mmm-yyyy");
   const [timeFormat, setTimeFormat] = useState("24h");
   const [uiScale, setUiScale] = useState([100]);
+
+  // Update state when API data loads
+  useEffect(() => {
+    if (uiDisplayData) {
+      if (uiDisplayData.theme) {
+        setTheme(uiDisplayData.theme as Theme);
+      }
+      if (uiDisplayData.accentColor) {
+        setAccentColor(uiDisplayData.accentColor as AccentColor);
+      }
+    }
+  }, [uiDisplayData, setTheme, setAccentColor]);
+
+  if (isLoading) {
+    return <div className="p-4">Loading UI display settings...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-500">Error loading UI display settings</div>;
+  }
 
   // Define the allowed UI scale values
   const uiScaleSteps = [90, 100, 110, 125];

@@ -31,6 +31,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CommonAlertDialog } from "@/components/common/CommonAlertDialog";
+import { useSignalsSettings } from "@/services/api/settings/settings.api";
 
 type Signal = {
   id: number;
@@ -42,102 +43,11 @@ type Signal = {
   isFavorite: boolean;
 };
 
-const SIGNALS_DATA: Signal[] = [
-  {
-    id: 1,
-    name: "Back Pressure Pump RPM",
-    subsystem: "Pressure Control",
-    inUse: true,
-    unit: "RPM",
-    valueRange: "0-2400",
-    isFavorite: true,
-  },
-  {
-    id: 2,
-    name: "Choke Valve Position",
-    subsystem: "Pressure Control",
-    inUse: true,
-    unit: "%",
-    valueRange: "0-100",
-    isFavorite: true,
-  },
-  {
-    id: 3,
-    name: "Gain Factor",
-    subsystem: "Pressure Control",
-    inUse: true,
-    unit: "Unles",
-    valueRange: "0-10",
-    isFavorite: true,
-  },
-  {
-    id: 4,
-    name: "Flow Rate",
-    subsystem: "DAQ",
-    inUse: true,
-    unit: "L/min",
-    valueRange: "0-1500",
-    isFavorite: true,
-  },
-  {
-    id: 5,
-    name: "Managed Pressure Setpoint",
-    subsystem: "Pressure Control",
-    inUse: true,
-    unit: "psi",
-    valueRange: "0-5000",
-    isFavorite: true,
-  },
-  {
-    id: 6,
-    name: "Standpipe Pressure",
-    subsystem: "DAQ",
-    inUse: true,
-    unit: "psi",
-    valueRange: "0-8000",
-    isFavorite: true,
-  },
-  {
-    id: 7,
-    name: "Total Mud Volume",
-    subsystem: "Hydraulics",
-    inUse: true,
-    unit: "bbl",
-    valueRange: "0-1000",
-    isFavorite: true,
-  },
-  {
-    id: 8,
-    name: "Auto Control Active",
-    subsystem: "Auto Control",
-    inUse: true,
-    unit: "",
-    valueRange: "",
-    isFavorite: true,
-  },
-  {
-    id: 9,
-    name: "Safety Valve Open",
-    subsystem: "Network",
-    inUse: true,
-    unit: "",
-    valueRange: "",
-    isFavorite: true,
-  },
-  {
-    id: 10,
-    name: "Surface Back Pressure",
-    subsystem: "Hydraulic Model Validation",
-    inUse: true,
-    unit: "psi",
-    valueRange: "-1000-3000",
-    isFavorite: true,
-  },
-];
-
 const signalColumnHelper = createColumnHelper<Signal>();
 
 export function Signals() {
+  const { data: signalsData, isLoading, error } = useSignalsSettings();
+
   const [search, setSearch] = useState("");
   const [filterBy, setFilterBy] = useState("all");
   const [subsystemFilters, setSubsystemFilters] = useState<string[]>([]);
@@ -146,7 +56,14 @@ export function Signals() {
     pageIndex: 0,
     pageSize: 10,
   });
-  const [signals, setSignals] = useState(SIGNALS_DATA);
+  const [signals, setSignals] = useState<Signal[]>([]);
+
+  // Update local state when API data loads
+  useMemo(() => {
+    if (signalsData?.signals) {
+      setSignals(signalsData.signals);
+    }
+  }, [signalsData]);
 
   const [isAddSignalModalOpen, setIsAddSignalModalOpen] = useState(false);
   const [isConfigureTagsModalOpen, setIsConfigureTagsModalOpen] =
@@ -347,6 +264,22 @@ export function Signals() {
 
   const totalSignals = signals.length;
   const usedSignals = signals.filter((s) => s.inUse).length;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-sm text-muted-foreground">Loading signals...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-4 border border-destructive/50 rounded-lg text-destructive">
+        Error loading signals: {error.message}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500">

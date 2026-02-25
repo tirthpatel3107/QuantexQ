@@ -2,6 +2,8 @@ import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RestoreDefaultsButton, CommonInput } from "@/components/common";
 import { FluidData } from "@/types/mud";
+import { useGasCompressibilityData } from "@/services/api/mudproperties/mudproperties.api";
+import { useEffect } from "react";
 
 interface GasCompressibilityProps {
   fluid: FluidData;
@@ -12,6 +14,29 @@ export function GasCompressibility({
   fluid,
   setFluid,
 }: GasCompressibilityProps) {
+  const { data: gasResponse, isLoading, error } = useGasCompressibilityData();
+  const gasData = gasResponse?.data;
+
+  // Update fluid state when API data loads
+  useEffect(() => {
+    if (gasData) {
+      setFluid((prev) => ({
+        ...prev,
+        gasSolubility: gasData.gasSolubility,
+        compressibilityFactor: gasData.compressibilityFactor,
+        gasOilRatio: gasData.gasOilRatio,
+      }));
+    }
+  }, [gasData, setFluid]);
+
+  if (isLoading) {
+    return <div className="p-4">Loading gas compressibility data...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-500">Error loading gas compressibility data</div>;
+  }
+
   return (
     <div className="grid grid-cols-1 max-w-2xl gap-4 mb-4">
       <PanelCard

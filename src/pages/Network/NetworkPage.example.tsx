@@ -20,11 +20,11 @@ import {
   useSaveSourcesData,
   useSaveDestinationsData,
   useSaveProtocolsData,
-} from '@/services/api/network.api';
+} from '@/services/api/network/network.api';
 
 // Socket integration
 import { useSocketIntegration, useSocketConnection } from '@/services/socket/useSocketIntegration';
-import { networkKeys } from '@/services/api/network.api';
+import { networkKeys } from '@/services/api/network/network.api';
 
 // Tab components (you'll create these)
 import SourcesTab from './tabs/SourcesTab';

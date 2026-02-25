@@ -7,10 +7,26 @@ import { CommonToggle } from "@/components/common/CommonToggle";
 import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
+import { useRoutingData } from "@/services/api/network/network.api";
 
 export function Routing() {
+  const { data: routingResponse, isLoading, error } = useRoutingData();
+  const routingData = routingResponse?.data;
+
   const [modbusEnabled, setModbusEnabled] = useState(true);
   const [eqmptEmacerEnabled, setEqmptEmacerEnabled] = useState(true);
+
+  if (isLoading) {
+    return <div className="p-4">Loading routing data...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-500">Error loading routing data</div>;
+  }
+
+  if (!routingData) {
+    return <div className="p-4">No routing data available</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">

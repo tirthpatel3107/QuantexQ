@@ -7,9 +7,25 @@ import { Badge } from "@/components/ui/badge";
 import { Play, FileDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
+import { useDiagnosticsData } from "@/services/api/network/network.api";
 
 export function Diagnostics() {
+  const { data: diagnosticsResponse, isLoading, error } = useDiagnosticsData();
+  const diagnosticsData = diagnosticsResponse?.data;
+
   const [packetCaptureDuration, setPacketCaptureDuration] = useState("90");
+
+  if (isLoading) {
+    return <div className="p-4">Loading diagnostics data...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-500">Error loading diagnostics data</div>;
+  }
+
+  if (!diagnosticsData) {
+    return <div className="p-4">No diagnostics data available</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">

@@ -9,10 +9,26 @@ import { RadioGroup } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
+import { useSecurityData } from "@/services/api/network/network.api";
 
 export function Security() {
+  const { data: securityResponse, isLoading, error } = useSecurityData();
+  const securityData = securityResponse?.data;
+
   const [authMethod, setAuthMethod] = useState("certificate");
   const [rigPlcEnabled, setRigPlcEnabled] = useState(true);
+
+  if (isLoading) {
+    return <div className="p-4">Loading security data...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-500">Error loading security data</div>;
+  }
+
+  if (!securityData) {
+    return <div className="p-4">No security data available</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">

@@ -20,6 +20,7 @@ import {
 } from "@/components/common";
 import { CommonAlertDialog } from "@/components/common/CommonAlertDialog";
 import { PanelCard } from "@/components/dashboard/PanelCard";
+import { useAlarmsSettings } from "@/services/api/settings/settings.api";
 
 type SensorLimit = {
   id: string;
@@ -72,6 +73,9 @@ const DEFAULT_SENSORS: SensorLimit[] = [
 const sensorColumnHelper = createColumnHelper<SensorLimit>();
 
 export function Alarms() {
+  const { data: alarmsResponse, isLoading, error } = useAlarmsSettings();
+  const alarmsData = alarmsResponse?.data;
+
   const [activeTab, setActiveTab] = useState("kick");
   const [sensorsData, setSensorsData] = useState(DEFAULT_SENSORS);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -173,6 +177,14 @@ export function Alarms() {
     { value: "kick", label: "Kick and Loss" },
     { value: "sensors", label: "Sensors" },
   ];
+
+  if (isLoading) {
+    return <div className="p-4">Loading alarms settings...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-500">Error loading alarms settings</div>;
+  }
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">

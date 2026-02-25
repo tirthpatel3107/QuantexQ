@@ -6,6 +6,8 @@ import {
   CommonToggle,
 } from "@/components/common";
 import { GeneralSettingsData } from "@/types/settings";
+import { useGeneralSettings } from "@/services/api/settings/settings.api";
+import { useEffect } from "react";
 
 interface GeneralSettingsProps {
   general: GeneralSettingsData;
@@ -20,6 +22,30 @@ export function GeneralSettings({
   safetyConfirmations,
   setSafetyConfirmations,
 }: GeneralSettingsProps) {
+  const { data: generalResponse, isLoading, error } = useGeneralSettings();
+  const generalData = generalResponse?.data;
+
+  // Update general state when API data loads
+  useEffect(() => {
+    if (generalData) {
+      setGeneral({
+        defaultWellName: generalData.applicationName || general.defaultWellName,
+        defaultRigName: general.defaultRigName,
+        defaultScenario: general.defaultScenario,
+        startupScreen1: general.startupScreen1,
+        startupScreen2: general.startupScreen2,
+      });
+    }
+  }, [generalData]);
+
+  if (isLoading) {
+    return <div className="p-4">Loading general settings...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-500">Error loading general settings</div>;
+  }
+
   const rigOptions = [
     { label: "Rig-01", value: "Rig-01" },
     { label: "Rig-02", value: "Rig-02" },

@@ -6,6 +6,7 @@ import { CommonCheckbox } from "@/components/common/CommonCheckbox";
 import { CommonSelect } from "@/components/common/CommonSelect";
 import { Volume2, Play, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNotificationsData } from "@/services/api/daq/daq.api";
 
 interface NotificationLogEntry {
   id: string;
@@ -17,6 +18,9 @@ interface NotificationLogEntry {
 }
 
 export function Notifications() {
+  const { data: notificationsResponse, isLoading, error } = useNotificationsData();
+  const notificationsData = notificationsResponse?.data;
+
   // Settings & Summary state
   const [alarmSound, setAlarmSound] = useState("factory_alert.mp3");
   const [acceptableWrns, setAcceptableWrns] = useState(true);
@@ -105,6 +109,14 @@ export function Notifications() {
     if (severity.includes("NEEDED")) return "bg-red-900/40 text-red-300";
     return "bg-muted text-muted-foreground";
   };
+
+  if (isLoading) {
+    return <div className="p-4">Loading notifications data...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-500">Error loading notifications data</div>;
+  }
 
   return (
     <div className="space-y-4">

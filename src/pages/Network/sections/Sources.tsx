@@ -5,12 +5,15 @@ import { CommonSelect } from "@/components/common/CommonSelect";
 import { CommonInput, CommonAccordionItem } from "@/components/common";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
 import { Badge } from "@/components/ui/badge";
+import { useSourcesData } from "@/services/api/network/network.api";
 
 export function Sources() {
+  const { data: sourcesResponse, isLoading, error } = useSourcesData();
+  const sourcesData = sourcesResponse?.data;
+
   const [devicesExpanded, setDevicesExpanded] = useState(true);
-  const [rigPlcEnabled, setRigPlcEnabled] = useState(true);
-  const [pwdEnabled, setPwdEnabled] = useState(true);
-  const [connectionStatus] = useState("Primary");
+  const [rigPlcEnabled, setRigPlcEnabled] = useState(sourcesData?.rigPlc?.enabled ?? true);
+  const [pwdEnabled, setPwdEnabled] = useState(sourcesData?.pwdWits?.enabled ?? true);
 
   const getStatusBadgeColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -25,6 +28,18 @@ export function Sources() {
     }
   };
 
+  if (isLoading) {
+    return <div className="p-4">Loading sources data...</div>;
+  }
+
+  if (error) {
+    return <div className="p-4 text-red-500">Error loading sources data</div>;
+  }
+
+  if (!sourcesData) {
+    return <div className="p-4">No sources data available</div>;
+  }
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
@@ -35,9 +50,9 @@ export function Sources() {
               <span>Rig PLC</span>
               <Badge
                 variant="default"
-                className={`text-xs ${getStatusBadgeColor(connectionStatus)}`}
+                className={`text-xs ${getStatusBadgeColor(sourcesData.rigPlc.connectionStatus)}`}
               >
-                {connectionStatus}
+                {sourcesData.rigPlc.connectionStatus}
               </Badge>
             </div>
           }
@@ -51,14 +66,14 @@ export function Sources() {
         >
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground mb-5">
-              Source Type: PRIMARY (PLC) Chokes | Flow Meter | PWD (optional)
+              Source Type: {sourcesData.rigPlc.sourceType}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div className="flex gap-2">
                 <CommonInput
                   label="Endpoint"
-                  value="10.1.0.113"
+                  value={sourcesData.rigPlc.endpoint}
                   onChange={() => {}}
                   placeholder="10.1.0.11"
                   type="text"
@@ -66,7 +81,7 @@ export function Sources() {
                 />
                 <CommonInput
                   label=" "
-                  value="502"
+                  value={sourcesData.rigPlc.port}
                   onChange={() => {}}
                   placeholder="502"
                   type="text"
@@ -74,7 +89,7 @@ export function Sources() {
               </div>
               <CommonSelect
                 label="Tag Map"
-                value="502"
+                value={sourcesData.rigPlc.tagMap}
                 onValueChange={() => {}}
                 options={[
                   { value: "502", label: "502" },
@@ -84,7 +99,7 @@ export function Sources() {
 
               <CommonSelect
                 label="Data rate"
-                value="100ms"
+                value={sourcesData.rigPlc.dataRate}
                 onValueChange={() => {}}
                 options={[
                   { value: "100ms", label: "100 ms" },
@@ -94,7 +109,7 @@ export function Sources() {
 
               <CommonSelect
                 label="Tag Map"
-                value="502"
+                value={sourcesData.rigPlc.tagMap}
                 onValueChange={() => {}}
                 options={[
                   { value: "502", label: "502" },
@@ -117,19 +132,15 @@ export function Sources() {
           }
         >
           <div className="space-y-4">
-            <CommonAccordionItem
-              title="Chokes (A/B)"
-              tags="ChokeA_Pos, ChokeB_Pos, Choke_SP"
-              healthStatus="OK"
-              healthCount="3/3"
-            />
-
-            <CommonAccordionItem
-              title="Flow Meter"
-              tags="Flow_In, Flow_Out, Aux_Flow"
-              healthStatus="OK"
-              healthCount="3/3"
-            />
+            {sourcesData.devices.map((device) => (
+              <CommonAccordionItem
+                key={device.id}
+                title={device.name}
+                tags={device.tags}
+                healthStatus={device.healthStatus}
+                healthCount={device.healthCount}
+              />
+            ))}
           </div>
         </PanelCard>
 
@@ -148,14 +159,14 @@ export function Sources() {
             <div className="flex gap-2">
               <CommonInput
                 label="Endpoint"
-                value="10.1.0.113"
+                value={sourcesData.pwdWits.endpoint}
                 onChange={() => {}}
                 placeholder="10.1.0.11"
                 type="text"
               />
               <CommonInput
                 label=" "
-                value="502"
+                value={sourcesData.pwdWits.port}
                 onChange={() => {}}
                 placeholder="502"
                 type="text"
@@ -163,7 +174,7 @@ export function Sources() {
             </div>
             <CommonSelect
               label="Data rate"
-              value="none"
+              value={sourcesData.pwdWits.dataRate}
               onValueChange={() => {}}
               options={[
                 { value: "none", label: "None" },
@@ -174,7 +185,7 @@ export function Sources() {
 
             <CommonSelect
               label="Data rate"
-              value="1x"
+              value={sourcesData.pwdWits.frequency}
               onValueChange={() => {}}
               options={[
                 { value: "1x", label: "1x / sec" },
@@ -184,7 +195,7 @@ export function Sources() {
 
             <CommonInput
               label="Tag Map"
-              value="10.1.0.113"
+              value={sourcesData.pwdWits.tagMap}
               onChange={() => {}}
               placeholder="10.1.0.11"
               type="text"
