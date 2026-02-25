@@ -1,15 +1,44 @@
+import { useState, useEffect } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { CommonInput } from "@/components/common/CommonInput";
 import { CommonRadio } from "@/components/common/CommonRadio";
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
-import { CommonSkeleton, SectionSkeleton } from "@/components/common";
-import { useProtocolsData } from "@/services/api/network/network.api";
+import { SectionSkeleton } from "@/components/common";
+import {
+  useProtocolsData,
+  useSaveProtocolsData,
+  useProtocolsOptions,
+} from "@/services/api/network/network.api";
+import type { SaveProtocolsPayload } from "@/services/api/network/network.types";
 
 export function Protocols() {
   const { data: protocolsResponse, isLoading, error } = useProtocolsData();
+  const { data: optionsResponse } = useProtocolsOptions();
+  const { mutate: saveProtocolsData } = useSaveProtocolsData();
+
   const protocolsData = protocolsResponse?.data;
+  const options = optionsResponse?.data;
+
+  const [formData, setFormData] = useState<SaveProtocolsPayload | null>(null);
+
+  // Initialize form data when protocolsData loads
+  useEffect(() => {
+    if (protocolsData) {
+      const { protocols } = protocolsData;
+      setFormData({ protocols });
+    }
+  }, [protocolsData]);
+
+  // Save data to API
+  const handleSaveData = (updatedData: Partial<SaveProtocolsPayload>) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    saveProtocolsData(newFormData);
+  };
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
@@ -19,7 +48,7 @@ export function Protocols() {
     return <div className="p-4 text-red-500">Error loading protocols data</div>;
   }
 
-  if (!protocolsData) {
+  if (!protocolsData || !formData) {
     return <div className="p-4">No protocols data available</div>;
   }
 
@@ -61,8 +90,14 @@ export function Protocols() {
                   />
                   <div className="ml-6 space-y-2">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                      <CommonInput placeholder="10.1.0.1:13:502" />
-                      <CommonInput placeholder="10.1.0.113:502" />
+                      <CommonInput
+                        placeholder="10.1.0.1:13:502"
+                        onChange={(e) => handleSaveData({ protocols: formData.protocols })}
+                      />
+                      <CommonInput
+                        placeholder="10.1.0.113:502"
+                        onChange={(e) => handleSaveData({ protocols: formData.protocols })}
+                      />
                     </div>
                   </div>
                 </div>
@@ -75,7 +110,10 @@ export function Protocols() {
                     label="OPC-UA (UA-TCP)"
                   />
                   <div className="ml-6 grid grid-cols-1 lg:grid-cols-2">
-                    <CommonInput placeholder="opc.tcp 10.1.0.113:49320" />
+                    <CommonInput
+                      placeholder="opc.tcp 10.1.0.113:49320"
+                      onChange={(e) => handleSaveData({ protocols: formData.protocols })}
+                    />
                   </div>
                 </div>
 
@@ -87,7 +125,10 @@ export function Protocols() {
                     label="Ethernet/IP"
                   />
                   <div className="ml-6 grid grid-cols-1 lg:grid-cols-2">
-                    <CommonInput placeholder="100.10.1.14:10.13:40818" />
+                    <CommonInput
+                      placeholder="100.10.1.14:10.13:40818"
+                      onChange={(e) => handleSaveData({ protocols: formData.protocols })}
+                    />
                   </div>
                 </div>
               </RadioGroup>

@@ -4,7 +4,6 @@ import {
   CommonSelect,
   CommonToggle,
   CommonSlider,
-  CommonSkeleton,
   SectionSkeleton,
 } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
@@ -14,7 +13,11 @@ import { useTheme } from "@/hooks/useTheme";
 import { type Theme } from "@/context/ThemeContext";
 import { useAccentColor, type AccentColor } from "@/hooks/useAccentColor";
 import { Separator } from "@/components/ui/separator";
-import { useUiDisplaySettings } from "@/services/api/settings/settings.api";
+import {
+  useUiDisplaySettings,
+  useSaveUiDisplaySettings,
+  useUiDisplayOptions,
+} from "@/services/api/settings/settings.api";
 
 const THEME_OPTIONS = [
   { label: "Dark", value: "dark" },
@@ -73,38 +76,23 @@ const ACCENT_COLORS = [
   },
 ];
 
-const LANGUAGE_OPTIONS = [
-  { label: "English (EN)", value: "en" },
-  { label: "Spanish (ES)", value: "es" },
-  { label: "French (FR)", value: "fr" },
-];
-
-const DATE_FORMAT_OPTIONS = [
-  { label: "DD MMM YYYY", value: "dd-mmm-yyyy" },
-  { label: "MM/DD/YYYY", value: "mm-dd-yyyy" },
-  { label: "YYYY-MM-DD", value: "yyyy-mm-dd" },
-];
-
-const TIME_FORMAT_OPTIONS = [
-  { label: "24-Hour Clock (HH:mm)", value: "24h" },
-  { label: "12-Hour Clock (hh:mm AM/PM)", value: "12h" },
-];
-
 export function UiDisplay() {
   const { data: uiDisplayResponse, isLoading, error } = useUiDisplaySettings();
+  const { data: optionsResponse } = useUiDisplayOptions();
+  const { mutate: saveUiDisplayData } = useSaveUiDisplaySettings();
+
   const uiDisplayData = uiDisplayResponse?.data;
+  const options = optionsResponse?.data;
 
   const { theme, setTheme } = useTheme();
   const { accentColor, setAccentColor } = useAccentColor();
-  const [highlightAlerts, setHighlightAlerts] = useState(true);
-  const [language, setLanguage] = useState("en");
-  const [dateFormat, setDateFormat] = useState("dd-mmm-yyyy");
-  const [timeFormat, setTimeFormat] = useState("24h");
-  const [uiScale, setUiScale] = useState([100]);
 
-  // Update state when API data loads
+  const [formData, setFormData] = useState<any>(null);
+
+  // Initialize form data when uiDisplayData loads
   useEffect(() => {
     if (uiDisplayData) {
+      setFormData(uiDisplayData);
       if (uiDisplayData.theme) {
         setTheme(uiDisplayData.theme as Theme);
       }
@@ -114,6 +102,15 @@ export function UiDisplay() {
     }
   }, [uiDisplayData, setTheme, setAccentColor]);
 
+  // Save data to API
+  const handleSaveData = (updatedData: any) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    saveUiDisplayData(newFormData);
+  };
+
   if (isLoading) {
     return <SectionSkeleton count={4} gridClassName="lg:grid-cols-[2fr_1fr]" />;
   }
@@ -122,6 +119,10 @@ export function UiDisplay() {
     return (
       <div className="p-4 text-red-500">Error loading UI display settings</div>
     );
+  }
+
+  if (!uiDisplayData || !formData) {
+    return <div className="p-4">No UI display data available</div>;
   }
 
   // Define the allowed UI scale values
@@ -134,7 +135,7 @@ export function UiDisplay() {
     const closest = uiScaleSteps.reduce((prev, curr) =>
       Math.abs(curr - newValue) < Math.abs(prev - newValue) ? curr : prev,
     );
-    setUiScale([closest]);
+    handleSaveData({ uiScale: closest });
   };
 
   return (
@@ -146,34 +147,36 @@ export function UiDisplay() {
             {/* UI Highlight Alerts */}
             <CommonToggle
               label="UI Highlight Alerts"
-              checked={highlightAlerts}
-              onCheckedChange={setHighlightAlerts}
+              checked={formData.highlightAlerts ?? true}
+              onCheckedChange={(highlightAlerts) =>
+                handleSaveData({ highlightAlerts })
+              }
             />
 
             <div className="grid gap-3 grid-cols-2">
               {/* Language */}
               <CommonSelect
                 label="Language"
-                options={LANGUAGE_OPTIONS}
-                value={language}
-                onValueChange={setLanguage}
+                options={options?.languageOptions || []}
+                value={formData.language || "en"}
+                onValueChange={(language) => handleSaveData({ language })}
                 placeholder="Select language"
               />
               {/* Date Format */}
               <CommonSelect
                 label="Date Format"
-                options={DATE_FORMAT_OPTIONS}
-                value={dateFormat}
-                onValueChange={setDateFormat}
+                options={options?.dateFormatOptions || []}
+                value={formData.dateFormat || "dd-mmm-yyyy"}
+                onValueChange={(dateFormat) => handleSaveData({ dateFormat })}
                 placeholder="Select date format"
               />
 
               {/* Time Format */}
               <CommonSelect
                 label="Time Format"
-                options={TIME_FORMAT_OPTIONS}
-                value={timeFormat}
-                onValueChange={setTimeFormat}
+                options={options?.timeFormatOptions || []}
+                value={formData.timeFormat || "24h"}
+                onValueChange={(timeFormat) => handleSaveData({ timeFormat })}
                 placeholder="Select time format"
               />
             </div>
@@ -181,7 +184,7 @@ export function UiDisplay() {
             {/* UI Scale */}
             <CommonSlider
               label="UI Scale"
-              value={uiScale}
+              value={[formData.uiScale || 100]}
               onValueChange={handleUiScaleChange}
               min={90}
               max={125}

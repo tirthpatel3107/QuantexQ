@@ -826,3 +826,269 @@ export const useSaveDownloadsData = () => {
     },
   });
 };
+
+// ============================================
+// OPTIONS Hooks - Dropdown Options for Each Section
+// ============================================
+
+// Display Options
+export const useDisplayOptions = () => {
+  return useQuery({
+    queryKey: [...daqKeys.display(), "options"],
+    queryFn: async () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            success: true,
+            data: {
+              sectionTypeOptions: [
+                { label: "Monitoring", value: "monitoring" },
+                { label: "Trends", value: "trends" },
+                { label: "Analytics", value: "analytics" },
+              ],
+            },
+          });
+        }, 300);
+      });
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Streaming Options
+export const useStreamingOptions = () => {
+  return useQuery({
+    queryKey: [...daqKeys.streaming(), "options"],
+    queryFn: async () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            success: true,
+            data: {
+              witsLevelOptions: [
+                { label: "Level 0", value: "0" },
+                { label: "Level 1", value: "1" },
+              ],
+              formatOptions: [
+                { label: "CSV", value: "csv" },
+                { label: "JSON", value: "json" },
+                { label: "Binary", value: "binary" },
+              ],
+              baudRateOptions: [
+                { label: "9600", value: 9600 },
+                { label: "19200", value: 19200 },
+                { label: "38400", value: 38400 },
+              ],
+            },
+          });
+        }, 300);
+      });
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Notifications Options
+export const useNotificationsOptions = () => {
+  return useQuery({
+    queryKey: [...daqKeys.notifications(), "options"],
+    queryFn: async () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            success: true,
+            data: {
+              alarmSoundOptions: [
+                { label: "factory_alert.mp3", value: "factory_alert.mp3" },
+                { label: "chime.mp3", value: "chime.mp3" },
+                { label: "beep.mp3", value: "beep.mp3" },
+              ],
+              channelTypeOptions: [
+                { label: "Email", value: "email" },
+                { label: "SMS", value: "sms" },
+                { label: "In-App", value: "in-app" },
+              ],
+            },
+          });
+        }, 300);
+      });
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Log Analysis Options
+export const useLogAnalysisOptions = () => {
+  return useQuery({
+    queryKey: [...daqKeys.logAnalysis(), "options"],
+    queryFn: async () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            success: true,
+            data: {
+              timeRangeOptions: [
+                { label: "Last Hour", value: "last-hour" },
+                { label: "Last 24 Hours", value: "last-24h" },
+                { label: "Last Week", value: "last-week" },
+              ],
+              reportFormatOptions: [
+                { label: "PDF", value: "pdf" },
+                { label: "CSV", value: "csv" },
+              ],
+            },
+          });
+        }, 300);
+      });
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Sensor Permissions Options
+export const useSensorPermsOptions = () => {
+  return useQuery({
+    queryKey: [...daqKeys.sensorPerms(), "options"],
+    queryFn: async () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            success: true,
+            data: {
+              permissionTypeOptions: [
+                { label: "Hydraulic", value: "hydraulic" },
+                { label: "Permission Group", value: "perm-group" },
+              ],
+            },
+          });
+        }, 300);
+      });
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Calibration Options
+export const useCalibrationOptions = () => {
+  return useQuery({
+    queryKey: [...daqKeys.calibration(), "options"],
+    queryFn: async () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            success: true,
+            data: {
+              statusOptions: [
+                { label: "Valid", value: "valid" },
+                { label: "Expired", value: "expired" },
+                { label: "Pending", value: "pending" },
+              ],
+              roleOptions: [
+                { label: "Technician", value: "technician" },
+                { label: "Engineer", value: "engineer" },
+                { label: "Supervisor", value: "supervisor" },
+              ],
+            },
+          });
+        }, 300);
+      });
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Hydraulics Options
+export const useHydraulicsOptions = () => {
+  return useQuery({
+    queryKey: [...daqKeys.hydraulics(), "options"],
+    queryFn: async () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            success: true,
+            data: {
+              modelTypeOptions: [
+                { label: "MW Rheological", value: "mw-rheological" },
+                { label: "Friction Loss", value: "friction-loss" },
+                { label: "Standing Pressure", value: "standing-pressure" },
+              ],
+              mudTypeOptions: [
+                { label: "WBM", value: "WBM" },
+                { label: "OBM", value: "OBM" },
+                { label: "SBM", value: "SBM" },
+              ],
+            },
+          });
+        }, 300);
+      });
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// System Settings Options
+export const useSystemSettingsOptions = () => {
+  return useQuery({
+    queryKey: [...daqKeys.systemSettings(), "options"],
+    queryFn: async () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            success: true,
+            data: {
+              controlModeOptions: [
+                { label: "Manual", value: "manual" },
+                { label: "Auto", value: "auto" },
+              ],
+              systemTypeOptions: [
+                { label: "TS", value: "TS" },
+                { label: "MPD", value: "MPD" },
+              ],
+              mudSystemOptions: [
+                { label: "OBM", value: "OBM" },
+                { label: "WBM", value: "WBM" },
+                { label: "SBM", value: "SBM" },
+              ],
+            },
+          });
+        }, 300);
+      });
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Downloads Options
+export const useDownloadsOptions = () => {
+  return useQuery({
+    queryKey: [...daqKeys.downloads(), "options"],
+    queryFn: async () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            success: true,
+            data: {
+              timeRangeOptions: [
+                { label: "Last Hour", value: "last-hour" },
+                { label: "Last Day", value: "last-day" },
+                { label: "Last Week", value: "last-week" },
+                { label: "Custom", value: "custom" },
+              ],
+              exportFormatOptions: [
+                { label: "CSV", value: "csv" },
+                { label: "WITSML", value: "witsml" },
+                { label: "IPF", value: "ipf" },
+              ],
+              exportTypeOptions: [
+                { label: "Preset", value: "preset" },
+                { label: "Logfile", value: "logfile" },
+                { label: "DAQ Summary", value: "daq-summary" },
+              ],
+            },
+          });
+        }, 300);
+      });
+    },
+    staleTime: 10 * 60 * 1000,
+  });
+};

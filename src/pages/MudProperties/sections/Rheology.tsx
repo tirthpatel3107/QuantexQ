@@ -1,8 +1,12 @@
-import { CommonSkeleton, SectionSkeleton } from "@/components/common";
+import { useState, useEffect } from "react";
+import { SectionSkeleton } from "@/components/common";
 import { RheologyPanel } from "./panels/RheologyPanel";
 import { FluidData } from "@/types/mud";
-import { useRheologyData } from "@/services/api/mudproperties/mudproperties.api";
-import { useEffect } from "react";
+import {
+  useRheologyData,
+  useSaveRheologyData,
+} from "@/services/api/mudproperties/mudproperties.api";
+import type { SaveRheologyPayload } from "@/services/api/mudproperties/mudproperties.types";
 
 interface RheologySectionProps {
   fluid: FluidData;
@@ -11,21 +15,37 @@ interface RheologySectionProps {
 
 export function Rheology({ fluid, setFluid }: RheologySectionProps) {
   const { data: rheologyResponse, isLoading, error } = useRheologyData();
+  const { mutate: saveRheologyData } = useSaveRheologyData();
+
   const rheologyData = rheologyResponse?.data;
 
-  // Update fluid state when API data loads
+  const [formData, setFormData] = useState<SaveRheologyPayload | null>(null);
+
+  // Initialize form data when rheologyData loads
   useEffect(() => {
     if (rheologyData) {
+      const { rheologySource, pv, yp, gel10s, gel10m } = rheologyData;
+      setFormData({ rheologySource, pv, yp, gel10s, gel10m });
       setFluid((prev) => ({
         ...prev,
-        rheologySource: rheologyData.rheologySource,
-        pv: rheologyData.pv,
-        yp: rheologyData.yp,
-        gel10s: rheologyData.gel10s,
-        gel10m: rheologyData.gel10m,
+        rheologySource,
+        pv,
+        yp,
+        gel10s,
+        gel10m,
       }));
     }
   }, [rheologyData, setFluid]);
+
+  // Save data to API
+  const handleSaveData = (updatedData: Partial<SaveRheologyPayload>) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    setFluid((prev) => ({ ...prev, ...updatedData }));
+    saveRheologyData(newFormData);
+  };
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
@@ -33,6 +53,10 @@ export function Rheology({ fluid, setFluid }: RheologySectionProps) {
 
   if (error) {
     return <div className="p-4 text-red-500">Error loading rheology data</div>;
+  }
+
+  if (!rheologyData || !formData) {
+    return <div className="p-4">No rheology data available</div>;
   }
 
   return (

@@ -1,14 +1,17 @@
+import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   RestoreDefaultsButton,
   CommonInput,
-  CommonSkeleton,
   SectionSkeleton,
 } from "@/components/common";
 import { FluidData } from "@/types/mud";
-import { useGasCompressibilityData } from "@/services/api/mudproperties/mudproperties.api";
-import { useEffect } from "react";
+import {
+  useGasCompressibilityData,
+  useSaveGasCompressibilityData,
+} from "@/services/api/mudproperties/mudproperties.api";
+import type { SaveGasCompressibilityPayload } from "@/services/api/mudproperties/mudproperties.types";
 
 interface GasCompressibilityProps {
   fluid: FluidData;
@@ -20,29 +23,50 @@ export function GasCompressibility({
   setFluid,
 }: GasCompressibilityProps) {
   const { data: gasResponse, isLoading, error } = useGasCompressibilityData();
+  const { mutate: saveGasCompressibilityData } = useSaveGasCompressibilityData();
+
   const gasData = gasResponse?.data;
 
-  // Update fluid state when API data loads
+  const [formData, setFormData] = useState<SaveGasCompressibilityPayload | null>(null);
+
+  // Initialize form data when gasData loads
   useEffect(() => {
     if (gasData) {
+      const { gasSolubility, compressibilityFactor, gasOilRatio } = gasData;
+      setFormData({ gasSolubility, compressibilityFactor, gasOilRatio });
       setFluid((prev) => ({
         ...prev,
-        gasSolubility: gasData.gasSolubility,
-        compressibilityFactor: gasData.compressibilityFactor,
-        gasOilRatio: gasData.gasOilRatio,
+        gasSolubility,
+        compressibilityFactor,
+        gasOilRatio,
       }));
     }
   }, [gasData, setFluid]);
 
+  // Save data to API
+  const handleSaveData = (updatedData: Partial<SaveGasCompressibilityPayload>) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    setFluid((prev) => ({ ...prev, ...updatedData }));
+    saveGasCompressibilityData(newFormData);
+  };
+
   if (isLoading) {
     return <SectionSkeleton count={6} />;
   }
+
   if (error) {
     return (
       <div className="p-4 text-red-500">
         Error loading gas compressibility data
       </div>
     );
+  }
+
+  if (!gasData || !formData) {
+    return <div className="p-4">No gas compressibility data available</div>;
   }
 
   return (
@@ -56,12 +80,9 @@ export function GasCompressibility({
             Gas solubility
           </Label>
           <CommonInput
-            value={fluid.gasSolubility}
+            value={formData.gasSolubility}
             onChange={(e) =>
-              setFluid((f) => ({
-                ...f,
-                gasSolubility: e.target.value,
-              }))
+              handleSaveData({ gasSolubility: e.target.value })
             }
             placeholder="—"
           />
@@ -71,12 +92,9 @@ export function GasCompressibility({
             Compressibility factor
           </Label>
           <CommonInput
-            value={fluid.compressibilityFactor}
+            value={formData.compressibilityFactor}
             onChange={(e) =>
-              setFluid((f) => ({
-                ...f,
-                compressibilityFactor: e.target.value,
-              }))
+              handleSaveData({ compressibilityFactor: e.target.value })
             }
             placeholder="—"
           />
@@ -86,12 +104,9 @@ export function GasCompressibility({
             Gas/oil ratio
           </Label>
           <CommonInput
-            value={fluid.gasOilRatio}
+            value={formData.gasOilRatio}
             onChange={(e) =>
-              setFluid((f) => ({
-                ...f,
-                gasOilRatio: e.target.value,
-              }))
+              handleSaveData({ gasOilRatio: e.target.value })
             }
             placeholder="—"
           />

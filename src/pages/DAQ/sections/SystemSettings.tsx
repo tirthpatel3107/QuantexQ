@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   CommonSelect,
   CommonInput,
   CommonButton,
   CommonToggle,
-  CommonSkeleton,
   SectionSkeleton,
 } from "@/components/common";
 import { RestoreDefaultsButton } from "@/components/common/RestoreDefaultsButton";
 import { Settings } from "lucide-react";
-import { useSystemSettingsData } from "@/services/api/daq/daq.api";
+import {
+  useSystemSettingsData,
+  useSaveSystemSettingsData,
+  useSystemSettingsOptions,
+} from "@/services/api/daq/daq.api";
+import type { SaveSystemSettingsPayload } from "@/services/api/daq/daq.types";
 
 export function SystemSettings() {
   const {
@@ -18,7 +22,32 @@ export function SystemSettings() {
     isLoading,
     error,
   } = useSystemSettingsData();
+  const { data: optionsResponse } = useSystemSettingsOptions();
+  const { mutate: saveSystemSettingsData } = useSaveSystemSettingsData();
+
   const systemSettingsData = systemSettingsResponse?.data;
+  const options = optionsResponse?.data;
+
+  const [formData, setFormData] = useState<SaveSystemSettingsPayload | null>(
+    null,
+  );
+
+  // Initialize form data when systemSettingsData loads
+  useEffect(() => {
+    if (systemSettingsData) {
+      const { daqPreset, controlMode, hardwareConfig } = systemSettingsData;
+      setFormData({ daqPreset, controlMode, hardwareConfig });
+    }
+  }, [systemSettingsData]);
+
+  // Save data to API
+  const handleSaveData = (updatedData: Partial<SaveSystemSettingsPayload>) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    saveSystemSettingsData(newFormData);
+  };
 
   // System Settings state
   const [systemType, setSystemType] = useState("MPD");
@@ -68,6 +97,10 @@ export function SystemSettings() {
     );
   }
 
+  if (!systemSettingsData || !formData) {
+    return <div className="p-4">No system settings data available</div>;
+  }
+
   return (
     <div className="grid grid-cols-1 gap-4">
       {/* Left Column */}
@@ -85,32 +118,21 @@ export function SystemSettings() {
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
             <CommonSelect
               label="System Type"
-              options={[
-                { label: "TS", value: "TS" },
-                { label: "MPD", value: "MPD" },
-              ]}
+              options={options?.systemTypeOptions || []}
               value={systemType}
               onValueChange={setSystemType}
             />
 
             <CommonSelect
               label="Mud System"
-              options={[
-                { label: "OBM", value: "OBM" },
-                { label: "WBM", value: "WBM" },
-                { label: "SBM", value: "SBM" },
-              ]}
+              options={options?.mudSystemOptions || []}
               value={mudSystem}
               onValueChange={setMudSystem}
             />
 
             <CommonSelect
               label="Control Mode"
-              options={[
-                { label: "Manual", value: "Manual" },
-                { label: "Auto", value: "Auto" },
-                { label: "Semi-Auto", value: "Semi-Auto" },
-              ]}
+              options={options?.controlModeOptions || []}
               value={controlMode}
               onValueChange={setControlMode}
             />

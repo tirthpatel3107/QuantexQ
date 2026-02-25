@@ -23,9 +23,6 @@ import { Summary } from "./sections/Summary";
 import { MudPropertiesSidebar } from "./components/MudPropertiesSidebar";
 import {
   MUD_NAV,
-  TYPE_OPTIONS,
-  BASE_FLUID_OPTIONS,
-  TEMP_OPTIONS,
 } from "./constants";
 import { FluidData } from "@/types/mud";
 
@@ -111,9 +108,6 @@ export default function MudProperties() {
           <FluidOverview
             fluid={fluid}
             setFluid={setFluid}
-            typeOptions={TYPE_OPTIONS}
-            baseFluidOptions={BASE_FLUID_OPTIONS}
-            tempOptions={TEMP_OPTIONS}
           />
         );
       case "rheology":

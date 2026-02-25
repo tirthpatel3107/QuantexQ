@@ -1,24 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { CommonToggle } from "@/components/common/CommonToggle";
 import { CommonSelect } from "@/components/common/CommonSelect";
 import { CommonInput, CommonAccordionItem } from "@/components/common";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
 import { Badge } from "@/components/ui/badge";
-import { CommonSkeleton, SectionSkeleton } from "@/components/common";
-import { useSourcesData } from "@/services/api/network/network.api";
+import { SectionSkeleton } from "@/components/common";
+import {
+  useSourcesData,
+  useSaveSourcesData,
+  useSourcesOptions,
+} from "@/services/api/network/network.api";
+import type { SaveSourcesPayload } from "@/services/api/network/network.types";
 
 export function Sources() {
   const { data: sourcesResponse, isLoading, error } = useSourcesData();
+  const { data: optionsResponse } = useSourcesOptions();
+  const { mutate: saveSourcesData } = useSaveSourcesData();
+
   const sourcesData = sourcesResponse?.data;
+  const options = optionsResponse?.data;
 
   const [devicesExpanded, setDevicesExpanded] = useState(true);
-  const [rigPlcEnabled, setRigPlcEnabled] = useState(
-    sourcesData?.rigPlc?.enabled ?? true,
-  );
-  const [pwdEnabled, setPwdEnabled] = useState(
-    sourcesData?.pwdWits?.enabled ?? true,
-  );
+  const [formData, setFormData] = useState<SaveSourcesPayload | null>(null);
+
+  // Initialize form data when sourcesData loads
+  useEffect(() => {
+    if (sourcesData) {
+      const { rigPlc, pwdWits, devices } = sourcesData;
+      setFormData({ rigPlc, pwdWits, devices });
+    }
+  }, [sourcesData]);
+
+  // Save data to API
+  const handleSaveData = (updatedData: Partial<SaveSourcesPayload>) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    saveSourcesData(newFormData);
+  };
 
   const getStatusBadgeColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -41,9 +62,12 @@ export function Sources() {
     return <div className="p-4 text-red-500">Error loading sources data</div>;
   }
 
-  if (!sourcesData) {
+  if (!sourcesData || !formData) {
     return <div className="p-4">No sources data available</div>;
   }
+
+  const { rigPlc, pwdWits, devices } = formData;
+  const { connectionStatus, sourceType } = sourcesData.rigPlc;
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
@@ -55,71 +79,78 @@ export function Sources() {
               <span>Rig PLC</span>
               <Badge
                 variant="default"
-                className={`text-xs ${getStatusBadgeColor(sourcesData.rigPlc.connectionStatus)}`}
+                className={`text-xs ${getStatusBadgeColor(connectionStatus)}`}
               >
-                {sourcesData.rigPlc.connectionStatus}
+                {connectionStatus}
               </Badge>
             </div>
           }
           headerAction={
             <CommonToggle
               label="Modbus TCP"
-              checked={rigPlcEnabled}
-              onCheckedChange={setRigPlcEnabled}
+              checked={rigPlc.enabled}
+              onCheckedChange={(enabled) =>
+                handleSaveData({ rigPlc: { ...rigPlc, enabled } })
+              }
             />
           }
         >
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground mb-5">
-              Source Type: {sourcesData.rigPlc.sourceType}
+              Source Type: {sourceType}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div className="flex gap-2">
                 <CommonInput
                   label="Endpoint"
-                  value={sourcesData.rigPlc.endpoint}
-                  onChange={() => {}}
+                  value={rigPlc.endpoint}
+                  onChange={(e) =>
+                    handleSaveData({
+                      rigPlc: { ...rigPlc, endpoint: e.target.value },
+                    })
+                  }
                   placeholder="10.1.0.11"
                   type="text"
                   className="flex-1"
                 />
                 <CommonInput
                   label=" "
-                  value={sourcesData.rigPlc.port}
-                  onChange={() => {}}
+                  value={rigPlc.port}
+                  onChange={(e) =>
+                    handleSaveData({
+                      rigPlc: { ...rigPlc, port: e.target.value },
+                    })
+                  }
                   placeholder="502"
                   type="text"
                 />
               </div>
               <CommonSelect
                 label="Tag Map"
-                value={sourcesData.rigPlc.tagMap}
-                onValueChange={() => {}}
-                options={[
-                  { value: "502", label: "502" },
-                  { value: "100ms", label: "100 ms" },
-                ]}
+                value={rigPlc.tagMap}
+                onValueChange={(tagMap) =>
+                  handleSaveData({ rigPlc: { ...rigPlc, tagMap } })
+                }
+                options={options?.tagMapOptions || []}
               />
 
               <CommonSelect
                 label="Data rate"
-                value={sourcesData.rigPlc.dataRate}
-                onValueChange={() => {}}
-                options={[
-                  { value: "100ms", label: "100 ms" },
-                  { value: "200ms", label: "200 ms" },
-                ]}
+                value={rigPlc.dataRate}
+                onValueChange={(dataRate) =>
+                  handleSaveData({ rigPlc: { ...rigPlc, dataRate } })
+                }
+                options={options?.dataRateOptions || []}
               />
 
               <CommonSelect
                 label="Tag Map"
-                value={sourcesData.rigPlc.tagMap}
-                onValueChange={() => {}}
-                options={[
-                  { value: "502", label: "502" },
-                  { value: "100ms", label: "100 ms" },
-                ]}
+                value={rigPlc.tagMap}
+                onValueChange={(tagMap) =>
+                  handleSaveData({ rigPlc: { ...rigPlc, tagMap } })
+                }
+                options={options?.tagMapOptions || []}
               />
             </div>
           </div>
@@ -137,13 +168,13 @@ export function Sources() {
           }
         >
           <div className="space-y-4">
-            {sourcesData.devices.map((device) => (
+            {devices.map(({ id, name, tags, healthStatus, healthCount }) => (
               <CommonAccordionItem
-                key={device.id}
-                title={device.name}
-                tags={device.tags}
-                healthStatus={device.healthStatus}
-                healthCount={device.healthCount}
+                key={id}
+                title={name}
+                tags={tags}
+                healthStatus={healthStatus}
+                healthCount={healthCount}
               />
             ))}
           </div>
@@ -155,8 +186,10 @@ export function Sources() {
           headerAction={
             <CommonToggle
               label=""
-              checked={pwdEnabled}
-              onCheckedChange={setPwdEnabled}
+              checked={pwdWits.enabled}
+              onCheckedChange={(enabled) =>
+                handleSaveData({ pwdWits: { ...pwdWits, enabled } })
+              }
             />
           }
         >
@@ -164,44 +197,53 @@ export function Sources() {
             <div className="flex gap-2">
               <CommonInput
                 label="Endpoint"
-                value={sourcesData.pwdWits.endpoint}
-                onChange={() => {}}
+                value={pwdWits.endpoint}
+                onChange={(e) =>
+                  handleSaveData({
+                    pwdWits: { ...pwdWits, endpoint: e.target.value },
+                  })
+                }
                 placeholder="10.1.0.11"
                 type="text"
               />
               <CommonInput
                 label=" "
-                value={sourcesData.pwdWits.port}
-                onChange={() => {}}
+                value={pwdWits.port}
+                onChange={(e) =>
+                  handleSaveData({
+                    pwdWits: { ...pwdWits, port: e.target.value },
+                  })
+                }
                 placeholder="502"
                 type="text"
               />
             </div>
             <CommonSelect
               label="Data rate"
-              value={sourcesData.pwdWits.dataRate}
-              onValueChange={() => {}}
-              options={[
-                { value: "none", label: "None" },
-                { value: "502", label: "502" },
-                { value: "100ms", label: "100 ms" },
-              ]}
+              value={pwdWits.dataRate}
+              onValueChange={(dataRate) =>
+                handleSaveData({ pwdWits: { ...pwdWits, dataRate } })
+              }
+              options={options?.dataRateOptions || []}
             />
 
             <CommonSelect
-              label="Data rate"
-              value={sourcesData.pwdWits.frequency}
-              onValueChange={() => {}}
-              options={[
-                { value: "1x", label: "1x / sec" },
-                { value: "2x", label: "2x / sec" },
-              ]}
+              label="Frequency"
+              value={pwdWits.frequency}
+              onValueChange={(frequency) =>
+                handleSaveData({ pwdWits: { ...pwdWits, frequency } })
+              }
+              options={options?.frequencyOptions || []}
             />
 
             <CommonInput
               label="Tag Map"
-              value={sourcesData.pwdWits.tagMap}
-              onChange={() => {}}
+              value={pwdWits.tagMap}
+              onChange={(e) =>
+                handleSaveData({
+                  pwdWits: { ...pwdWits, tagMap: e.target.value },
+                })
+              }
               placeholder="10.1.0.11"
               type="text"
             />

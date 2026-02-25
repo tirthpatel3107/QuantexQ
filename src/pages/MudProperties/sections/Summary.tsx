@@ -1,4 +1,4 @@
-import { CommonSkeleton, SectionSkeleton } from "@/components/common";
+import { SectionSkeleton } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { FluidData } from "@/types/mud";
 import { useSummaryData } from "@/services/api/mudproperties/mudproperties.api";
@@ -9,6 +9,7 @@ interface SummaryProps {
 
 export function Summary({ fluid }: SummaryProps) {
   const { data: summaryResponse, isLoading, error } = useSummaryData();
+
   const summaryData = summaryResponse?.data;
 
   if (isLoading) {

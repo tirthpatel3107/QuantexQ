@@ -17,6 +17,11 @@ import type {
   SaveRoutingPayload,
   SaveSecurityPayload,
   SaveDiagnosticsPayload,
+  SourcesOptionsData,
+  ProtocolsOptionsData,
+  RoutingOptionsData,
+  SecurityOptionsData,
+  DiagnosticsOptionsData,
 } from "./network.types";
 
 // ============================================
@@ -26,10 +31,15 @@ import type {
 export const networkKeys = {
   all: ["network"] as const,
   sources: () => [...networkKeys.all, "sources"] as const,
+  sourcesOptions: () => [...networkKeys.all, "sources", "options"] as const,
   protocols: () => [...networkKeys.all, "protocols"] as const,
+  protocolsOptions: () => [...networkKeys.all, "protocols", "options"] as const,
   routing: () => [...networkKeys.all, "routing"] as const,
+  routingOptions: () => [...networkKeys.all, "routing", "options"] as const,
   security: () => [...networkKeys.all, "security"] as const,
+  securityOptions: () => [...networkKeys.all, "security", "options"] as const,
   diagnostics: () => [...networkKeys.all, "diagnostics"] as const,
+  diagnosticsOptions: () => [...networkKeys.all, "diagnostics", "options"] as const,
 };
 
 // ============================================
@@ -125,6 +135,60 @@ export const useSourcesData = () => {
 };
 
 // ============================================
+// GET: Sources Options (Dropdown Data)
+// ============================================
+
+const fetchSourcesOptions = async (): Promise<
+  ApiResponse<SourcesOptionsData>
+> => {
+  // TODO: Uncomment when real API is ready
+  // const response = await fetch(`${API_BASE_URL}/network/sources/options`);
+  // if (!response.ok) throw new Error('Failed to fetch sources options');
+  // return response.json();
+
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          tagMapOptions: [
+            { value: "502", label: "502" },
+            { value: "503", label: "503" },
+            { value: "504", label: "504" },
+          ],
+          dataRateOptions: [
+            { value: "50ms", label: "50 ms" },
+            { value: "100ms", label: "100 ms" },
+            { value: "200ms", label: "200 ms" },
+            { value: "500ms", label: "500 ms" },
+            { value: "1000ms", label: "1000 ms" },
+          ],
+          frequencyOptions: [
+            { value: "1x", label: "1x / sec" },
+            { value: "2x", label: "2x / sec" },
+            { value: "5x", label: "5x / sec" },
+            { value: "10x", label: "10x / sec" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+/**
+ * Hook to fetch Sources options for dropdowns
+ */
+export const useSourcesOptions = () => {
+  return useQuery({
+    queryKey: networkKeys.sourcesOptions(),
+    queryFn: fetchSourcesOptions,
+    staleTime: 10 * 60 * 1000, // 10 minutes (options don't change often)
+  });
+};
+
+// ============================================
 // GET: Protocols Tab
 // ============================================
 
@@ -197,6 +261,46 @@ export const useProtocolsData = () => {
 };
 
 // ============================================
+// GET: Protocols Options (Dropdown Data)
+// ============================================
+
+const fetchProtocolsOptions = async (): Promise<
+  ApiResponse<ProtocolsOptionsData>
+> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          protocolTypeOptions: [
+            { value: "modbus-tcp", label: "Modbus TCP" },
+            { value: "opc-ua", label: "OPC-UA (UA-TCP)" },
+            { value: "ethernet-ip", label: "Ethernet/IP" },
+          ],
+          endpointOptions: [
+            { value: "10.1.0.113:502", label: "10.1.0.113:502" },
+            { value: "10.1.0.114:502", label: "10.1.0.114:502" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+/**
+ * Hook to fetch Protocols options for dropdowns
+ */
+export const useProtocolsOptions = () => {
+  return useQuery({
+    queryKey: networkKeys.protocolsOptions(),
+    queryFn: fetchProtocolsOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// ============================================
 // GET: Routing Tab
 // ============================================
 
@@ -260,6 +364,47 @@ export const useRoutingData = () => {
 };
 
 // ============================================
+// GET: Routing Options (Dropdown Data)
+// ============================================
+
+const fetchRoutingOptions = async (): Promise<
+  ApiResponse<RoutingOptionsData>
+> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          portOptions: [
+            { value: "502", label: "502" },
+            { value: "503", label: "503" },
+            { value: "100ms", label: "100 ms" },
+          ],
+          tagMapOptions: [
+            { value: "ChokeA_Pos", label: "ChokeA_Pos" },
+            { value: "ChokeB_Pos", label: "ChokeB_Pos" },
+            { value: "MPD SBP", label: "MPD SBP" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+/**
+ * Hook to fetch Routing options for dropdowns
+ */
+export const useRoutingOptions = () => {
+  return useQuery({
+    queryKey: networkKeys.routingOptions(),
+    queryFn: fetchRoutingOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// ============================================
 // GET: Security Tab
 // ============================================
 
@@ -319,6 +464,46 @@ export const useSecurityData = () => {
     queryKey: networkKeys.security(),
     queryFn: fetchSecurityData,
     staleTime: 5 * 60 * 1000,
+  });
+};
+
+// ============================================
+// GET: Security Options (Dropdown Data)
+// ============================================
+
+const fetchSecurityOptions = async (): Promise<
+  ApiResponse<SecurityOptionsData>
+> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          authMethodOptions: [
+            { value: "none", label: "None" },
+            { value: "user-pass", label: "User / Pass" },
+            { value: "certificate", label: "Certificate (SSL)" },
+          ],
+          portOptions: [
+            { value: "502", label: "502" },
+            { value: "503", label: "503" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+/**
+ * Hook to fetch Security options for dropdowns
+ */
+export const useSecurityOptions = () => {
+  return useQuery({
+    queryKey: networkKeys.securityOptions(),
+    queryFn: fetchSecurityOptions,
+    staleTime: 10 * 60 * 1000,
   });
 };
 
@@ -394,6 +579,48 @@ export const useDiagnosticsData = () => {
     queryKey: networkKeys.diagnostics(),
     queryFn: fetchDiagnosticsData,
     staleTime: 5 * 60 * 1000,
+  });
+};
+
+// ============================================
+// GET: Diagnostics Options (Dropdown Data)
+// ============================================
+
+const fetchDiagnosticsOptions = async (): Promise<
+  ApiResponse<DiagnosticsOptionsData>
+> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          durationOptions: [
+            { value: "30", label: "30 sec" },
+            { value: "60", label: "60 sec" },
+            { value: "90", label: "90 sec" },
+            { value: "120", label: "120 sec" },
+          ],
+          testTypeOptions: [
+            { value: "ping", label: "Ping Test" },
+            { value: "tcp-port", label: "TCP Port Test" },
+            { value: "handshake", label: "Protocol Handshake" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+/**
+ * Hook to fetch Diagnostics options for dropdowns
+ */
+export const useDiagnosticsOptions = () => {
+  return useQuery({
+    queryKey: networkKeys.diagnosticsOptions(),
+    queryFn: fetchDiagnosticsOptions,
+    staleTime: 10 * 60 * 1000,
   });
 };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { CommonButton } from "@/components/common/CommonButton";
 import { CommonInput } from "@/components/common/CommonInput";
@@ -7,15 +7,42 @@ import { CommonToggle } from "@/components/common/CommonToggle";
 import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
-import { CommonSkeleton, SectionSkeleton } from "@/components/common";
-import { useRoutingData } from "@/services/api/network/network.api";
+import { SectionSkeleton } from "@/components/common";
+import {
+  useRoutingData,
+  useSaveRoutingData,
+  useRoutingOptions,
+} from "@/services/api/network/network.api";
+import type { SaveRoutingPayload } from "@/services/api/network/network.types";
 
 export function Routing() {
   const { data: routingResponse, isLoading, error } = useRoutingData();
+  const { data: optionsResponse } = useRoutingOptions();
+  const { mutate: saveRoutingData } = useSaveRoutingData();
+
   const routingData = routingResponse?.data;
+  const options = optionsResponse?.data;
 
   const [modbusEnabled, setModbusEnabled] = useState(true);
   const [eqmptEmacerEnabled, setEqmptEmacerEnabled] = useState(true);
+  const [formData, setFormData] = useState<SaveRoutingPayload | null>(null);
+
+  // Initialize form data when routingData loads
+  useEffect(() => {
+    if (routingData) {
+      const { routes } = routingData;
+      setFormData({ routes });
+    }
+  }, [routingData]);
+
+  // Save data to API
+  const handleSaveData = (updatedData: Partial<SaveRoutingPayload>) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    saveRoutingData(newFormData);
+  };
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
@@ -25,7 +52,7 @@ export function Routing() {
     return <div className="p-4 text-red-500">Error loading routing data</div>;
   }
 
-  if (!routingData) {
+  if (!routingData || !formData) {
     return <div className="p-4">No routing data available</div>;
   }
 
@@ -51,7 +78,10 @@ export function Routing() {
                   <CommonToggle
                     label=""
                     checked={modbusEnabled}
-                    onCheckedChange={setModbusEnabled}
+                    onCheckedChange={(checked) => {
+                      setModbusEnabled(checked);
+                      handleSaveData({ routes: formData.routes });
+                    }}
                   />
                 </div>
               }
@@ -69,7 +99,7 @@ export function Routing() {
                     <CommonInput
                       label="Input Data"
                       value="10.1.0.113"
-                      onChange={() => {}}
+                      onChange={(e) => handleSaveData({ routes: formData.routes })}
                       placeholder="10.1.0.11"
                       type="text"
                       className="flex-1"
@@ -77,14 +107,14 @@ export function Routing() {
                     <CommonInput
                       label=" "
                       value="0"
-                      onChange={() => {}}
+                      onChange={(e) => handleSaveData({ routes: formData.routes })}
                       placeholder="0"
                       type="text"
                     />
                     <CommonInput
                       label=" "
                       value="502"
-                      onChange={() => {}}
+                      onChange={(e) => handleSaveData({ routes: formData.routes })}
                       placeholder="502"
                       type="text"
                     />
@@ -92,11 +122,8 @@ export function Routing() {
                   <CommonSelect
                     label="Port"
                     value="502"
-                    onValueChange={() => {}}
-                    options={[
-                      { value: "502", label: "502" },
-                      { value: "100ms", label: "100 ms" },
-                    ]}
+                    onValueChange={(value) => handleSaveData({ routes: formData.routes })}
+                    options={options?.portOptions || []}
                   />
                 </div>
               </div>
@@ -118,13 +145,13 @@ export function Routing() {
                   <CommonInput
                     label="Snecron (Dy"
                     value="WITS (TCP)"
-                    onChange={() => {}}
+                    onChange={(e) => handleSaveData({ routes: formData.routes })}
                     className="text-sm"
                   />
                   <CommonInput
                     label="Tag"
                     value="1.0.335"
-                    onChange={() => {}}
+                    onChange={(e) => handleSaveData({ routes: formData.routes })}
                     className="text-sm"
                   />
                   <CommonButton variant="outline" className="text-sm px-3 mt-8">
@@ -161,7 +188,7 @@ export function Routing() {
                         <CommonToggle
                           label="Tag Mac"
                           checked={true}
-                          onCheckedChange={() => {}}
+                          onCheckedChange={(checked) => handleSaveData({ routes: formData.routes })}
                         />
                       </div>
                     </div>
@@ -170,17 +197,17 @@ export function Routing() {
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2 items-center">
                       <CommonInput
                         value="ChokeA_Pos"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                       <CommonInput
                         value="MPD SBP"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                       <CommonInput
                         value="ChokeB_PS | ChokeB_Pos | Choke_SP"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                     </div>
@@ -189,17 +216,17 @@ export function Routing() {
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2 items-center">
                       <CommonInput
                         value="SBIn Coop (Enbl)"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                       <CommonInput
                         value="SBP_SSP"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                       <CommonInput
                         value="SBP_SSP"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                     </div>
@@ -213,18 +240,21 @@ export function Routing() {
                     <div className="grid grid-cols-[1fr_1fr_2fr] gap-2 items-center">
                       <CommonInput
                         value="MPD Q 0 in"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                       <CommonInput
                         value="(Choke 0.0 0a)"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                       <CommonToggle
                         label="EqmptEmacer"
                         checked={eqmptEmacerEnabled}
-                        onCheckedChange={setEqmptEmacerEnabled}
+                        onCheckedChange={(checked) => {
+                          setEqmptEmacerEnabled(checked);
+                          handleSaveData({ routes: formData.routes });
+                        }}
                       />
                     </div>
 
@@ -232,17 +262,17 @@ export function Routing() {
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2">
                       <CommonInput
                         value="Flow_Q-In"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                       <CommonInput
                         value="MPD Q in"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                       <CommonInput
                         value="Flow Q Out | Aux Flow"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                     </div>
@@ -251,17 +281,17 @@ export function Routing() {
                     <div className="grid grid-cols-3 xl:grid-cols-[1fr_1fr_2fr] gap-2">
                       <CommonInput
                         value="MPD Q ux"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                       <CommonInput
                         value="MPD Q Set"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                       <CommonInput
                         value="MPD Q aex"
-                        onChange={() => {}}
+                        onChange={(e) => handleSaveData({ routes: formData.routes })}
                         className="text-sm"
                       />
                     </div>

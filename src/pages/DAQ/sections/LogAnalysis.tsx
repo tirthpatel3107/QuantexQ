@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import {
-  CommonButton,
-  CommonSkeleton,
-  SectionSkeleton,
-} from "@/components/common";
+import { CommonButton, SectionSkeleton } from "@/components/common";
 import { Badge } from "@/components/ui/badge";
 import { Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useLogAnalysisData } from "@/services/api/daq/daq.api";
+import {
+  useLogAnalysisData,
+  useSaveLogAnalysisData,
+  useLogAnalysisOptions,
+} from "@/services/api/daq/daq.api";
+import type { SaveLogAnalysisPayload } from "@/services/api/daq/daq.types";
 
 interface LogEntry {
   id: string;
@@ -21,7 +22,31 @@ interface LogEntry {
 
 export function LogAnalysis() {
   const { data: logAnalysisResponse, isLoading, error } = useLogAnalysisData();
+  const { data: optionsResponse } = useLogAnalysisOptions();
+  const { mutate: saveLogAnalysisData } = useSaveLogAnalysisData();
+
   const logAnalysisData = logAnalysisResponse?.data;
+  const options = optionsResponse?.data;
+
+  const [formData, setFormData] = useState<SaveLogAnalysisPayload | null>(null);
+
+  // Initialize form data when logAnalysisData loads
+  useEffect(() => {
+    if (logAnalysisData) {
+      const { logViewer, trendAnalysis, reportGeneration, logArchive } =
+        logAnalysisData;
+      setFormData({ logViewer, trendAnalysis, reportGeneration, logArchive });
+    }
+  }, [logAnalysisData]);
+
+  // Save data to API
+  const handleSaveData = (updatedData: Partial<SaveLogAnalysisPayload>) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    saveLogAnalysisData(newFormData);
+  };
 
   const [logEntries] = useState<LogEntry[]>([
     {
@@ -90,6 +115,10 @@ export function LogAnalysis() {
     return (
       <div className="p-4 text-red-500">Error loading log analysis data</div>
     );
+  }
+
+  if (!logAnalysisData || !formData) {
+    return <div className="p-4">No log analysis data available</div>;
   }
 
   return (

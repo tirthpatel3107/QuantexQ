@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { CommonButton } from "@/components/common/CommonButton";
 import { CommonInput } from "@/components/common/CommonInput";
@@ -7,14 +7,41 @@ import { Badge } from "@/components/ui/badge";
 import { Play, FileDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
-import { CommonSkeleton, SectionSkeleton } from "@/components/common";
-import { useDiagnosticsData } from "@/services/api/network/network.api";
+import { SectionSkeleton } from "@/components/common";
+import {
+  useDiagnosticsData,
+  useSaveDiagnosticsData,
+  useDiagnosticsOptions,
+} from "@/services/api/network/network.api";
+import type { SaveDiagnosticsPayload } from "@/services/api/network/network.types";
 
 export function Diagnostics() {
   const { data: diagnosticsResponse, isLoading, error } = useDiagnosticsData();
+  const { data: optionsResponse } = useDiagnosticsOptions();
+  const { mutate: saveDiagnosticsData } = useSaveDiagnosticsData();
+
   const diagnosticsData = diagnosticsResponse?.data;
+  const options = optionsResponse?.data;
 
   const [packetCaptureDuration, setPacketCaptureDuration] = useState("90");
+  const [formData, setFormData] = useState<SaveDiagnosticsPayload | null>(null);
+
+  // Initialize form data when diagnosticsData loads
+  useEffect(() => {
+    if (diagnosticsData) {
+      const { diagnosticTools } = diagnosticsData;
+      setFormData({ diagnosticTools });
+    }
+  }, [diagnosticsData]);
+
+  // Save data to API
+  const handleSaveData = (updatedData: Partial<SaveDiagnosticsPayload>) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    saveDiagnosticsData(newFormData);
+  };
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
@@ -25,7 +52,7 @@ export function Diagnostics() {
     );
   }
 
-  if (!diagnosticsData) {
+  if (!diagnosticsData || !formData) {
     return <div className="p-4">No diagnostics data available</div>;
   }
 
@@ -92,7 +119,7 @@ export function Diagnostics() {
                   id="packet-capture"
                   label="Enable Packet Capture"
                   checked={false}
-                  onCheckedChange={() => {}}
+                  onCheckedChange={(checked) => handleSaveData({ diagnosticTools: formData.diagnosticTools })}
                 />
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-muted-foreground">
@@ -101,7 +128,10 @@ export function Diagnostics() {
                   <CommonInput
                     type="number"
                     value={packetCaptureDuration}
-                    onChange={(e) => setPacketCaptureDuration(e.target.value)}
+                    onChange={(e) => {
+                      setPacketCaptureDuration(e.target.value);
+                      handleSaveData({ diagnosticTools: formData.diagnosticTools });
+                    }}
                     suffix="sec"
                     className="w-24 mb-0"
                   />

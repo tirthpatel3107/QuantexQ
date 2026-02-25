@@ -1,8 +1,12 @@
-import { CommonSkeleton, SectionSkeleton } from "@/components/common";
+import { useState, useEffect } from "react";
+import { SectionSkeleton } from "@/components/common";
 import { DensitySolidsPanel } from "./panels/DensitySolidsPanel";
 import { FluidData } from "@/types/mud";
-import { useDensityData } from "@/services/api/mudproperties/mudproperties.api";
-import { useEffect } from "react";
+import {
+  useDensityData,
+  useSaveDensityData,
+} from "@/services/api/mudproperties/mudproperties.api";
+import type { SaveDensityPayload } from "@/services/api/mudproperties/mudproperties.types";
 
 interface DensitySectionProps {
   fluid: FluidData;
@@ -11,18 +15,34 @@ interface DensitySectionProps {
 
 export function Density({ fluid, setFluid }: DensitySectionProps) {
   const { data: densityResponse, isLoading, error } = useDensityData();
+  const { mutate: saveDensityData } = useSaveDensityData();
+
   const densityData = densityResponse?.data;
 
-  // Update fluid state when API data loads
+  const [formData, setFormData] = useState<SaveDensityPayload | null>(null);
+
+  // Initialize form data when densityData loads
   useEffect(() => {
     if (densityData) {
+      const { mudWeightIn, mudWeightOut, oilWaterRatio, salinity } = densityData;
+      setFormData({ mudWeightIn, mudWeightOut, oilWaterRatio, salinity });
       setFluid((prev) => ({
         ...prev,
-        oilWater: densityData.oilWaterRatio,
-        salinity: densityData.salinity,
+        oilWater: oilWaterRatio,
+        salinity,
       }));
     }
   }, [densityData, setFluid]);
+
+  // Save data to API
+  const handleSaveData = (updatedData: Partial<SaveDensityPayload>) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    setFluid((prev) => ({ ...prev, ...updatedData }));
+    saveDensityData(newFormData);
+  };
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
@@ -30,6 +50,10 @@ export function Density({ fluid, setFluid }: DensitySectionProps) {
 
   if (error) {
     return <div className="p-4 text-red-500">Error loading density data</div>;
+  }
+
+  if (!densityData || !formData) {
+    return <div className="p-4">No density data available</div>;
   }
 
   return (

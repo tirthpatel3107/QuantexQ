@@ -1,13 +1,16 @@
+import { useState, useEffect } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   RestoreDefaultsButton,
   CommonInput,
-  CommonSkeleton,
   SectionSkeleton,
 } from "@/components/common";
 import { FluidData } from "@/types/mud";
-import { useCalibrationData } from "@/services/api/mudproperties/mudproperties.api";
-import { useEffect } from "react";
+import {
+  useCalibrationData,
+  useSaveCalibrationData,
+} from "@/services/api/mudproperties/mudproperties.api";
+import type { SaveCalibrationPayload } from "@/services/api/mudproperties/mudproperties.types";
 
 interface CalibrationProps {
   fluid: FluidData;
@@ -16,19 +19,35 @@ interface CalibrationProps {
 
 export function Calibration({ fluid, setFluid }: CalibrationProps) {
   const { data: calibrationResponse, isLoading, error } = useCalibrationData();
+  const { mutate: saveCalibrationData } = useSaveCalibrationData();
+
   const calibrationData = calibrationResponse?.data;
 
-  // Update fluid state when API data loads
+  const [formData, setFormData] = useState<SaveCalibrationPayload | null>(null);
+
+  // Initialize form data when calibrationData loads
   useEffect(() => {
     if (calibrationData) {
+      const { viscometerCalDate, densityCalDate, tempSensorOffset } = calibrationData;
+      setFormData({ viscometerCalDate, densityCalDate, tempSensorOffset });
       setFluid((prev) => ({
         ...prev,
-        viscometerCalDate: calibrationData.viscometerCalDate,
-        densityCalDate: calibrationData.densityCalDate,
-        tempSensorOffset: calibrationData.tempSensorOffset,
+        viscometerCalDate,
+        densityCalDate,
+        tempSensorOffset,
       }));
     }
   }, [calibrationData, setFluid]);
+
+  // Save data to API
+  const handleSaveData = (updatedData: Partial<SaveCalibrationPayload>) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    setFluid((prev) => ({ ...prev, ...updatedData }));
+    saveCalibrationData(newFormData);
+  };
 
   if (isLoading) {
     return <SectionSkeleton count={6} />;
@@ -40,18 +59,19 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
     );
   }
 
+  if (!calibrationData || !formData) {
+    return <div className="p-4">No calibration data available</div>;
+  }
+
   return (
     <div className="grid grid-cols-1 max-w-2xl gap-4 mb-4">
       <PanelCard title="Calibration" headerAction={<RestoreDefaultsButton />}>
         <div className="grid grid-cols-[140px_1fr] gap-3 items-center">
           <CommonInput
             label="Viscometer cal. date"
-            value={fluid.viscometerCalDate}
+            value={formData.viscometerCalDate}
             onChange={(e) =>
-              setFluid((f) => ({
-                ...f,
-                viscometerCalDate: e.target.value,
-              }))
+              handleSaveData({ viscometerCalDate: e.target.value })
             }
             placeholder="—"
             type="date"
@@ -59,12 +79,9 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
 
           <CommonInput
             label="Density cal. date"
-            value={fluid.densityCalDate}
+            value={formData.densityCalDate}
             onChange={(e) =>
-              setFluid((f) => ({
-                ...f,
-                densityCalDate: e.target.value,
-              }))
+              handleSaveData({ densityCalDate: e.target.value })
             }
             placeholder="—"
             type="date"
@@ -72,12 +89,9 @@ export function Calibration({ fluid, setFluid }: CalibrationProps) {
 
           <CommonInput
             label="Temp. sensor offset"
-            value={fluid.tempSensorOffset}
+            value={formData.tempSensorOffset}
             onChange={(e) =>
-              setFluid((f) => ({
-                ...f,
-                tempSensorOffset: e.target.value,
-              }))
+              handleSaveData({ tempSensorOffset: e.target.value })
             }
             placeholder="°F"
           />

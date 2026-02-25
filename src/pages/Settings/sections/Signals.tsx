@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -27,13 +27,16 @@ import {
   CommonDialog,
   CommonInput,
   CommonDropdownMenu,
-  CommonSkeleton,
   SectionSkeleton,
 } from "@/components/common";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CommonAlertDialog } from "@/components/common/CommonAlertDialog";
-import { useSignalsSettings } from "@/services/api/settings/settings.api";
+import {
+  useSignalsSettings,
+  useSaveSignalsSettings,
+  useSignalsOptions,
+} from "@/services/api/settings/settings.api";
 
 type Signal = {
   id: number;
@@ -48,7 +51,12 @@ type Signal = {
 const signalColumnHelper = createColumnHelper<Signal>();
 
 export function Signals() {
-  const { data: signalsData, isLoading, error } = useSignalsSettings();
+  const { data: signalsResponse, isLoading, error } = useSignalsSettings();
+  const { data: optionsResponse } = useSignalsOptions();
+  const { mutate: saveSignalsData } = useSaveSignalsSettings();
+
+  const signalsData = signalsResponse?.data;
+  const options = optionsResponse?.data;
 
   const [search, setSearch] = useState("");
   const [filterBy, setFilterBy] = useState("all");
@@ -60,12 +68,18 @@ export function Signals() {
   });
   const [signals, setSignals] = useState<Signal[]>([]);
 
-  // Update local state when API data loads
-  useMemo(() => {
+  // Initialize signals when API data loads
+  useEffect(() => {
     if (signalsData?.signals) {
       setSignals(signalsData.signals);
     }
   }, [signalsData]);
+
+  // Save data to API
+  const handleSaveData = (updatedSignals: Signal[]) => {
+    setSignals(updatedSignals);
+    saveSignalsData({ signals: updatedSignals });
+  };
 
   const [isAddSignalModalOpen, setIsAddSignalModalOpen] = useState(false);
   const [isConfigureTagsModalOpen, setIsConfigureTagsModalOpen] =
@@ -81,41 +95,28 @@ export function Signals() {
     { label: "Not In Use", value: "notInUse" },
   ];
 
-  const subsystemOptions = [
-    { label: "Pressure Control", value: "Pressure Control" },
-    { label: "DAQ", value: "DAQ" },
-    { label: "Hydraulics", value: "Hydraulics" },
-    { label: "Auto Control", value: "Auto Control" },
-    { label: "Network", value: "Network" },
-    {
-      label: "Hydraulic Model Validation",
-      value: "Hydraulic Model Validation",
-    },
-  ];
-
   const toggleFavorite = (id: number) => {
-    setSignals((prev) =>
-      prev.map((signal) =>
-        signal.id === id
-          ? { ...signal, isFavorite: !signal.isFavorite }
-          : signal,
-      ),
+    const updatedSignals = signals.map((signal) =>
+      signal.id === id
+        ? { ...signal, isFavorite: !signal.isFavorite }
+        : signal
     );
+    handleSaveData(updatedSignals);
   };
 
   const toggleInUse = (id: number) => {
-    setSignals((prev) =>
-      prev.map((signal) =>
-        signal.id === id ? { ...signal, inUse: !signal.inUse } : signal,
-      ),
+    const updatedSignals = signals.map((signal) =>
+      signal.id === id ? { ...signal, inUse: !signal.inUse } : signal
     );
+    handleSaveData(updatedSignals);
   };
 
   const handleDeleteSignal = () => {
     if (selectedSignal) {
-      setSignals((prev) =>
-        prev.filter((signal) => signal.id !== selectedSignal.id),
+      const updatedSignals = signals.filter(
+        (signal) => signal.id !== selectedSignal.id
       );
+      handleSaveData(updatedSignals);
       setIsDeleteConfirmOpen(false);
       setSelectedSignal(null);
     }
@@ -311,7 +312,7 @@ export function Signals() {
           <CommonDropdownMenu
             value={subsystemFilters}
             onValueChange={(value) => setSubsystemFilters(value as string[])}
-            options={subsystemOptions}
+            options={options?.subsystemOptions || []}
             triggerLabel="Subsystems"
             triggerIcon={Filter}
             menuLabel="Filter by Subsystem"
@@ -414,7 +415,7 @@ export function Signals() {
           />
           <CommonSelect
             label="Subsystem"
-            options={subsystemOptions}
+            options={options?.subsystemOptions || []}
             value=""
             onValueChange={() => {}}
             placeholder="Select subsystem"
@@ -503,7 +504,7 @@ export function Signals() {
           />
           <CommonSelect
             label="Subsystem"
-            options={subsystemOptions}
+            options={options?.subsystemOptions || []}
             value={selectedSignal?.subsystem || ""}
             onValueChange={() => {}}
             placeholder="Select subsystem"

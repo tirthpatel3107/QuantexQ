@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -17,12 +17,15 @@ import {
   CommonButton,
   RestoreDefaultsButton,
   CommonCheckbox,
-  CommonSkeleton,
   SectionSkeleton,
 } from "@/components/common";
 import { CommonAlertDialog } from "@/components/common/CommonAlertDialog";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { useAlarmsSettings } from "@/services/api/settings/settings.api";
+import {
+  useAlarmsSettings,
+  useSaveAlarmsSettings,
+  useAlarmsOptions,
+} from "@/services/api/settings/settings.api";
 
 type SensorLimit = {
   id: string;
@@ -76,7 +79,11 @@ const sensorColumnHelper = createColumnHelper<SensorLimit>();
 
 export function Alarms() {
   const { data: alarmsResponse, isLoading, error } = useAlarmsSettings();
+  const { data: optionsResponse } = useAlarmsOptions();
+  const { mutate: saveAlarmsData } = useSaveAlarmsSettings();
+
   const alarmsData = alarmsResponse?.data;
+  const options = optionsResponse?.data;
 
   const [activeTab, setActiveTab] = useState("kick");
   const [sensorsData, setSensorsData] = useState(DEFAULT_SENSORS);
@@ -85,6 +92,23 @@ export function Alarms() {
     null,
   );
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [formData, setFormData] = useState<any>(null);
+
+  // Initialize form data when alarmsData loads
+  useEffect(() => {
+    if (alarmsData) {
+      setFormData(alarmsData);
+    }
+  }, [alarmsData]);
+
+  // Save data to API
+  const handleSaveData = (updatedData: any) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    saveAlarmsData(newFormData);
+  };
 
   const columns = useMemo(
     () => [
@@ -289,12 +313,8 @@ export function Alarms() {
                   <CommonSelect
                     label="Delay (seconds)"
                     value="15"
-                    options={[
-                      { label: "10", value: "10" },
-                      { label: "15", value: "15" },
-                      { label: "20", value: "20" },
-                    ]}
-                    onValueChange={() => {}}
+                    options={options?.delayOptions || []}
+                    onValueChange={(delay) => handleSaveData({ delay })}
                   />
 
                   <CommonInput
@@ -335,35 +355,31 @@ export function Alarms() {
                   <CommonSelect
                     label="Kick Delay (sec)"
                     value="10"
-                    options={[
-                      { label: "10", value: "10" },
-                      { label: "15", value: "15" },
-                      { label: "20", value: "20" },
-                    ]}
-                    onValueChange={() => {}}
+                    options={options?.delayOptions || []}
+                    onValueChange={(kickDelay) => handleSaveData({ kickDelay })}
                   />
                   <CommonSelect
                     label="Loss Delay (sec)"
                     value="10"
-                    options={[
-                      { label: "10", value: "10" },
-                      { label: "15", value: "15" },
-                      { label: "20", value: "20" },
-                    ]}
-                    onValueChange={() => {}}
+                    options={options?.delayOptions || []}
+                    onValueChange={(lossDelay) => handleSaveData({ lossDelay })}
                   />
 
                   <CommonSelect
                     label="Offline Output"
                     value="audio"
-                    options={[{ label: "Audio Alarm", value: "audio" }]}
-                    onValueChange={() => {}}
+                    options={options?.outputOptions || []}
+                    onValueChange={(offlineOutput) =>
+                      handleSaveData({ offlineOutput })
+                    }
                   />
                   <CommonSelect
                     label="Online Output"
                     value="kick-loss"
-                    options={[{ label: "Kick and Loss", value: "kick-loss" }]}
-                    onValueChange={() => {}}
+                    options={options?.alarmTypeOptions || []}
+                    onValueChange={(onlineOutput) =>
+                      handleSaveData({ onlineOutput })
+                    }
                   />
                 </div>
               </div>

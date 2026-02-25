@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   CommonButton,
   CommonToggle,
   CommonCheckbox,
   CommonSelect,
-  CommonSkeleton,
   SectionSkeleton,
 } from "@/components/common";
 import { Volume2, Play, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useNotificationsData } from "@/services/api/daq/daq.api";
+import {
+  useNotificationsData,
+  useSaveNotificationsData,
+  useNotificationsOptions,
+} from "@/services/api/daq/daq.api";
+import type { SaveNotificationsPayload } from "@/services/api/daq/daq.types";
 
 interface NotificationLogEntry {
   id: string;
@@ -27,7 +31,33 @@ export function Notifications() {
     isLoading,
     error,
   } = useNotificationsData();
+  const { data: optionsResponse } = useNotificationsOptions();
+  const { mutate: saveNotificationsData } = useSaveNotificationsData();
+
   const notificationsData = notificationsResponse?.data;
+  const options = optionsResponse?.data;
+
+  const [formData, setFormData] = useState<SaveNotificationsPayload | null>(
+    null,
+  );
+
+  // Initialize form data when notificationsData loads
+  useEffect(() => {
+    if (notificationsData) {
+      const { alarmRules, channels, escalation, muteRules } =
+        notificationsData;
+      setFormData({ alarmRules, channels, escalation, muteRules });
+    }
+  }, [notificationsData]);
+
+  // Save data to API
+  const handleSaveData = (updatedData: Partial<SaveNotificationsPayload>) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    saveNotificationsData(newFormData);
+  };
 
   // Settings & Summary state
   const [alarmSound, setAlarmSound] = useState("factory_alert.mp3");
@@ -79,12 +109,6 @@ export function Notifications() {
     },
   ]);
 
-  const alarmSoundOptions = [
-    { label: "factory_alert.mp3", value: "factory_alert.mp3" },
-    { label: "chime.mp3", value: "chime.mp3" },
-    { label: "beep.mp3", value: "beep.mp3" },
-  ];
-
   const getTypeIcon = (type: string) => {
     switch (type) {
       case "high":
@@ -128,6 +152,10 @@ export function Notifications() {
     );
   }
 
+  if (!notificationsData || !formData) {
+    return <div className="p-4">No notifications data available</div>;
+  }
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -143,7 +171,7 @@ export function Notifications() {
               <div className="flex items-center gap-3">
                 <div className="flex-1">
                   <CommonSelect
-                    options={alarmSoundOptions}
+                    options={options?.alarmSoundOptions || []}
                     value={alarmSound}
                     onValueChange={setAlarmSound}
                     placeholder="Select alarm sound"

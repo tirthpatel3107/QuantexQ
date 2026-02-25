@@ -390,3 +390,53 @@ export interface SaveDownloadsPayload {
   logs: LogFilter;
   quickExport: QuickExportConfig;
 }
+
+// ============================================
+// Options Data Types
+// ============================================
+
+export interface DisplayOptionsData {
+  sectionTypeOptions: Array<{ label: string; value: string }>;
+}
+
+export interface StreamingOptionsData {
+  witsLevelOptions: Array<{ label: string; value: string }>;
+  formatOptions: Array<{ label: string; value: string }>;
+  baudRateOptions: Array<{ label: string; value: number }>;
+}
+
+export interface NotificationsOptionsData {
+  alarmSoundOptions: Array<{ label: string; value: string }>;
+  channelTypeOptions: Array<{ label: string; value: string }>;
+}
+
+export interface LogAnalysisOptionsData {
+  timeRangeOptions: Array<{ label: string; value: string }>;
+  reportFormatOptions: Array<{ label: string; value: string }>;
+}
+
+export interface SensorPermsOptionsData {
+  permissionTypeOptions: Array<{ label: string; value: string }>;
+}
+
+export interface CalibrationOptionsData {
+  statusOptions: Array<{ label: string; value: string }>;
+  roleOptions: Array<{ label: string; value: string }>;
+}
+
+export interface HydraulicsOptionsData {
+  modelTypeOptions: Array<{ label: string; value: string }>;
+  mudTypeOptions: Array<{ label: string; value: string }>;
+}
+
+export interface SystemSettingsOptionsData {
+  controlModeOptions: Array<{ label: string; value: string }>;
+  systemTypeOptions: Array<{ label: string; value: string }>;
+  mudSystemOptions: Array<{ label: string; value: string }>;
+}
+
+export interface DownloadsOptionsData {
+  timeRangeOptions: Array<{ label: string; value: string }>;
+  exportFormatOptions: Array<{ label: string; value: string }>;
+  exportTypeOptions: Array<{ label: string; value: string }>;
+}

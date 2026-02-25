@@ -70,6 +70,48 @@ export interface SaveSourcesPayload {
   devices: DeviceSource[];
 }
 
+export interface SourcesOptionsData {
+  tagMapOptions: Array<{ value: string; label: string }>;
+  dataRateOptions: Array<{ value: string; label: string }>;
+  frequencyOptions: Array<{ value: string; label: string }>;
+}
+
+// ============================================
+// Protocols Options
+// ============================================
+
+export interface ProtocolsOptionsData {
+  protocolTypeOptions: Array<{ value: string; label: string }>;
+  endpointOptions: Array<{ value: string; label: string }>;
+}
+
+// ============================================
+// Routing Options
+// ============================================
+
+export interface RoutingOptionsData {
+  portOptions: Array<{ value: string; label: string }>;
+  tagMapOptions: Array<{ value: string; label: string }>;
+}
+
+// ============================================
+// Security Options
+// ============================================
+
+export interface SecurityOptionsData {
+  authMethodOptions: Array<{ value: string; label: string }>;
+  portOptions: Array<{ value: string; label: string }>;
+}
+
+// ============================================
+// Diagnostics Options
+// ============================================
+
+export interface DiagnosticsOptionsData {
+  durationOptions: Array<{ value: string; label: string }>;
+  testTypeOptions: Array<{ value: string; label: string }>;
+}
+
 // ============================================
 // Protocols Tab
 // ============================================

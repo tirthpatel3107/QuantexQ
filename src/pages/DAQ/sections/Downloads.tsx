@@ -1,5 +1,4 @@
-import { CommonSkeleton, SectionSkeleton } from "@/components/common";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { CommonButton } from "@/components/common/CommonButton";
 import {
@@ -8,9 +7,15 @@ import {
   CommonTabsList,
   CommonTabsTrigger,
 } from "@/components/common/CommonTabs";
+import { SectionSkeleton } from "@/components/common";
 import { Download, FolderOpen, FileText, File } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useDownloadsData } from "@/services/api/daq/daq.api";
+import {
+  useDownloadsData,
+  useSaveDownloadsData,
+  useDownloadsOptions,
+} from "@/services/api/daq/daq.api";
+import type { SaveDownloadsPayload } from "@/services/api/daq/daq.types";
 
 interface FileItem {
   name: string;
@@ -87,7 +92,30 @@ const downloadHistory: DownloadHistoryItem[] = [
 
 export function Downloads() {
   const { data: downloadsResponse, isLoading, error } = useDownloadsData();
+  const { data: optionsResponse } = useDownloadsOptions();
+  const { mutate: saveDownloadsData } = useSaveDownloadsData();
+
   const downloadsData = downloadsResponse?.data;
+  const options = optionsResponse?.data;
+
+  const [formData, setFormData] = useState<SaveDownloadsPayload | null>(null);
+
+  // Initialize form data when downloadsData loads
+  useEffect(() => {
+    if (downloadsData) {
+      const { logs, quickExport } = downloadsData;
+      setFormData({ logs, quickExport });
+    }
+  }, [downloadsData]);
+
+  // Save data to API
+  const handleSaveData = (updatedData: Partial<SaveDownloadsPayload>) => {
+    if (!formData) return;
+
+    const newFormData = { ...formData, ...updatedData };
+    setFormData(newFormData);
+    saveDownloadsData(newFormData);
+  };
 
   const [activeTab, setActiveTab] = useState("downloads");
   const [activeLogFilter, setActiveLogFilter] = useState("all");
@@ -98,6 +126,10 @@ export function Downloads() {
 
   if (error) {
     return <div className="p-4 text-red-500">Error loading downloads data</div>;
+  }
+
+  if (!downloadsData || !formData) {
+    return <div className="p-4">No downloads data available</div>;
   }
 
   return (

@@ -28,11 +28,17 @@ import type {
 export const mudPropertiesKeys = {
   all: ["mudProperties"] as const,
   overview: () => [...mudPropertiesKeys.all, "overview"] as const,
+  overviewOptions: () => [...mudPropertiesKeys.all, "overview", "options"] as const,
   rheology: () => [...mudPropertiesKeys.all, "rheology"] as const,
+  rheologyOptions: () => [...mudPropertiesKeys.all, "rheology", "options"] as const,
   density: () => [...mudPropertiesKeys.all, "density"] as const,
+  densityOptions: () => [...mudPropertiesKeys.all, "density", "options"] as const,
   temperature: () => [...mudPropertiesKeys.all, "temperature"] as const,
+  temperatureOptions: () => [...mudPropertiesKeys.all, "temperature", "options"] as const,
   gas: () => [...mudPropertiesKeys.all, "gas"] as const,
+  gasOptions: () => [...mudPropertiesKeys.all, "gas", "options"] as const,
   calibration: () => [...mudPropertiesKeys.all, "calibration"] as const,
+  calibrationOptions: () => [...mudPropertiesKeys.all, "calibration", "options"] as const,
   summary: () => [...mudPropertiesKeys.all, "summary"] as const,
 };
 
@@ -506,5 +512,191 @@ export const useSaveCalibrationData = () => {
         queryKey: mudPropertiesKeys.calibration(),
       });
     },
+  });
+};
+
+// ============================================
+// GET: Options Hooks for Dropdowns
+// ============================================
+
+// Fluid Overview Options
+const fetchFluidOverviewOptions = async (): Promise<
+  ApiResponse<import("./mudproperties.types").FluidOverviewOptionsData>
+> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          typeOptions: [
+            { value: "OBM", label: "OBM (Oil-Based Mud)" },
+            { value: "WBM", label: "WBM (Water-Based Mud)" },
+            { value: "SBM", label: "SBM (Synthetic-Based Mud)" },
+          ],
+          baseFluidOptions: [
+            { value: "Diesel", label: "Diesel" },
+            { value: "Mineral Oil", label: "Mineral Oil" },
+            { value: "Synthetic", label: "Synthetic" },
+            { value: "Water", label: "Water" },
+          ],
+          tempOptions: [
+            { value: "°F", label: "°F" },
+            { value: "°C", label: "°C" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useFluidOverviewOptions = () => {
+  return useQuery({
+    queryKey: mudPropertiesKeys.overviewOptions(),
+    queryFn: fetchFluidOverviewOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Rheology Options
+const fetchRheologyOptions = async (): Promise<
+  ApiResponse<import("./mudproperties.types").RheologyOptionsData>
+> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          rheologySourceOptions: [
+            { value: "viscometer", label: "Viscometer" },
+            { value: "manual", label: "Manual Entry" },
+            { value: "calculated", label: "Calculated" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useRheologyOptions = () => {
+  return useQuery({
+    queryKey: mudPropertiesKeys.rheologyOptions(),
+    queryFn: fetchRheologyOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Density Options
+const fetchDensityOptions = async (): Promise<
+  ApiResponse<import("./mudproperties.types").DensityOptionsData>
+> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          unitOptions: [
+            { value: "ppg", label: "ppg" },
+            { value: "sg", label: "sg" },
+            { value: "kg/m³", label: "kg/m³" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useDensityOptions = () => {
+  return useQuery({
+    queryKey: mudPropertiesKeys.densityOptions(),
+    queryFn: fetchDensityOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Temperature Options
+const fetchTemperatureOptions = async (): Promise<
+  ApiResponse<import("./mudproperties.types").TemperatureOptionsData>
+> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          unitOptions: [
+            { value: "°F", label: "°F" },
+            { value: "°C", label: "°C" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useTemperatureOptions = () => {
+  return useQuery({
+    queryKey: mudPropertiesKeys.temperatureOptions(),
+    queryFn: fetchTemperatureOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Gas Compressibility Options
+const fetchGasCompressibilityOptions = async (): Promise<
+  ApiResponse<import("./mudproperties.types").GasCompressibilityOptionsData>
+> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          unitOptions: [
+            { value: "scf/bbl", label: "scf/bbl" },
+            { value: "m³/m³", label: "m³/m³" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useGasCompressibilityOptions = () => {
+  return useQuery({
+    queryKey: mudPropertiesKeys.gasOptions(),
+    queryFn: fetchGasCompressibilityOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Calibration Options
+const fetchCalibrationOptions = async (): Promise<
+  ApiResponse<import("./mudproperties.types").CalibrationOptionsData>
+> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          calibrationTypeOptions: [
+            { value: "viscometer", label: "Viscometer" },
+            { value: "density", label: "Density Meter" },
+            { value: "temperature", label: "Temperature Sensor" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useCalibrationOptions = () => {
+  return useQuery({
+    queryKey: mudPropertiesKeys.calibrationOptions(),
+    queryFn: fetchCalibrationOptions,
+    staleTime: 10 * 60 * 1000,
   });
 };

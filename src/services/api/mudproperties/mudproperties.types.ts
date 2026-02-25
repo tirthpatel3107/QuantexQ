@@ -161,3 +161,38 @@ export interface SummaryTabData {
   lastUpdated: string;
   updatedBy: string;
 }
+
+// ============================================
+// Options Data Types (for dropdowns)
+// ============================================
+
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
+export interface FluidOverviewOptionsData {
+  typeOptions: SelectOption[];
+  baseFluidOptions: SelectOption[];
+  tempOptions: SelectOption[];
+}
+
+export interface RheologyOptionsData {
+  rheologySourceOptions: SelectOption[];
+}
+
+export interface DensityOptionsData {
+  unitOptions: SelectOption[];
+}
+
+export interface TemperatureOptionsData {
+  unitOptions: SelectOption[];
+}
+
+export interface GasCompressibilityOptionsData {
+  unitOptions: SelectOption[];
+}
+
+export interface CalibrationOptionsData {
+  calibrationTypeOptions: SelectOption[];
+}

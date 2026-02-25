@@ -13,15 +13,25 @@ import type { ApiResponse, SaveResult } from "../types";
 export const settingsKeys = {
   all: ["settings"] as const,
   general: () => [...settingsKeys.all, "general"] as const,
+  generalOptions: () => [...settingsKeys.all, "general", "options"] as const,
   uiDisplay: () => [...settingsKeys.all, "uiDisplay"] as const,
+  uiDisplayOptions: () => [...settingsKeys.all, "uiDisplay", "options"] as const,
   units: () => [...settingsKeys.all, "units"] as const,
+  unitsOptions: () => [...settingsKeys.all, "units", "options"] as const,
   dataTime: () => [...settingsKeys.all, "dataTime"] as const,
+  dataTimeOptions: () => [...settingsKeys.all, "dataTime", "options"] as const,
   alarms: () => [...settingsKeys.all, "alarms"] as const,
+  alarmsOptions: () => [...settingsKeys.all, "alarms", "options"] as const,
   signals: () => [...settingsKeys.all, "signals"] as const,
+  signalsOptions: () => [...settingsKeys.all, "signals", "options"] as const,
   chokePumps: () => [...settingsKeys.all, "chokePumps"] as const,
+  chokePumpsOptions: () => [...settingsKeys.all, "chokePumps", "options"] as const,
   autoControl: () => [...settingsKeys.all, "autoControl"] as const,
+  autoControlOptions: () => [...settingsKeys.all, "autoControl", "options"] as const,
   hydraulicsModel: () => [...settingsKeys.all, "hydraulicsModel"] as const,
+  hydraulicsModelOptions: () => [...settingsKeys.all, "hydraulicsModel", "options"] as const,
   aboutDiagnostics: () => [...settingsKeys.all, "aboutDiagnostics"] as const,
+  aboutDiagnosticsOptions: () => [...settingsKeys.all, "aboutDiagnostics", "options"] as const,
 };
 
 // ============================================
@@ -69,6 +79,45 @@ export const useGeneralSettings = () => {
 };
 
 // ============================================
+// GET: General Settings Options (Dropdown Data)
+// ============================================
+
+const fetchGeneralOptions = async (): Promise<ApiResponse<any>> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          rigOptions: [
+            { label: "Rig-01", value: "Rig-01" },
+            { label: "Rig-02", value: "Rig-02" },
+            { label: "Rig-03", value: "Rig-03" },
+          ],
+          scenarioOptions: [
+            { label: "Static", value: "Static" },
+            { label: "Dynamic", value: "Dynamic" },
+          ],
+          screenOptions: [
+            { label: "Quantum HUD", value: "Quantum HUD" },
+            { label: "Dashboard", value: "Dashboard" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useGeneralOptions = () => {
+  return useQuery({
+    queryKey: settingsKeys.generalOptions(),
+    queryFn: fetchGeneralOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// ============================================
 // GET: UI Display Settings Tab
 // ============================================
 
@@ -103,6 +152,46 @@ export const useUiDisplaySettings = () => {
   return useQuery({
     queryKey: settingsKeys.uiDisplay(),
     queryFn: fetchUiDisplaySettings,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// ============================================
+// GET: UI Display Options (Dropdown Data)
+// ============================================
+
+const fetchUiDisplayOptions = async (): Promise<ApiResponse<any>> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          languageOptions: [
+            { label: "English (EN)", value: "en" },
+            { label: "Spanish (ES)", value: "es" },
+            { label: "French (FR)", value: "fr" },
+          ],
+          dateFormatOptions: [
+            { label: "DD MMM YYYY", value: "dd-mmm-yyyy" },
+            { label: "MM/DD/YYYY", value: "mm-dd-yyyy" },
+            { label: "YYYY-MM-DD", value: "yyyy-mm-dd" },
+          ],
+          timeFormatOptions: [
+            { label: "24-Hour Clock (HH:mm)", value: "24h" },
+            { label: "12-Hour Clock (hh:mm AM/PM)", value: "12h" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useUiDisplayOptions = () => {
+  return useQuery({
+    queryKey: settingsKeys.uiDisplayOptions(),
+    queryFn: fetchUiDisplayOptions,
     staleTime: 10 * 60 * 1000,
   });
 };
@@ -146,6 +235,50 @@ export const useUnitsSettings = () => {
 };
 
 // ============================================
+// GET: Units Options (Dropdown Data)
+// ============================================
+
+const fetchUnitsOptions = async (): Promise<ApiResponse<any>> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          pressureOptions: [
+            { label: "PSI", value: "psi" },
+            { label: "Bar", value: "bar" },
+            { label: "kPa", value: "kpa" },
+          ],
+          temperatureOptions: [
+            { label: "Fahrenheit", value: "fahrenheit" },
+            { label: "Celsius", value: "celsius" },
+          ],
+          lengthOptions: [
+            { label: "Feet", value: "feet" },
+            { label: "Meters", value: "meters" },
+          ],
+          volumeOptions: [
+            { label: "Gallons", value: "gallons" },
+            { label: "Liters", value: "liters" },
+            { label: "Barrels", value: "barrels" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useUnitsOptions = () => {
+  return useQuery({
+    queryKey: settingsKeys.unitsOptions(),
+    queryFn: fetchUnitsOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// ============================================
 // GET: Data & Time Settings Tab
 // ============================================
 
@@ -179,6 +312,50 @@ export const useDataTimeSettings = () => {
   return useQuery({
     queryKey: settingsKeys.dataTime(),
     queryFn: fetchDataTimeSettings,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// ============================================
+// GET: Data & Time Options (Dropdown Data)
+// ============================================
+
+const fetchDataTimeOptions = async (): Promise<ApiResponse<any>> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          timezoneOptions: [
+            { label: "America/New_York", value: "America/New_York" },
+            { label: "America/Chicago", value: "America/Chicago" },
+            { label: "America/Denver", value: "America/Denver" },
+            { label: "America/Los_Angeles", value: "America/Los_Angeles" },
+            { label: "UTC", value: "UTC" },
+          ],
+          ntpServerOptions: [
+            { label: "pool.ntp.org", value: "pool.ntp.org" },
+            { label: "time.google.com", value: "time.google.com" },
+            { label: "time.nist.gov", value: "time.nist.gov" },
+          ],
+          syncIntervalOptions: [
+            { label: "15 minutes", value: "900" },
+            { label: "30 minutes", value: "1800" },
+            { label: "1 hour", value: "3600" },
+            { label: "6 hours", value: "21600" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useDataTimeOptions = () => {
+  return useQuery({
+    queryKey: settingsKeys.dataTimeOptions(),
+    queryFn: fetchDataTimeOptions,
     staleTime: 10 * 60 * 1000,
   });
 };
@@ -230,6 +407,49 @@ export const useAlarmsSettings = () => {
   return useQuery({
     queryKey: settingsKeys.alarms(),
     queryFn: fetchAlarmsSettings,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// ============================================
+// GET: Alarms Options (Dropdown Data)
+// ============================================
+
+const fetchAlarmsOptions = async (): Promise<ApiResponse<any>> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          delayOptions: [
+            { label: "5", value: "5" },
+            { label: "10", value: "10" },
+            { label: "15", value: "15" },
+            { label: "20", value: "20" },
+            { label: "30", value: "30" },
+          ],
+          outputOptions: [
+            { label: "Audio Alarm", value: "audio" },
+            { label: "Visual Alert", value: "visual" },
+            { label: "Both", value: "both" },
+          ],
+          alarmTypeOptions: [
+            { label: "Kick and Loss", value: "kick-loss" },
+            { label: "Pressure", value: "pressure" },
+            { label: "Flow", value: "flow" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useAlarmsOptions = () => {
+  return useQuery({
+    queryKey: settingsKeys.alarmsOptions(),
+    queryFn: fetchAlarmsOptions,
     staleTime: 10 * 60 * 1000,
   });
 };
@@ -358,6 +578,40 @@ export const useSignalsSettings = () => {
 };
 
 // ============================================
+// GET: Signals Options (Dropdown Data)
+// ============================================
+
+const fetchSignalsOptions = async (): Promise<ApiResponse<any>> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          subsystemOptions: [
+            { label: "Pressure Control", value: "Pressure Control" },
+            { label: "DAQ", value: "DAQ" },
+            { label: "Hydraulics", value: "Hydraulics" },
+            { label: "Auto Control", value: "Auto Control" },
+            { label: "Network", value: "Network" },
+            { label: "Hydraulic Model Validation", value: "Hydraulic Model Validation" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useSignalsOptions = () => {
+  return useQuery({
+    queryKey: settingsKeys.signalsOptions(),
+    queryFn: fetchSignalsOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// ============================================
 // GET: Choke & Pumps Settings Tab
 // ============================================
 
@@ -416,6 +670,42 @@ export const useChokePumpsSettings = () => {
 };
 
 // ============================================
+// GET: Choke & Pumps Options (Dropdown Data)
+// ============================================
+
+const fetchChokePumpsOptions = async (): Promise<ApiResponse<any>> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          controlModeOptions: [
+            { label: "Auto", value: "auto" },
+            { label: "Manual", value: "manual" },
+            { label: "Semi-Auto", value: "semi-auto" },
+          ],
+          responseTimeOptions: [
+            { label: "Fast (1.0s)", value: "1.0" },
+            { label: "Normal (2.5s)", value: "2.5" },
+            { label: "Slow (5.0s)", value: "5.0" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useChokePumpsOptions = () => {
+  return useQuery({
+    queryKey: settingsKeys.chokePumpsOptions(),
+    queryFn: fetchChokePumpsOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// ============================================
 // GET: Auto Control Settings Tab
 // ============================================
 
@@ -467,6 +757,41 @@ export const useAutoControlSettings = () => {
 };
 
 // ============================================
+// GET: Auto Control Options (Dropdown Data)
+// ============================================
+
+const fetchAutoControlOptions = async (): Promise<ApiResponse<any>> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          controlModeOptions: [
+            { label: "Auto", value: "auto" },
+            { label: "Manual", value: "manual" },
+          ],
+          precisionOptions: [
+            { label: "Low", value: "low" },
+            { label: "Medium", value: "medium" },
+            { label: "High", value: "high" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useAutoControlOptions = () => {
+  return useQuery({
+    queryKey: settingsKeys.autoControlOptions(),
+    queryFn: fetchAutoControlOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// ============================================
 // GET: Hydraulics Model Settings Tab
 // ============================================
 
@@ -508,6 +833,47 @@ export const useHydraulicsModelSettings = () => {
   return useQuery({
     queryKey: settingsKeys.hydraulicsModel(),
     queryFn: fetchHydraulicsModelSettings,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// ============================================
+// GET: Hydraulics Model Options (Dropdown Data)
+// ============================================
+
+const fetchHydraulicsModelOptions = async (): Promise<ApiResponse<any>> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          modelOptions: [
+            { label: "Bingham Plastic", value: "bingham-plastic" },
+            { label: "Power Law", value: "power-law" },
+            { label: "Herschel-Bulkley", value: "herschel-bulkley" },
+          ],
+          precisionOptions: [
+            { label: "Low", value: "low" },
+            { label: "Medium", value: "medium" },
+            { label: "High", value: "high" },
+          ],
+          updateIntervalOptions: [
+            { label: "500 ms", value: "500" },
+            { label: "1000 ms", value: "1000" },
+            { label: "2000 ms", value: "2000" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useHydraulicsModelOptions = () => {
+  return useQuery({
+    queryKey: settingsKeys.hydraulicsModelOptions(),
+    queryFn: fetchHydraulicsModelOptions,
     staleTime: 10 * 60 * 1000,
   });
 };
@@ -558,6 +924,37 @@ export const useAboutDiagnosticsSettings = () => {
   return useQuery({
     queryKey: settingsKeys.aboutDiagnostics(),
     queryFn: fetchAboutDiagnosticsSettings,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// ============================================
+// GET: About & Diagnostics Options (Dropdown Data)
+// ============================================
+
+const fetchAboutDiagnosticsOptions = async (): Promise<ApiResponse<any>> => {
+  // MOCK RESPONSE
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          licenseTypeOptions: [
+            { label: "Enterprise", value: "enterprise" },
+            { label: "Professional", value: "professional" },
+            { label: "Standard", value: "standard" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useAboutDiagnosticsOptions = () => {
+  return useQuery({
+    queryKey: settingsKeys.aboutDiagnosticsOptions(),
+    queryFn: fetchAboutDiagnosticsOptions,
     staleTime: 10 * 60 * 1000,
   });
 };
