@@ -34,7 +34,8 @@ export function Hydraulics() {
     successMessage: "Hydraulics settings saved successfully",
     errorMessage: "Failed to save hydraulics settings",
     confirmTitle: "Save Hydraulics Settings",
-    confirmDescription: "Are you sure you want to save these hydraulics changes?",
+    confirmDescription:
+      "Are you sure you want to save these hydraulics changes?",
   });
 
   if (isLoading || !form.formData) {

@@ -23,7 +23,10 @@ import { Summary } from "./sections/Summary";
 import { MudPropertiesSidebar } from "./components/MudPropertiesSidebar";
 import { MUD_NAV } from "./constants";
 import { FluidData } from "@/types/mud";
-import { MudPropertiesProvider, useMudPropertiesContext } from "./MudPropertiesContext";
+import {
+  MudPropertiesProvider,
+  useMudPropertiesContext,
+} from "./MudPropertiesContext";
 
 function MudPropertiesContent() {
   const { section } = useParams();

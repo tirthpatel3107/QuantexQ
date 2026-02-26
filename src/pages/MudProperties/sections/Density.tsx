@@ -21,15 +21,32 @@ export function Density() {
   const { data: densityResponse, isLoading } = useDensityData();
   const { data: optionsResponse } = useDensityOptions();
   const { mutate: saveDensityData } = useSaveDensityData();
-  const { registerSaveHandler, unregisterSaveHandler } = useMudPropertiesContext();
+  const { registerSaveHandler, unregisterSaveHandler } =
+    useMudPropertiesContext();
 
   const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
     if (!densityResponse?.data) return undefined;
-    const { mudWeightIn, mudWeightOut, oilWaterRatio, salinity, solidsContent, lowGravitySolids, highGravitySolids } = densityResponse.data;
-    return { mudWeightIn, mudWeightOut, oilWaterRatio, salinity, solidsContent, lowGravitySolids, highGravitySolids };
+    const {
+      mudWeightIn,
+      mudWeightOut,
+      oilWaterRatio,
+      salinity,
+      solidsContent,
+      lowGravitySolids,
+      highGravitySolids,
+    } = densityResponse.data;
+    return {
+      mudWeightIn,
+      mudWeightOut,
+      oilWaterRatio,
+      salinity,
+      solidsContent,
+      lowGravitySolids,
+      highGravitySolids,
+    };
   }, [densityResponse?.data]);
 
   // Use the reusable form hook
@@ -52,13 +69,16 @@ export function Density() {
   });
 
   // Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter
-  const setFluidAdapter = useCallback((update: any) => {
-    if (typeof update === 'function') {
-      form.setFormData(update);
-    } else {
-      form.updateLocalField(update);
-    }
-  }, [form]);
+  const setFluidAdapter = useCallback(
+    (update: any) => {
+      if (typeof update === "function") {
+        form.setFormData(update);
+      } else {
+        form.updateLocalField(update);
+      }
+    },
+    [form],
+  );
 
   if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;

@@ -47,7 +47,7 @@ export function useSaveWithConfirmation<T>({
       console.error("Save error:", error);
       CommonToast.error(
         errorMessage,
-        error instanceof Error ? error.message : undefined
+        error instanceof Error ? error.message : undefined,
       );
     } finally {
       setIsSaving(false);

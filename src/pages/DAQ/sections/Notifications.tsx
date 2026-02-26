@@ -38,7 +38,8 @@ export function Notifications() {
 
   const initialData = useMemo(() => {
     if (!notificationsResponse?.data) return undefined;
-    const { alarmRules, channels, escalation, muteRules } = notificationsResponse.data;
+    const { alarmRules, channels, escalation, muteRules } =
+      notificationsResponse.data;
     return { alarmRules, channels, escalation, muteRules };
   }, [notificationsResponse?.data]);
 
@@ -57,7 +58,8 @@ export function Notifications() {
     successMessage: "Notifications settings saved successfully",
     errorMessage: "Failed to save notifications settings",
     confirmTitle: "Save Notifications Settings",
-    confirmDescription: "Are you sure you want to save these notifications changes?",
+    confirmDescription:
+      "Are you sure you want to save these notifications changes?",
   });
 
   // Settings & Summary state
@@ -152,201 +154,205 @@ export function Notifications() {
   return (
     <>
       <div className="space-y-4">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Settings & Summary Panel */}
-        <PanelCard title="Settings & Summary">
-          <div className="space-y-4">
-            {/* Alarm Sound */}
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Volume2 className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">Alarm sound</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex-1">
-                  <CommonSelect
-                    options={options?.alarmSoundOptions || []}
-                    value={alarmSound}
-                    onValueChange={setAlarmSound}
-                    placeholder="Select alarm sound"
-                    className="mb-0"
-                    triggerClassName="h-10"
-                  />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Settings & Summary Panel */}
+          <PanelCard title="Settings & Summary">
+            <div className="space-y-4">
+              {/* Alarm Sound */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Volume2 className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">Alarm sound</span>
                 </div>
-                <CommonButton
-                  variant="outline"
-                  className="h-10 px-4 mt-2"
-                  icon={Play}
-                >
-                  Test
-                </CommonButton>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <CommonSelect
+                      options={options?.alarmSoundOptions || []}
+                      value={alarmSound}
+                      onValueChange={setAlarmSound}
+                      placeholder="Select alarm sound"
+                      className="mb-0"
+                      triggerClassName="h-10"
+                    />
+                  </div>
+                  <CommonButton
+                    variant="outline"
+                    className="h-10 px-4 mt-2"
+                    icon={Play}
+                  >
+                    Test
+                  </CommonButton>
+                </div>
+              </div>
+
+              {/* Alarm Notifications */}
+              <div className="space-y-3 pt-4">
+                <h4 className="text-sm font-medium">Alarm Notifications</h4>
+                <CommonToggle
+                  id="acceptable-wrns"
+                  label="Acceptable Wrns"
+                  checked={acceptableWrns}
+                  onCheckedChange={setAcceptableWrns}
+                />
+
+                <CommonToggle
+                  id="acceptable-cmpncs"
+                  label="Acceptable Cmpncs"
+                  checked={acceptableCmpncs}
+                  onCheckedChange={setAcceptableCmpncs}
+                />
+
+                <CommonToggle
+                  id="validity-completion"
+                  label="Validity Completion"
+                  checked={validityCompletion}
+                  onCheckedChange={setValidityCompletion}
+                />
               </div>
             </div>
+          </PanelCard>
 
-            {/* Alarm Notifications */}
-            <div className="space-y-3 pt-4">
-              <h4 className="text-sm font-medium">Alarm Notifications</h4>
-              <CommonToggle
-                id="acceptable-wrns"
-                label="Acceptable Wrns"
-                checked={acceptableWrns}
-                onCheckedChange={setAcceptableWrns}
+          {/* Notificating Store Panel */}
+          <PanelCard title="Notificating Store">
+            <div className="space-y-3">
+              <CommonCheckbox
+                id="remind-reset"
+                label="Remind on reset"
+                checked={remindOnReset}
+                onCheckedChange={(checked) =>
+                  setRemindOnReset(checked === true)
+                }
+              />
+
+              <CommonCheckbox
+                id="self-dismissing"
+                label="Self-dismissing alarms"
+                checked={selfDismissing}
+                onCheckedChange={(checked) =>
+                  setSelfDismissing(checked === true)
+                }
+              />
+
+              <CommonCheckbox
+                id="unuset-complessible"
+                label="Unusetcomplessible"
+                checked={unusetComplessible}
+                onCheckedChange={(checked) =>
+                  setUnusetComplessible(checked === true)
+                }
               />
 
               <CommonToggle
-                id="acceptable-cmpncs"
-                label="Acceptable Cmpncs"
-                checked={acceptableCmpncs}
-                onCheckedChange={setAcceptableCmpncs}
+                id="enable-new-alarm"
+                label="Enable (new alarm principle)"
+                checked={enableNewAlarm}
+                onCheckedChange={setEnableNewAlarm}
+                className="pt-3"
               />
 
               <CommonToggle
-                id="validity-completion"
-                label="Validity Completion"
-                checked={validityCompletion}
-                onCheckedChange={setValidityCompletion}
+                id="alarm-clear"
+                label="Alarm clear diagnostics"
+                checked={alarmClearDiagnostics}
+                onCheckedChange={setAlarmClearDiagnostics}
+              />
+
+              <CommonToggle
+                id="inbound-rate"
+                label="inbound rate"
+                checked={inboundRate}
+                onCheckedChange={setInboundRate}
               />
             </div>
-          </div>
-        </PanelCard>
+          </PanelCard>
+        </div>
 
-        {/* Notificating Store Panel */}
-        <PanelCard title="Notificating Store">
+        {/* Notification Log Panel */}
+        <PanelCard
+          title={
+            <div className="flex items-center gap-2">
+              <Bell className="h-4 w-4" />
+              Notification Log
+            </div>
+          }
+          headerAction={
+            <div className="flex items-center gap-2">
+              <CommonButton variant="outline" size="sm">
+                Edit Severity & Filter
+              </CommonButton>
+            </div>
+          }
+        >
           <div className="space-y-3">
-            <CommonCheckbox
-              id="remind-reset"
-              label="Remind on reset"
-              checked={remindOnReset}
-              onCheckedChange={(checked) => setRemindOnReset(checked === true)}
-            />
+            <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
+              <span>Past 15 minutes:</span>
+              <CommonButton
+                variant="link"
+                size="sm"
+                className="h-auto p-0 text-sm"
+              >
+                Cleared History
+              </CommonButton>
+            </div>
 
-            <CommonCheckbox
-              id="self-dismissing"
-              label="Self-dismissing alarms"
-              checked={selfDismissing}
-              onCheckedChange={(checked) => setSelfDismissing(checked === true)}
-            />
+            {/* Log Table Header */}
+            <div className="grid grid-cols-12 gap-3 text-sm font-medium text-muted-foreground pb-2 border-b border-border/50">
+              <div className="col-span-3">Mention/Email</div>
+              <div className="col-span-5">Message</div>
+              <div className="col-span-3">Severity</div>
+              <div className="col-span-1"></div>
+            </div>
 
-            <CommonCheckbox
-              id="unuset-complessible"
-              label="Unusetcomplessible"
-              checked={unusetComplessible}
-              onCheckedChange={(checked) =>
-                setUnusetComplessible(checked === true)
-              }
-            />
+            {/* Log Entries */}
+            <div className="space-y-2">
+              {logEntries.map((entry) => (
+                <div
+                  key={entry.id}
+                  className="grid grid-cols-12 gap-3 items-center py-2 hover:bg-accent/50 rounded transition-colors"
+                >
+                  <div className="col-span-3 flex items-center gap-2">
+                    <div
+                      className={cn(
+                        "w-6 h-6 rounded flex items-center justify-center text-sm font-bold border",
+                        getTypeColor(entry.type),
+                      )}
+                    >
+                      {getTypeIcon(entry.type)}
+                    </div>
+                    <span className="text-sm truncate">{entry.timestamp}</span>
+                  </div>
+                  <div className="col-span-5">
+                    <span className="text-sm">{entry.message}</span>
+                  </div>
+                  <div className="col-span-3">
+                    <span
+                      className={cn(
+                        "inline-block px-2 py-1 rounded text-sm font-medium",
+                        getSeverityColor(entry.severity),
+                      )}
+                    >
+                      {entry.severity}
+                    </span>
+                  </div>
+                  <div className="col-span-1 flex justify-end">
+                    <span className="text-sm text-emerald-400 font-medium">
+                      {entry.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-            <CommonToggle
-              id="enable-new-alarm"
-              label="Enable (new alarm principle)"
-              checked={enableNewAlarm}
-              onCheckedChange={setEnableNewAlarm}
-              className="pt-3"
-            />
-
-            <CommonToggle
-              id="alarm-clear"
-              label="Alarm clear diagnostics"
-              checked={alarmClearDiagnostics}
-              onCheckedChange={setAlarmClearDiagnostics}
-            />
-
-            <CommonToggle
-              id="inbound-rate"
-              label="inbound rate"
-              checked={inboundRate}
-              onCheckedChange={setInboundRate}
-            />
+            <div className="flex justify-end pt-3">
+              <CommonButton variant="outline" size="sm">
+                Clear Alerts History
+              </CommonButton>
+            </div>
           </div>
         </PanelCard>
       </div>
 
-      {/* Notification Log Panel */}
-      <PanelCard
-        title={
-          <div className="flex items-center gap-2">
-            <Bell className="h-4 w-4" />
-            Notification Log
-          </div>
-        }
-        headerAction={
-          <div className="flex items-center gap-2">
-            <CommonButton variant="outline" size="sm">
-              Edit Severity & Filter
-            </CommonButton>
-          </div>
-        }
-      >
-        <div className="space-y-3">
-          <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
-            <span>Past 15 minutes:</span>
-            <CommonButton
-              variant="link"
-              size="sm"
-              className="h-auto p-0 text-sm"
-            >
-              Cleared History
-            </CommonButton>
-          </div>
-
-          {/* Log Table Header */}
-          <div className="grid grid-cols-12 gap-3 text-sm font-medium text-muted-foreground pb-2 border-b border-border/50">
-            <div className="col-span-3">Mention/Email</div>
-            <div className="col-span-5">Message</div>
-            <div className="col-span-3">Severity</div>
-            <div className="col-span-1"></div>
-          </div>
-
-          {/* Log Entries */}
-          <div className="space-y-2">
-            {logEntries.map((entry) => (
-              <div
-                key={entry.id}
-                className="grid grid-cols-12 gap-3 items-center py-2 hover:bg-accent/50 rounded transition-colors"
-              >
-                <div className="col-span-3 flex items-center gap-2">
-                  <div
-                    className={cn(
-                      "w-6 h-6 rounded flex items-center justify-center text-sm font-bold border",
-                      getTypeColor(entry.type),
-                    )}
-                  >
-                    {getTypeIcon(entry.type)}
-                  </div>
-                  <span className="text-sm truncate">{entry.timestamp}</span>
-                </div>
-                <div className="col-span-5">
-                  <span className="text-sm">{entry.message}</span>
-                </div>
-                <div className="col-span-3">
-                  <span
-                    className={cn(
-                      "inline-block px-2 py-1 rounded text-sm font-medium",
-                      getSeverityColor(entry.severity),
-                    )}
-                  >
-                    {entry.severity}
-                  </span>
-                </div>
-                <div className="col-span-1 flex justify-end">
-                  <span className="text-sm text-emerald-400 font-medium">
-                    {entry.status}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-end pt-3">
-            <CommonButton variant="outline" size="sm">
-              Clear Alerts History
-            </CommonButton>
-          </div>
-        </div>
-      </PanelCard>
-    </div>
-
-    <FormSaveDialog form={form} />
-  </>
+      <FormSaveDialog form={form} />
+    </>
   );
 }

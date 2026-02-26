@@ -48,8 +48,8 @@ export function useSectionForm<T>({
   }, [handleSave, registerSaveHandler, unregisterSaveHandler]);
 
   /**
-   * Updates state immediately in the UI. 
-   * This is used for input changes. The data is only saved to the API 
+   * Updates state immediately in the UI.
+   * This is used for input changes. The data is only saved to the API
    * when the header "Save" button is clicked.
    */
   const updateLocalField = useCallback((updates: Partial<T>) => {

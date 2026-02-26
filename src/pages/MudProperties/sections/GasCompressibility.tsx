@@ -26,16 +26,32 @@ import { useMudPropertiesContext } from "../MudPropertiesContext";
 export function GasCompressibility() {
   const { data: gasResponse, isLoading } = useGasCompressibilityData();
   const { data: optionsResponse } = useGasCompressibilityOptions();
-  const { mutate: saveGasCompressibilityData } = useSaveGasCompressibilityData();
-  const { registerSaveHandler, unregisterSaveHandler } = useMudPropertiesContext();
+  const { mutate: saveGasCompressibilityData } =
+    useSaveGasCompressibilityData();
+  const { registerSaveHandler, unregisterSaveHandler } =
+    useMudPropertiesContext();
 
   const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
     if (!gasResponse?.data) return undefined;
-    const { gasSolubility, compressibilityFactor, gasOilRatio, gasGravity, criticalPressure, criticalTemp } = gasResponse.data;
-    return { gasSolubility, compressibilityFactor, gasOilRatio, gasGravity, criticalPressure, criticalTemp };
+    const {
+      gasSolubility,
+      compressibilityFactor,
+      gasOilRatio,
+      gasGravity,
+      criticalPressure,
+      criticalTemp,
+    } = gasResponse.data;
+    return {
+      gasSolubility,
+      compressibilityFactor,
+      gasOilRatio,
+      gasGravity,
+      criticalPressure,
+      criticalTemp,
+    };
   }, [gasResponse?.data]);
 
   // Use the reusable form hook
@@ -54,7 +70,8 @@ export function GasCompressibility() {
     successMessage: "Gas compressibility settings saved successfully",
     errorMessage: "Failed to save gas compressibility settings",
     confirmTitle: "Save Gas Compressibility Settings",
-    confirmDescription: "Are you sure you want to save these gas compressibility changes?",
+    confirmDescription:
+      "Are you sure you want to save these gas compressibility changes?",
   });
 
   if (isLoading || !form.formData) {
@@ -76,7 +93,9 @@ export function GasCompressibility() {
             </Label>
             <CommonInput
               value={formData.gasSolubility}
-              onChange={(e) => form.updateLocalField({ gasSolubility: e.target.value })}
+              onChange={(e) =>
+                form.updateLocalField({ gasSolubility: e.target.value })
+              }
               placeholder="—"
             />
             <span className="text-[11px] text-muted-foreground">scf/bbl</span>
@@ -86,7 +105,9 @@ export function GasCompressibility() {
             </Label>
             <CommonInput
               value={formData.compressibilityFactor}
-              onChange={(e) => form.updateLocalField({ compressibilityFactor: e.target.value })}
+              onChange={(e) =>
+                form.updateLocalField({ compressibilityFactor: e.target.value })
+              }
               placeholder="—"
             />
             <span className="text-[11px] text-muted-foreground">—</span>
@@ -96,7 +117,9 @@ export function GasCompressibility() {
             </Label>
             <CommonInput
               value={formData.gasOilRatio}
-              onChange={(e) => form.updateLocalField({ gasOilRatio: e.target.value })}
+              onChange={(e) =>
+                form.updateLocalField({ gasOilRatio: e.target.value })
+              }
               placeholder="—"
             />
             <span className="text-[11px] text-muted-foreground">scf/stb</span>

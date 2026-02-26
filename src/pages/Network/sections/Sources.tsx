@@ -81,7 +81,7 @@ export function Sources() {
   }
 
   const { rigPlc, pwdWits, devices } = form.formData;
-  
+
   // Use connectionStatus from original data if available, or fall back to form state
   const connectionStatus =
     sourcesResponse?.data.rigPlc.connectionStatus || rigPlc.connectionStatus;

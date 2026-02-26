@@ -56,7 +56,9 @@ export function Alarms() {
   const options = optionsResponse?.data;
   const [activeTab, setActiveTab] = useState("kick");
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [selectedSensor, setSelectedSensor] = useState<SensorLimit | null>(null);
+  const [selectedSensor, setSelectedSensor] = useState<SensorLimit | null>(
+    null,
+  );
   const [sorting, setSorting] = useState<SortingState>([]);
 
   // Memoize initial data
@@ -182,7 +184,9 @@ export function Alarms() {
 
   const handleDeleteSensor = () => {
     if (selectedSensor) {
-      const updatedSensors = sensorsData.filter((s: SensorLimit) => s.id !== selectedSensor.id);
+      const updatedSensors = sensorsData.filter(
+        (s: SensorLimit) => s.id !== selectedSensor.id,
+      );
       form.updateLocalField({ sensors: updatedSensors });
       setIsDeleteConfirmOpen(false);
       setSelectedSensor(null);
@@ -210,7 +214,9 @@ export function Alarms() {
                 <CommonCheckbox
                   id="dynamic-limits"
                   checked={formData.dynamicLimitsEnabled}
-                  onCheckedChange={(checked) => form.updateLocalField({ dynamicLimitsEnabled: checked })}
+                  onCheckedChange={(checked) =>
+                    form.updateLocalField({ dynamicLimitsEnabled: checked })
+                  }
                   label="Enable adjustable dynamic limits"
                   containerClassName="gap-2"
                 />
@@ -219,43 +225,61 @@ export function Alarms() {
                 <CommonInput
                   label="Kick Limit (bbl)"
                   value={formData.kickLimit}
-                  onChange={(e) => form.updateLocalField({ kickLimit: e.target.value })}
+                  onChange={(e) =>
+                    form.updateLocalField({ kickLimit: e.target.value })
+                  }
                   type="number"
                 />
                 <CommonInput
                   label="Loss Limit (bbl)"
                   value={formData.lossLimit}
-                  onChange={(e) => form.updateLocalField({ lossLimit: e.target.value })}
+                  onChange={(e) =>
+                    form.updateLocalField({ lossLimit: e.target.value })
+                  }
                   type="number"
                 />
                 <CommonInput
                   label="Pit Gain Limit (bbl)"
                   value={formData.pitGainLimit}
-                  onChange={(e) => form.updateLocalField({ pitGainLimit: e.target.value })}
+                  onChange={(e) =>
+                    form.updateLocalField({ pitGainLimit: e.target.value })
+                  }
                   type="number"
                 />
                 <CommonInput
                   label="SPP High Limit (psi)"
                   value={formData.sppHighLimit}
-                  onChange={(e) => form.updateLocalField({ sppHighLimit: e.target.value })}
+                  onChange={(e) =>
+                    form.updateLocalField({ sppHighLimit: e.target.value })
+                  }
                   type="number"
                 />
                 <CommonInput
                   label="PPP High Limit (psi)"
                   value={formData.pppHighLimit}
-                  onChange={(e) => form.updateLocalField({ pppHighLimit: e.target.value })}
+                  onChange={(e) =>
+                    form.updateLocalField({ pppHighLimit: e.target.value })
+                  }
                   type="number"
                 />
                 <CommonInput
                   label="Pit Volume High Lim."
                   value={formData.pitVolumeHighLimit}
-                  onChange={(e) => form.updateLocalField({ pitVolumeHighLimit: e.target.value })}
+                  onChange={(e) =>
+                    form.updateLocalField({
+                      pitVolumeHighLimit: e.target.value,
+                    })
+                  }
                   type="number"
                 />
                 <CommonInput
                   label="Pit Volume High Lim. (bbl)"
                   value={formData.pitVolumeHighLimitBbl}
-                  onChange={(e) => form.updateLocalField({ pitVolumeHighLimitBbl: e.target.value })}
+                  onChange={(e) =>
+                    form.updateLocalField({
+                      pitVolumeHighLimitBbl: e.target.value,
+                    })
+                  }
                   type="number"
                 />
               </div>
@@ -278,19 +302,31 @@ export function Alarms() {
                   <CommonCheckbox
                     id="logic-gains"
                     checked={formData.logicActivateWhenGainsStop}
-                    onCheckedChange={(checked) => form.updateLocalField({ logicActivateWhenGainsStop: checked })}
+                    onCheckedChange={(checked) =>
+                      form.updateLocalField({
+                        logicActivateWhenGainsStop: checked,
+                      })
+                    }
                     label="Activate when gains / losses stop"
                   />
                   <CommonCheckbox
                     id="logic-sticky"
                     checked={formData.logicActivateStickyAlarms}
-                    onCheckedChange={(checked) => form.updateLocalField({ logicActivateStickyAlarms: checked })}
+                    onCheckedChange={(checked) =>
+                      form.updateLocalField({
+                        logicActivateStickyAlarms: checked,
+                      })
+                    }
                     label="Activate sticky alarms"
                   />
                   <CommonCheckbox
                     id="logic-secondary"
                     checked={formData.logicActivateSecondaryAlarms}
-                    onCheckedChange={(checked) => form.updateLocalField({ logicActivateSecondaryAlarms: checked })}
+                    onCheckedChange={(checked) =>
+                      form.updateLocalField({
+                        logicActivateSecondaryAlarms: checked,
+                      })
+                    }
                     label="Activate secondary alarms"
                   />
                 </div>
@@ -300,13 +336,19 @@ export function Alarms() {
                     label="Delay (seconds)"
                     value={formData.logicDelay}
                     options={options?.delayOptions || []}
-                    onValueChange={(delay) => form.updateLocalField({ logicDelay: delay })}
+                    onValueChange={(delay) =>
+                      form.updateLocalField({ logicDelay: delay })
+                    }
                   />
 
                   <CommonInput
                     label="Monitor duration (seconds)"
                     value={formData.logicMonitorDuration}
-                    onChange={(e) => form.updateLocalField({ logicMonitorDuration: e.target.value })}
+                    onChange={(e) =>
+                      form.updateLocalField({
+                        logicMonitorDuration: e.target.value,
+                      })
+                    }
                     type="number"
                     className="h-9"
                   />
@@ -329,13 +371,17 @@ export function Alarms() {
                   <CommonCheckbox
                     id="notify-offline"
                     checked={formData.notifyOfflineAlarm}
-                    onCheckedChange={(checked) => form.updateLocalField({ notifyOfflineAlarm: checked })}
+                    onCheckedChange={(checked) =>
+                      form.updateLocalField({ notifyOfflineAlarm: checked })
+                    }
                     label="Activate offline alarm output when connections are down"
                   />
                   <CommonCheckbox
                     id="notify-online"
                     checked={formData.notifyOnlineAlarm}
-                    onCheckedChange={(checked) => form.updateLocalField({ notifyOnlineAlarm: checked })}
+                    onCheckedChange={(checked) =>
+                      form.updateLocalField({ notifyOnlineAlarm: checked })
+                    }
                     label="Use rig online alarm output when connected"
                   />
                 </div>
@@ -345,26 +391,34 @@ export function Alarms() {
                     label="Kick Delay (sec)"
                     value={formData.kickDelay}
                     options={options?.delayOptions || []}
-                    onValueChange={(kickDelay) => form.updateLocalField({ kickDelay })}
+                    onValueChange={(kickDelay) =>
+                      form.updateLocalField({ kickDelay })
+                    }
                   />
                   <CommonSelect
                     label="Loss Delay (sec)"
                     value={formData.lossDelay}
                     options={options?.delayOptions || []}
-                    onValueChange={(lossDelay) => form.updateLocalField({ lossDelay })}
+                    onValueChange={(lossDelay) =>
+                      form.updateLocalField({ lossDelay })
+                    }
                   />
 
                   <CommonSelect
                     label="Offline Output"
                     value={formData.offlineOutput}
                     options={options?.outputOptions || []}
-                    onValueChange={(offlineOutput) => form.updateLocalField({ offlineOutput })}
+                    onValueChange={(offlineOutput) =>
+                      form.updateLocalField({ offlineOutput })
+                    }
                   />
                   <CommonSelect
                     label="Online Output"
                     value={formData.onlineOutput}
                     options={options?.alarmTypeOptions || []}
-                    onValueChange={(onlineOutput) => form.updateLocalField({ onlineOutput })}
+                    onValueChange={(onlineOutput) =>
+                      form.updateLocalField({ onlineOutput })
+                    }
                   />
                 </div>
               </div>
@@ -383,11 +437,7 @@ export function Alarms() {
             }
             headerAction={
               <div className="flex gap-2">
-                <CommonButton
-                  variant="outline"
-                  size="sm"
-                  icon={PlusCircle}
-                >
+                <CommonButton variant="outline" size="sm" icon={PlusCircle}>
                   Add Custom Sensor
                 </CommonButton>
                 <RestoreDefaultsButton size="sm" />

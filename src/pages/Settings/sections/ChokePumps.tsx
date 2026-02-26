@@ -44,7 +44,8 @@ export function ChokePumps() {
     successMessage: "Choke & Pumps settings saved successfully",
     errorMessage: "Failed to save choke & pumps settings",
     confirmTitle: "Save Choke & Pumps Settings",
-    confirmDescription: "Are you sure you want to save these choke & pumps changes?",
+    confirmDescription:
+      "Are you sure you want to save these choke & pumps changes?",
   });
 
   if (isLoading || !form.formData) {

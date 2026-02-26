@@ -44,7 +44,8 @@ export function DataTime() {
     successMessage: "Data & Time settings saved successfully",
     errorMessage: "Failed to save data & time settings",
     confirmTitle: "Save Data & Time Settings",
-    confirmDescription: "Are you sure you want to save these data & time changes?",
+    confirmDescription:
+      "Are you sure you want to save these data & time changes?",
   });
 
   if (isLoading || !form.formData) {

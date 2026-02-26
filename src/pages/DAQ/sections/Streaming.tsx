@@ -19,7 +19,8 @@ export function Streaming() {
 
   const initialData = useMemo(() => {
     if (!streamingResponse?.data) return undefined;
-    const { witsStream, edrLogging, dataRate, liveExport } = streamingResponse.data;
+    const { witsStream, edrLogging, dataRate, liveExport } =
+      streamingResponse.data;
     return { witsStream, edrLogging, dataRate, liveExport };
   }, [streamingResponse?.data]);
 
@@ -38,7 +39,8 @@ export function Streaming() {
     successMessage: "Streaming settings saved successfully",
     errorMessage: "Failed to save streaming settings",
     confirmTitle: "Save Streaming Settings",
-    confirmDescription: "Are you sure you want to save these streaming changes?",
+    confirmDescription:
+      "Are you sure you want to save these streaming changes?",
   });
 
   if (isLoading || !form.formData) {
@@ -50,7 +52,8 @@ export function Streaming() {
   return (
     <>
       <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-        Streaming & Logging DAQ Section (WITS: {witsStream.enabled ? "Enabled" : "Disabled"})
+        Streaming & Logging DAQ Section (WITS:{" "}
+        {witsStream.enabled ? "Enabled" : "Disabled"})
       </div>
 
       <FormSaveDialog form={form} />

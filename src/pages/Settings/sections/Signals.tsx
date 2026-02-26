@@ -242,7 +242,8 @@ export function Signals() {
 
   const filteredData = signals.filter((s) => {
     // Search filter
-    if (search && !s.name.toLowerCase().includes(search.toLowerCase())) return false;
+    if (search && !s.name.toLowerCase().includes(search.toLowerCase()))
+      return false;
 
     // Type filter
     if (filterBy === "favorites" && !s.isFavorite) return false;
@@ -250,7 +251,8 @@ export function Signals() {
     if (filterBy === "notInUse" && s.inUse) return false;
 
     // Subsystem filter
-    if (subsystemFilters.length > 0 && !subsystemFilters.includes(s.subsystem)) return false;
+    if (subsystemFilters.length > 0 && !subsystemFilters.includes(s.subsystem))
+      return false;
 
     return true;
   });
@@ -362,7 +364,8 @@ export function Signals() {
         <div className="flex items-center justify-between text-[13px] text-muted-foreground px-1">
           <div className="flex items-center gap-4">
             <span>
-              Total Signals: <span className="font-semibold">{totalSignals}</span>
+              Total Signals:{" "}
+              <span className="font-semibold">{totalSignals}</span>
             </span>
             <span className="text-muted-foreground/50">|</span>
             <span>
@@ -411,7 +414,11 @@ export function Signals() {
               onValueChange={() => {}}
               placeholder="Select subsystem"
             />
-            <CommonInput label="Unit" id="unit" placeholder="e.g., RPM, psi, %" />
+            <CommonInput
+              label="Unit"
+              id="unit"
+              placeholder="e.g., RPM, psi, %"
+            />
             <CommonInput
               label="Value Range"
               id="value-range"
@@ -509,7 +516,10 @@ export function Signals() {
               placeholder="e.g., 0-2400"
             />
             <div className="flex items-center space-x-2">
-              <Checkbox id="edit-in-use" defaultChecked={selectedSignal?.inUse} />
+              <Checkbox
+                id="edit-in-use"
+                defaultChecked={selectedSignal?.inUse}
+              />
               <label
                 htmlFor="edit-in-use"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

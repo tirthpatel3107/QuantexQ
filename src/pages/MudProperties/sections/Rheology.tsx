@@ -21,14 +21,16 @@ export function Rheology() {
   const { data: rheologyResponse, isLoading } = useRheologyData();
   const { data: optionsResponse } = useRheologyOptions();
   const { mutate: saveRheologyData } = useSaveRheologyData();
-  const { registerSaveHandler, unregisterSaveHandler } = useMudPropertiesContext();
+  const { registerSaveHandler, unregisterSaveHandler } =
+    useMudPropertiesContext();
 
   const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
     if (!rheologyResponse?.data) return undefined;
-    const { rheologySource, pv, yp, gel10s, gel10m, n, k, tau0 } = rheologyResponse.data;
+    const { rheologySource, pv, yp, gel10s, gel10m, n, k, tau0 } =
+      rheologyResponse.data;
     return { rheologySource, pv, yp, gel10s, gel10m, n, k, tau0 };
   }, [rheologyResponse?.data]);
 
@@ -52,13 +54,16 @@ export function Rheology() {
   });
 
   // Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter
-  const setFluidAdapter = useCallback((update: any) => {
-    if (typeof update === 'function') {
-      form.setFormData(update);
-    } else {
-      form.updateLocalField(update);
-    }
-  }, [form]);
+  const setFluidAdapter = useCallback(
+    (update: any) => {
+      if (typeof update === "function") {
+        form.setFormData(update);
+      } else {
+        form.updateLocalField(update);
+      }
+    },
+    [form],
+  );
 
   if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;

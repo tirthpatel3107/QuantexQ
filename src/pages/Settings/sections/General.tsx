@@ -61,7 +61,8 @@ export function GeneralSettings() {
     successMessage: "General settings saved successfully",
     errorMessage: "Failed to save general settings",
     confirmTitle: "Save General Settings",
-    confirmDescription: "Are you sure you want to save these general settings changes?",
+    confirmDescription:
+      "Are you sure you want to save these general settings changes?",
   });
 
   if (isLoading || !form.formData) {

@@ -38,7 +38,8 @@ export function Calibration() {
     successMessage: "Calibration settings saved successfully",
     errorMessage: "Failed to save calibration settings",
     confirmTitle: "Save Calibration Settings",
-    confirmDescription: "Are you sure you want to save these calibration changes?",
+    confirmDescription:
+      "Are you sure you want to save these calibration changes?",
   });
 
   if (isLoading || !form.formData) {

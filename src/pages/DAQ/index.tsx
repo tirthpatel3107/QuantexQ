@@ -32,7 +32,12 @@ function DAQContent() {
   const headerActions = (
     <>
       <CommonTooltip content="Save DAQ settings">
-        <CommonButton variant="outline" size="sm" icon={Save} onClick={requestSave}>
+        <CommonButton
+          variant="outline"
+          size="sm"
+          icon={Save}
+          onClick={requestSave}
+        >
           Save
         </CommonButton>
       </CommonTooltip>

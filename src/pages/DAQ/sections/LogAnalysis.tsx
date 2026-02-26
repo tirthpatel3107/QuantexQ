@@ -1,7 +1,11 @@
 import { useState, useMemo } from "react";
 import { useSectionForm } from "@/hooks/useSectionForm";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonButton, SectionSkeleton, FormSaveDialog } from "@/components/common";
+import {
+  CommonButton,
+  SectionSkeleton,
+  FormSaveDialog,
+} from "@/components/common";
 import { Filter } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -27,7 +31,8 @@ export function LogAnalysis() {
 
   const initialData = useMemo(() => {
     if (!logAnalysisResponse?.data) return undefined;
-    const { logViewer, trendAnalysis, reportGeneration, logArchive } = logAnalysisResponse.data;
+    const { logViewer, trendAnalysis, reportGeneration, logArchive } =
+      logAnalysisResponse.data;
     return { logViewer, trendAnalysis, reportGeneration, logArchive };
   }, [logAnalysisResponse?.data]);
 
@@ -46,7 +51,8 @@ export function LogAnalysis() {
     successMessage: "Log analysis settings saved successfully",
     errorMessage: "Failed to save log analysis settings",
     confirmTitle: "Save Log Analysis Settings",
-    confirmDescription: "Are you sure you want to save these log analysis changes?",
+    confirmDescription:
+      "Are you sure you want to save these log analysis changes?",
   });
 
   const [logEntries] = useState<LogEntry[]>([
@@ -115,69 +121,69 @@ export function LogAnalysis() {
   return (
     <>
       <div className="space-y-4">
-      {/* Log Results Panel */}
-      <PanelCard
-        title="Log Results"
-        headerAction={
-          <CommonButton variant="outline" size="sm" icon={Filter}>
-            Filter Dims
-          </CommonButton>
-        }
-      >
-        <div className="space-y-3">
-          {/* Filter Info */}
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <div className="flex items-center gap-4">
-              <span>Data filtered to: Level All</span>
-              <span>Start time: 06 Feb 2026 | 16:18</span>
-              <span>End time: 06 Feb 2026 | 16:36</span>
-            </div>
-            <CommonButton variant="secondary" size="sm">
-              Filter Logs
+        {/* Log Results Panel */}
+        <PanelCard
+          title="Log Results"
+          headerAction={
+            <CommonButton variant="outline" size="sm" icon={Filter}>
+              Filter Dims
             </CommonButton>
-          </div>
-
-          {/* Log Table */}
-          <div className="border border-border/50 rounded-md overflow-hidden">
-            {/* Table Header */}
-            <div className="grid grid-cols-12 gap-3 bg-muted/50 px-4 py-3 text-sm font-medium text-muted-foreground border-b border-border/50">
-              <div className="col-span-2">PROBLEM ID</div>
-              <div className="col-span-2">Pigging</div>
-              <div className="col-span-1">Time</div>
-              <div className="col-span-7">Message</div>
+          }
+        >
+          <div className="space-y-3">
+            {/* Filter Info */}
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <div className="flex items-center gap-4">
+                <span>Data filtered to: Level All</span>
+                <span>Start time: 06 Feb 2026 | 16:18</span>
+                <span>End time: 06 Feb 2026 | 16:36</span>
+              </div>
+              <CommonButton variant="secondary" size="sm">
+                Filter Logs
+              </CommonButton>
             </div>
 
-            {/* Table Body */}
-            <div className="divide-y divide-border/30">
-              {logEntries.map((entry) => (
-                <div
-                  key={entry.id}
-                  className="grid grid-cols-12 gap-3 px-4 py-3 hover:bg-accent/30 transition-colors"
-                >
-                  <div className="col-span-2">
-                    <span
-                      className={cn(
-                        "inline-block px-2 py-1 rounded text-sm font-medium border",
-                        getSeverityColor(entry.severity),
-                      )}
-                    >
-                      {entry.problemId}
-                    </span>
+            {/* Log Table */}
+            <div className="border border-border/50 rounded-md overflow-hidden">
+              {/* Table Header */}
+              <div className="grid grid-cols-12 gap-3 bg-muted/50 px-4 py-3 text-sm font-medium text-muted-foreground border-b border-border/50">
+                <div className="col-span-2">PROBLEM ID</div>
+                <div className="col-span-2">Pigging</div>
+                <div className="col-span-1">Time</div>
+                <div className="col-span-7">Message</div>
+              </div>
+
+              {/* Table Body */}
+              <div className="divide-y divide-border/30">
+                {logEntries.map((entry) => (
+                  <div
+                    key={entry.id}
+                    className="grid grid-cols-12 gap-3 px-4 py-3 hover:bg-accent/30 transition-colors"
+                  >
+                    <div className="col-span-2">
+                      <span
+                        className={cn(
+                          "inline-block px-2 py-1 rounded text-sm font-medium border",
+                          getSeverityColor(entry.severity),
+                        )}
+                      >
+                        {entry.problemId}
+                      </span>
+                    </div>
+                    <div className="col-span-2 text-sm text-muted-foreground">
+                      {entry.pigging}
+                    </div>
+                    <div className="col-span-1 text-sm">{entry.time}</div>
+                    <div className="col-span-7 text-sm">{entry.message}</div>
                   </div>
-                  <div className="col-span-2 text-sm text-muted-foreground">
-                    {entry.pigging}
-                  </div>
-                  <div className="col-span-1 text-sm">{entry.time}</div>
-                  <div className="col-span-7 text-sm">{entry.message}</div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </PanelCard>
-    </div>
+        </PanelCard>
+      </div>
 
-    <FormSaveDialog form={form} />
-  </>
+      <FormSaveDialog form={form} />
+    </>
   );
 }

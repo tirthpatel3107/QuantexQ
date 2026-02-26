@@ -26,14 +26,16 @@ export function FluidOverview() {
   const { data: overviewResponse, isLoading } = useFluidOverviewData();
   const { data: optionsResponse } = useFluidOverviewOptions();
   const { mutate: saveFluidOverviewData } = useSaveFluidOverviewData();
-  const { registerSaveHandler, unregisterSaveHandler } = useMudPropertiesContext();
+  const { registerSaveHandler, unregisterSaveHandler } =
+    useMudPropertiesContext();
 
   const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
     if (!overviewResponse?.data) return undefined;
-    const { type, baseFluid, activePitsVolume, flowlineTemp } = overviewResponse.data;
+    const { type, baseFluid, activePitsVolume, flowlineTemp } =
+      overviewResponse.data;
     return { type, baseFluid, activePitsVolume, flowlineTemp };
   }, [overviewResponse?.data]);
 
@@ -53,19 +55,23 @@ export function FluidOverview() {
     successMessage: "Fluid overview settings saved successfully",
     errorMessage: "Failed to save fluid overview settings",
     confirmTitle: "Save Fluid Overview Settings",
-    confirmDescription: "Are you sure you want to save these fluid overview changes?",
+    confirmDescription:
+      "Are you sure you want to save these fluid overview changes?",
   });
 
   // Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter
-  const setFluidAdapter = useCallback((update: any) => {
-    if (typeof update === 'function') {
-      // This is a bit tricky since form.formData might be null initially
-      // But useSectionForm ensures it's populated if initialData is there
-      form.setFormData(update);
-    } else {
-      form.updateLocalField(update);
-    }
-  }, [form]);
+  const setFluidAdapter = useCallback(
+    (update: any) => {
+      if (typeof update === "function") {
+        // This is a bit tricky since form.formData might be null initially
+        // But useSectionForm ensures it's populated if initialData is there
+        form.setFormData(update);
+      } else {
+        form.updateLocalField(update);
+      }
+    },
+    [form],
+  );
 
   if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;

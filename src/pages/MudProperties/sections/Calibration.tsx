@@ -26,15 +26,32 @@ export function Calibration() {
   const { data: calibrationResponse, isLoading } = useCalibrationData();
   const { data: optionsResponse } = useCalibrationOptions();
   const { mutate: saveCalibrationData } = useSaveCalibrationData();
-  const { registerSaveHandler, unregisterSaveHandler } = useMudPropertiesContext();
+  const { registerSaveHandler, unregisterSaveHandler } =
+    useMudPropertiesContext();
 
   const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
     if (!calibrationResponse?.data) return undefined;
-    const { viscometerCalDate, densityCalDate, tempSensorOffset, pressureSensorCal, flowMeterCal, lastCalibrationBy, nextCalibrationDue } = calibrationResponse.data;
-    return { viscometerCalDate, densityCalDate, tempSensorOffset, pressureSensorCal, flowMeterCal, lastCalibrationBy, nextCalibrationDue };
+    const {
+      viscometerCalDate,
+      densityCalDate,
+      tempSensorOffset,
+      pressureSensorCal,
+      flowMeterCal,
+      lastCalibrationBy,
+      nextCalibrationDue,
+    } = calibrationResponse.data;
+    return {
+      viscometerCalDate,
+      densityCalDate,
+      tempSensorOffset,
+      pressureSensorCal,
+      flowMeterCal,
+      lastCalibrationBy,
+      nextCalibrationDue,
+    };
   }, [calibrationResponse?.data]);
 
   // Use the reusable form hook
@@ -53,7 +70,8 @@ export function Calibration() {
     successMessage: "Calibration settings saved successfully",
     errorMessage: "Failed to save calibration settings",
     confirmTitle: "Save Calibration Settings",
-    confirmDescription: "Are you sure you want to save these calibration changes?",
+    confirmDescription:
+      "Are you sure you want to save these calibration changes?",
   });
 
   if (isLoading || !form.formData) {
@@ -70,7 +88,9 @@ export function Calibration() {
             <CommonInput
               label="Viscometer cal. date"
               value={formData.viscometerCalDate}
-              onChange={(e) => form.updateLocalField({ viscometerCalDate: e.target.value })}
+              onChange={(e) =>
+                form.updateLocalField({ viscometerCalDate: e.target.value })
+              }
               placeholder="—"
               type="date"
             />
@@ -78,7 +98,9 @@ export function Calibration() {
             <CommonInput
               label="Density cal. date"
               value={formData.densityCalDate}
-              onChange={(e) => form.updateLocalField({ densityCalDate: e.target.value })}
+              onChange={(e) =>
+                form.updateLocalField({ densityCalDate: e.target.value })
+              }
               placeholder="—"
               type="date"
             />
@@ -86,7 +108,9 @@ export function Calibration() {
             <CommonInput
               label="Temp. sensor offset"
               value={formData.tempSensorOffset}
-              onChange={(e) => form.updateLocalField({ tempSensorOffset: e.target.value })}
+              onChange={(e) =>
+                form.updateLocalField({ tempSensorOffset: e.target.value })
+              }
               placeholder="°F"
             />
           </div>

@@ -58,7 +58,8 @@ export function Diagnostics() {
     successMessage: "Diagnostics settings saved successfully",
     errorMessage: "Failed to save diagnostics settings",
     confirmTitle: "Save Diagnostics Settings",
-    confirmDescription: "Are you sure you want to save these diagnostics changes?",
+    confirmDescription:
+      "Are you sure you want to save these diagnostics changes?",
   });
 
   // Save data to API with confirmation
@@ -89,9 +90,8 @@ export function Diagnostics() {
   return (
     <>
       <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 auto-rows-max">
-        <div className="hidden">
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 auto-rows-max">
           {/* Quick Tests */}
           <PanelCard title="Quick Tests">
             <div className="space-y-3">
@@ -330,23 +330,23 @@ export function Diagnostics() {
             </div>
           </PanelCard>
         </div>
-      </div>
-      <div className="grid grid-cols-1 gap-3 auto-rows-max">
-        <HealthMonitoringPanel />
-      </div>
-    </div>
 
-    <CommonAlertDialog
-      open={isConfirmOpen}
-      onOpenChange={setIsConfirmOpen}
-      title={confirmTitle}
-      description={confirmDescription}
-      cancelText="Cancel"
-      actionText="Save"
-      onAction={handleConfirmedSave}
-      onCancel={handleCancel}
-    />
-  </>
+        <div className="grid grid-cols-1 gap-3 auto-rows-max">
+          <HealthMonitoringPanel />
+        </div>
+      </div>
+
+      <CommonAlertDialog
+        open={isConfirmOpen}
+        onOpenChange={setIsConfirmOpen}
+        title={confirmTitle}
+        description={confirmDescription}
+        cancelText="Cancel"
+        actionText="Save"
+        onAction={handleConfirmedSave}
+        onCancel={handleCancel}
+      />
+    </>
   );
 }
 

@@ -27,7 +27,8 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: "border bg-background/95 text-foreground backdrop-blur supports-[backdrop-filter]:bg-background/80",
+        default:
+          "border bg-background/95 text-foreground backdrop-blur supports-[backdrop-filter]:bg-background/80",
         destructive:
           "destructive group border-destructive bg-destructive/95 text-destructive-foreground backdrop-blur supports-[backdrop-filter]:bg-destructive/90",
       },
@@ -67,7 +68,11 @@ const Toast = React.forwardRef<
   return (
     <ToastPrimitives.Root
       ref={ref}
-      className={cn(toastVariants({ variant }), "relative overflow-hidden", className)}
+      className={cn(
+        toastVariants({ variant }),
+        "relative overflow-hidden",
+        className,
+      )}
       {...props}
     >
       {props.children}

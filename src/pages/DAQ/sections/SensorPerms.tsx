@@ -38,7 +38,8 @@ export function SensorPerms() {
     successMessage: "Sensor permissions saved successfully",
     errorMessage: "Failed to save sensor permissions",
     confirmTitle: "Save Sensor Permissions",
-    confirmDescription: "Are you sure you want to save these sensor permission changes?",
+    confirmDescription:
+      "Are you sure you want to save these sensor permission changes?",
   });
 
   if (isLoading || !form.formData) {

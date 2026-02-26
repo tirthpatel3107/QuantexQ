@@ -75,7 +75,8 @@ export const CATEGORY_CARDS = [
   {
     id: "hydraulics",
     title: "Hydraulics Model",
-    description: "Hydraulic model parameters, friction factors, flow calculations.",
+    description:
+      "Hydraulic model parameters, friction factors, flow calculations.",
     icon: Droplets,
   },
   {
@@ -87,7 +88,8 @@ export const CATEGORY_CARDS = [
   {
     id: "users",
     title: "Users & Roles",
-    description: "User management, permissions, role assignments, access control.",
+    description:
+      "User management, permissions, role assignments, access control.",
     icon: Users,
   },
   {

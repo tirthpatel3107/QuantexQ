@@ -28,7 +28,12 @@ function NetworkContent() {
   const headerActions = (
     <>
       <CommonTooltip content="Save network settings">
-        <CommonButton variant="outline" size="sm" icon={Save} onClick={requestSave}>
+        <CommonButton
+          variant="outline"
+          size="sm"
+          icon={Save}
+          onClick={requestSave}
+        >
           Save
         </CommonButton>
       </CommonTooltip>

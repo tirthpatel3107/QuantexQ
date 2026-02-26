@@ -21,15 +21,32 @@ export function Temperature() {
   const { data: temperatureResponse, isLoading } = useTemperatureData();
   const { data: optionsResponse } = useTemperatureOptions();
   const { mutate: saveTemperatureData } = useSaveTemperatureData();
-  const { registerSaveHandler, unregisterSaveHandler } = useMudPropertiesContext();
+  const { registerSaveHandler, unregisterSaveHandler } =
+    useMudPropertiesContext();
 
   const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
     if (!temperatureResponse?.data) return undefined;
-    const { surfaceTemp, bottomholeTemp, tempGradient, flowlineTemp, ambientTemp, staticTemp, circulatingTemp } = temperatureResponse.data;
-    return { surfaceTemp, bottomholeTemp, tempGradient, flowlineTemp, ambientTemp, staticTemp, circulatingTemp };
+    const {
+      surfaceTemp,
+      bottomholeTemp,
+      tempGradient,
+      flowlineTemp,
+      ambientTemp,
+      staticTemp,
+      circulatingTemp,
+    } = temperatureResponse.data;
+    return {
+      surfaceTemp,
+      bottomholeTemp,
+      tempGradient,
+      flowlineTemp,
+      ambientTemp,
+      staticTemp,
+      circulatingTemp,
+    };
   }, [temperatureResponse?.data]);
 
   // Use the reusable form hook
@@ -48,17 +65,21 @@ export function Temperature() {
     successMessage: "Temperature settings saved successfully",
     errorMessage: "Failed to save temperature settings",
     confirmTitle: "Save Temperature Settings",
-    confirmDescription: "Are you sure you want to save these temperature changes?",
+    confirmDescription:
+      "Are you sure you want to save these temperature changes?",
   });
 
   // Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter
-  const setFluidAdapter = useCallback((update: any) => {
-    if (typeof update === 'function') {
-      form.setFormData(update);
-    } else {
-      form.updateLocalField(update);
-    }
-  }, [form]);
+  const setFluidAdapter = useCallback(
+    (update: any) => {
+      if (typeof update === "function") {
+        form.setFormData(update);
+      } else {
+        form.updateLocalField(update);
+      }
+    },
+    [form],
+  );
 
   if (isLoading || !form.formData) {
     return <SectionSkeleton count={6} />;

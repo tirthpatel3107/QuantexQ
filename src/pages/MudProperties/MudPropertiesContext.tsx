@@ -6,7 +6,9 @@ interface MudPropertiesContextType {
   unregisterSaveHandler: () => void;
 }
 
-const MudPropertiesContext = createContext<MudPropertiesContextType | undefined>(undefined);
+const MudPropertiesContext = createContext<
+  MudPropertiesContextType | undefined
+>(undefined);
 
 export function MudPropertiesProvider({ children }: { children: ReactNode }) {
   const [saveHandler, setSaveHandler] = useState<(() => void) | null>(null);
@@ -37,7 +39,9 @@ export function MudPropertiesProvider({ children }: { children: ReactNode }) {
 export function useMudPropertiesContext() {
   const context = useContext(MudPropertiesContext);
   if (!context) {
-    throw new Error("useMudPropertiesContext must be used within MudPropertiesProvider");
+    throw new Error(
+      "useMudPropertiesContext must be used within MudPropertiesProvider",
+    );
   }
   return context;
 }
