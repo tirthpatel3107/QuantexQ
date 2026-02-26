@@ -1,9 +1,58 @@
 import { useState } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonButton } from "@/components/common/CommonButton";
-import { CommonToggle } from "@/components/common/CommonToggle";
+import {
+  CommonButton,
+  CommonToggle,
+  CommonCheckbox,
+  StatusBadge,
+} from "@/components/common";
 import { Badge } from "@/components/ui/badge";
 import { Settings } from "lucide-react";
+
+export const DEFAULT_HEALTH_METRICS = [
+  { label: "Last packet time:", value: "2 seconds ago" },
+  { label: "Latency:", value: "19 ms" },
+  { label: "Drop rate:", value: "0 %" },
+  { label: "Messages/sec:", value: "74 / sec" },
+  { label: "Clock drift:", value: "+10 ms ahead" },
+];
+
+export const DEFAULT_DEVICE_HEALTH = [
+  {
+    name: "Chokes",
+    status: "OK",
+    statusColor: "green" as const,
+    percentage: "100%",
+    badge: "≤ 3",
+  },
+  {
+    name: "Flow_Meter",
+    status: "95%",
+    statusColor: "yellow" as const,
+    percentage: "95%",
+    badge: "≤ 3",
+  },
+  {
+    name: "PWD",
+    status: "WARN",
+    statusColor: "orange" as const,
+    percentage: "PWD_BHP",
+    badge: "≤ 1",
+  },
+];
+
+export const DEFAULT_CONNECTION_LOGS = [
+  {
+    timestamp: "23 Apr | 14:56",
+    message: "Chokes connected via Modbus TCP",
+  },
+  { timestamp: "23 Apr | 14:47", message: "Flow Meter: Tag coverage 95%" },
+  {
+    timestamp: "23 Apr | 14:41",
+    message: "Tag coverage 96% (1 missing):",
+    badge: "PWD",
+  },
+];
 
 export interface HealthMetric {
   label: string;
@@ -30,55 +79,18 @@ export interface HealthMonitoringPanelProps {
   deviceHealthItems?: DeviceHealthItem[];
   connectionLogEntries?: ConnectionLogEntry[];
   showFailoverSimulation?: boolean;
+  showDiagnosticsResults?: boolean;
   onFailoverChange?: (enabled: boolean) => void;
   onDeviceSettingsClick?: () => void;
 }
 
 export function HealthMonitoringPanel({
   connectionStatus = "CONNECTED",
-  liveHealthMetrics = [
-    { label: "Last packet time:", value: "2 seconds ago" },
-    { label: "Latency:", value: "19 ms" },
-    { label: "Drop rate:", value: "0 %" },
-    { label: "Messages/sec:", value: "74 / sec" },
-    { label: "Clock drift:", value: "+10 ms ahead" },
-  ],
-  deviceHealthItems = [
-    {
-      name: "Chokes",
-      status: "OK",
-      statusColor: "green",
-      percentage: "100%",
-      badge: "≤ 3",
-    },
-    {
-      name: "Flow_Meter",
-      status: "95%",
-      statusColor: "yellow",
-      percentage: "95%",
-      badge: "≤ 3",
-    },
-    {
-      name: "PWD",
-      status: "WARN",
-      statusColor: "orange",
-      percentage: "PWD_BHP",
-      badge: "≤ 1",
-    },
-  ],
-  connectionLogEntries = [
-    {
-      timestamp: "23 Apr | 14:56",
-      message: "Chokes connected via Modbus TCP",
-    },
-    { timestamp: "23 Apr | 14:47", message: "Flow Meter: Tag coverage 95%" },
-    {
-      timestamp: "23 Apr | 14:41",
-      message: "Tag coverage 96% (1 missing):",
-      badge: "PWD",
-    },
-  ],
+  liveHealthMetrics = DEFAULT_HEALTH_METRICS,
+  deviceHealthItems = DEFAULT_DEVICE_HEALTH,
+  connectionLogEntries = DEFAULT_CONNECTION_LOGS,
   showFailoverSimulation = true,
+  showDiagnosticsResults = false,
   onFailoverChange,
   onDeviceSettingsClick,
 }: HealthMonitoringPanelProps) {
@@ -87,19 +99,6 @@ export function HealthMonitoringPanel({
   const handleFailoverChange = (checked: boolean) => {
     setFailoverSimulation(checked);
     onFailoverChange?.(checked);
-  };
-
-  const getStatusBadgeColor = (status: string) => {
-    switch (status) {
-      case "CONNECTED":
-        return "bg-green-600";
-      case "WARNING":
-        return "bg-yellow-600";
-      case "DISCONNECTED":
-        return "bg-red-600";
-      default:
-        return "bg-gray-600";
-    }
   };
 
   const getDeviceStatusColor = (color: string) => {
@@ -138,12 +137,7 @@ export function HealthMonitoringPanel({
       <PanelCard
         title="Live Health (PLC)"
         headerAction={
-          <Badge
-            variant="default"
-            className={`text-xs ${getStatusBadgeColor(connectionStatus)}`}
-          >
-            {connectionStatus}
-          </Badge>
+          <StatusBadge status={connectionStatus} className="text-xs" />
         }
       >
         <div className="space-y-4">
@@ -239,48 +233,50 @@ export function HealthMonitoringPanel({
       </PanelCard>
 
       {/* Last Diagnostic Results */}
-      {/* <PanelCard title="Last Diagnostic Results">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-red-500" />
-            <span className="text-lg font-semibold text-red-500">FAIL</span>
-          </div>
-          <div className="space-y-2 text-sm">
+      {showDiagnosticsResults && (
+        <PanelCard title="Last Diagnostic Results">
+          <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <span>PLC Modbus unresponsive</span>
+              <div className="w-3 h-3 rounded-full bg-red-500" />
+              <span className="text-lg font-semibold text-red-500">FAIL</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <span>5 critical tags missing</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <span>ChokeB_Pos out of range</span>
-            </div>
-          </div>
-
-          <hr className="my-4" />
-
-          <div>
-            <h4 className="text-sm font-semibold mb-2">Suggested actions</h4>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2">
-                <input type="checkbox" className="rounded" />
-                <span>Check PLC port 502, reachable</span>
+                <div className="w-2 h-2 rounded-full bg-red-500" />
+                <span>PLC Modbus unresponsive</span>
               </div>
               <div className="flex items-center gap-2">
-                <input type="checkbox" className="rounded" />
-                <span>Tag Map segment: Flow_Fr~Flow_Out missing</span>
+                <div className="w-2 h-2 rounded-full bg-red-500" />
+                <span>5 critical tags missing</span>
               </div>
               <div className="flex items-center gap-2">
-                <input type="checkbox" className="rounded" />
-                <span>Check PLC clock drift (~ 574 ms)</span>
+                <div className="w-2 h-2 rounded-full bg-red-500" />
+                <span>ChokeB_Pos out of range</span>
+              </div>
+            </div>
+
+            <hr className="my-4" />
+
+            <div>
+              <h4 className="text-sm font-semibold mb-2">Suggested actions</h4>
+              <div className="space-y-3">
+                <CommonCheckbox
+                  id="check-plc-port"
+                  label="Check PLC port 502, reachable"
+                />
+                <CommonCheckbox
+                  id="tag-map-segment"
+                  label="Tag Map segment: Flow_Fr~Flow_Out missing"
+                />
+                <CommonCheckbox
+                  id="check-clock-drift"
+                  label="Check PLC clock drift (~ 574 ms)"
+                />
               </div>
             </div>
           </div>
-        </div>
-      </PanelCard> */}
+        </PanelCard>
+      )}
     </>
   );
 }

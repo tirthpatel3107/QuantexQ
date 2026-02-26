@@ -2,12 +2,12 @@ import { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { SimulationProvider } from "@/context/SimulationProvider";
+import { SimulationProvider } from "@/context/Simulation/SimulationProvider.tsx";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SidebarProvider } from "./context/SidebarContext.tsx";
+import { SidebarProvider } from "./context/Sidebar/SidebarContext.tsx";
 import { AccentColorProvider } from "@/hooks/useAccentColor";
 import { ROUTES } from "@/constants/routes";
 import { THEME_STORAGE_KEY } from "@/constants/config";

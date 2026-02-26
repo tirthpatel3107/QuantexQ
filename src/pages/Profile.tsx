@@ -27,7 +27,6 @@ import {
 } from "lucide-react";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { useTheme } from "@/hooks/useTheme";
-
 const sessions = [
   {
     device: "Rugged Tablet · Rig Control Room",

@@ -8,15 +8,15 @@
 // ============================================
 
 export type SocketEventType =
-  | 'network:sources:update'
-  | 'network:destinations:update'
-  | 'network:protocols:update'
-  | 'daq:overview:update'
-  | 'daq:calibration:update'
-  | 'daq:streaming:update'
-  | 'settings:update'
-  | 'system:status'
-  | 'error';
+  | "network:sources:update"
+  | "network:destinations:update"
+  | "network:protocols:update"
+  | "daq:overview:update"
+  | "daq:calibration:update"
+  | "daq:streaming:update"
+  | "settings:update"
+  | "system:status"
+  | "error";
 
 // ============================================
 // Socket Event Payload
@@ -33,7 +33,11 @@ export interface SocketEvent<T = unknown> {
 // Socket Connection Status
 // ============================================
 
-export type SocketStatus = 'connected' | 'disconnected' | 'connecting' | 'error';
+export type SocketStatus =
+  | "connected"
+  | "disconnected"
+  | "connecting"
+  | "error";
 
 export interface SocketConnectionInfo {
   status: SocketStatus;
@@ -72,7 +76,7 @@ export interface SocketConfig {
 
 export interface NetworkSourceUpdateEvent {
   sourceId: string;
-  status: 'connected' | 'disconnected' | 'error';
+  status: "connected" | "disconnected" | "error";
   data?: Record<string, unknown>;
 }
 
@@ -84,7 +88,7 @@ export interface DaqChannelUpdateEvent {
 }
 
 export interface SystemStatusEvent {
-  status: 'online' | 'offline' | 'maintenance';
+  status: "online" | "offline" | "maintenance";
   message?: string;
   affectedSections?: string[];
 }

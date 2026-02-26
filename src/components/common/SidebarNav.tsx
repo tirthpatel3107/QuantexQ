@@ -48,7 +48,7 @@ export const SidebarNav = memo(function SidebarNav({
                   // "diagnostics",
 
                   // ---- DAQ ------
-                  "notifications",
+                  // "notifications",
                   "log-analysis",
                   "downloads",
                   "system-settings",

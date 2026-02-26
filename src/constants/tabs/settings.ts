@@ -27,7 +27,13 @@ export const SETTINGS_NAV = [
   { id: "about", label: "About / Diagnostics", icon: Info },
 ];
 
-export const CATEGORY_CARDS = [
+export const SETTINGS_CATEGORY_CARDS = [
+  {
+    id: "general",
+    title: "General",
+    description: "General application settings and preferences.",
+    icon: SettingsIcon,
+  },
   {
     id: "units",
     title: "Units",
@@ -39,12 +45,6 @@ export const CATEGORY_CARDS = [
     title: "Data & Time",
     description: "Timezone, format, sampling rate, data source.",
     icon: Clock,
-  },
-  {
-    id: "ui",
-    title: "UI & Display",
-    description: "Themes, chart/animation style, density, layout options.",
-    icon: Monitor,
   },
   {
     id: "signals",
@@ -62,14 +62,40 @@ export const CATEGORY_CARDS = [
   },
   {
     id: "auto-control",
-    title: "Auto Display",
+    title: "Auto Control",
     description: "Choke configs, response profiles, main/aux pump logic.",
     icon: Network,
   },
   {
     id: "choke-pumps",
     title: "Chokes & Pumps",
-    description: "Choke configs, response profiles.",
+    description: "Choke configs, response profiles, pump settings.",
     icon: Gauge,
+  },
+  {
+    id: "hydraulics",
+    title: "Hydraulics Model",
+    description:
+      "Hydraulic model parameters, friction factors, flow calculations.",
+    icon: Droplets,
+  },
+  {
+    id: "ui",
+    title: "UI & Display",
+    description: "Themes, chart/animation style, density, layout options.",
+    icon: Monitor,
+  },
+  {
+    id: "users",
+    title: "Users & Roles",
+    description:
+      "User management, permissions, role assignments, access control.",
+    icon: Users,
+  },
+  {
+    id: "about",
+    title: "About / Diagnostics",
+    description: "System information, version details, diagnostics, logs.",
+    icon: Info,
   },
 ];

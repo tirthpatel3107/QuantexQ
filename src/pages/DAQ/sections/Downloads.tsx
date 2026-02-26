@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useSectionForm } from "@/hooks/useSectionForm";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { CommonButton } from "@/components/common/CommonButton";
 import {
@@ -7,8 +8,16 @@ import {
   CommonTabsList,
   CommonTabsTrigger,
 } from "@/components/common/CommonTabs";
+import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 import { Download, FolderOpen, FileText, File } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  useDownloadsData,
+  useSaveDownloadsData,
+  useDownloadsOptions,
+} from "@/services/api/daq/daq.api";
+import type { SaveDownloadsPayload } from "@/services/api/daq/daq.types";
+import { useDAQContext } from "../../../context/DAQ/DAQContext";
 
 interface FileItem {
   name: string;
@@ -84,183 +93,228 @@ const downloadHistory: DownloadHistoryItem[] = [
 ];
 
 export function Downloads() {
+  const { data: downloadsResponse, isLoading } = useDownloadsData();
+  const { data: optionsResponse } = useDownloadsOptions();
+  const { mutate: saveDownloadsData } = useSaveDownloadsData();
+  const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
+
+  const options = optionsResponse?.data;
+
+  const initialData = useMemo(() => {
+    if (!downloadsResponse?.data) return undefined;
+    const { logs, quickExport } = downloadsResponse.data;
+    return { logs, quickExport };
+  }, [downloadsResponse?.data]);
+
+  const form = useSectionForm<SaveDownloadsPayload>({
+    initialData,
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveDownloadsData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    registerSaveHandler,
+    unregisterSaveHandler,
+    successMessage: "Downloads settings saved successfully",
+    errorMessage: "Failed to save downloads settings",
+    confirmTitle: "Save Downloads Settings",
+    confirmDescription:
+      "Are you sure you want to save these downloads changes?",
+  });
+
   const [activeTab, setActiveTab] = useState("downloads");
   const [activeLogFilter, setActiveLogFilter] = useState("all");
 
+  if (isLoading || !form.formData) {
+    return <SectionSkeleton count={6} />;
+  }
+
+  const { logs, quickExport } = form.formData;
+
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-3">
-      <PanelCard
-        title={
-          <div className="flex items-center gap-2">
-            <Download className="h-4 w-4" />
-            <span>Downloads</span>
-          </div>
-        }
-        headerAction={
-          <CommonButton variant="outline" size="sm" icon={FolderOpen}>
-            Open Downloads Folder
-          </CommonButton>
-        }
-      >
-        <CommonTabs value={activeTab} onValueChange={setActiveTab}>
-          <CommonTabsList>
-            <CommonTabsTrigger value="downloads">Downloads</CommonTabsTrigger>
-            <CommonTabsTrigger value="dcs-sets">DCS Sets</CommonTabsTrigger>
-            <CommonTabsTrigger value="download-patch">
-              Download Patch
-            </CommonTabsTrigger>
-          </CommonTabsList>
-
-          <CommonTabsContent value="downloads" className="space-y-6">
-            {/* Download DAQ Preset Section */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-foreground">
-                Download DAQ Preset
-              </h3>
-              <div className="space-y-2">
-                {downloadPresetFiles.map((file, index) => (
-                  <FileRow key={index} file={file} />
-                ))}
-              </div>
+    <>
+      <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-3">
+        <PanelCard
+          title={
+            <div className="flex items-center gap-2">
+              <Download className="h-4 w-4" />
+              <span>Downloads</span>
             </div>
+          }
+          headerAction={
+            <CommonButton variant="outline" size="sm" icon={FolderOpen}>
+              Open Downloads Folder
+            </CommonButton>
+          }
+        >
+          <CommonTabs value={activeTab} onValueChange={setActiveTab}>
+            <CommonTabsList>
+              <CommonTabsTrigger value="downloads">Downloads</CommonTabsTrigger>
+              <CommonTabsTrigger value="dcs-sets">DCS Sets</CommonTabsTrigger>
+              <CommonTabsTrigger value="download-patch">
+                Download Patch
+              </CommonTabsTrigger>
+            </CommonTabsList>
 
-            {/* View Logs Section */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-foreground">
-                View Logs
-              </h3>
-
-              {/* Filter Buttons */}
-              <div className="flex items-center gap-2 flex-wrap pb-5">
-                {[
-                  "Last Hour",
-                  "Last Day",
-                  "Last Week",
-                  "Custom",
-                  "All",
-                  "Narrow",
-                  "HPE",
-                  "CSV narrow",
-                  "WITSML",
-                ].map((filter) => (
-                  <CommonButton
-                    key={filter}
-                    variant={
-                      activeLogFilter === filter.toLowerCase().replace(" ", "-")
-                        ? "default"
-                        : "outline"
-                    }
-                    size="sm"
-                    onClick={() =>
-                      setActiveLogFilter(filter.toLowerCase().replace(" ", "-"))
-                    }
-                    className="text-sm"
-                  >
-                    {filter}
-                  </CommonButton>
-                ))}
+            <CommonTabsContent value="downloads" className="space-y-6">
+              {/* Download DAQ Preset Section */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-foreground">
+                  Download DAQ Preset
+                </h3>
+                <div className="space-y-2">
+                  {downloadPresetFiles.map((file, index) => (
+                    <FileRow key={index} file={file} />
+                  ))}
+                </div>
               </div>
 
-              {/* Quick Filter and Reckler Pool */}
-              <div className="grid grid-cols-2 gap-6">
-                {/* Quick Filter to Pres Section */}
-                <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Quick Filter to Pres Master deGas:
-                  </h4>
-                  <div className="space-y-2">
-                    {quickFilterFiles.map((file, index) => (
-                      <FileRow key={index} file={file} compact />
-                    ))}
+              {/* View Logs Section */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-foreground">
+                  View Logs
+                </h3>
+
+                {/* Filter Buttons */}
+                <div className="flex items-center gap-2 flex-wrap pb-5">
+                  {[
+                    "Last Hour",
+                    "Last Day",
+                    "Last Week",
+                    "Custom",
+                    "All",
+                    "Narrow",
+                    "HPE",
+                    "CSV narrow",
+                    "WITSML",
+                  ].map((filter) => (
+                    <CommonButton
+                      key={filter}
+                      variant={
+                        activeLogFilter ===
+                        filter.toLowerCase().replace(" ", "-")
+                          ? "default"
+                          : "outline"
+                      }
+                      size="sm"
+                      onClick={() =>
+                        setActiveLogFilter(
+                          filter.toLowerCase().replace(" ", "-"),
+                        )
+                      }
+                      className="text-sm"
+                    >
+                      {filter}
+                    </CommonButton>
+                  ))}
+                </div>
+
+                {/* Quick Filter and Reckler Pool */}
+                <div className="grid grid-cols-2 gap-6">
+                  {/* Quick Filter to Pres Section */}
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Quick Filter to Pres Master deGas:
+                    </h4>
+                    <div className="space-y-2">
+                      {quickFilterFiles.map((file, index) => (
+                        <FileRow key={index} file={file} compact />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Reckler Pool Preset Section */}
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-medium text-muted-foreground">
+                      Reckler Pool Preset palice:
+                    </h4>
+                    <div className="space-y-2">
+                      {recklerPoolFiles.map((file, index) => (
+                        <FileRow key={index} file={file} compact />
+                      ))}
+                    </div>
                   </div>
                 </div>
+              </div>
+            </CommonTabsContent>
 
-                {/* Reckler Pool Preset Section */}
-                <div className="space-y-3">
-                  <h4 className="text-sm font-medium text-muted-foreground">
-                    Reckler Pool Preset palice:
-                  </h4>
-                  <div className="space-y-2">
-                    {recklerPoolFiles.map((file, index) => (
-                      <FileRow key={index} file={file} compact />
-                    ))}
+            <CommonTabsContent value="dcs-sets">
+              <div className="p-8 text-center text-muted-foreground">
+                DCS Sets content
+              </div>
+            </CommonTabsContent>
+
+            <CommonTabsContent value="download-patch">
+              <div className="p-8 text-center text-muted-foreground">
+                Download Patch content
+              </div>
+            </CommonTabsContent>
+          </CommonTabs>
+        </PanelCard>
+
+        {/* Download History Section */}
+        <PanelCard title="Download History">
+          <div className="space-y-1">
+            {/* Table Header */}
+            <div className="grid grid-cols-[140px_1fr_80px] gap-3 pb-2 border-b border-border px-2">
+              <div className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                Timestamp
+              </div>
+              <div className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                Filename
+              </div>
+              <div className="text-sm font-semibold text-muted-foreground uppercase tracking-wider text-right">
+                Size
+              </div>
+            </div>
+
+            {/* Table Rows */}
+            {downloadHistory.map((item, index) => {
+              const handleDownload = () => {
+                // Create a mock download - in production, this would fetch the actual file
+                const blob = new Blob(["Mock file content"], {
+                  type: "text/plain",
+                });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = item.filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+              };
+
+              return (
+                <div
+                  key={index}
+                  onClick={handleDownload}
+                  className="grid grid-cols-[140px_1fr_80px] gap-3 py-2.5 px-2 border-b border-border/40 hover:bg-muted/30 transition-colors rounded group cursor-pointer"
+                >
+                  <div className="text-sm text-muted-foreground flex items-center">
+                    {item.timestamp}
+                  </div>
+                  <div className="text-sm text-foreground flex items-center gap-2 min-w-0">
+                    <FileText className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                    <span className="truncate" title={item.filename}>
+                      {item.filename}
+                    </span>
+                  </div>
+                  <div className="text-sm text-muted-foreground flex items-center justify-end">
+                    {item.size}
                   </div>
                 </div>
-              </div>
-            </div>
-          </CommonTabsContent>
-
-          <CommonTabsContent value="dcs-sets">
-            <div className="p-8 text-center text-muted-foreground">
-              DCS Sets content
-            </div>
-          </CommonTabsContent>
-
-          <CommonTabsContent value="download-patch">
-            <div className="p-8 text-center text-muted-foreground">
-              Download Patch content
-            </div>
-          </CommonTabsContent>
-        </CommonTabs>
-      </PanelCard>
-
-      {/* Download History Section */}
-      <PanelCard title="Download History">
-        <div className="space-y-1">
-          {/* Table Header */}
-          <div className="grid grid-cols-[140px_1fr_80px] gap-3 pb-2 border-b border-border px-2">
-            <div className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-              Timestamp
-            </div>
-            <div className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-              Filename
-            </div>
-            <div className="text-sm font-semibold text-muted-foreground uppercase tracking-wider text-right">
-              Size
-            </div>
+              );
+            })}
           </div>
+        </PanelCard>
+      </div>
 
-          {/* Table Rows */}
-          {downloadHistory.map((item, index) => {
-            const handleDownload = () => {
-              // Create a mock download - in production, this would fetch the actual file
-              const blob = new Blob(["Mock file content"], {
-                type: "text/plain",
-              });
-              const url = URL.createObjectURL(blob);
-              const link = document.createElement("a");
-              link.href = url;
-              link.download = item.filename;
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-              URL.revokeObjectURL(url);
-            };
-
-            return (
-              <div
-                key={index}
-                onClick={handleDownload}
-                className="grid grid-cols-[140px_1fr_80px] gap-3 py-2.5 px-2 border-b border-border/40 hover:bg-muted/30 transition-colors rounded group cursor-pointer"
-              >
-                <div className="text-sm text-muted-foreground flex items-center">
-                  {item.timestamp}
-                </div>
-                <div className="text-sm text-foreground flex items-center gap-2 min-w-0">
-                  <FileText className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                  <span className="truncate" title={item.filename}>
-                    {item.filename}
-                  </span>
-                </div>
-                <div className="text-sm text-muted-foreground flex items-center justify-end">
-                  {item.size}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </PanelCard>
-    </div>
+      <FormSaveDialog form={form} />
+    </>
   );
 }
 

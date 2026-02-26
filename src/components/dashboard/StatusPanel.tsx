@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { cn } from "@/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,7 +26,7 @@ function getDonutPath(
 
 const PAD_RAD = (2 * Math.PI) / 180;
 
-function DonutChart({
+const DonutChart = memo(function DonutChart({
   data,
   size,
   innerR,
@@ -63,7 +64,7 @@ function DonutChart({
       })}
     </svg>
   );
-}
+});
 
 interface StatusItem {
   label: string;
@@ -84,7 +85,7 @@ interface StatusPanelProps {
   }[];
 }
 
-export function StatusPanel({
+export const StatusPanel = memo(function StatusPanel({
   title,
   items,
   statusIndicator,
@@ -229,4 +230,4 @@ export function StatusPanel({
       )}
     </div>
   );
-}
+});

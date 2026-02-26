@@ -21,7 +21,7 @@ const statusBorderColors = {
   critical: "border-destructive/50",
 };
 
-function LineChartContent({
+const LineChartContent = memo(function LineChartContent({
   data,
   color,
   threshold,
@@ -115,7 +115,7 @@ function LineChartContent({
       />
     </div>
   );
-}
+});
 
 export const ChartPanel = memo(function ChartPanel({
   title,

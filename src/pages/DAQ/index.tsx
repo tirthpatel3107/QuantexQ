@@ -11,7 +11,7 @@ import {
   CommonTooltip,
 } from "@/components/common";
 
-import { DAQ_NAV } from "./constants";
+import { DAQ_NAV } from "@/constants";
 import { DaqOverview } from "./sections/DaqOverview";
 import { Display } from "./sections/Display";
 import { Streaming } from "./sections/Streaming";
@@ -22,15 +22,22 @@ import { Calibration } from "./sections/Calibration";
 import { Hydraulics } from "./sections/Hydraulics";
 import { SystemSettings } from "./sections/SystemSettings";
 import { Downloads } from "./sections/Downloads";
+import { DAQProvider, useDAQContext } from "../../context/DAQ/DAQContext";
 
-export default function DAQ() {
+function DAQContent() {
   const { section } = useParams();
   const activeSection = section || "daq";
+  const { requestSave } = useDAQContext();
 
   const headerActions = (
     <>
       <CommonTooltip content="Save DAQ settings">
-        <CommonButton variant="outline" size="sm" icon={Save}>
+        <CommonButton
+          variant="outline"
+          size="sm"
+          icon={Save}
+          onClick={requestSave}
+        >
           Save
         </CommonButton>
       </CommonTooltip>
@@ -110,5 +117,13 @@ export default function DAQ() {
         <main className="flex-1 min-w-0 overflow-auto">{renderSection()}</main>
       </SidebarLayout>
     </PageLayout>
+  );
+}
+
+export default function DAQ() {
+  return (
+    <DAQProvider>
+      <DAQContent />
+    </DAQProvider>
   );
 }

@@ -29,13 +29,15 @@ import { HydraulicsModel } from "./sections/HydraulicsModel";
 import { UiDisplay } from "./sections/UiDisplay";
 import { UsersRoles } from "./sections/userRoles";
 import { AboutDiagnostics } from "./sections/AboutDiagnostics";
-import { SETTINGS_NAV } from "./constants";
+import { SETTINGS_NAV } from "@/constants";
 import { GeneralSettingsData } from "@/types/settings";
+import { SettingsProvider, useSettingsContext } from "../../context/Settings/SettingsContext";
 
-export default function Settings() {
+function SettingsContent() {
   const { section } = useParams();
   const activeSection = section || "setting";
-  
+  const { requestSave } = useSettingsContext();
+
   const [general, setGeneral] = useState<GeneralSettingsData>({
     defaultWellName: "NFQ-21-6A",
     defaultRigName: "Rig-01",
@@ -45,49 +47,55 @@ export default function Settings() {
   });
   const [safetyConfirmations, setSafetyConfirmations] = useState(true);
 
-  const headerActions = useMemo(() => (
-    <>
-      <CommonTooltip content="Save settings">
-        <CommonButton variant="outline" size="sm" icon={Save}>
-          Save
-        </CommonButton>
-      </CommonTooltip>
-      <CommonTooltip content="Discard changes">
-        <CommonButton variant="outline" size="sm" icon={RotateCcw}>
-          Discard
-        </CommonButton>
-      </CommonTooltip>
-      <CommonTooltip content="Export settings">
-        <CommonButton variant="outline" size="sm" icon={Upload}>
-          Export
-        </CommonButton>
-      </CommonTooltip>
-    </>
-  ), []);
+  const headerActions = useMemo(
+    () => (
+      <>
+        <CommonTooltip content="Save settings">
+          <CommonButton
+            variant="outline"
+            size="sm"
+            icon={Save}
+            onClick={requestSave}
+          >
+            Save
+          </CommonButton>
+        </CommonTooltip>
+        <CommonTooltip content="Discard changes">
+          <CommonButton variant="outline" size="sm" icon={RotateCcw}>
+            Discard
+          </CommonButton>
+        </CommonTooltip>
+        <CommonTooltip content="Export settings">
+          <CommonButton variant="outline" size="sm" icon={Upload}>
+            Export
+          </CommonButton>
+        </CommonTooltip>
+      </>
+    ),
+    [requestSave],
+  );
 
-  const sidebarNav = useMemo(() => (
-    <SidebarNav
-      items={SETTINGS_NAV}
-      activeSection={activeSection}
-      baseRoute={ROUTES.SETTINGS}
-    />
-  ), [activeSection]);
+  const sidebarNav = useMemo(
+    () => (
+      <SidebarNav
+        items={SETTINGS_NAV}
+        activeSection={activeSection}
+        baseRoute={ROUTES.SETTINGS}
+      />
+    ),
+    [activeSection],
+  );
 
-  const activeNav = useMemo(() => 
-    SETTINGS_NAV.find((n) => n.id === activeSection)
-  , [activeSection]);
+  const activeNav = useMemo(
+    () => SETTINGS_NAV.find((n) => n.id === activeSection),
+    [activeSection],
+  );
 
   const renderSection = () => {
     switch (activeSection) {
       case "setting":
         return (
           <>
-            <GeneralSettings
-              general={general}
-              setGeneral={setGeneral}
-              safetyConfirmations={safetyConfirmations}
-              setSafetyConfirmations={setSafetyConfirmations}
-            />
             <SettingsOverview />
           </>
         );
@@ -148,11 +156,16 @@ export default function Settings() {
           actions={headerActions}
         />
 
-        <main className="flex-1 min-w-0 overflow-auto">
-          {renderSection()}
-        </main>
+        <main className="flex-1 min-w-0 overflow-auto">{renderSection()}</main>
       </SidebarLayout>
     </PageLayout>
   );
 }
 
+export default function Settings() {
+  return (
+    <SettingsProvider>
+      <SettingsContent />
+    </SettingsProvider>
+  );
+}

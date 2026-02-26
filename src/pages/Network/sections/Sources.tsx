@@ -1,200 +1,282 @@
-import { useState } from "react";
+// React & Hooks
+import { useState, useEffect } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Components - UI & Icons
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonToggle } from "@/components/common/CommonToggle";
-import { CommonSelect } from "@/components/common/CommonSelect";
-import { CommonInput, CommonAccordionItem } from "@/components/common";
+import {
+  CommonAccordionItem,
+  SectionSkeleton,
+  FormSaveDialog,
+  StatusBadge,
+  CommonFormToggle,
+  CommonFormInput,
+  CommonFormSelect,
+} from "@/components/common";
+
+// Components - Local
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
-import { Badge } from "@/components/ui/badge";
+
+// Services & Types
+import {
+  useSourcesData,
+  useSaveSourcesData,
+  useSourcesOptions,
+} from "@/services/api/network/network.api";
+import type { SaveSourcesPayload, DeviceSource } from "@/services/api/network/network.types";
+
+// Context
+import { useNetworkContext } from "../../../context/Network/NetworkContext";
+
+export const sourcesFormSchema = z.object({
+  rigPlc: z.object({
+    enabled: z.boolean(),
+    connectionStatus: z.enum(["Primary", "Connected", "Disconnected"]),
+    sourceType: z.string(),
+    endpoint: z.string().min(1, "Endpoint is required"),
+    port: z.string().min(1, "Port is required").regex(/^\d+$/, "Port must be a number"),
+    tagMap: z.string().min(1, "Tag Map is required"),
+    dataRate: z.string().min(1, "Data rate is required"),
+  }),
+  pwdWits: z.object({
+    enabled: z.boolean(),
+    endpoint: z.string().min(1, "Endpoint is required"),
+    port: z.string().min(1, "Port is required").regex(/^\d+$/, "Port must be a number"),
+    dataRate: z.string().min(1, "Data rate is required"),
+    frequency: z.string().min(1, "Frequency is required"),
+    tagMap: z.string().min(1, "Tag Map is required"),
+  }),
+  devices: z.object({
+    enabled: z.boolean().default(true),
+    items: z.custom<DeviceSource[]>(),
+  }),
+});
+
+type SourcesFormValues = z.infer<typeof sourcesFormSchema>;
 
 export function Sources() {
-  const [devicesExpanded, setDevicesExpanded] = useState(true);
-  const [rigPlcEnabled, setRigPlcEnabled] = useState(true);
-  const [pwdEnabled, setPwdEnabled] = useState(true);
-  const [connectionStatus] = useState("Primary");
+  const { data: sourcesResponse, isLoading } = useSourcesData();
+  const { data: optionsResponse } = useSourcesOptions();
+  const { mutate: saveSourcesData } = useSaveSourcesData();
+  const { registerSaveHandler, unregisterSaveHandler } = useNetworkContext();
 
-  const getStatusBadgeColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "primary":
-        return "bg-blue-500 text-white";
-      case "connected":
-        return "bg-green-500 text-white";
-      case "disconnected":
-        return "bg-red-500 text-white";
-      default:
-        return "";
+  const options = optionsResponse?.data;
+
+  // Initialize form
+  const formMethods = useForm<SourcesFormValues>({
+    resolver: zodResolver(sourcesFormSchema),
+  });
+
+  const { reset, control, handleSubmit } = formMethods;
+
+  // Track if we have set initial data
+  const [hasSetInitial, setHasSetInitial] = useState(false);
+
+  useEffect(() => {
+    if (sourcesResponse?.data && !hasSetInitial) {
+      const { rigPlc, pwdWits, devices } = sourcesResponse.data;
+      reset({ rigPlc, pwdWits, devices });
+      setHasSetInitial(true);
     }
-  };
+  }, [sourcesResponse, hasSetInitial, reset]);
+
+  // Handle save and confirmation using the same UI flow as useSectionForm
+  const saveWithConfirmation = useSaveWithConfirmation<SaveSourcesPayload>({
+    onSave: (data) => {
+      return new Promise<void>((resolve, reject) => {
+        saveSourcesData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    successMessage: "Sources settings saved successfully",
+    errorMessage: "Failed to save sources settings",
+    confirmTitle: "Save Sources Settings",
+    confirmDescription: "Are you sure you want to save these sources changes?",
+  });
+
+  // Attach context's save to RHF handleSubmit
+  useEffect(() => {
+    const handleSave = handleSubmit((validData) => {
+      saveWithConfirmation.requestSave(validData as SaveSourcesPayload);
+    });
+
+    registerSaveHandler(handleSave);
+    return () => {
+      unregisterSaveHandler();
+    };
+  }, [handleSubmit, registerSaveHandler, unregisterSaveHandler, saveWithConfirmation]);
+
+  if (isLoading || !hasSetInitial || !sourcesResponse?.data) {
+    return <SectionSkeleton count={6} />;
+  }
+
+  const connectionStatus = sourcesResponse.data.rigPlc.connectionStatus;
+  const sourceType = sourcesResponse.data.rigPlc.sourceType || "N/A";
+  const devicesItems = sourcesResponse.data.devices.items || [];
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
-        {/* Rig PLC Source */}
-        <PanelCard
-          title={
-            <div className="flex items-center gap-2">
-              <span>Rig PLC</span>
-              <Badge
-                variant="default"
-                className={`text-xs ${getStatusBadgeColor(connectionStatus)}`}
-              >
-                {connectionStatus}
-              </Badge>
-            </div>
-          }
-          headerAction={
-            <CommonToggle
-              label="Modbus TCP"
-              checked={rigPlcEnabled}
-              onCheckedChange={setRigPlcEnabled}
-            />
-          }
-        >
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground mb-5">
-              Source Type: PRIMARY (PLC) Chokes | Flow Meter | PWD (optional)
-            </p>
+    <>
+      <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
+          {/* Rig PLC Source */}
+          <PanelCard
+            title={
+              <div className="flex items-center gap-2">
+                <span>Rig PLC</span>
+                <StatusBadge status={connectionStatus} className="text-xs" />
+              </div>
+            }
+            headerAction={
+              <CommonFormToggle
+                name="rigPlc.enabled"
+                control={control}
+                label="Modbus TCP"
+              />
+            }
+          >
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground mb-5">
+                Source Type: {sourceType}
+              </p>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div className="flex gap-2">
+                  <CommonFormInput
+                    name="rigPlc.endpoint"
+                    control={control}
+                    label="Endpoint"
+                    placeholder="10.1.0.11"
+                    type="text"
+                    containerClassName="flex-1"
+                  />
+                  <CommonFormInput
+                    name="rigPlc.port"
+                    control={control}
+                    label="Port"
+                    placeholder="502"
+                    type="number"
+                    containerClassName="w-[100px]"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <CommonFormSelect
+                    name="rigPlc.tagMap"
+                    control={control}
+                    label="Tag Map"
+                    options={options?.tagMapOptions || []}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <CommonFormSelect
+                    name="rigPlc.dataRate"
+                    control={control}
+                    label="Data rate"
+                    options={options?.dataRateOptions || []}
+                  />
+                </div>
+              </div>
+            </div>
+          </PanelCard>
+
+          {/* Devices (from PLC) */}
+          <PanelCard
+            title="Devices (from PLC)"
+            headerAction={
+              <CommonFormToggle
+                name="devices.enabled"
+                control={control}
+                label=""
+              />
+            }
+          >
+            <div className="space-y-4">
+              {devicesItems.map(({ id, name, tags, healthStatus, healthCount }) => (
+                <CommonAccordionItem
+                  key={id}
+                  title={name}
+                  tags={tags}
+                  healthStatus={healthStatus}
+                  healthCount={healthCount}
+                />
+              ))}
+            </div>
+          </PanelCard>
+
+          {/* PWD WITS */}
+          <PanelCard
+            title="PWD WITS (TCP)"
+            headerAction={
+              <CommonFormToggle
+                name="pwdWits.enabled"
+                control={control}
+                label=""
+              />
+            }
+          >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div className="flex gap-2">
-                <CommonInput
+                <CommonFormInput
+                  name="pwdWits.endpoint"
+                  control={control}
                   label="Endpoint"
-                  value="10.1.0.113"
-                  onChange={() => {}}
                   placeholder="10.1.0.11"
                   type="text"
-                  className="flex-1"
+                  containerClassName="flex-1"
                 />
-                <CommonInput
-                  label=" "
-                  value="502"
-                  onChange={() => {}}
+                <CommonFormInput
+                  name="pwdWits.port"
+                  control={control}
+                  label="Port"
                   placeholder="502"
+                  type="number"
+                  containerClassName="w-[100px]"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <CommonFormSelect
+                  name="pwdWits.dataRate"
+                  control={control}
+                  label="Data rate"
+                  options={options?.dataRateOptions || []}
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <CommonFormSelect
+                  name="pwdWits.frequency"
+                  control={control}
+                  label="Frequency"
+                  options={options?.frequencyOptions || []}
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <CommonFormInput
+                  name="pwdWits.tagMap"
+                  control={control}
+                  label="Tag Map"
+                  placeholder="10.1.0.11"
                   type="text"
                 />
               </div>
-              <CommonSelect
-                label="Tag Map"
-                value="502"
-                onValueChange={() => {}}
-                options={[
-                  { value: "502", label: "502" },
-                  { value: "100ms", label: "100 ms" },
-                ]}
-              />
-
-              <CommonSelect
-                label="Data rate"
-                value="100ms"
-                onValueChange={() => {}}
-                options={[
-                  { value: "100ms", label: "100 ms" },
-                  { value: "200ms", label: "200 ms" },
-                ]}
-              />
-
-              <CommonSelect
-                label="Tag Map"
-                value="502"
-                onValueChange={() => {}}
-                options={[
-                  { value: "502", label: "502" },
-                  { value: "100ms", label: "100 ms" },
-                ]}
-              />
             </div>
-          </div>
-        </PanelCard>
-
-        {/* Devices (from PLC) */}
-        <PanelCard
-          title="Devices (from PLC)"
-          headerAction={
-            <CommonToggle
-              label=""
-              checked={devicesExpanded}
-              onCheckedChange={setDevicesExpanded}
-            />
-          }
-        >
-          <div className="space-y-4">
-            <CommonAccordionItem
-              title="Chokes (A/B)"
-              tags="ChokeA_Pos, ChokeB_Pos, Choke_SP"
-              healthStatus="OK"
-              healthCount="3/3"
-            />
-
-            <CommonAccordionItem
-              title="Flow Meter"
-              tags="Flow_In, Flow_Out, Aux_Flow"
-              healthStatus="OK"
-              healthCount="3/3"
-            />
-          </div>
-        </PanelCard>
-
-        {/* PWD WITS */}
-        <PanelCard
-          title="PWD WITS (TCP)"
-          headerAction={
-            <CommonToggle
-              label=""
-              checked={pwdEnabled}
-              onCheckedChange={setPwdEnabled}
-            />
-          }
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-            <div className="flex gap-2">
-              <CommonInput
-                label="Endpoint"
-                value="10.1.0.113"
-                onChange={() => {}}
-                placeholder="10.1.0.11"
-                type="text"
-              />
-              <CommonInput
-                label=" "
-                value="502"
-                onChange={() => {}}
-                placeholder="502"
-                type="text"
-              />
-            </div>
-            <CommonSelect
-              label="Data rate"
-              value="none"
-              onValueChange={() => {}}
-              options={[
-                { value: "none", label: "None" },
-                { value: "502", label: "502" },
-                { value: "100ms", label: "100 ms" },
-              ]}
-            />
-
-            <CommonSelect
-              label="Data rate"
-              value="1x"
-              onValueChange={() => {}}
-              options={[
-                { value: "1x", label: "1x / sec" },
-                { value: "2x", label: "2x / sec" },
-              ]}
-            />
-
-            <CommonInput
-              label="Tag Map"
-              value="10.1.0.113"
-              onChange={() => {}}
-              placeholder="10.1.0.11"
-              type="text"
-            />
-          </div>
-        </PanelCard>
+          </PanelCard>
+        </div>
+        <div className="grid grid-cols-1 gap-3 auto-rows-max">
+          <HealthMonitoringPanel />
+        </div>
       </div>
-      <div className="grid grid-cols-1 gap-3 auto-rows-max">
-        <HealthMonitoringPanel />
-      </div>
-    </div>
+
+      {/* FormSaveDialog needs the shape returned by useSaveWithConfirmation */}
+      <FormSaveDialog form={saveWithConfirmation} />
+    </>
   );
 }

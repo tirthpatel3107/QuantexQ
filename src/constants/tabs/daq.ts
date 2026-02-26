@@ -9,22 +9,6 @@ import {
   Settings as SettingsIcon,
   Download,
   Activity,
-} from "lucide-react";
-
-export const DAQ_NAV = [
-  { id: "daq", label: "DAQ", icon: Activity, isOverview: true },
-  { id: "display", label: "Display", icon: Monitor },
-  { id: "streaming", label: "Streaming & Logging", icon: Radio },
-  { id: "notifications", label: "Notifications", icon: Bell },
-  { id: "log-analysis", label: "Log Analysis", icon: BarChart3 },
-  { id: "sensor-perms", label: "Sensor Perms", icon: Shield },
-  { id: "calibration", label: "Calibration", icon: Sliders },
-  { id: "hydraulics", label: "Hydraulics Models", icon: Droplets },
-  { id: "system-settings", label: "System Settings", icon: SettingsIcon },
-  { id: "downloads", label: "Downloads", icon: Download },
-];
-
-import {
   Gauge,
   Waves,
   Thermometer,
@@ -42,7 +26,20 @@ import {
   HardDrive,
 } from "lucide-react";
 
-export const SECTION_CARDS: Record<
+export const DAQ_NAV = [
+  { id: "daq", label: "DAQ", icon: Activity, isOverview: true },
+  { id: "display", label: "Display", icon: Monitor },
+  { id: "streaming", label: "Streaming & Logging", icon: Radio },
+  { id: "notifications", label: "Notifications", icon: Bell },
+  { id: "log-analysis", label: "Log Analysis", icon: BarChart3 },
+  { id: "sensor-perms", label: "Sensor Perms", icon: Shield },
+  { id: "calibration", label: "Calibration", icon: Sliders },
+  { id: "hydraulics", label: "Hydraulics Models", icon: Droplets },
+  { id: "system-settings", label: "System Settings", icon: SettingsIcon },
+  { id: "downloads", label: "Downloads", icon: Download },
+];
+
+export const DAQ_SECTION_CARDS: Record<
   string,
   { id: string; title: string; description: string; icon: React.ElementType }[]
 > = {

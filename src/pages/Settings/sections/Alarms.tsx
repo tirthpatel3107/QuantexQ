@@ -1,3 +1,4 @@
+// React & Hooks
 import { useState, useMemo } from "react";
 import {
   createColumnHelper,
@@ -6,6 +7,9 @@ import {
   getSortedRowModel,
   SortingState,
 } from "@tanstack/react-table";
+import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Components - UI & Icons
 import { Bell, Trash2, Activity, Zap, PlusCircle } from "lucide-react";
 import {
   CommonTable,
@@ -17,9 +21,21 @@ import {
   CommonButton,
   RestoreDefaultsButton,
   CommonCheckbox,
+  SectionSkeleton,
+  FormSaveDialog,
+  CommonAlertDialog,
 } from "@/components/common";
-import { CommonAlertDialog } from "@/components/common/CommonAlertDialog";
 import { PanelCard } from "@/components/dashboard/PanelCard";
+
+// Services & Types
+import {
+  useAlarmsSettings,
+  useSaveAlarmsSettings,
+  useAlarmsOptions,
+} from "@/services/api/settings/settings.api";
+
+// Context
+import { useSettingsContext } from "../../../context/Settings/SettingsContext";
 
 type SensorLimit = {
   id: string;
@@ -29,134 +45,126 @@ type SensorLimit = {
   unit: string;
 };
 
-const DEFAULT_SENSORS: SensorLimit[] = [
-  {
-    id: "1",
-    name: "Pit Volume",
-    lowLimit: "80",
-    highLimit: "520",
-    unit: "bbl",
-  },
-  { id: "2", name: "Flow Out", lowLimit: "300", highLimit: "800", unit: "gpm" },
-  { id: "3", name: "Flow In", lowLimit: "300", highLimit: "800", unit: "gpm" },
-  {
-    id: "4",
-    name: "Hook Load",
-    lowLimit: "5,000",
-    highLimit: "40,000",
-    unit: "lbs",
-  },
-  {
-    id: "5",
-    name: "Weight on Bit",
-    lowLimit: "5,000",
-    highLimit: "30,000",
-    unit: "lbs",
-  },
-  {
-    id: "6",
-    name: "Pump Pressure",
-    lowLimit: "1,200",
-    highLimit: "4,200",
-    unit: "psi",
-  },
-  {
-    id: "7",
-    name: "Return Flow %",
-    lowLimit: "50",
-    highLimit: "105",
-    unit: "%",
-  },
-];
-
 const sensorColumnHelper = createColumnHelper<SensorLimit>();
 
 export function Alarms() {
+  const { data: alarmsResponse, isLoading } = useAlarmsSettings();
+  const { data: optionsResponse } = useAlarmsOptions();
+  const { mutate: saveAlarmsData } = useSaveAlarmsSettings();
+  const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
+
+  const options = optionsResponse?.data;
   const [activeTab, setActiveTab] = useState("kick");
-  const [sensorsData, setSensorsData] = useState(DEFAULT_SENSORS);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [selectedSensor, setSelectedSensor] = useState<SensorLimit | null>(
     null,
   );
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columns = useMemo(
-    () => [
-      sensorColumnHelper.accessor("name", {
-        header: "Sensor Name",
-        cell: (info) => (
-          <span className="text-[13px] font-medium text-foreground/90">
-            {info.getValue()}
-          </span>
-        ),
-      }),
-      sensorColumnHelper.accessor("lowLimit", {
-        header: "Low Limit",
-        cell: (info) => (
-          <CommonInput
-            value={info.getValue()}
-            className="h-8 w-24 text-center text-[12px]"
-            onChange={(e) => {
-              const newValue = e.target.value;
-              setSensorsData((prev) =>
-                prev.map((item) =>
-                  item.id === info.row.original.id
-                    ? { ...item, lowLimit: newValue }
-                    : item,
-                ),
-              );
+  // Memoize initial data
+  const initialData = useMemo(() => {
+    if (!alarmsResponse?.data) return undefined;
+    return alarmsResponse.data;
+  }, [alarmsResponse?.data]);
+
+  // Use the reusable form hook
+  const form = useSectionForm<any>({
+    initialData,
+    onSave: (data) => {
+      return new Promise((resolve, reject) => {
+        saveAlarmsData(data, {
+          onSuccess: () => resolve(),
+          onError: (error) => reject(error),
+        });
+      });
+    },
+    registerSaveHandler,
+    unregisterSaveHandler,
+    successMessage: "Alarms settings saved successfully",
+    errorMessage: "Failed to save alarms settings",
+    confirmTitle: "Save Alarms Settings",
+    confirmDescription: "Are you sure you want to save these alarms changes?",
+  });
+
+  if (isLoading || !form.formData) {
+    return <SectionSkeleton count={6} />;
+  }
+
+  const { formData } = form;
+  const sensorsData = formData.sensors || [];
+
+  const columns = [
+    sensorColumnHelper.accessor("name", {
+      header: "Sensor Name",
+      cell: (info) => (
+        <span className="text-[13px] font-medium text-foreground/90">
+          {info.getValue()}
+        </span>
+      ),
+    }),
+    sensorColumnHelper.accessor("lowLimit", {
+      header: "Low Limit",
+      cell: (info) => (
+        <CommonInput
+          value={info.getValue()}
+          className="h-8 w-24 text-center text-[12px]"
+          onChange={(e) => {
+            const newValue = e.target.value;
+            const updatedSensors = sensorsData.map((item: SensorLimit) =>
+              item.id === info.row.original.id
+                ? { ...item, lowLimit: newValue }
+                : item,
+            );
+            form.updateLocalField({ sensors: updatedSensors });
+          }}
+        />
+      ),
+    }),
+    sensorColumnHelper.accessor("highLimit", {
+      header: "High Limit",
+      cell: (info) => (
+        <CommonInput
+          value={info.getValue()}
+          className="h-8 w-24 text-center text-[12px]"
+          onChange={(e) => {
+            const newValue = e.target.value;
+            const updatedSensors = sensorsData.map((item: SensorLimit) =>
+              item.id === info.row.original.id
+                ? { ...item, highLimit: newValue }
+                : item,
+            );
+            form.updateLocalField({ sensors: updatedSensors });
+          }}
+        />
+      ),
+    }),
+    sensorColumnHelper.accessor("unit", {
+      header: "Units",
+      cell: (info) => (
+        <span className="text-[12px] text-muted-foreground">
+          {info.getValue()}
+        </span>
+      ),
+    }),
+    sensorColumnHelper.display({
+      id: "actions",
+      header: "",
+      cell: (info) => (
+        <div className="flex justify-end pr-2">
+          <button
+            className="p-1.5 rounded-md text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+            title="Delete Sensor"
+            onClick={() => {
+              setSelectedSensor(info.row.original);
+              setIsDeleteConfirmOpen(true);
             }}
-          />
-        ),
-      }),
-      sensorColumnHelper.accessor("highLimit", {
-        header: "High Limit",
-        cell: (info) => (
-          <CommonInput
-            value={info.getValue()}
-            className="h-8 w-24 text-center text-[12px]"
-            onChange={(e) => {
-              const newValue = e.target.value;
-              setSensorsData((prev) =>
-                prev.map((item) =>
-                  item.id === info.row.original.id
-                    ? { ...item, highLimit: newValue }
-                    : item,
-                ),
-              );
-            }}
-          />
-        ),
-      }),
-      sensorColumnHelper.accessor("unit", {
-        header: "Units",
-        cell: (info) => (
-          <span className="text-[12px] text-muted-foreground">
-            {info.getValue()}
-          </span>
-        ),
-      }),
-      sensorColumnHelper.display({
-        id: "actions",
-        header: "",
-        cell: (info) => (
-          <div className="flex justify-end pr-2">
-            <button
-              className="p-1.5 rounded-md text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
-              title="Delete Sensor"
-              onClick={() => {
-                setSelectedSensor(info.row.original);
-                setIsDeleteConfirmOpen(true);
-              }}
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
-          </div>
-        ),
-      }),
-    ],
-    [],
-  );
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
+      ),
+    }),
+  ];
 
   const sensorsTable = useReactTable({
     data: sensorsData,
@@ -173,6 +181,17 @@ export function Alarms() {
     { value: "kick", label: "Kick and Loss" },
     { value: "sensors", label: "Sensors" },
   ];
+
+  const handleDeleteSensor = () => {
+    if (selectedSensor) {
+      const updatedSensors = sensorsData.filter(
+        (s: SensorLimit) => s.id !== selectedSensor.id,
+      );
+      form.updateLocalField({ sensors: updatedSensors });
+      setIsDeleteConfirmOpen(false);
+      setSelectedSensor(null);
+    }
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
@@ -194,7 +213,10 @@ export function Alarms() {
               <div className="space-y-3 pb-5">
                 <CommonCheckbox
                   id="dynamic-limits"
-                  defaultChecked
+                  checked={formData.dynamicLimitsEnabled}
+                  onCheckedChange={(checked) =>
+                    form.updateLocalField({ dynamicLimitsEnabled: checked })
+                  }
                   label="Enable adjustable dynamic limits"
                   containerClassName="gap-2"
                 />
@@ -202,37 +224,62 @@ export function Alarms() {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                 <CommonInput
                   label="Kick Limit (bbl)"
-                  defaultValue="10"
+                  value={formData.kickLimit}
+                  onChange={(e) =>
+                    form.updateLocalField({ kickLimit: e.target.value })
+                  }
                   type="number"
                 />
                 <CommonInput
                   label="Loss Limit (bbl)"
-                  defaultValue="25"
+                  value={formData.lossLimit}
+                  onChange={(e) =>
+                    form.updateLocalField({ lossLimit: e.target.value })
+                  }
                   type="number"
                 />
                 <CommonInput
                   label="Pit Gain Limit (bbl)"
-                  defaultValue="15"
+                  value={formData.pitGainLimit}
+                  onChange={(e) =>
+                    form.updateLocalField({ pitGainLimit: e.target.value })
+                  }
                   type="number"
                 />
                 <CommonInput
                   label="SPP High Limit (psi)"
-                  defaultValue="4000"
+                  value={formData.sppHighLimit}
+                  onChange={(e) =>
+                    form.updateLocalField({ sppHighLimit: e.target.value })
+                  }
                   type="number"
                 />
                 <CommonInput
                   label="PPP High Limit (psi)"
-                  defaultValue="2500"
+                  value={formData.pppHighLimit}
+                  onChange={(e) =>
+                    form.updateLocalField({ pppHighLimit: e.target.value })
+                  }
                   type="number"
                 />
                 <CommonInput
                   label="Pit Volume High Lim."
-                  defaultValue="545"
+                  value={formData.pitVolumeHighLimit}
+                  onChange={(e) =>
+                    form.updateLocalField({
+                      pitVolumeHighLimit: e.target.value,
+                    })
+                  }
                   type="number"
                 />
                 <CommonInput
                   label="Pit Volume High Lim. (bbl)"
-                  defaultValue="545"
+                  value={formData.pitVolumeHighLimitBbl}
+                  onChange={(e) =>
+                    form.updateLocalField({
+                      pitVolumeHighLimitBbl: e.target.value,
+                    })
+                  }
                   type="number"
                 />
               </div>
@@ -254,17 +301,32 @@ export function Alarms() {
                 <div className="space-y-3 pb-5">
                   <CommonCheckbox
                     id="logic-gains"
-                    defaultChecked
+                    checked={formData.logicActivateWhenGainsStop}
+                    onCheckedChange={(checked) =>
+                      form.updateLocalField({
+                        logicActivateWhenGainsStop: checked,
+                      })
+                    }
                     label="Activate when gains / losses stop"
                   />
                   <CommonCheckbox
                     id="logic-sticky"
-                    defaultChecked
+                    checked={formData.logicActivateStickyAlarms}
+                    onCheckedChange={(checked) =>
+                      form.updateLocalField({
+                        logicActivateStickyAlarms: checked,
+                      })
+                    }
                     label="Activate sticky alarms"
                   />
                   <CommonCheckbox
                     id="logic-secondary"
-                    defaultChecked
+                    checked={formData.logicActivateSecondaryAlarms}
+                    onCheckedChange={(checked) =>
+                      form.updateLocalField({
+                        logicActivateSecondaryAlarms: checked,
+                      })
+                    }
                     label="Activate secondary alarms"
                   />
                 </div>
@@ -272,18 +334,21 @@ export function Alarms() {
                 <div className="grid grid-cols-2 gap-4 pb-2">
                   <CommonSelect
                     label="Delay (seconds)"
-                    value="15"
-                    options={[
-                      { label: "10", value: "10" },
-                      { label: "15", value: "15" },
-                      { label: "20", value: "20" },
-                    ]}
-                    onValueChange={() => {}}
+                    value={formData.logicDelay}
+                    options={options?.delayOptions || []}
+                    onValueChange={(delay) =>
+                      form.updateLocalField({ logicDelay: delay })
+                    }
                   />
 
                   <CommonInput
                     label="Monitor duration (seconds)"
-                    defaultValue="180"
+                    value={formData.logicMonitorDuration}
+                    onChange={(e) =>
+                      form.updateLocalField({
+                        logicMonitorDuration: e.target.value,
+                      })
+                    }
                     type="number"
                     className="h-9"
                   />
@@ -305,12 +370,18 @@ export function Alarms() {
                 <div className="space-y-3 pb-5">
                   <CommonCheckbox
                     id="notify-offline"
-                    defaultChecked
+                    checked={formData.notifyOfflineAlarm}
+                    onCheckedChange={(checked) =>
+                      form.updateLocalField({ notifyOfflineAlarm: checked })
+                    }
                     label="Activate offline alarm output when connections are down"
                   />
                   <CommonCheckbox
                     id="notify-online"
-                    defaultChecked
+                    checked={formData.notifyOnlineAlarm}
+                    onCheckedChange={(checked) =>
+                      form.updateLocalField({ notifyOnlineAlarm: checked })
+                    }
                     label="Use rig online alarm output when connected"
                   />
                 </div>
@@ -318,36 +389,36 @@ export function Alarms() {
                 <div className="grid grid-cols-2 gap-4">
                   <CommonSelect
                     label="Kick Delay (sec)"
-                    value="10"
-                    options={[
-                      { label: "10", value: "10" },
-                      { label: "15", value: "15" },
-                      { label: "20", value: "20" },
-                    ]}
-                    onValueChange={() => {}}
+                    value={formData.kickDelay}
+                    options={options?.delayOptions || []}
+                    onValueChange={(kickDelay) =>
+                      form.updateLocalField({ kickDelay })
+                    }
                   />
                   <CommonSelect
                     label="Loss Delay (sec)"
-                    value="10"
-                    options={[
-                      { label: "10", value: "10" },
-                      { label: "15", value: "15" },
-                      { label: "20", value: "20" },
-                    ]}
-                    onValueChange={() => {}}
+                    value={formData.lossDelay}
+                    options={options?.delayOptions || []}
+                    onValueChange={(lossDelay) =>
+                      form.updateLocalField({ lossDelay })
+                    }
                   />
 
                   <CommonSelect
                     label="Offline Output"
-                    value="audio"
-                    options={[{ label: "Audio Alarm", value: "audio" }]}
-                    onValueChange={() => {}}
+                    value={formData.offlineOutput}
+                    options={options?.outputOptions || []}
+                    onValueChange={(offlineOutput) =>
+                      form.updateLocalField({ offlineOutput })
+                    }
                   />
                   <CommonSelect
                     label="Online Output"
-                    value="kick-loss"
-                    options={[{ label: "Kick and Loss", value: "kick-loss" }]}
-                    onValueChange={() => {}}
+                    value={formData.onlineOutput}
+                    options={options?.alarmTypeOptions || []}
+                    onValueChange={(onlineOutput) =>
+                      form.updateLocalField({ onlineOutput })
+                    }
                   />
                 </div>
               </div>
@@ -365,19 +436,12 @@ export function Alarms() {
               </div>
             }
             headerAction={
-              <>
-                <div>
-                  <CommonButton
-                    variant="outline"
-                    size="sm"
-                    icon={PlusCircle}
-                    className="h-9 border-dashed border-border/60 hover:border-primary/50 hover:bg-primary/5 mr-2"
-                  >
-                    Add Custom Sensor
-                  </CommonButton>
-                  <RestoreDefaultsButton size="sm" />
-                </div>
-              </>
+              <div className="flex gap-2">
+                <CommonButton variant="outline" size="sm" icon={PlusCircle}>
+                  Add Custom Sensor
+                </CommonButton>
+                <RestoreDefaultsButton size="sm" />
+              </div>
             }
           >
             <CommonTable
@@ -389,6 +453,8 @@ export function Alarms() {
         </CommonTabsContent>
       </CommonTabs>
 
+      <FormSaveDialog form={form} />
+
       {/* Delete Confirmation */}
       <CommonAlertDialog
         open={isDeleteConfirmOpen}
@@ -397,14 +463,7 @@ export function Alarms() {
         description={`Are you sure you want to delete the sensor limit for "${selectedSensor?.name}"? This action cannot be undone.`}
         actionText="Delete"
         cancelText="Cancel"
-        onAction={() => {
-          if (selectedSensor) {
-            setSensorsData((prev) =>
-              prev.filter((item) => item.id !== selectedSensor.id),
-            );
-          }
-          setIsDeleteConfirmOpen(false);
-        }}
+        onAction={handleDeleteSensor}
         actionClassName="bg-destructive text-destructive-foreground hover:bg-destructive/90"
       />
     </div>

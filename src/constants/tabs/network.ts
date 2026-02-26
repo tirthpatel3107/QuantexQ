@@ -7,18 +7,6 @@ import {
   Lock,
   Activity,
   Network as NetworkIcon,
-} from "lucide-react";
-
-export const NETWORK_NAV = [
-  { id: "network", label: "Network", icon: NetworkIcon, isOverview: true },
-  { id: "sources", label: "Sources", icon: Server },
-  { id: "protocols", label: "Protocols", icon: Cable },
-  { id: "routing", label: "Routing", icon: GitBranch },
-  { id: "security", label: "Security", icon: ShieldCheck },
-  { id: "diagnostics", label: "Diagnostics", icon: Microscope },
-];
-
-import {
   Wifi,
   Cpu,
   Radio,
@@ -34,7 +22,16 @@ import {
   FileJson,
 } from "lucide-react";
 
-export const SECTION_CARDS: Record<
+export const NETWORK_NAV = [
+  { id: "network", label: "Network", icon: NetworkIcon, isOverview: true },
+  { id: "sources", label: "Sources", icon: Server },
+  { id: "protocols", label: "Protocols", icon: Cable },
+  { id: "routing", label: "Routing", icon: GitBranch },
+  { id: "security", label: "Security", icon: ShieldCheck },
+  { id: "diagnostics", label: "Diagnostics", icon: Microscope },
+];
+
+export const NETWORK_SECTION_CARDS: Record<
   string,
   { id: string; title: string; description: string; icon: React.ElementType }[]
 > = {

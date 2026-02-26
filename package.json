@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prettier": "prettier --write \"src/**/*.{tsx,ts,js,css,scss,html}\""
+    "format": "prettier --write \"src/**/*.{tsx,ts,js,css,scss,html}\""
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

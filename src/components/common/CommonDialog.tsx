@@ -50,7 +50,10 @@ export function CommonDialog({
 }: CommonDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(maxWidth, "flex flex-col", className)} hideClose={hideClose}>
+      <DialogContent
+        className={cn(maxWidth, "flex flex-col", className)}
+        hideClose={hideClose}
+      >
         <DialogHeader>
           <DialogTitle className="text-foreground">{title}</DialogTitle>
           {description && (

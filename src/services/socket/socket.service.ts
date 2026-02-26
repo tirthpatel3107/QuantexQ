@@ -1,13 +1,13 @@
 /**
  * Socket Service (Singleton)
  * Manages WebSocket/Socket.IO connections for real-time updates
- * 
+ *
  * Features:
  * - Singleton pattern (one connection for entire app)
  * - Subscribe/unsubscribe to specific events
  * - Automatic reconnection
  * - Integration with TanStack Query cache
- * 
+ *
  * Usage:
  * const socket = SocketService.getInstance();
  * socket.connect();
@@ -24,20 +24,20 @@ import type {
   SocketEventType,
   SocketStatus,
   SocketSubscription,
-} from './socket.types';
+} from "./socket.types";
 
 class SocketService {
   private static instance: SocketService;
   private socket: WebSocket | null = null;
   private config: SocketConfig;
   private subscriptions: Map<string, SocketSubscription> = new Map();
-  private connectionInfo: SocketConnectionInfo = { status: 'disconnected' };
+  private connectionInfo: SocketConnectionInfo = { status: "disconnected" };
   private reconnectTimer: NodeJS.Timeout | null = null;
   private subscriptionIdCounter = 0;
 
   private constructor(config?: Partial<SocketConfig>) {
     this.config = {
-      url: import.meta.env.VITE_SOCKET_URL || 'ws://localhost:8080',
+      url: import.meta.env.VITE_SOCKET_URL || "ws://localhost:8080",
       reconnect: true,
       reconnectAttempts: 5,
       reconnectDelay: 3000,
@@ -62,11 +62,11 @@ class SocketService {
    */
   public connect(): void {
     if (this.socket?.readyState === WebSocket.OPEN) {
-      console.log('[Socket] Already connected');
+      console.log("[Socket] Already connected");
       return;
     }
 
-    this.updateConnectionStatus('connecting');
+    this.updateConnectionStatus("connecting");
 
     // TODO: Uncomment when real WebSocket server is ready
     // try {
@@ -80,8 +80,8 @@ class SocketService {
     // MOCK: Simulate connection
     console.log(`[Socket] Connecting to ${this.config.url}...`);
     setTimeout(() => {
-      this.updateConnectionStatus('connected');
-      console.log('[Socket] Connected (mock)');
+      this.updateConnectionStatus("connected");
+      console.log("[Socket] Connected (mock)");
     }, 1000);
   }
 
@@ -99,8 +99,8 @@ class SocketService {
       this.socket = null;
     }
 
-    this.updateConnectionStatus('disconnected');
-    console.log('[Socket] Disconnected');
+    this.updateConnectionStatus("disconnected");
+    console.log("[Socket] Disconnected");
   }
 
   /**
@@ -108,7 +108,7 @@ class SocketService {
    */
   public subscribe(
     eventType: SocketEventType,
-    callback: (event: SocketEvent) => void
+    callback: (event: SocketEvent) => void,
   ): SocketSubscription {
     const id = `sub-${++this.subscriptionIdCounter}`;
 
@@ -132,7 +132,9 @@ class SocketService {
     const subscription = this.subscriptions.get(subscriptionId);
     if (subscription) {
       this.subscriptions.delete(subscriptionId);
-      console.log(`[Socket] Unsubscribed from ${subscription.eventType} (ID: ${subscriptionId})`);
+      console.log(
+        `[Socket] Unsubscribed from ${subscription.eventType} (ID: ${subscriptionId})`,
+      );
     }
   }
 
@@ -141,7 +143,7 @@ class SocketService {
    */
   public emit(eventType: string, data: unknown): void {
     if (this.socket?.readyState !== WebSocket.OPEN) {
-      console.warn('[Socket] Cannot emit - not connected');
+      console.warn("[Socket] Cannot emit - not connected");
       return;
     }
 
@@ -162,7 +164,7 @@ class SocketService {
    * Check if connected
    */
   public isConnected(): boolean {
-    return this.connectionInfo.status === 'connected';
+    return this.connectionInfo.status === "connected";
   }
 
   // ============================================
@@ -173,8 +175,8 @@ class SocketService {
     if (!this.socket) return;
 
     this.socket.onopen = () => {
-      this.updateConnectionStatus('connected');
-      console.log('[Socket] Connection established');
+      this.updateConnectionStatus("connected");
+      console.log("[Socket] Connection established");
     };
 
     this.socket.onmessage = (event) => {
@@ -182,34 +184,37 @@ class SocketService {
         const socketEvent: SocketEvent = JSON.parse(event.data);
         this.handleIncomingEvent(socketEvent);
       } catch (error) {
-        console.error('[Socket] Failed to parse message:', error);
+        console.error("[Socket] Failed to parse message:", error);
       }
     };
 
     this.socket.onerror = (error) => {
-      console.error('[Socket] Error:', error);
+      console.error("[Socket] Error:", error);
       this.handleConnectionError(error);
     };
 
     this.socket.onclose = () => {
-      console.log('[Socket] Connection closed');
-      this.updateConnectionStatus('disconnected');
+      console.log("[Socket] Connection closed");
+      this.updateConnectionStatus("disconnected");
       this.attemptReconnect();
     };
   }
 
   private handleIncomingEvent(event: SocketEvent): void {
-    console.log('[Socket] Received event:', event.type, event);
+    console.log("[Socket] Received event:", event.type, event);
 
     // Notify all subscribers for this event type
-    this.subscriptions.forEach((subscription) => {
-      if (subscription.eventType === event.type) {
-        try {
-          subscription.callback(event);
-        } catch (error) {
-          console.error(`[Socket] Error in subscription callback:`, error);
+    // Use requestAnimationFrame to batch callbacks and prevent blocking
+    requestAnimationFrame(() => {
+      this.subscriptions.forEach((subscription) => {
+        if (subscription.eventType === event.type) {
+          try {
+            subscription.callback(event);
+          } catch (error) {
+            console.error(`[Socket] Error in subscription callback:`, error);
+          }
         }
-      }
+      });
     });
   }
 
@@ -217,13 +222,15 @@ class SocketService {
     this.connectionInfo = {
       ...this.connectionInfo,
       status,
-      connectedAt: status === 'connected' ? new Date().toISOString() : undefined,
+      connectedAt:
+        status === "connected" ? new Date().toISOString() : undefined,
     };
   }
 
   private handleConnectionError(error: unknown): void {
-    this.updateConnectionStatus('error');
-    this.connectionInfo.lastError = error instanceof Error ? error.message : 'Unknown error';
+    this.updateConnectionStatus("error");
+    this.connectionInfo.lastError =
+      error instanceof Error ? error.message : "Unknown error";
     this.attemptReconnect();
   }
 
@@ -232,14 +239,14 @@ class SocketService {
 
     const attempts = this.connectionInfo.reconnectAttempts || 0;
     if (attempts >= (this.config.reconnectAttempts || 5)) {
-      console.log('[Socket] Max reconnection attempts reached');
+      console.log("[Socket] Max reconnection attempts reached");
       return;
     }
 
     this.connectionInfo.reconnectAttempts = attempts + 1;
 
     console.log(
-      `[Socket] Reconnecting in ${this.config.reconnectDelay}ms (attempt ${attempts + 1})`
+      `[Socket] Reconnecting in ${this.config.reconnectDelay}ms (attempt ${attempts + 1})`,
     );
 
     this.reconnectTimer = setTimeout(() => {

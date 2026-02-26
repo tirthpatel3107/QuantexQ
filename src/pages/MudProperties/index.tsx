@@ -1,11 +1,6 @@
 import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Droplets,
-  Save,
-  RotateCcw,
-  Download,
-} from "lucide-react";
+import { Droplets, Save, RotateCcw, Download } from "lucide-react";
 
 import { ROUTES } from "@/constants/routes";
 import {
@@ -26,19 +21,20 @@ import { GasCompressibility } from "./sections/GasCompressibility";
 import { Calibration } from "./sections/Calibration";
 import { Summary } from "./sections/Summary";
 import { MudPropertiesSidebar } from "./components/MudPropertiesSidebar";
-import {
-  MUD_NAV,
-  TYPE_OPTIONS,
-  BASE_FLUID_OPTIONS,
-  TEMP_OPTIONS,
-} from "./constants";
+import { MUD_NAV } from "@/constants";
 import { FluidData } from "@/types/mud";
+import {
+  MudPropertiesProvider,
+  useMudPropertiesContext,
+} from "../../context/MudProperties/MudPropertiesContext";
 
-export default function MudProperties() {
+function MudPropertiesContent() {
   const { section } = useParams();
   const activeSection = section || "mud-properties";
   const [, setDirty] = useState(true);
+  const { requestSave } = useMudPropertiesContext();
 
+  // Local fluid state - will be populated by individual tab API calls
   const [fluid, setFluid] = useState<FluidData>({
     type: "OBM",
     baseFluid: "Diesel",
@@ -62,57 +58,59 @@ export default function MudProperties() {
     tempSensorOffset: "",
   });
 
-  const headerActions = useMemo(() => (
-    <>
-      <CommonTooltip content="Save mud properties">
-        <CommonButton
-          variant="outline"
-          size="sm"
-          onClick={() => setDirty(false)}
-          icon={Save}
-        >
-          Save
-        </CommonButton>
-      </CommonTooltip>
-      <CommonTooltip content="Discard changes">
-        <CommonButton variant="outline" size="sm" icon={RotateCcw}>
-          Discard
-        </CommonButton>
-      </CommonTooltip>
-      <CommonTooltip content="Import mud properties">
-        <CommonButton variant="outline" size="sm" icon={Download}>
-          Import
-        </CommonButton>
-      </CommonTooltip>
-    </>
-  ), []);
+  const headerActions = useMemo(
+    () => (
+      <>
+        <CommonTooltip content="Save mud properties">
+          <CommonButton
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setDirty(false);
+              requestSave();
+            }}
+            icon={Save}
+          >
+            Save
+          </CommonButton>
+        </CommonTooltip>
+        <CommonTooltip content="Discard changes">
+          <CommonButton variant="outline" size="sm" icon={RotateCcw}>
+            Discard
+          </CommonButton>
+        </CommonTooltip>
+        <CommonTooltip content="Import mud properties">
+          <CommonButton variant="outline" size="sm" icon={Download}>
+            Import
+          </CommonButton>
+        </CommonTooltip>
+      </>
+    ),
+    [requestSave],
+  );
 
-  const sidebarNav = useMemo(() => (
-    <SidebarNav
-      items={MUD_NAV}
-      activeSection={activeSection}
-      baseRoute={ROUTES.MUD_PROPERTIES}
-    />
-  ), [activeSection]);
+  const sidebarNav = useMemo(
+    () => (
+      <SidebarNav
+        items={MUD_NAV}
+        activeSection={activeSection}
+        baseRoute={ROUTES.MUD_PROPERTIES}
+      />
+    ),
+    [activeSection],
+  );
 
-  const activeNav = useMemo(() => 
-    MUD_NAV.find((n) => n.id === activeSection)
-  , [activeSection]);
+  const activeNav = useMemo(
+    () => MUD_NAV.find((n) => n.id === activeSection),
+    [activeSection],
+  );
 
   const renderSection = () => {
     switch (activeSection) {
       case "mud-properties":
         return <MudPropertiesOverview />;
       case "overview":
-        return (
-          <FluidOverview
-            fluid={fluid}
-            setFluid={setFluid}
-            typeOptions={TYPE_OPTIONS}
-            baseFluidOptions={BASE_FLUID_OPTIONS}
-            tempOptions={TEMP_OPTIONS}
-          />
-        );
+        return <FluidOverview fluid={fluid} setFluid={setFluid} />;
       case "rheology":
         return <Rheology fluid={fluid} setFluid={setFluid} />;
       case "density":
@@ -170,3 +168,10 @@ export default function MudProperties() {
   );
 }
 
+export default function MudProperties() {
+  return (
+    <MudPropertiesProvider>
+      <MudPropertiesContent />
+    </MudPropertiesProvider>
+  );
+}
