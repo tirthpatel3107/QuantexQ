@@ -1,36 +1,32 @@
 import { toast } from "@/hooks/use-toast";
 
-export type ToastVariant = "default" | "destructive" | "success";
+export type ToastVariant = "default" | "destructive" | "success" | "warning" | "info";
 
 interface ShowToastParams {
   title: string;
   description?: string;
   variant?: ToastVariant;
   duration?: number;
+  showIcon?: boolean;
 }
 
 /**
  * Common toast utility for showing notifications
- * Positioned at top-right of the screen
+ * Positioned at top-right of the screen with modern design
  */
 export const showToast = ({
   title,
   description,
   variant = "default",
   duration = 3000,
+  showIcon = true,
 }: ShowToastParams) => {
-  // Map success variant to default with custom styling
-  const toastVariant = variant === "success" ? "default" : variant;
-
   return toast({
     title,
     description,
-    variant: toastVariant,
+    variant,
     duration,
-    className:
-      variant === "success"
-        ? "border-green-500/50 bg-green-50/95 dark:bg-green-950/95 backdrop-blur supports-[backdrop-filter]:bg-green-50/80 dark:supports-[backdrop-filter]:bg-green-950/80"
-        : undefined,
+    showIcon,
   });
 };
 
@@ -38,12 +34,15 @@ export const showToast = ({
  * Convenience methods for common toast types
  */
 export const CommonToast = {
-  success: (title: string, description?: string) =>
-    showToast({ title, description, variant: "success" }),
+  success: (title: string, description?: string, duration?: number) =>
+    showToast({ title, description, variant: "success", duration }),
 
-  error: (title: string, description?: string) =>
-    showToast({ title, description, variant: "destructive" }),
+  error: (title: string, description?: string, duration?: number) =>
+    showToast({ title, description, variant: "destructive", duration }),
 
-  info: (title: string, description?: string) =>
-    showToast({ title, description, variant: "default" }),
+  warning: (title: string, description?: string, duration?: number) =>
+    showToast({ title, description, variant: "warning", duration }),
+
+  info: (title: string, description?: string, duration?: number) =>
+    showToast({ title, description, variant: "info", duration }),
 };
