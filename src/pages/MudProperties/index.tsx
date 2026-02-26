@@ -26,7 +26,7 @@ import { FluidData } from "@/types/mud";
 import {
   MudPropertiesProvider,
   useMudPropertiesContext,
-} from "./MudPropertiesContext";
+} from "../../context/MudProperties/MudPropertiesContext";
 
 function MudPropertiesContent() {
   const { section } = useParams();

@@ -22,7 +22,7 @@ import { Calibration } from "./sections/Calibration";
 import { Hydraulics } from "./sections/Hydraulics";
 import { SystemSettings } from "./sections/SystemSettings";
 import { Downloads } from "./sections/Downloads";
-import { DAQProvider, useDAQContext } from "./DAQContext";
+import { DAQProvider, useDAQContext } from "../../context/DAQ/DAQContext";
 
 function DAQContent() {
   const { section } = useParams();

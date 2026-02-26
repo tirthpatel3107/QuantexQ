@@ -82,22 +82,25 @@ const fetchSourcesData = async (): Promise<ApiResponse<SourcesTabData>> => {
             frequency: "1x",
             tagMap: "10.1.0.113",
           },
-          devices: [
-            {
-              id: "chokes",
-              name: "Chokes (A/B)",
-              tags: "ChokeA_Pos, ChokeB_Pos, Choke_SP",
-              healthStatus: "OK",
-              healthCount: "3/3",
-            },
-            {
-              id: "flow-meter",
-              name: "Flow Meter",
-              tags: "Flow_In, Flow_Out, Aux_Flow",
-              healthStatus: "OK",
-              healthCount: "3/3",
-            },
-          ],
+          devices: {
+            enabled: true,
+            items: [
+              {
+                id: "chokes",
+                name: "Chokes (A/B)",
+                tags: "ChokeA_Pos, ChokeB_Pos, Choke_SP",
+                healthStatus: "OK",
+                healthCount: "3/3",
+              },
+              {
+                id: "flow-meter",
+                name: "Flow Meter",
+                tags: "Flow_In, Flow_Out, Aux_Flow",
+                healthStatus: "OK",
+                healthCount: "3/3",
+              },
+            ],
+          },
           healthMonitoring: {
             sources: [
               {

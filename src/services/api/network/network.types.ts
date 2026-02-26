@@ -22,7 +22,10 @@ export interface NetworkData {
 export interface SourcesTabData {
   rigPlc: RigPlcSource;
   pwdWits: PwdWitsSource;
-  devices: DeviceSource[];
+  devices: {
+    enabled: boolean;
+    items: DeviceSource[];
+  };
   healthMonitoring: HealthMonitoringData;
 }
 
@@ -67,7 +70,10 @@ export interface HealthSource {
 export interface SaveSourcesPayload {
   rigPlc: RigPlcSource;
   pwdWits: PwdWitsSource;
-  devices: DeviceSource[];
+  devices: {
+    enabled: boolean;
+    items: DeviceSource[];
+  };
 }
 
 export interface SourcesOptionsData {

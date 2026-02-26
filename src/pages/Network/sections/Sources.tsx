@@ -1,17 +1,20 @@
 // React & Hooks
-import { useState, useMemo } from "react";
-import { useSectionForm } from "@/hooks/useSectionForm";
+import { useState, useEffect } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
 // Components - UI & Icons
-import { Badge } from "@/components/ui/badge";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
-  CommonToggle,
-  CommonSelect,
-  CommonInput,
   CommonAccordionItem,
   SectionSkeleton,
   FormSaveDialog,
+  StatusBadge,
+  CommonFormToggle,
+  CommonFormInput,
+  CommonFormSelect,
 } from "@/components/common";
 
 // Components - Local
@@ -23,23 +26,37 @@ import {
   useSaveSourcesData,
   useSourcesOptions,
 } from "@/services/api/network/network.api";
-import type { SaveSourcesPayload } from "@/services/api/network/network.types";
+import type { SaveSourcesPayload, DeviceSource } from "@/services/api/network/network.types";
 
 // Context
-import { useNetworkContext } from "../NetworkContext";
+import { useNetworkContext } from "../../../context/Network/NetworkContext";
 
-const getStatusBadgeColor = (status: string) => {
-  switch (status.toLowerCase()) {
-    case "primary":
-      return "bg-blue-500 text-white";
-    case "connected":
-      return "bg-green-500 text-white";
-    case "disconnected":
-      return "bg-red-500 text-white";
-    default:
-      return "";
-  }
-};
+// --- Validation Schema ---
+const sourcesFormSchema = z.object({
+  rigPlc: z.object({
+    enabled: z.boolean(),
+    connectionStatus: z.enum(["Primary", "Connected", "Disconnected"]),
+    sourceType: z.string(),
+    endpoint: z.string().min(1, "Endpoint is required"),
+    port: z.string().min(1, "Port is required").regex(/^\d+$/, "Port must be a number"),
+    tagMap: z.string().min(1, "Tag Map is required"),
+    dataRate: z.string().min(1, "Data rate is required"),
+  }),
+  pwdWits: z.object({
+    enabled: z.boolean(),
+    endpoint: z.string().min(1, "Endpoint is required"),
+    port: z.string().min(1, "Port is required").regex(/^\d+$/, "Port must be a number"),
+    dataRate: z.string().min(1, "Data rate is required"),
+    frequency: z.string().min(1, "Frequency is required"),
+    tagMap: z.string().min(1, "Tag Map is required"),
+  }),
+  devices: z.object({
+    enabled: z.boolean().default(true),
+    items: z.custom<DeviceSource[]>(),
+  }),
+});
+
+type SourcesFormValues = z.infer<typeof sourcesFormSchema>;
 
 export function Sources() {
   const { data: sourcesResponse, isLoading } = useSourcesData();
@@ -48,44 +65,60 @@ export function Sources() {
   const { registerSaveHandler, unregisterSaveHandler } = useNetworkContext();
 
   const options = optionsResponse?.data;
-  const [devicesExpanded, setDevicesExpanded] = useState(true);
 
-  // Memoize initial data to prevent re-initialization on every render
-  const initialData = useMemo(() => {
-    if (!sourcesResponse?.data) return undefined;
-    const { rigPlc, pwdWits, devices } = sourcesResponse.data;
-    return { rigPlc, pwdWits, devices };
-  }, [sourcesResponse?.data]);
+  // Initialize form
+  const formMethods = useForm<SourcesFormValues>({
+    resolver: zodResolver(sourcesFormSchema),
+  });
 
-  // Use the new reusable form hook
-  const form = useSectionForm<SaveSourcesPayload>({
-    initialData,
+  const { reset, control, handleSubmit } = formMethods;
+
+  // Track if we have set initial data
+  const [hasSetInitial, setHasSetInitial] = useState(false);
+
+  useEffect(() => {
+    if (sourcesResponse?.data && !hasSetInitial) {
+      const { rigPlc, pwdWits, devices } = sourcesResponse.data;
+      reset({ rigPlc, pwdWits, devices });
+      setHasSetInitial(true);
+    }
+  }, [sourcesResponse, hasSetInitial, reset]);
+
+  // Handle save and confirmation using the same UI flow as useSectionForm
+  const saveWithConfirmation = useSaveWithConfirmation<SaveSourcesPayload>({
     onSave: (data) => {
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         saveSourcesData(data, {
           onSuccess: () => resolve(),
           onError: (error) => reject(error),
         });
       });
     },
-    registerSaveHandler,
-    unregisterSaveHandler,
     successMessage: "Sources settings saved successfully",
     errorMessage: "Failed to save sources settings",
     confirmTitle: "Save Sources Settings",
     confirmDescription: "Are you sure you want to save these sources changes?",
   });
 
-  if (isLoading || !form.formData) {
+  // Attach context's save to RHF handleSubmit
+  useEffect(() => {
+    const handleSave = handleSubmit((validData) => {
+      saveWithConfirmation.requestSave(validData as SaveSourcesPayload);
+    });
+
+    registerSaveHandler(handleSave);
+    return () => {
+      unregisterSaveHandler();
+    };
+  }, [handleSubmit, registerSaveHandler, unregisterSaveHandler, saveWithConfirmation]);
+
+  if (isLoading || !hasSetInitial || !sourcesResponse?.data) {
     return <SectionSkeleton count={6} />;
   }
 
-  const { rigPlc, pwdWits, devices } = form.formData;
-
-  // Use connectionStatus from original data if available, or fall back to form state
-  const connectionStatus =
-    sourcesResponse?.data.rigPlc.connectionStatus || rigPlc.connectionStatus;
-  const sourceType = sourcesResponse?.data.rigPlc.sourceType || "N/A";
+  const connectionStatus = sourcesResponse.data.rigPlc.connectionStatus;
+  const sourceType = sourcesResponse.data.rigPlc.sourceType || "N/A";
+  const devicesItems = sourcesResponse.data.devices.items || [];
 
   return (
     <>
@@ -96,21 +129,14 @@ export function Sources() {
             title={
               <div className="flex items-center gap-2">
                 <span>Rig PLC</span>
-                <Badge
-                  variant="default"
-                  className={`text-xs ${getStatusBadgeColor(connectionStatus)}`}
-                >
-                  {connectionStatus}
-                </Badge>
+                <StatusBadge status={connectionStatus} className="text-xs" />
               </div>
             }
             headerAction={
-              <CommonToggle
+              <CommonFormToggle
+                name="rigPlc.enabled"
+                control={control}
                 label="Modbus TCP"
-                checked={rigPlc.enabled}
-                onCheckedChange={(enabled) =>
-                  form.updateLocalField({ rigPlc: { ...rigPlc, enabled } })
-                }
               />
             }
           >
@@ -121,56 +147,41 @@ export function Sources() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 <div className="flex gap-2">
-                  <CommonInput
+                  <CommonFormInput
+                    name="rigPlc.endpoint"
+                    control={control}
                     label="Endpoint"
-                    value={rigPlc.endpoint}
-                    onChange={(e) =>
-                      form.updateLocalField({
-                        rigPlc: { ...rigPlc, endpoint: e.target.value },
-                      })
-                    }
                     placeholder="10.1.0.11"
-                    className="flex-1"
                     type="text"
+                    containerClassName="flex-1"
                   />
-                  <CommonInput
-                    label=" "
-                    value={rigPlc.port}
-                    onChange={(e) =>
-                      form.updateLocalField({
-                        rigPlc: { ...rigPlc, port: e.target.value },
-                      })
-                    }
+                  <CommonFormInput
+                    name="rigPlc.port"
+                    control={control}
+                    label="Port"
                     placeholder="502"
                     type="number"
+                    containerClassName="w-[100px]"
                   />
                 </div>
-                <CommonSelect
-                  label="Tag Map"
-                  value={rigPlc.tagMap}
-                  onValueChange={(tagMap) =>
-                    form.updateLocalField({ rigPlc: { ...rigPlc, tagMap } })
-                  }
-                  options={options?.tagMapOptions || []}
-                />
 
-                <CommonSelect
-                  label="Data rate"
-                  value={rigPlc.dataRate}
-                  onValueChange={(dataRate) =>
-                    form.updateLocalField({ rigPlc: { ...rigPlc, dataRate } })
-                  }
-                  options={options?.dataRateOptions || []}
-                />
+                <div className="flex flex-col gap-1">
+                  <CommonFormSelect
+                    name="rigPlc.tagMap"
+                    control={control}
+                    label="Tag Map"
+                    options={options?.tagMapOptions || []}
+                  />
+                </div>
 
-                <CommonSelect
-                  label="Tag Map"
-                  value={rigPlc.tagMap}
-                  onValueChange={(tagMap) =>
-                    form.updateLocalField({ rigPlc: { ...rigPlc, tagMap } })
-                  }
-                  options={options?.tagMapOptions || []}
-                />
+                <div className="flex flex-col gap-1">
+                  <CommonFormSelect
+                    name="rigPlc.dataRate"
+                    control={control}
+                    label="Data rate"
+                    options={options?.dataRateOptions || []}
+                  />
+                </div>
               </div>
             </div>
           </PanelCard>
@@ -179,15 +190,15 @@ export function Sources() {
           <PanelCard
             title="Devices (from PLC)"
             headerAction={
-              <CommonToggle
+              <CommonFormToggle
+                name="devices.enabled"
+                control={control}
                 label=""
-                checked={devicesExpanded}
-                onCheckedChange={setDevicesExpanded}
               />
             }
           >
             <div className="space-y-4">
-              {devices.map(({ id, name, tags, healthStatus, healthCount }) => (
+              {devicesItems.map(({ id, name, tags, healthStatus, healthCount }) => (
                 <CommonAccordionItem
                   key={id}
                   title={name}
@@ -203,69 +214,60 @@ export function Sources() {
           <PanelCard
             title="PWD WITS (TCP)"
             headerAction={
-              <CommonToggle
+              <CommonFormToggle
+                name="pwdWits.enabled"
+                control={control}
                 label=""
-                checked={pwdWits.enabled}
-                onCheckedChange={(enabled) =>
-                  form.updateLocalField({ pwdWits: { ...pwdWits, enabled } })
-                }
               />
             }
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div className="flex gap-2">
-                <CommonInput
+                <CommonFormInput
+                  name="pwdWits.endpoint"
+                  control={control}
                   label="Endpoint"
-                  value={pwdWits.endpoint}
-                  onChange={(e) =>
-                    form.updateLocalField({
-                      pwdWits: { ...pwdWits, endpoint: e.target.value },
-                    })
-                  }
+                  placeholder="10.1.0.11"
+                  type="text"
+                  containerClassName="flex-1"
+                />
+                <CommonFormInput
+                  name="pwdWits.port"
+                  control={control}
+                  label="Port"
+                  placeholder="502"
+                  type="number"
+                  containerClassName="w-[100px]"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <CommonFormSelect
+                  name="pwdWits.dataRate"
+                  control={control}
+                  label="Data rate"
+                  options={options?.dataRateOptions || []}
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <CommonFormSelect
+                  name="pwdWits.frequency"
+                  control={control}
+                  label="Frequency"
+                  options={options?.frequencyOptions || []}
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <CommonFormInput
+                  name="pwdWits.tagMap"
+                  control={control}
+                  label="Tag Map"
                   placeholder="10.1.0.11"
                   type="text"
                 />
-                <CommonInput
-                  label=" "
-                  value={pwdWits.port}
-                  onChange={(e) =>
-                    form.updateLocalField({
-                      pwdWits: { ...pwdWits, port: e.target.value },
-                    })
-                  }
-                  placeholder="502"
-                  type="number"
-                />
               </div>
-              <CommonSelect
-                label="Data rate"
-                value={pwdWits.dataRate}
-                onValueChange={(dataRate) =>
-                  form.updateLocalField({ pwdWits: { ...pwdWits, dataRate } })
-                }
-                options={options?.dataRateOptions || []}
-              />
-
-              <CommonSelect
-                label="Frequency"
-                value={pwdWits.frequency}
-                onValueChange={(frequency) =>
-                  form.updateLocalField({ pwdWits: { ...pwdWits, frequency } })
-                }
-                options={options?.frequencyOptions || []}
-              />
-
-              <CommonInput
-                label="Tag Map"
-                value={pwdWits.tagMap}
-                onChange={(e) =>
-                  form.updateLocalField({
-                    pwdWits: { ...pwdWits, tagMap: e.target.value },
-                  })
-                }
-                placeholder="10.1.0.11"
-                type="text"
-              />
             </div>
           </PanelCard>
         </div>
@@ -274,7 +276,8 @@ export function Sources() {
         </div>
       </div>
 
-      <FormSaveDialog form={form} />
+      {/* FormSaveDialog needs the shape returned by useSaveWithConfirmation */}
+      <FormSaveDialog form={saveWithConfirmation} />
     </>
   );
 }

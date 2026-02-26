@@ -7,7 +7,7 @@ import {
   useStreamingOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveStreamingPayload } from "@/services/api/daq/daq.types";
-import { useDAQContext } from "../DAQContext";
+import { useDAQContext } from "../../../context/DAQ/DAQContext";
 
 export function Streaming() {
   const { data: streamingResponse, isLoading } = useStreamingData();

@@ -13,7 +13,7 @@ import {
   useSaveLogAnalysisData,
 } from "@/services/api/daq/daq.api";
 import type { SaveLogAnalysisPayload } from "@/services/api/daq/daq.types";
-import { useDAQContext } from "../DAQContext";
+import { useDAQContext } from "../../../context/DAQ/DAQContext";
 
 interface LogEntry {
   id: string;

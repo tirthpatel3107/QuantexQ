@@ -1,7 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
-interface CommonToggleProps {
+export interface CommonToggleProps {
   id?: string;
   label: string;
   description?: string;

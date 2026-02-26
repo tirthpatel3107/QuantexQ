@@ -25,7 +25,7 @@ import {
 import type { SaveProtocolsPayload } from "@/services/api/network/network.types";
 
 // Context
-import { useNetworkContext } from "../NetworkContext";
+import { useNetworkContext } from "../../../context/Network/NetworkContext";
 
 export function Protocols() {
   const { data: protocolsResponse, isLoading } = useProtocolsData();

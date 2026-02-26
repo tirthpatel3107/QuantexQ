@@ -20,7 +20,7 @@ import {
 import type { SaveCalibrationPayload } from "@/services/api/mudproperties/mudproperties.types";
 
 // Context
-import { useMudPropertiesContext } from "../MudPropertiesContext";
+import { useMudPropertiesContext } from "../../../context/MudProperties/MudPropertiesContext";
 
 export function Calibration() {
   const { data: calibrationResponse, isLoading } = useCalibrationData();

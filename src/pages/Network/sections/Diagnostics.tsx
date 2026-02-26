@@ -15,7 +15,7 @@ import {
 } from "@/services/api/network/network.api";
 import type { SaveDiagnosticsPayload } from "@/services/api/network/network.types";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import { useNetworkContext } from "../NetworkContext";
+import { useNetworkContext } from "../../../context/Network/NetworkContext";
 
 export function Diagnostics() {
   const { data: diagnosticsResponse, isLoading, error } = useDiagnosticsData();

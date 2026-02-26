@@ -3,6 +3,7 @@ import { PanelCard } from "@/components/dashboard/PanelCard";
 import { CommonButton } from "@/components/common/CommonButton";
 import { CommonToggle } from "@/components/common/CommonToggle";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/common";
 import { Settings } from "lucide-react";
 
 export interface HealthMetric {
@@ -89,18 +90,6 @@ export function HealthMonitoringPanel({
     onFailoverChange?.(checked);
   };
 
-  const getStatusBadgeColor = (status: string) => {
-    switch (status) {
-      case "CONNECTED":
-        return "bg-green-600";
-      case "WARNING":
-        return "bg-yellow-600";
-      case "DISCONNECTED":
-        return "bg-red-600";
-      default:
-        return "bg-gray-600";
-    }
-  };
 
   const getDeviceStatusColor = (color: string) => {
     switch (color) {
@@ -138,12 +127,7 @@ export function HealthMonitoringPanel({
       <PanelCard
         title="Live Health (PLC)"
         headerAction={
-          <Badge
-            variant="default"
-            className={`text-xs ${getStatusBadgeColor(connectionStatus)}`}
-          >
-            {connectionStatus}
-          </Badge>
+          <StatusBadge status={connectionStatus} className="text-xs" />
         }
       >
         <div className="space-y-4">

@@ -17,7 +17,7 @@ import {
   useNotificationsOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveNotificationsPayload } from "@/services/api/daq/daq.types";
-import { useDAQContext } from "../DAQContext";
+import { useDAQContext } from "../../../context/DAQ/DAQContext";
 
 interface NotificationLogEntry {
   id: string;

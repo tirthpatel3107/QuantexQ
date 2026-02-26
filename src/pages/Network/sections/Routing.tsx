@@ -27,7 +27,7 @@ import {
 import type { SaveRoutingPayload } from "@/services/api/network/network.types";
 
 // Context
-import { useNetworkContext } from "../NetworkContext";
+import { useNetworkContext } from "../../../context/Network/NetworkContext";
 
 export function Routing() {
   const { data: routingResponse, isLoading } = useRoutingData();
