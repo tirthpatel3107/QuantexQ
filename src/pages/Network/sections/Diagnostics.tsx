@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonButton } from "@/components/common/CommonButton";
-import { CommonInput } from "@/components/common/CommonInput";
-import { CommonToggle } from "@/components/common/CommonToggle";
+import { CommonButton } from "@/shared/components/Button/CommonButton";
+import { CommonInput } from "@/shared/components/Form/CommonInput";
+import { CommonToggle } from "@/shared/components/Form/CommonToggle";
 import { Badge } from "@/components/ui/badge";
 import { Play, FileDown } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
-import { SectionSkeleton, CommonAlertDialog } from "@/components/common";
+import { cn } from "@/shared/utils/utils";
+import { HealthMonitoringPanel } from "../../../features/network/pages/Network/HealthMonitoringPanel";
+import { SectionSkeleton, CommonAlertDialog } from "@/shared/components";
 import {
   useDiagnosticsData,
   useSaveDiagnosticsData,
   useDiagnosticsOptions,
 } from "@/services/api/network/network.api";
 import type { SaveDiagnosticsPayload } from "@/services/api/network/network.types";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import { useNetworkContext } from "../../../context/Network/NetworkContext";
+import { useSaveWithConfirmation } from "@/shared/hooks/useSaveWithConfirmation";
+import { useNetworkContext } from "../../../features/network/context/NetworkContext";
 
 export function Diagnostics() {
   const { data: diagnosticsResponse, isLoading, error } = useDiagnosticsData();

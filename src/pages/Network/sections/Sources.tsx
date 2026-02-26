@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { useSaveWithConfirmation } from "@/shared/hooks/useSaveWithConfirmation";
 
 // Components - UI & Icons
 import { PanelCard } from "@/components/dashboard/PanelCard";
@@ -15,10 +15,10 @@ import {
   CommonFormToggle,
   CommonFormInput,
   CommonFormSelect,
-} from "@/components/common";
+} from "@/shared/components";
 
 // Components - Local
-import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
+import { HealthMonitoringPanel } from "../../../features/network/pages/Network/HealthMonitoringPanel";
 
 // Services & Types
 import {
@@ -29,7 +29,7 @@ import {
 import type { SaveSourcesPayload, DeviceSource } from "@/services/api/network/network.types";
 
 // Context
-import { useNetworkContext } from "../../../context/Network/NetworkContext";
+import { useNetworkContext } from "../../../features/network/context/NetworkContext";
 
 // --- Validation Schema ---
 const sourcesFormSchema = z.object({

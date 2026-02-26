@@ -1,0 +1,171 @@
+import { useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import {
+  Settings as SettingsIcon,
+  Save,
+  RotateCcw,
+  Upload,
+} from "lucide-react";
+
+import { ROUTES } from "@/shared/constants/routes";
+import {
+  PageLayout,
+  SidebarLayout,
+  PageHeaderBar,
+  CommonButton,
+  SidebarNav,
+  CommonTooltip,
+} from "@/shared/components";
+
+import { SettingsOverview } from "./sections/SettingsOverview";
+import { GeneralSettings } from "./sections/General";
+import { Units } from "./sections/Units";
+import { DataTime } from "./sections/DataTime";
+import { Signals } from "./sections/Signals";
+import { Alarms } from "./sections/Alarms";
+import { AutoControl } from "./sections/AutoControl";
+import { ChokePumps } from "./sections/ChokePumps";
+import { HydraulicsModel } from "./sections/HydraulicsModel";
+import { UiDisplay } from "./sections/UiDisplay";
+import { UsersRoles } from "./sections/userRoles";
+import { AboutDiagnostics } from "./sections/AboutDiagnostics";
+import { SETTINGS_NAV } from "./constants";
+import { GeneralSettingsData } from "@/types/settings";
+import { SettingsProvider, useSettingsContext } from "../../context/SettingsContext";
+
+function SettingsContent() {
+  const { section } = useParams();
+  const activeSection = section || "setting";
+  const { requestSave } = useSettingsContext();
+
+  const [general, setGeneral] = useState<GeneralSettingsData>({
+    defaultWellName: "NFQ-21-6A",
+    defaultRigName: "Rig-01",
+    defaultScenario: "Static",
+    startupScreen1: "Quantum HUD",
+    startupScreen2: "Quantum HUD",
+  });
+  const [safetyConfirmations, setSafetyConfirmations] = useState(true);
+
+  const headerActions = useMemo(
+    () => (
+      <>
+        <CommonTooltip content="Save settings">
+          <CommonButton
+            variant="outline"
+            size="sm"
+            icon={Save}
+            onClick={requestSave}
+          >
+            Save
+          </CommonButton>
+        </CommonTooltip>
+        <CommonTooltip content="Discard changes">
+          <CommonButton variant="outline" size="sm" icon={RotateCcw}>
+            Discard
+          </CommonButton>
+        </CommonTooltip>
+        <CommonTooltip content="Export settings">
+          <CommonButton variant="outline" size="sm" icon={Upload}>
+            Export
+          </CommonButton>
+        </CommonTooltip>
+      </>
+    ),
+    [requestSave],
+  );
+
+  const sidebarNav = useMemo(
+    () => (
+      <SidebarNav
+        items={SETTINGS_NAV}
+        activeSection={activeSection}
+        baseRoute={ROUTES.SETTINGS}
+      />
+    ),
+    [activeSection],
+  );
+
+  const activeNav = useMemo(
+    () => SETTINGS_NAV.find((n) => n.id === activeSection),
+    [activeSection],
+  );
+
+  const renderSection = () => {
+    switch (activeSection) {
+      case "setting":
+        return (
+          <>
+            <SettingsOverview />
+          </>
+        );
+      case "general":
+        return (
+          <GeneralSettings
+            general={general}
+            setGeneral={setGeneral}
+            safetyConfirmations={safetyConfirmations}
+            setSafetyConfirmations={setSafetyConfirmations}
+          />
+        );
+      case "units":
+        return <Units />;
+      case "data-time":
+        return <DataTime />;
+      case "signals":
+        return <Signals />;
+      case "alarms":
+        return <Alarms />;
+      case "auto-control":
+        return <AutoControl />;
+      case "choke-pumps":
+        return <ChokePumps />;
+      case "hydraulics":
+        return <HydraulicsModel />;
+      case "ui":
+        return <UiDisplay />;
+      case "users":
+        return <UsersRoles />;
+      case "about":
+        return <AboutDiagnostics />;
+      default:
+        return <SettingsOverview />;
+    }
+  };
+
+  return (
+    <PageLayout>
+      <SidebarLayout
+        sidebar={sidebarNav}
+        sidebarFooter={
+          <p className="text-[11px] text-muted-foreground">
+            Modified by adm.tirth | 06 Feb 2026 | 12:21
+          </p>
+        }
+      >
+        <PageHeaderBar
+          icon={
+            activeNav?.icon ? (
+              <activeNav.icon className="h-5 w-5" />
+            ) : (
+              <SettingsIcon className="h-5 w-5" />
+            )
+          }
+          title={activeNav?.label ?? ""}
+          metadata="Active Profile: Rig-01 / NFQ-21-6A Admin"
+          actions={headerActions}
+        />
+
+        <main className="flex-1 min-w-0 overflow-auto">{renderSection()}</main>
+      </SidebarLayout>
+    </PageLayout>
+  );
+}
+
+export default function Settings() {
+  return (
+    <SettingsProvider>
+      <SettingsContent />
+    </SettingsProvider>
+  );
+}

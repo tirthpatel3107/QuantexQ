@@ -5,8 +5,8 @@ import {
   CommonButton,
   PageLoader,
   CommonToggle,
-} from "@/components/common";
-import { PanelCard } from "@/components/dashboard/PanelCard";
+} from "@/shared/components";
+import { PanelCard } from "@/pages/Dashboard/components/PanelCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -25,8 +25,8 @@ import {
   Clock4,
   Check,
 } from "lucide-react";
-import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
-import { useTheme } from "@/hooks/useTheme";
+import { useInitialSkeleton } from "@/shared/hooks/useInitialSkeleton";
+import { useTheme } from "@/shared/hooks/useTheme";
 
 const sessions = [
   {

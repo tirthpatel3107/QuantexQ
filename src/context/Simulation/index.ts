@@ -1,2 +1,2 @@
-export * from "./SimulationContext";
-export { SimulationProvider } from "./SimulationProvider";
+export * from "../../features/simulation/context/SimulationContext";
+export { SimulationProvider } from "../../features/simulation/context/SimulationProvider";

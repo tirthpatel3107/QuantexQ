@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonButton } from "@/components/common/CommonButton";
-import { CommonInput } from "@/components/common/CommonInput";
-import { CommonSelect } from "@/components/common/CommonSelect";
-import { CommonToggle } from "@/components/common/CommonToggle";
-import { CommonRadio } from "@/components/common/CommonRadio";
+import { CommonButton } from "@/shared/components/Button/CommonButton";
+import { CommonInput } from "@/shared/components/Form/CommonInput";
+import { CommonSelect } from "@/shared/components/CommonSelect";
+import { CommonToggle } from "@/shared/components/Form/CommonToggle";
+import { CommonRadio } from "@/shared/components/Form/CommonRadio";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
-import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
-import { CommonSkeleton, SectionSkeleton } from "@/components/common";
+import { HealthMonitoringPanel } from "../../../features/network/pages/Network/HealthMonitoringPanel";
+import { CommonSkeleton, SectionSkeleton } from "@/shared/components";
 import { useSecurityData } from "@/services/api/network/network.api";
 
 export function Security() {

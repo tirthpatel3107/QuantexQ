@@ -1,6 +1,6 @@
 // React & Hooks
 import { useState, useMemo } from "react";
-import { useSectionForm } from "@/hooks/useSectionForm";
+import { useSectionForm } from "@/shared/hooks/useSectionForm";
 
 // Components - UI & Icons
 import { Badge } from "@/components/ui/badge";
@@ -11,10 +11,10 @@ import {
   CommonRadio,
   SectionSkeleton,
   FormSaveDialog,
-} from "@/components/common";
+} from "@/shared/components";
 
 // Components - Local
-import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
+import { HealthMonitoringPanel } from "../../../features/network/pages/Network/HealthMonitoringPanel";
 
 // Services & Types
 import {
@@ -25,7 +25,7 @@ import {
 import type { SaveProtocolsPayload } from "@/services/api/network/network.types";
 
 // Context
-import { useNetworkContext } from "../../../context/Network/NetworkContext";
+import { useNetworkContext } from "../../../features/network/context/NetworkContext";
 
 export function Protocols() {
   const { data: protocolsResponse, isLoading } = useProtocolsData();

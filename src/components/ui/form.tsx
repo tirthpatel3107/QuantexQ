@@ -10,7 +10,7 @@ import {
   useFormContext,
 } from "react-hook-form";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 import { Label } from "@/components/ui/label";
 
 const Form = FormProvider;
@@ -21,7 +21,7 @@ import {
   FormFieldContextValue,
   FormItemContextValue,
 } from "./form-context";
-import { useFormField } from "@/hooks/use-form-field";
+import { useFormField } from "@/shared/hooks/use-form-field";
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,

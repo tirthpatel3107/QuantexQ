@@ -1,17 +1,17 @@
 import React, { useState, useMemo, useCallback } from "react";
-import { cn } from "@/lib/utils";
-import { Header } from "@/components/dashboard/Header";
-import { VerticalChartCard } from "@/components/dashboard/VerticalChartCard";
-import { DepthGauge } from "@/components/dashboard/DepthGauge";
-import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
-import { useSimulationData } from "@/hooks/useSimulation";
+import { cn } from "@/shared/utils/utils";
+import { Header } from "@/pages/Dashboard/components/Header";
+import { VerticalChartCard } from "@/pages/Dashboard/components/VerticalChartCard";
+import { DepthGauge } from "@/pages/Dashboard/components/DepthGauge";
+import { useInitialSkeleton } from "@/shared/hooks/useInitialSkeleton";
+import { useSimulationData } from "@/features/simulation/hooks/useSimulation";
 import {
   CENTER_CARDS,
   metricsFromLatestPoint,
-} from "@/data/dashboardChartConfig";
+} from "@/pages/Dashboard/data/dashboardChartConfig";
 
-import { TimeAxisCard } from "@/components/dashboard/TimeAxisCard";
-import { FlowDifferenceBar } from "@/components/dashboard/FlowDifferenceBar";
+import { TimeAxisCard } from "@/pages/Dashboard/components/TimeAxisCard";
+import { FlowDifferenceBar } from "@/pages/Dashboard/components/FlowDifferenceBar";
 
 /**
  * Main Dashboard Landing Page

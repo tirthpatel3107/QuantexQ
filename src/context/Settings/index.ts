@@ -1,1 +1,1 @@
-export * from "./SettingsContext";
+export * from "../../features/settings/context/SettingsContext";

@@ -3,7 +3,7 @@ import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 
 import { CommonInput, CommonInputProps } from "./CommonInput";
 import { CommonSelect, CommonSelectProps } from "./CommonSelect";
-import { CommonToggle, CommonToggleProps } from "./CommonToggle";
+import { CommonToggle, CommonToggleProps } from "../../shared/components/Form/CommonToggle";
 
 // ============================================
 // CommonFormInput

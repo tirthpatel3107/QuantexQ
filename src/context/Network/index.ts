@@ -1,1 +1,1 @@
-export * from "./NetworkContext";
+export * from "../../features/network/context/NetworkContext";

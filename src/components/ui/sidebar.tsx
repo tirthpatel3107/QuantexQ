@@ -3,9 +3,9 @@ import { Slot } from "@radix-ui/react-slot";
 import { VariantProps, cva } from "class-variance-authority";
 import { PanelLeft } from "lucide-react";
 
-import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/shared/hooks/use-mobile";
+import { cn } from "@/shared/utils/utils";
+import { Button } from "@/shared/components/Button/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -15,7 +15,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shared/components/Tooltip/tooltip";
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -26,7 +26,7 @@ const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 import { SidebarContext } from "./sidebar-context";
 import type { SidebarContextValue } from "./sidebar-context";
-import { useSidebar } from "@/hooks/use-sidebar";
+import { useSidebar } from "@/shared/hooks/use-sidebar";
 
 const SidebarProvider = React.forwardRef<
   HTMLDivElement,

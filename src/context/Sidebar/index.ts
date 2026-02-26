@@ -1,2 +1,2 @@
-export * from "./SidebarContext";
-export { SidebarProvider } from "./SidebarContext";
+export * from "../../shared/components/Sidebar/SidebarContext";
+export { SidebarProvider } from "../../shared/components/Sidebar/SidebarContext.tsx";
