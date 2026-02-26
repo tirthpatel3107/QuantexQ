@@ -2,7 +2,7 @@ import { useContext } from "react";
 import {
   SimulationStateContext,
   SimulationDataContext,
-} from "../context/SimulationContext";
+} from "../context/Simulation";
 
 export function useSimulation() {
   const state = useContext(SimulationStateContext);
