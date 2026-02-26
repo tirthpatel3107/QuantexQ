@@ -131,7 +131,7 @@ export function Sources() {
                     }
                     placeholder="10.1.0.11"
                     className="flex-1"
-                    type="number"
+                    type="text"
                   />
                   <CommonInput
                     label=" "
@@ -223,7 +223,7 @@ export function Sources() {
                     })
                   }
                   placeholder="10.1.0.11"
-                  type="number"
+                  type="text"
                 />
                 <CommonInput
                   label=" "
@@ -264,7 +264,7 @@ export function Sources() {
                   })
                 }
                 placeholder="10.1.0.11"
-                type="number"
+                type="text"
               />
             </div>
           </PanelCard>

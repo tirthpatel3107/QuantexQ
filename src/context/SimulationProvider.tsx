@@ -24,6 +24,11 @@ import {
  * - Running status of the operations
  * - Accumulated chart data for all metrics
  * - Elapsed mission time
+ * 
+ * Performance optimizations:
+ * - Memoized context values to prevent unnecessary re-renders
+ * - Batched chart updates with configurable intervals
+ * - Efficient state updates using functional setState
  */
 export function SimulationProvider({ children }: { children: ReactNode }) {
   const [isRunning, setRunningState] = useState(false);
@@ -46,15 +51,20 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       }
       return;
     }
+    
+    // Batch chart updates for better performance
     intervalRef.current = setInterval(() => {
+      // Use functional update to avoid stale closures
       setChartData((prev) => {
         const next = { ...prev };
+        // Update all chart keys in a single render cycle
         for (const key of CHART_KEYS) {
           next[key] = appendChartPoint(prev[key], key);
         }
         return next;
       });
     }, CHART_UPDATE_INTERVAL_MS);
+    
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);

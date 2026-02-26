@@ -204,14 +204,17 @@ class SocketService {
     console.log("[Socket] Received event:", event.type, event);
 
     // Notify all subscribers for this event type
-    this.subscriptions.forEach((subscription) => {
-      if (subscription.eventType === event.type) {
-        try {
-          subscription.callback(event);
-        } catch (error) {
-          console.error(`[Socket] Error in subscription callback:`, error);
+    // Use requestAnimationFrame to batch callbacks and prevent blocking
+    requestAnimationFrame(() => {
+      this.subscriptions.forEach((subscription) => {
+        if (subscription.eventType === event.type) {
+          try {
+            subscription.callback(event);
+          } catch (error) {
+            console.error(`[Socket] Error in subscription callback:`, error);
+          }
         }
-      }
+      });
     });
   }
 
