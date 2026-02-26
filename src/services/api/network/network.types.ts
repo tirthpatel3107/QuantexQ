@@ -123,20 +123,29 @@ export interface DiagnosticsOptionsData {
 // ============================================
 
 export interface ProtocolsTabData {
-  protocols: ProtocolConfig[];
-}
-
-export interface ProtocolConfig {
-  id: string;
-  name: string;
-  type: "modbus" | "witsml" | "opcua" | "mqtt" | "custom";
-  description: string;
-  enabled: boolean;
-  settings: Record<string, unknown>;
+  rigPlc: {
+    type: "modbus-tcp" | "opc-ua" | "ethernet-ip";
+    modbusEndpoints?: string[];
+    opcEndpoint?: string;
+    ethernetEndpoint?: string;
+  };
+  pwd: {
+    type: "direct-wits" | "witsml-left" | "mqtt" | "tcp-udp-left" | "witsml-right" | "tcp-udp-right";
+    endpoint?: string;
+  };
 }
 
 export interface SaveProtocolsPayload {
-  protocols: ProtocolConfig[];
+  rigPlc: {
+    type: "modbus-tcp" | "opc-ua" | "ethernet-ip";
+    modbusEndpoints?: string[];
+    opcEndpoint?: string;
+    ethernetEndpoint?: string;
+  };
+  pwd: {
+    type: "direct-wits" | "witsml-left" | "mqtt" | "tcp-udp-left" | "witsml-right" | "tcp-udp-right";
+    endpoint?: string;
+  };
 }
 
 // ============================================

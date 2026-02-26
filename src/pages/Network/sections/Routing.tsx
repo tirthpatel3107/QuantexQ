@@ -1,18 +1,21 @@
 // React & Hooks
-import { useState, useMemo } from "react";
-import { useSectionForm } from "@/hooks/useSectionForm";
+import { useState, useEffect } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
 // Components - UI & Icons
-import { Badge } from "@/components/ui/badge";
 import { Plus } from "lucide-react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   CommonButton,
-  CommonInput,
-  CommonSelect,
-  CommonToggle,
   SectionSkeleton,
   FormSaveDialog,
+  StatusBadge,
+  CommonFormToggle,
+  CommonFormInput,
+  CommonFormSelect,
 } from "@/components/common";
 
 // Components - Local
@@ -29,6 +32,77 @@ import type { SaveRoutingPayload } from "@/services/api/network/network.types";
 // Context
 import { useNetworkContext } from "../../../context/Network/NetworkContext";
 
+// --- Validation Schema ---
+const routingFormSchema = z.object({
+  rigPlc: z.object({
+    enabled: z.boolean(),
+    endpoint: z.string().min(1, "Endpoint is required"),
+    subnet: z.string().min(1, "Subnet is required"),
+    port: z.string().min(1, "Port is required"),
+    portConfig: z.string().min(1, "Port config is required"),
+  }),
+  pwd: z.object({
+    protocol: z.string().min(1, "Protocol is required"),
+    tag: z.string().min(1, "Tag is required"),
+  }),
+  outputChannels: z.object({
+    enabled: z.boolean(),
+    chokeA: z.string().min(1, "Choke A is required"),
+    mpdSbp: z.string().min(1, "MPD SBP is required"),
+    chokeOutputs: z.string().min(1, "Choke outputs is required"),
+    sbInCoop: z.string().min(1, "SB In Coop is required"),
+    sbpSsp: z.string().min(1, "SBP SSP is required"),
+    sbpSspOutput: z.string().min(1, "SBP SSP output is required"),
+  }),
+  dualQControl: z.object({
+    enabled: z.boolean(),
+    mpdQIn: z.string().min(1, "MPD Q In is required"),
+    chokeQOut: z.string().min(1, "Choke Q Out is required"),
+    flowQIn: z.string().min(1, "Flow Q In is required"),
+    mpdQInAlt: z.string().min(1, "MPD Q In Alt is required"),
+    flowOutputs: z.string().min(1, "Flow outputs is required"),
+    mpdQAux: z.string().min(1, "MPD Q Aux is required"),
+    mpdQSet: z.string().min(1, "MPD Q Set is required"),
+    mpdQAex: z.string().min(1, "MPD Q Aex is required"),
+  }),
+});
+
+type RoutingFormValues = z.infer<typeof routingFormSchema>;
+
+const initialData: RoutingFormValues = {
+  rigPlc: {
+    enabled: true,
+    endpoint: "",
+    subnet: "",
+    port: "",
+    portConfig: "",
+  },
+  pwd: {
+    protocol: "",
+    tag: "",
+  },
+  outputChannels: {
+    enabled: true,
+    chokeA: "",
+    mpdSbp: "",
+    chokeOutputs: "",
+    sbInCoop: "",
+    sbpSsp: "",
+    sbpSspOutput: "",
+  },
+  dualQControl: {
+    enabled: true,
+    mpdQIn: "",
+    chokeQOut: "",
+    flowQIn: "",
+    mpdQInAlt: "",
+    flowOutputs: "",
+    mpdQAux: "",
+    mpdQSet: "",
+    mpdQAex: "",
+  },
+};
+
 export function Routing() {
   const { data: routingResponse, isLoading } = useRoutingData();
   const { data: optionsResponse } = useRoutingOptions();
@@ -36,40 +110,67 @@ export function Routing() {
   const { registerSaveHandler, unregisterSaveHandler } = useNetworkContext();
 
   const options = optionsResponse?.data;
-  const [modbusEnabled, setModbusEnabled] = useState(true);
-  const [eqmptEmacerEnabled, setEqmptEmacerEnabled] = useState(true);
 
-  // Memoize initial data
-  const initialData = useMemo(() => {
-    if (!routingResponse?.data) return undefined;
-    const { routes } = routingResponse.data;
-    return { routes };
-  }, [routingResponse?.data]);
+  // Initialize form
+  const formMethods = useForm<RoutingFormValues>({
+    resolver: zodResolver(routingFormSchema),
+  });
 
-  // Use the reusable form hook
-  const form = useSectionForm<SaveRoutingPayload>({
-    initialData,
-    onSave: (data) => {
-      return new Promise((resolve, reject) => {
-        saveRoutingData(data, {
+  const { reset, control, handleSubmit } = formMethods;
+
+  // Track if we have set initial data
+  const [hasSetInitial, setHasSetInitial] = useState(false);
+
+  useEffect(() => {
+    if (routingResponse?.data && !hasSetInitial) {
+      // Initialize form with API data
+
+      reset(initialData);
+      setHasSetInitial(true);
+    }
+  }, [routingResponse, hasSetInitial, reset]);
+
+  // Handle save and confirmation using the same UI flow as Sources
+  const saveWithConfirmation = useSaveWithConfirmation<SaveRoutingPayload>({
+    onSave: () => {
+      // Transform form data back to API format
+      const payload: SaveRoutingPayload = {
+        routes: routingResponse?.data?.routes || [],
+      };
+
+      return new Promise<void>((resolve, reject) => {
+        saveRoutingData(payload, {
           onSuccess: () => resolve(),
           onError: (error) => reject(error),
         });
       });
     },
-    registerSaveHandler,
-    unregisterSaveHandler,
     successMessage: "Routing settings saved successfully",
     errorMessage: "Failed to save routing settings",
     confirmTitle: "Save Routing Settings",
     confirmDescription: "Are you sure you want to save these routing changes?",
   });
 
-  if (isLoading || !form.formData) {
+  // Attach context's save to RHF handleSubmit
+  useEffect(() => {
+    const handleSave = handleSubmit(() => {
+      saveWithConfirmation.requestSave({} as SaveRoutingPayload);
+    });
+
+    registerSaveHandler(handleSave);
+    return () => {
+      unregisterSaveHandler();
+    };
+  }, [
+    handleSubmit,
+    registerSaveHandler,
+    unregisterSaveHandler,
+    saveWithConfirmation,
+  ]);
+
+  if (isLoading || !hasSetInitial) {
     return <SectionSkeleton count={6} />;
   }
-
-  const { routes } = form.formData;
 
   return (
     <>
@@ -82,21 +183,16 @@ export function Routing() {
               title={
                 <div className="flex items-center gap-2">
                   <span>Rig PLC</span>
-                  <Badge variant="secondary" className="text-sm">
-                    Primary
-                  </Badge>
+                  <StatusBadge status="Primary" className="text-xs" />
                 </div>
               }
               headerAction={
                 <div className="flex items-center gap-2">
                   <span className="text-sm">Modbus TCP</span>
-                  <CommonToggle
+                  <CommonFormToggle
+                    name="rigPlc.enabled"
+                    control={control}
                     label=""
-                    checked={modbusEnabled}
-                    onCheckedChange={(checked) => {
-                      setModbusEnabled(checked);
-                      form.updateLocalField({ routes });
-                    }}
                   />
                 </div>
               }
@@ -110,33 +206,35 @@ export function Routing() {
                 {/* Input Data */}
                 <div className="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-3 text-sm">
                   <div className="flex gap-2">
-                    <CommonInput
+                    <CommonFormInput
+                      name="rigPlc.endpoint"
+                      control={control}
                       label="Input Data"
-                      value="10.1.0.113"
-                      onChange={(e) => form.updateLocalField({ routes })}
                       placeholder="10.1.0.11"
                       type="text"
-                      className="flex-1"
+                      containerClassName="flex-1"
                     />
-                    <CommonInput
+                    <CommonFormInput
+                      name="rigPlc.subnet"
+                      control={control}
                       label=" "
-                      value="0"
-                      onChange={(e) => form.updateLocalField({ routes })}
                       placeholder="0"
                       type="text"
+                      containerClassName="w-20"
                     />
-                    <CommonInput
+                    <CommonFormInput
+                      name="rigPlc.port"
+                      control={control}
                       label=" "
-                      value="502"
-                      onChange={(e) => form.updateLocalField({ routes })}
                       placeholder="502"
                       type="text"
+                      containerClassName="w-20"
                     />
                   </div>
-                  <CommonSelect
+                  <CommonFormSelect
+                    name="rigPlc.portConfig"
+                    control={control}
                     label="Port"
-                    value="502"
-                    onValueChange={(value) => form.updateLocalField({ routes })}
                     options={options?.portOptions || []}
                   />
                 </div>
@@ -148,28 +246,28 @@ export function Routing() {
               title={
                 <div className="flex items-center gap-2">
                   <span>PWD</span>
-                  <Badge variant="secondary" className="text-sm">
-                    SECONDARY (PWD)
-                  </Badge>
+                  <StatusBadge status="Secondary" className="text-xs" />
                 </div>
               }
             >
               <div className="space-y-4">
                 <div className="grid grid-cols-[1fr_1fr_auto] gap-2 items-center">
-                  <CommonInput
-                    label="Snecron (Dy"
-                    value="WITS (TCP)"
-                    onChange={(e) => form.updateLocalField({ routes })}
-                    className="text-sm"
+                  <CommonFormInput
+                    name="pwd.protocol"
+                    control={control}
+                    label="Protocol"
+                    placeholder="WITS (TCP)"
+                    containerClassName="text-sm"
                   />
-                  <CommonInput
+                  <CommonFormInput
+                    name="pwd.tag"
+                    control={control}
                     label="Tag"
-                    value="1.0.335"
-                    onChange={(e) => form.updateLocalField({ routes })}
-                    className="text-sm"
+                    placeholder="1.0.335"
+                    containerClassName="text-sm"
                   />
                   <CommonButton variant="outline" className="text-sm px-3 mt-8">
-                    AFINSE
+                    BROWSE
                   </CommonButton>
                 </div>
 
@@ -199,51 +297,55 @@ export function Routing() {
                           Single Loop Control
                         </span>
                         <span className="text-sm text-muted-foreground">|</span>
-                        <CommonToggle
-                          label="Tag Mac"
-                          checked={true}
-                          onCheckedChange={(checked) =>
-                            form.updateLocalField({ routes })
-                          }
+                        <CommonFormToggle
+                          name="outputChannels.enabled"
+                          control={control}
+                          label="Tag Map"
                         />
                       </div>
                     </div>
 
-                    {/* First row: input : input */}
+                    {/* First row */}
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2 items-center">
-                      <CommonInput
-                        value="ChokeA_Pos"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="outputChannels.chokeA"
+                        control={control}
+                        placeholder="ChokeA_Pos"
+                        containerClassName="text-sm"
                       />
-                      <CommonInput
-                        value="MPD SBP"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="outputChannels.mpdSbp"
+                        control={control}
+                        placeholder="MPD SBP"
+                        containerClassName="text-sm"
                       />
-                      <CommonInput
-                        value="ChokeB_PS | ChokeB_Pos | Choke_SP"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="outputChannels.chokeOutputs"
+                        control={control}
+                        placeholder="ChokeB_PS | ChokeB_Pos | Choke_SP"
+                        containerClassName="text-sm"
                       />
                     </div>
 
-                    {/* Second row: input : input */}
+                    {/* Second row */}
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2 items-center">
-                      <CommonInput
-                        value="SBIn Coop (Enbl)"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="outputChannels.sbInCoop"
+                        control={control}
+                        placeholder="SBIn Coop (Enbl)"
+                        containerClassName="text-sm"
                       />
-                      <CommonInput
-                        value="SBP_SSP"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="outputChannels.sbpSsp"
+                        control={control}
+                        placeholder="SBP_SSP"
+                        containerClassName="text-sm"
                       />
-                      <CommonInput
-                        value="SBP_SSP"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="outputChannels.sbpSspOutput"
+                        control={control}
+                        placeholder="SBP_SSP"
+                        containerClassName="text-sm"
                       />
                     </div>
                   </div>
@@ -252,63 +354,70 @@ export function Routing() {
                   <div className="pt-5">
                     <span className="text-sm font-medium">DualQ Control</span>
 
-                    {/* First row: input input toggle */}
+                    {/* First row */}
                     <div className="grid grid-cols-[1fr_1fr_2fr] gap-2 items-center">
-                      <CommonInput
-                        value="MPD Q 0 in"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="dualQControl.mpdQIn"
+                        control={control}
+                        placeholder="MPD Q 0 in"
+                        containerClassName="text-sm"
                       />
-                      <CommonInput
-                        value="(Choke 0.0 0a)"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="dualQControl.chokeQOut"
+                        control={control}
+                        placeholder="(Choke 0.0 0a)"
+                        containerClassName="text-sm"
                       />
-                      <CommonToggle
-                        label="EqmptEmacer"
-                        checked={eqmptEmacerEnabled}
-                        onCheckedChange={(checked) => {
-                          setEqmptEmacerEnabled(checked);
-                          form.updateLocalField({ routes });
-                        }}
-                      />
+                      <div className="flex gap-2 justify-end">
+                        <CommonFormToggle
+                          name="dualQControl.enabled"
+                          control={control}
+                          label="EqmptEmacer"
+                        />
+                      </div>
                     </div>
 
-                    {/* Second row: input input input */}
+                    {/* Second row */}
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2">
-                      <CommonInput
-                        value="Flow_Q-In"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="dualQControl.flowQIn"
+                        control={control}
+                        placeholder="Flow_Q-In"
+                        containerClassName="text-sm"
                       />
-                      <CommonInput
-                        value="MPD Q in"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="dualQControl.mpdQInAlt"
+                        control={control}
+                        placeholder="MPD Q in"
+                        containerClassName="text-sm"
                       />
-                      <CommonInput
-                        value="Flow Q Out | Aux Flow"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="dualQControl.flowOutputs"
+                        control={control}
+                        placeholder="Flow Q Out | Aux Flow"
+                        containerClassName="text-sm"
                       />
                     </div>
 
-                    {/* Third row: input input input */}
+                    {/* Third row */}
                     <div className="grid grid-cols-3 xl:grid-cols-[1fr_1fr_2fr] gap-2">
-                      <CommonInput
-                        value="MPD Q ux"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="dualQControl.mpdQAux"
+                        control={control}
+                        placeholder="MPD Q ux"
+                        containerClassName="text-sm"
                       />
-                      <CommonInput
-                        value="MPD Q Set"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="dualQControl.mpdQSet"
+                        control={control}
+                        placeholder="MPD Q Set"
+                        containerClassName="text-sm"
                       />
-                      <CommonInput
-                        value="MPD Q aex"
-                        onChange={(e) => form.updateLocalField({ routes })}
-                        className="text-sm"
+                      <CommonFormInput
+                        name="dualQControl.mpdQAex"
+                        control={control}
+                        placeholder="MPD Q aex"
+                        containerClassName="text-sm"
                       />
                     </div>
                   </div>
@@ -324,7 +433,8 @@ export function Routing() {
         </div>
       </div>
 
-      <FormSaveDialog form={form} />
+      {/* FormSaveDialog needs the shape returned by useSaveWithConfirmation */}
+      <FormSaveDialog form={saveWithConfirmation} />
     </>
   );
 }

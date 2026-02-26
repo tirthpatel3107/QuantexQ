@@ -208,44 +208,14 @@ const fetchProtocolsData = async (): Promise<ApiResponse<ProtocolsTabData>> => {
       resolve({
         success: true,
         data: {
-          protocols: [
-            {
-              id: "p-modbus",
-              name: "Modbus TCP",
-              type: "modbus",
-              description:
-                "Master/Slave config, register maps, byte ordering (Little/Big Endian).",
-              enabled: true,
-              settings: {},
-            },
-            {
-              id: "p-witsml",
-              name: "WITSML / ETP",
-              type: "witsml",
-              description:
-                "Store queries, object mapping (Well, Wellbore, Log, Rig, Trajectory).",
-              enabled: true,
-              settings: {},
-            },
-            {
-              id: "p-opcua",
-              name: "OPC-UA",
-              type: "opcua",
-              description:
-                "Node discovery, subscription management, security policy (Sign & Encrypt).",
-              enabled: false,
-              settings: {},
-            },
-            {
-              id: "p-mqtt",
-              name: "MQTT / Sparkplug B",
-              type: "mqtt",
-              description:
-                "Broker settings, Topic structure, Birth/Death certificates, Payload encoding.",
-              enabled: false,
-              settings: {},
-            },
-          ],
+          rigPlc: {
+            type: "modbus-tcp",
+            modbusEndpoints: ["10.1.0.1:13:502", "10.1.0.113:502"],
+          },
+          pwd: {
+            type: "direct-wits",
+            endpoint: "1.0.1:250.49155",
+          },
         },
         timestamp: new Date().toISOString(),
       });

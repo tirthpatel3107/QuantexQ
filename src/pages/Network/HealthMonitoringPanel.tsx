@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonButton } from "@/components/common/CommonButton";
-import { CommonToggle } from "@/components/common/CommonToggle";
+import {
+  CommonButton,
+  CommonToggle,
+  CommonCheckbox,
+  StatusBadge,
+} from "@/components/common";
 import { Badge } from "@/components/ui/badge";
-import { StatusBadge } from "@/components/common";
 import { Settings } from "lucide-react";
 
 export interface HealthMetric {
@@ -31,6 +34,7 @@ export interface HealthMonitoringPanelProps {
   deviceHealthItems?: DeviceHealthItem[];
   connectionLogEntries?: ConnectionLogEntry[];
   showFailoverSimulation?: boolean;
+  showDiagnosticsResults?: boolean;
   onFailoverChange?: (enabled: boolean) => void;
   onDeviceSettingsClick?: () => void;
 }
@@ -80,6 +84,7 @@ export function HealthMonitoringPanel({
     },
   ],
   showFailoverSimulation = true,
+  showDiagnosticsResults = false,
   onFailoverChange,
   onDeviceSettingsClick,
 }: HealthMonitoringPanelProps) {
@@ -89,7 +94,6 @@ export function HealthMonitoringPanel({
     setFailoverSimulation(checked);
     onFailoverChange?.(checked);
   };
-
 
   const getDeviceStatusColor = (color: string) => {
     switch (color) {
@@ -223,48 +227,50 @@ export function HealthMonitoringPanel({
       </PanelCard>
 
       {/* Last Diagnostic Results */}
-      {/* <PanelCard title="Last Diagnostic Results">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-red-500" />
-            <span className="text-lg font-semibold text-red-500">FAIL</span>
-          </div>
-          <div className="space-y-2 text-sm">
+      {showDiagnosticsResults && (
+        <PanelCard title="Last Diagnostic Results">
+          <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <span>PLC Modbus unresponsive</span>
+              <div className="w-3 h-3 rounded-full bg-red-500" />
+              <span className="text-lg font-semibold text-red-500">FAIL</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <span>5 critical tags missing</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-500" />
-              <span>ChokeB_Pos out of range</span>
-            </div>
-          </div>
-
-          <hr className="my-4" />
-
-          <div>
-            <h4 className="text-sm font-semibold mb-2">Suggested actions</h4>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2">
-                <input type="checkbox" className="rounded" />
-                <span>Check PLC port 502, reachable</span>
+                <div className="w-2 h-2 rounded-full bg-red-500" />
+                <span>PLC Modbus unresponsive</span>
               </div>
               <div className="flex items-center gap-2">
-                <input type="checkbox" className="rounded" />
-                <span>Tag Map segment: Flow_Fr~Flow_Out missing</span>
+                <div className="w-2 h-2 rounded-full bg-red-500" />
+                <span>5 critical tags missing</span>
               </div>
               <div className="flex items-center gap-2">
-                <input type="checkbox" className="rounded" />
-                <span>Check PLC clock drift (~ 574 ms)</span>
+                <div className="w-2 h-2 rounded-full bg-red-500" />
+                <span>ChokeB_Pos out of range</span>
+              </div>
+            </div>
+
+            <hr className="my-4" />
+
+            <div>
+              <h4 className="text-sm font-semibold mb-2">Suggested actions</h4>
+              <div className="space-y-3">
+                <CommonCheckbox
+                  id="check-plc-port"
+                  label="Check PLC port 502, reachable"
+                />
+                <CommonCheckbox
+                  id="tag-map-segment"
+                  label="Tag Map segment: Flow_Fr~Flow_Out missing"
+                />
+                <CommonCheckbox
+                  id="check-clock-drift"
+                  label="Check PLC clock drift (~ 574 ms)"
+                />
               </div>
             </div>
           </div>
-        </div>
-      </PanelCard> */}
+        </PanelCard>
+      )}
     </>
   );
 }

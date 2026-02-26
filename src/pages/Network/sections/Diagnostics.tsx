@@ -1,55 +1,162 @@
+// React & Hooks
 import { useState, useEffect } from "react";
-import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonButton } from "@/components/common/CommonButton";
-import { CommonInput } from "@/components/common/CommonInput";
-import { CommonToggle } from "@/components/common/CommonToggle";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import ReactECharts from "echarts-for-react";
+import type { EChartsOption } from "echarts";
+
+// Components - UI & Icons
 import { Badge } from "@/components/ui/badge";
 import { Play, FileDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PanelCard } from "@/components/dashboard/PanelCard";
+import {
+  CommonButton,
+  SectionSkeleton,
+  FormSaveDialog,
+  CommonFormToggle,
+  CommonFormInput,
+  CommonFormSelect,
+} from "@/components/common";
+
+// Components - Local
 import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
-import { SectionSkeleton, CommonAlertDialog } from "@/components/common";
+
+// Services & Types
 import {
   useDiagnosticsData,
   useSaveDiagnosticsData,
   useDiagnosticsOptions,
 } from "@/services/api/network/network.api";
 import type { SaveDiagnosticsPayload } from "@/services/api/network/network.types";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Context
 import { useNetworkContext } from "../../../context/Network/NetworkContext";
 
+// --- Mock Data ---
+const MOCK_CHART_DATA = {
+  latency: Array.from({ length: 20 }, (_, i) => ({
+    time: i.toString(),
+    value: Math.floor(Math.random() * 400) + 100,
+  })),
+  dropRate: Array.from({ length: 20 }, (_, i) => ({
+    time: i.toString(),
+    value: Math.random() * 2,
+  })),
+  messages: Array.from({ length: 20 }, (_, i) => ({
+    time: i.toString(),
+    value: Math.floor(Math.random() * 50) + 100,
+  })),
+};
+
+// --- Validation Schema ---
+const diagnosticsFormSchema = z.object({
+  packetCapture: z.object({
+    enabled: z.boolean(),
+    duration: z.string().min(1, "Duration is required"),
+  }),
+  jitterAnalysis: z.object({
+    showMask: z.boolean().default(false),
+  }),
+});
+
+type DiagnosticsFormValues = z.infer<typeof diagnosticsFormSchema>;
+
 export function Diagnostics() {
-  const { data: diagnosticsResponse, isLoading, error } = useDiagnosticsData();
+  const { data: diagnosticsResponse, isLoading } = useDiagnosticsData();
   const { data: optionsResponse } = useDiagnosticsOptions();
   const { mutate: saveDiagnosticsData } = useSaveDiagnosticsData();
   const { registerSaveHandler, unregisterSaveHandler } = useNetworkContext();
 
-  const diagnosticsData = diagnosticsResponse?.data;
   const options = optionsResponse?.data;
 
-  const [packetCaptureDuration, setPacketCaptureDuration] = useState("90");
-  const [formData, setFormData] = useState<SaveDiagnosticsPayload | null>(null);
+  // Initialize form
+  const formMethods = useForm<DiagnosticsFormValues>({
+    resolver: zodResolver(diagnosticsFormSchema),
+    defaultValues: {
+      packetCapture: {
+        enabled: false,
+        duration: "",
+      },
+      jitterAnalysis: {
+        showMask: false,
+      },
+    },
+  });
 
-  // Initialize form data when diagnosticsData loads
+  const { reset, control, handleSubmit, watch } = formMethods;
+  const showMask = watch("jitterAnalysis.showMask");
+
+  // Track if we have set initial data
+  const [hasSetInitial, setHasSetInitial] = useState(false);
+
   useEffect(() => {
-    if (diagnosticsData) {
-      const { diagnosticTools } = diagnosticsData;
-      setFormData({ diagnosticTools });
-    }
-  }, [diagnosticsData]);
+    if (diagnosticsResponse?.data && !hasSetInitial) {
+      const advTools = diagnosticsResponse.data.diagnosticTools.find(
+        (t) => t.id === "adv-tools",
+      );
 
-  // Setup save with confirmation
-  const {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  } = useSaveWithConfirmation<SaveDiagnosticsPayload>({
+      // Extract duration from description if present (MOCK data mapping)
+      let duration = "90";
+      if (advTools?.description) {
+        const match = advTools.description.match(/(\d+) sec duration/);
+        if (match) duration = match[1];
+      }
+
+      reset({
+        packetCapture: {
+          enabled: advTools?.status === "running",
+          duration: duration,
+        },
+        jitterAnalysis: {
+          showMask: false,
+        },
+      });
+      setHasSetInitial(true);
+    }
+  }, [diagnosticsResponse, hasSetInitial, reset]);
+
+  // Handle save and confirmation using the same UI flow as Sources
+  const saveWithConfirmation = useSaveWithConfirmation<DiagnosticsFormValues>({
     onSave: (data) => {
-      return new Promise((resolve, reject) => {
-        saveDiagnosticsData(data, {
+      // Map form values to API payload structure
+      const payload: SaveDiagnosticsPayload = {
+        diagnosticTools: [
+          {
+            id: "jitter-analysis",
+            name: "Jitter & Latency",
+            type: "jitter",
+            description: "Real-time packet arrival analysis, dropped frame detection, and round-trip time.",
+            status: "idle",
+          },
+          {
+            id: "integrity-check",
+            name: "Data Integrity Summary",
+            type: "integrity",
+            description: "Check sum validation, range clamping status, and stale data detection.",
+            status: "idle",
+          },
+          {
+            id: "adv-tools",
+            name: "Advanced Tools",
+            type: "advanced",
+            description: `Enable Packet Capture (${data.packetCapture.duration} sec duration), Start capture, Export PCAP for deep network analysis.`,
+            status: data.packetCapture.enabled ? "running" : "idle",
+          },
+          {
+            id: "diag-report",
+            name: "Diagnostic Report",
+            type: "report",
+            description: "Run Full Diagnostic and Export Report (PDF/CSV) — Report ID: DIAG-000128, last run: 06 Feb 2026 16:41.",
+            status: "completed",
+          },
+        ],
+      };
+
+      return new Promise<void>((resolve, reject) => {
+        saveDiagnosticsData(payload, {
           onSuccess: () => resolve(),
           onError: (error) => reject(error),
         });
@@ -58,294 +165,316 @@ export function Diagnostics() {
     successMessage: "Diagnostics settings saved successfully",
     errorMessage: "Failed to save diagnostics settings",
     confirmTitle: "Save Diagnostics Settings",
-    confirmDescription:
-      "Are you sure you want to save these diagnostics changes?",
+    confirmDescription: "Are you sure you want to save these diagnostics changes?",
   });
 
-  // Save data to API with confirmation
-  const handleSaveData = (updatedData: Partial<SaveDiagnosticsPayload>) => {
-    if (!formData) return;
-
-    const newFormData = { ...formData, ...updatedData };
-    setFormData(newFormData);
-  };
-
-  const handleSave = () => {
-    if (formData) {
-      requestSave(formData);
-    }
-  };
-
-  // Register save handler with parent context
+  // Attach context's save to RHF handleSubmit
   useEffect(() => {
-    registerSaveHandler(handleSave);
-    return () => unregisterSaveHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData]);
+    const handleSave = handleSubmit((validData) => {
+      saveWithConfirmation.requestSave(validData);
+    });
 
-  if (isLoading) {
+    registerSaveHandler(handleSave);
+    return () => {
+      unregisterSaveHandler();
+    };
+  }, [
+    handleSubmit,
+    registerSaveHandler,
+    unregisterSaveHandler,
+    saveWithConfirmation,
+  ]);
+
+  if (isLoading || !hasSetInitial) {
     return <SectionSkeleton count={6} />;
   }
 
   return (
     <>
-      <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 auto-rows-max">
-          {/* Quick Tests */}
-          <PanelCard title="Quick Tests">
-            <div className="space-y-3">
-              <QuickTestItem
-                label="Ping PLC"
-                detail="(Pg PLC 10.1.0.113:502)"
-                status="success"
-              />
-              <QuickTestItem
-                label="TCP Port Test"
-                detail="(Pg PLC 10.1.1.13:502)"
-                status="success"
-              />
-              <QuickTestItem label="Protocol Handshake Test" status="default" />
-              <QuickTestItem
-                label="Tag Read Test"
-                detail="(Pg PLC 10.1.0.113)"
-                status="fail"
-              />
-              <QuickTestItem
-                label="Clock Sync Check"
-                detail="(Pg PLC 16:39)"
-                status="default"
-              />
-            </div>
-          </PanelCard>
-
-          {/* Data Integrity Summary */}
-          <PanelCard title="Data Integrity Summary">
-            <div className="space-y-4">
-              <DataIntegrityRow
-                label="Tag coverage:"
-                value="95%"
-                detail="(17 / 18)"
-              />
-              <DataIntegrityRow label="Missing tags:" value="1" badge="--" />
-              <DataIntegrityRow
-                label="Out-of-range tags:"
-                value="3"
-                badge="--"
-              />
-              <DataIntegrityRow label="Frozen signals:" value="2" />
-              <DataIntegrityRow
-                label="Data rate (current):"
-                value="94 / 100 ms"
-                badge="IDEAL"
-                badgeVariant="success"
-              />
-            </div>
-          </PanelCard>
-          {/* Advanced Tools */}
-          <PanelCard title="Advanced Tools">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <CommonToggle
-                  id="packet-capture"
-                  label="Enable Packet Capture"
-                  checked={false}
-                  onCheckedChange={(checked) =>
-                    handleSaveData({
-                      diagnosticTools: formData.diagnosticTools,
-                    })
-                  }
+      <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3 items-start">
+        <div className="grid grid-cols-1 gap-3 items-start">
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 items-start">
+            {/* Quick Tests */}
+            <PanelCard title="Quick Tests">
+              <div className="space-y-3">
+                <QuickTestItem
+                  label="Ping PLC"
+                  detail="(Pg PLC 10.1.0.113:502)"
+                  status="success"
                 />
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">
-                    Duration:
-                  </span>
-                  <CommonInput
-                    type="number"
-                    value={packetCaptureDuration}
-                    onChange={(e) => {
-                      setPacketCaptureDuration(e.target.value);
-                      handleSaveData({
-                        diagnosticTools: formData.diagnosticTools,
-                      });
-                    }}
-                    suffix="sec"
-                    className="w-24 mb-0"
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <CommonButton size="sm" variant="outline" icon={Play}>
-                    Start
-                  </CommonButton>
-                  <CommonButton size="sm" variant="outline" icon={FileDown}>
-                    Export PCAP
-                  </CommonButton>
-                </div>
+                <QuickTestItem
+                  label="TCP Port Test"
+                  detail="(Pg PLC 10.1.1.13:502)"
+                  status="success"
+                />
+                <QuickTestItem
+                  label="Protocol Handshake Test"
+                  status="default"
+                />
+                <QuickTestItem
+                  label="Tag Read Test"
+                  detail="(Pg PLC 10.1.0.113)"
+                  status="fail"
+                />
+                <QuickTestItem
+                  label="Clock Sync Check"
+                  detail="(Pg PLC 16:39)"
+                  status="default"
+                />
               </div>
-            </div>
-          </PanelCard>
+            </PanelCard>
 
-          {/* Jitter / Drop Analysis */}
-          <PanelCard
-            title="Jitter / Drop Analysis"
-            headerAction={
-              <CommonButton variant="ghost" size="sm" className="text-xs">
-                Show more
-              </CommonButton>
-            }
-          >
-            <div className="space-y-4">
-              <MetricChart
-                label="Latency"
-                value="5 MIN"
-                badge="WARN"
-                badgeVariant="warning"
-              />
-              <MetricChart
-                label="Drop Rate (RB)"
-                value="Messages/sec:"
-                badge="13 / sec"
-              />
-              <div className="pt-2">
-                <MetricChart
-                  label="Latency"
-                  value="0.5 s"
-                  badge="WARN"
-                  badgeVariant="warning"
+            {/* Data Integrity Summary */}
+            <PanelCard title="Data Integrity Summary">
+              <div className="space-y-4">
+                <DataIntegrityRow
+                  label="Tag coverage:"
+                  value="95%"
+                  detail="(17 / 18)"
                 />
-                <MetricChart
-                  label="Drop Rate"
-                  value="<0%"
-                  badge="WARN"
-                  badgeVariant="warning"
+                <DataIntegrityRow label="Missing tags:" value="1" badge="--" />
+                <DataIntegrityRow
+                  label="Out-of-range tags:"
+                  value="3"
+                  badge="--"
                 />
-                <MetricChart
-                  label="Messages/sec: (RSS)"
-                  badge="GOOD"
+                <DataIntegrityRow label="Frozen signals:" value="2" />
+                <DataIntegrityRow
+                  label="Data rate (current):"
+                  value="94 / 100 ms"
+                  badge="IDEAL"
                   badgeVariant="success"
                 />
               </div>
-              <div className="flex gap-2 text-xs">
-                <CommonButton variant="ghost" size="sm">
-                  Show more
-                </CommonButton>
-                <CommonButton variant="ghost" size="sm">
-                  Show notes
-                </CommonButton>
-              </div>
-            </div>
-          </PanelCard>
+            </PanelCard>
 
-          {/* Critical Tags Watchlist */}
-          <PanelCard title="Critical Tags Watchlist">
-            <div className="space-y-2">
-              <WatchlistItem
-                tag="Flow_In"
-                value="84 gpm"
-                timestamp="12:42:54"
-                status="warning"
-              />
-              <WatchlistItem
-                tag="Flow_Out"
-                value="--"
-                timestamp="12:42:54"
-                status="default"
-              />
-              <WatchlistItem
-                tag="SBP"
-                value="654 psi"
-                timestamp="12:42:55"
-                status="success"
-              />
-              <WatchlistItem
-                tag="SPP"
-                value="824 psi"
-                timestamp="12:42:54"
-                status="success"
-              />
-              <WatchlistItem
-                tag="ChokeA_Pos"
-                value="38 %"
-                timestamp="12:42:54"
-                status="success"
-              />
-              <WatchlistItem
-                tag="ChokeB_Pos"
-                value="62 %"
-                timestamp="12:42:54"
-                status="warning"
-              />
-              <WatchlistItem
-                tag="PWD_BHP"
-                value="---"
-                timestamp=""
-                status="default"
-              />
-            </div>
-          </PanelCard>
+            {/* Advanced Tools */}
+            <PanelCard title="Advanced Tools">
+              <div className="space-y-4">
+                <div className="space-y-4">
+                  <CommonFormToggle
+                    name="packetCapture.enabled"
+                    control={control}
+                    label="Enable Packet Capture"
+                  />
+                  <div className="flex flex-col gap-1">
+                    <CommonFormSelect
+                      name="packetCapture.duration"
+                      control={control}
+                      label="Duration"
+                      options={options?.durationOptions || []}
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <CommonButton size="sm" variant="outline" icon={Play}>
+                      Start
+                    </CommonButton>
+                    <CommonButton size="sm" variant="outline" icon={FileDown}>
+                      Export PCAP
+                    </CommonButton>
+                  </div>
+                </div>
+              </div>
+            </PanelCard>
+          </div>
 
-          {/* Jitter / Drop Analysis (Second) */}
-          <PanelCard
-            title="Jitter / Drop Analysis"
-            headerAction={
-              <CommonButton variant="ghost" size="sm" className="text-xs">
-                Show mask
-              </CommonButton>
-            }
-          >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Latency</span>
-                <Badge variant="secondary">500 MIN</Badge>
+          <div className="grid grid-cols-1 xl:grid-cols-[1fr_2fr] gap-3 items-start">
+            {/* Critical Tags Watchlist */}
+            <PanelCard title="Critical Tags Watchlist">
+              <div className="space-y-2">
+                <WatchlistItem
+                  tag="Flow_In"
+                  value="84 gpm"
+                  timestamp="12:42:54"
+                  status="warning"
+                />
+                <WatchlistItem
+                  tag="Flow_Out"
+                  value="--"
+                  timestamp="12:42:54"
+                  status="default"
+                />
+                <WatchlistItem
+                  tag="SBP"
+                  value="654 psi"
+                  timestamp="12:42:55"
+                  status="success"
+                />
+                <WatchlistItem
+                  tag="SPP"
+                  value="824 psi"
+                  timestamp="12:42:54"
+                  status="success"
+                />
+                <WatchlistItem
+                  tag="ChokeA_Pos"
+                  value="38 %"
+                  timestamp="12:42:54"
+                  status="success"
+                />
+                <WatchlistItem
+                  tag="ChokeB_Pos"
+                  value="62 %"
+                  timestamp="12:42:54"
+                  status="warning"
+                />
+                <WatchlistItem
+                  tag="PWD_BHP"
+                  value="---"
+                  timestamp=""
+                  status="default"
+                />
               </div>
-              <div className="h-24 bg-muted/20 rounded flex items-center justify-center text-xs text-muted-foreground">
-                [Chart Placeholder]
+            </PanelCard>
+
+            {/* Jitter / Drop Analysis (Consolidated) */}
+            <PanelCard
+              title="Jitter / Drop Analysis"
+              headerAction={
+                <CommonFormToggle
+                  name="jitterAnalysis.showMask"
+                  control={control}
+                  label="Show mask"
+                />
+              }
+            >
+              {/* Summary Metrics */}
+              <div className="grid grid-cols-2 gap-6 mb-6">
+                <div className="space-y-4">
+                  <MetricChart
+                    label="Latency"
+                    value="5 MIN"
+                    badge="WARN"
+                    badgeVariant="warning"
+                  />
+                  <MetricChart
+                    label="Latency"
+                    value="0.5 s"
+                    badge="WARN"
+                    badgeVariant="warning"
+                  />
+                </div>
+                <div className="space-y-4">
+                  <MetricChart
+                    label="Drop Rate (RB)"
+                    value="13 / sec"
+                    badge="WARN"
+                    badgeVariant="warning"
+                  />
+                  <MetricChart
+                    label="Drop Rate"
+                    value="<0%"
+                    badge="WARN"
+                    badgeVariant="warning"
+                  />
+                </div>
+                <div className="space-y-4 col-span-2">
+                  <MetricChart
+                    label="Messages/sec: (RSS)"
+                    badge="GOOD"
+                    badgeVariant="success"
+                  />
+                </div>
               </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Drop Rate</span>
-                <Badge variant="secondary">&lt;0%</Badge>
+
+              {/* Detailed Charts */}
+              <div className="pt-4 border-t border-border/50">
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Latency Chart */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-muted-foreground uppercase font-medium">
+                        Latency
+                      </span>
+                      <Badge
+                        variant="secondary"
+                        className="h-4 px-1 text-[10px]"
+                      >
+                        500 MIN
+                      </Badge>
+                    </div>
+                    <div className="h-[140px] bg-muted/5 rounded-md border border-border/10 overflow-hidden relative">
+                      {showMask ? (
+                        <div className="absolute inset-0 flex items-center justify-center text-[10px] text-muted-foreground bg-background/40 backdrop-blur-[2px]">
+                          [Masked Chart View]
+                        </div>
+                      ) : (
+                        <DiagnosticChart
+                          color="hsl(var(--warning))"
+                          data={MOCK_CHART_DATA.latency}
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Drop Rate Chart */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-muted-foreground uppercase font-medium">
+                        Drop Rate
+                      </span>
+                      <Badge
+                        variant="secondary"
+                        className="h-4 px-1 text-[10px]"
+                      >
+                        {"<0%"}
+                      </Badge>
+                    </div>
+                    <div className="h-[140px] bg-muted/5 rounded-md border border-border/10 overflow-hidden relative">
+                      {showMask ? (
+                        <div className="absolute inset-0 flex items-center justify-center text-[10px] text-muted-foreground bg-background/40 backdrop-blur-[2px]">
+                          [Masked Chart View]
+                        </div>
+                      ) : (
+                        <DiagnosticChart
+                          color="hsl(var(--warning))"
+                          data={MOCK_CHART_DATA.dropRate}
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Messages/sec Chart */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-muted-foreground uppercase font-medium">
+                        Messages/sec
+                      </span>
+                      <Badge
+                        variant="outline"
+                        className="h-4 px-1 text-[10px] bg-green-500/10 text-green-500 border-green-500/20"
+                      >
+                        GOOD
+                      </Badge>
+                    </div>
+                    <div className="h-[140px] bg-muted/5 rounded-md border border-border/10 overflow-hidden relative">
+                      {showMask ? (
+                        <div className="absolute inset-0 flex items-center justify-center text-[10px] text-muted-foreground bg-background/40 backdrop-blur-[2px]">
+                          [Masked Chart View]
+                        </div>
+                      ) : (
+                        <DiagnosticChart
+                          color="hsl(var(--success))"
+                          data={MOCK_CHART_DATA.messages}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="h-24 bg-muted/20 rounded flex items-center justify-center text-xs text-muted-foreground">
-                [Chart Placeholder]
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">
-                  Messages/sec: (RSS)
-                </span>
-                <Badge
-                  variant="outline"
-                  className="bg-green-500/10 text-green-500 border-green-500/20"
-                >
-                  GOOD
-                </Badge>
-              </div>
-              <div className="flex gap-2 text-xs">
-                <CommonButton variant="ghost" size="sm">
-                  Show more
-                </CommonButton>
-                <CommonButton variant="ghost" size="sm">
-                  Show notes
-                </CommonButton>
-              </div>
-            </div>
-          </PanelCard>
+
+            </PanelCard>
+
+          </div>
         </div>
-
         <div className="grid grid-cols-1 gap-3 auto-rows-max">
-          <HealthMonitoringPanel />
+          <HealthMonitoringPanel showDiagnosticsResults />
         </div>
       </div>
 
-      <CommonAlertDialog
-        open={isConfirmOpen}
-        onOpenChange={setIsConfirmOpen}
-        title={confirmTitle}
-        description={confirmDescription}
-        cancelText="Cancel"
-        actionText="Save"
-        onAction={handleConfirmedSave}
-        onCancel={handleCancel}
-      />
+      {/* FormSaveDialog needs the shape returned by useSaveWithConfirmation */}
+      <FormSaveDialog form={saveWithConfirmation} />
     </>
   );
 }
@@ -467,20 +596,22 @@ function MetricChart({
     <div className="space-y-2">
       <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground">{label}</span>
-        {value && <span className="text-xs">{value}</span>}
+        <div className="flex gap-2 items-center">
+          {value && <span className="text-xs">{value}</span>}
+          {badge && (
+            <Badge
+              variant={
+                badgeVariant === "success" || badgeVariant === "warning"
+                  ? "outline"
+                  : badgeVariant
+              }
+              className={cn("text-xs", getBadgeClassName())}
+            >
+              {badge}
+            </Badge>
+          )}
+        </div>
       </div>
-      {badge && (
-        <Badge
-          variant={
-            badgeVariant === "success" || badgeVariant === "warning"
-              ? "outline"
-              : badgeVariant
-          }
-          className={cn("text-xs", getBadgeClassName())}
-        >
-          {badge}
-        </Badge>
-      )}
     </div>
   );
 }
@@ -525,5 +656,60 @@ function WatchlistItem({
         </Badge>
       </div>
     </div>
+  );
+}
+
+// --- Chart Support ---
+
+function DiagnosticChart({
+  data,
+  color,
+}: {
+  data: { time: string; value: number }[];
+  color: string;
+}) {
+  const option: EChartsOption = {
+    grid: { top: 5, right: 10, bottom: 5, left: 10, containLabel: false },
+    xAxis: {
+      type: "category",
+      show: false,
+      data: data.map((d) => d.time),
+    },
+    yAxis: {
+      type: "value",
+      show: false,
+    },
+    series: [
+      {
+        data: data.map((d) => d.value),
+        type: "line",
+        smooth: true,
+        symbol: "none",
+        lineStyle: { width: 1.5, color },
+        areaStyle: {
+          color: {
+            type: "linear",
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              { offset: 0, color: color },
+              { offset: 1, color: "transparent" },
+            ],
+          },
+          opacity: 0.1,
+        },
+      },
+    ],
+    animation: false,
+  };
+
+  return (
+    <ReactECharts
+      option={option}
+      style={{ height: "100%", width: "100%" }}
+      opts={{ renderer: "svg" }}
+    />
   );
 }
