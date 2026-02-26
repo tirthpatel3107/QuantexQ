@@ -21,7 +21,7 @@ import { GasCompressibility } from "./sections/GasCompressibility";
 import { Calibration } from "./sections/Calibration";
 import { Summary } from "./sections/Summary";
 import { MudPropertiesSidebar } from "./components/MudPropertiesSidebar";
-import { MUD_NAV } from "./constants";
+import { MUD_NAV } from "@/constants";
 import { FluidData } from "@/types/mud";
 import {
   MudPropertiesProvider,

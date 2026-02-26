@@ -29,8 +29,7 @@ import type { SaveProtocolsPayload } from "@/services/api/network/network.types"
 // Context
 import { useNetworkContext } from "../../../context/Network/NetworkContext";
 
-// --- Validation Schema ---
-const protocolsFormSchema = z.object({
+export const protocolsFormSchema = z.object({
   rigPlc: z.object({
     type: z.enum(["modbus-tcp", "opc-ua", "ethernet-ip"]),
     modbusEndpoints: z.array(z.string()).optional(),
@@ -42,7 +41,6 @@ const protocolsFormSchema = z.object({
     endpoint: z.string().optional(),
   }),
 }).superRefine((data, ctx) => {
-  // Validate Rig PLC based on selected type
   if (data.rigPlc.type === "modbus-tcp") {
     if (!data.rigPlc.modbusEndpoints || data.rigPlc.modbusEndpoints.length === 0) {
       ctx.addIssue({

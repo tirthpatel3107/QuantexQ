@@ -32,8 +32,7 @@ import type { SaveRoutingPayload } from "@/services/api/network/network.types";
 // Context
 import { useNetworkContext } from "../../../context/Network/NetworkContext";
 
-// --- Validation Schema ---
-const routingFormSchema = z.object({
+export const routingFormSchema = z.object({
   rigPlc: z.object({
     enabled: z.boolean(),
     endpoint: z.string().min(1, "Endpoint is required"),
@@ -67,9 +66,7 @@ const routingFormSchema = z.object({
   }),
 });
 
-type RoutingFormValues = z.infer<typeof routingFormSchema>;
-
-const initialData: RoutingFormValues = {
+export const ROUTING_INITIAL_DATA = {
   rigPlc: {
     enabled: true,
     endpoint: "",
@@ -103,6 +100,8 @@ const initialData: RoutingFormValues = {
   },
 };
 
+type RoutingFormValues = z.infer<typeof routingFormSchema>;
+
 export function Routing() {
   const { data: routingResponse, isLoading } = useRoutingData();
   const { data: optionsResponse } = useRoutingOptions();
@@ -125,7 +124,7 @@ export function Routing() {
     if (routingResponse?.data && !hasSetInitial) {
       // Initialize form with API data
 
-      reset(initialData);
+      reset(ROUTING_INITIAL_DATA);
       setHasSetInitial(true);
     }
   }, [routingResponse, hasSetInitial, reset]);

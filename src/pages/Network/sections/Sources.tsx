@@ -31,8 +31,7 @@ import type { SaveSourcesPayload, DeviceSource } from "@/services/api/network/ne
 // Context
 import { useNetworkContext } from "../../../context/Network/NetworkContext";
 
-// --- Validation Schema ---
-const sourcesFormSchema = z.object({
+export const sourcesFormSchema = z.object({
   rigPlc: z.object({
     enabled: z.boolean(),
     connectionStatus: z.enum(["Primary", "Connected", "Disconnected"]),

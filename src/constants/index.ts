@@ -17,3 +17,7 @@ export {
   THEME_STORAGE_KEY,
   SIMULATION_TIMER_STORAGE_KEY,
 } from "./config";
+export * from "./tabs/network";
+export * from "./tabs/daq";
+export * from "./tabs/mud-properties";
+export * from "./tabs/settings";

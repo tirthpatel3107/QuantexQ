@@ -11,7 +11,7 @@ import {
   CommonTooltip,
 } from "@/components/common";
 
-import { NETWORK_NAV } from "./constants";
+import { NETWORK_NAV } from "@/constants";
 import { NetworkOverview } from "./sections/NetworkOverview";
 import { Sources } from "./sections/Sources";
 import { Protocols } from "./sections/Protocols";

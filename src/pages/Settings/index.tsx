@@ -29,7 +29,7 @@ import { HydraulicsModel } from "./sections/HydraulicsModel";
 import { UiDisplay } from "./sections/UiDisplay";
 import { UsersRoles } from "./sections/userRoles";
 import { AboutDiagnostics } from "./sections/AboutDiagnostics";
-import { SETTINGS_NAV } from "./constants";
+import { SETTINGS_NAV } from "@/constants";
 import { GeneralSettingsData } from "@/types/settings";
 import { SettingsProvider, useSettingsContext } from "../../context/Settings/SettingsContext";
 

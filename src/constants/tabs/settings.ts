@@ -27,7 +27,7 @@ export const SETTINGS_NAV = [
   { id: "about", label: "About / Diagnostics", icon: Info },
 ];
 
-export const CATEGORY_CARDS = [
+export const SETTINGS_CATEGORY_CARDS = [
   {
     id: "general",
     title: "General",

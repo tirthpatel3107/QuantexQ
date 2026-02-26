@@ -34,8 +34,7 @@ import type { SaveSecurityPayload } from "@/services/api/network/network.types";
 // Context
 import { useNetworkContext } from "../../../context/Network/NetworkContext";
 
-// --- Validation Schema ---
-const securityFormSchema = z.object({
+export const securityFormSchema = z.object({
   rigPlc: z.object({
     enabled: z.boolean(),
     endpoint: z.string().min(1, "Endpoint is required"),

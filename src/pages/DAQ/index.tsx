@@ -11,7 +11,7 @@ import {
   CommonTooltip,
 } from "@/components/common";
 
-import { DAQ_NAV } from "./constants";
+import { DAQ_NAV } from "@/constants";
 import { DaqOverview } from "./sections/DaqOverview";
 import { Display } from "./sections/Display";
 import { Streaming } from "./sections/Streaming";
