@@ -13,20 +13,20 @@ import {
 
 import { DAQ_NAV } from "@/utils/constants";
 import { DaqOverview } from "./DaqOverview";
-import { Display } from "./Display";
-import { Streaming } from "./Streaming";
+// import { Display } from "./Display";
+// import { Streaming } from "./Streaming";
 import { Notifications } from "./Notifications";
 import { LogAnalysis } from "./LogAnalysis";
 import { SensorPerms } from "./SensorPerms";
-import { Calibration } from "./Calibration";
+// import { Calibration } from "./Calibration";
 import { Hydraulics } from "./Hydraulics";
-import { SystemSettings } from "./SystemSettings";
-import { Downloads } from "./Downloads";
+// import { SystemSettings } from "./SystemSettings";
+// import { Downloads } from "./Downloads";
 import { DAQProvider, useDAQContext } from "../../context/DAQ/DAQContext";
 
 /**
  * DAQ (Data Acquisition) Dashboard Content
- * 
+ *
  * This component manages the sub-navigation within the DAQ module.
  * It uses the URL path to determine which configuration sub-section to render.
  */
@@ -84,24 +84,24 @@ function DAQContent() {
     switch (activeSection) {
       case "daq":
         return <DaqOverview />;
-      case "display":
-        return <Display />;
-      case "streaming":
-        return <Streaming />;
       case "notifications":
         return <Notifications />;
       case "log-analysis":
         return <LogAnalysis />;
+      case "hydraulics":
+        return <Hydraulics />;
       case "sensor-perms":
         return <SensorPerms />;
       case "calibration":
-        return <Calibration />;
-      case "hydraulics":
-        return <Hydraulics />;
+        // return <Calibration />;
+      case "display":
+        // return <Display />;
+      case "streaming":
+        // return <Streaming />;
       case "system-settings":
-        return <SystemSettings />;
+        // return <SystemSettings />;
       case "downloads":
-        return <Downloads />;
+        // return <Downloads />;
       default:
         return <DaqOverview />;
     }
