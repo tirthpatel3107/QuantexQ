@@ -1,4 +1,11 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useCallback,
+  ReactNode,
+} from "react";
 
 interface SettingsContextType {
   requestSave: () => void;
@@ -13,24 +20,27 @@ const SettingsContext = createContext<SettingsContextType | undefined>(
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [saveHandler, setSaveHandler] = useState<(() => void) | null>(null);
 
-  const registerSaveHandler = (handler: () => void) => {
+  const registerSaveHandler = useCallback((handler: () => void) => {
     setSaveHandler(() => handler);
-  };
+  }, []);
 
-  const unregisterSaveHandler = () => {
+  const unregisterSaveHandler = useCallback(() => {
     setSaveHandler(null);
-  };
+  }, []);
 
-  const requestSave = () => {
+  const requestSave = useCallback(() => {
     if (saveHandler) {
       saveHandler();
     }
-  };
+  }, [saveHandler]);
+
+  const value = useMemo(
+    () => ({ requestSave, registerSaveHandler, unregisterSaveHandler }),
+    [requestSave, registerSaveHandler, unregisterSaveHandler],
+  );
 
   return (
-    <SettingsContext.Provider
-      value={{ requestSave, registerSaveHandler, unregisterSaveHandler }}
-    >
+    <SettingsContext.Provider value={value}>
       {children}
     </SettingsContext.Provider>
   );

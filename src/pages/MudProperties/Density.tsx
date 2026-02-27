@@ -15,7 +15,7 @@ import {
 import type { SaveDensityPayload } from "@/services/api/mudproperties/mudproperties.types";
 
 // Context
-import { useMudPropertiesContext } from "../../../context/MudProperties/MudPropertiesContext";
+import { useMudPropertiesContext } from "@/context/MudProperties";
 
 export function Density() {
   const { data: densityResponse, isLoading } = useDensityData();

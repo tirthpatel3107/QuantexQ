@@ -15,7 +15,7 @@ import {
 import type { SaveTemperaturePayload } from "@/services/api/mudproperties/mudproperties.types";
 
 // Context
-import { useMudPropertiesContext } from "../../../context/MudProperties/MudPropertiesContext";
+import { useMudPropertiesContext } from "@/context/MudProperties";
 
 export function Temperature() {
   const { data: temperatureResponse, isLoading } = useTemperatureData();

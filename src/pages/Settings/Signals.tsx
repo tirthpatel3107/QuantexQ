@@ -136,126 +136,131 @@ export function Signals() {
     }
   };
 
-  const columns = [
-    signalColumnHelper.display({
-      id: "favorite",
-      header: "",
-      size: 50,
-      cell: (info) => (
-        <button
-          onClick={() => toggleFavorite(info.row.original.id)}
-          className="p-1 hover:scale-110 transition-transform"
-          title={
-            info.row.original.isFavorite
-              ? "Remove from favorites"
-              : "Add to favorites"
-          }
-        >
-          <Star
-            className={cn(
-              "h-4 w-4 transition-colors",
+  const columns = useMemo(
+    () => [
+      signalColumnHelper.display({
+        id: "favorite",
+        header: "",
+        size: 50,
+        cell: (info) => (
+          <button
+            onClick={() => toggleFavorite(info.row.original.id)}
+            className="p-1 hover:scale-110 transition-transform"
+            title={
               info.row.original.isFavorite
-                ? "fill-yellow-500 text-yellow-500"
-                : "text-muted-foreground hover:text-yellow-500",
-            )}
+                ? "Remove from favorites"
+                : "Add to favorites"
+            }
+          >
+            <Star
+              className={cn(
+                "h-4 w-4 transition-colors",
+                info.row.original.isFavorite
+                  ? "fill-yellow-500 text-yellow-500"
+                  : "text-muted-foreground hover:text-yellow-500",
+              )}
+            />
+          </button>
+        ),
+      }),
+      signalColumnHelper.accessor("name", {
+        header: "Signal Name",
+        size: 250,
+        cell: (info) => (
+          <span className="text-[13px] text-foreground/90">
+            {info.getValue()}
+          </span>
+        ),
+      }),
+      signalColumnHelper.accessor("subsystem", {
+        header: "Subsystem",
+        size: 220,
+        cell: (info) => (
+          <span className="text-[13px] text-muted-foreground">
+            {info.getValue()}
+          </span>
+        ),
+      }),
+      signalColumnHelper.accessor("inUse", {
+        header: () => <div className="text-center">In Use</div>,
+        size: 100,
+        cell: (info) => (
+          <Checkbox
+            checked={info.getValue()}
+            onCheckedChange={() => toggleInUse(info.row.original.id)}
+            className="h-4 w-4"
           />
-        </button>
-      ),
-    }),
-    signalColumnHelper.accessor("name", {
-      header: "Signal Name",
-      size: 250,
-      cell: (info) => (
-        <span className="text-[13px] text-foreground/90">
-          {info.getValue()}
-        </span>
-      ),
-    }),
-    signalColumnHelper.accessor("subsystem", {
-      header: "Subsystem",
-      size: 220,
-      cell: (info) => (
-        <span className="text-[13px] text-muted-foreground">
-          {info.getValue()}
-        </span>
-      ),
-    }),
-    signalColumnHelper.accessor("inUse", {
-      header: () => <div className="text-center">In Use</div>,
-      size: 100,
-      cell: (info) => (
-        <Checkbox
-          checked={info.getValue()}
-          onCheckedChange={() => toggleInUse(info.row.original.id)}
-          className="h-4 w-4"
-        />
-      ),
-    }),
-    signalColumnHelper.accessor("unit", {
-      header: "Unit",
-      size: 120,
-      cell: (info) => (
-        <span className="text-[13px] text-muted-foreground">
-          {info.getValue() || "-"}
-        </span>
-      ),
-    }),
-    signalColumnHelper.accessor("valueRange", {
-      header: () => <div className="text-center">Value Range</div>,
-      size: 150,
-      cell: (info) => (
-        <span className="text-[13px] text-muted-foreground flex justify-start">
-          {info.getValue() || "-"}
-        </span>
-      ),
-    }),
-    signalColumnHelper.display({
-      id: "actions",
-      header: () => <div className="text-right">Actions</div>,
-      size: 100,
-      cell: (info) => (
-        <div className="flex justify-end gap-1.5">
-          <button
-            className="p-1.5 rounded-md text-success/70 hover:text-success hover:bg-success/10 transition-all"
-            title="Edit Signal"
-            onClick={() => {
-              setSelectedSignal(info.row.original);
-              setIsEditSignalModalOpen(true);
-            }}
-          >
-            <Pencil className="h-4 w-4" />
-          </button>
-          <button
-            className="p-1.5 rounded-md text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
-            title="Delete Signal"
-            onClick={() => {
-              setSelectedSignal(info.row.original);
-              setIsDeleteConfirmOpen(true);
-            }}
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
-      ),
-    }),
-  ];
+        ),
+      }),
+      signalColumnHelper.accessor("unit", {
+        header: "Unit",
+        size: 120,
+        cell: (info) => (
+          <span className="text-[13px] text-muted-foreground">
+            {info.getValue() || "-"}
+          </span>
+        ),
+      }),
+      signalColumnHelper.accessor("valueRange", {
+        header: () => <div className="text-center">Value Range</div>,
+        size: 150,
+        cell: (info) => (
+          <span className="text-[13px] text-muted-foreground flex justify-start">
+            {info.getValue() || "-"}
+          </span>
+        ),
+      }),
+      signalColumnHelper.display({
+        id: "actions",
+        header: () => <div className="text-right">Actions</div>,
+        size: 100,
+        cell: (info) => (
+          <div className="flex justify-end gap-1.5">
+            <button
+              className="p-1.5 rounded-md text-success/70 hover:text-success hover:bg-success/10 transition-all"
+              title="Edit Signal"
+              onClick={() => {
+                setSelectedSignal(info.row.original);
+                setIsEditSignalModalOpen(true);
+              }}
+            >
+              <Pencil className="h-4 w-4" />
+            </button>
+            <button
+              className="p-1.5 rounded-md text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+              title="Delete Signal"
+              onClick={() => {
+                setSelectedSignal(info.row.original);
+                setIsDeleteConfirmOpen(true);
+              }}
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        ),
+      }),
+    ],
+    [signals],
+  );
 
-  const filteredData = signals.filter((s) => {
-    // Search filter
-    if (search && !s.name.toLowerCase().includes(search.toLowerCase()))
-      return false;
+  const filteredData = useMemo(() => {
+    return signals.filter((s) => {
+      // Search filter
+      if (search && !s.name.toLowerCase().includes(search.toLowerCase()))
+        return false;
 
-    // Type filter
-    if (filterBy === "favorites" && !s.isFavorite) return false;
-    if (filterBy === "inUse" && !s.inUse) return false;
-    if (filterBy === "notInUse" && s.inUse) return false;
+      // Type filter
+      if (filterBy === "favorites" && !s.isFavorite) return false;
+      if (filterBy === "inUse" && !s.inUse) return false;
+      if (filterBy === "notInUse" && s.inUse) return false;
 
-    // Subsystem filter
-    if (subsystemFilters.length > 0 && !subsystemFilters.includes(s.subsystem))
-      return false;
+      // Subsystem filter
+      if (subsystemFilters.length > 0 && !subsystemFilters.includes(s.subsystem))
+        return false;
 
-    return true;
-  });
+      return true;
+    });
+  }, [signals, search, filterBy, subsystemFilters]);
 
   const table = useReactTable({
     data: filteredData,

@@ -20,7 +20,7 @@ import {
 import type { SaveFluidOverviewPayload } from "@/services/api/mudproperties/mudproperties.types";
 
 // Context
-import { useMudPropertiesContext } from "../../../context/MudProperties/MudPropertiesContext";
+import { useMudPropertiesContext } from "@/context/MudProperties";
 
 export function FluidOverview() {
   const { data: overviewResponse, isLoading } = useFluidOverviewData();

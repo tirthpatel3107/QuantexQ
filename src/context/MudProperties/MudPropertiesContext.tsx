@@ -1,4 +1,11 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useCallback,
+  ReactNode,
+} from "react";
 
 interface MudPropertiesContextType {
   requestSave: () => void;
@@ -13,24 +20,27 @@ const MudPropertiesContext = createContext<
 export function MudPropertiesProvider({ children }: { children: ReactNode }) {
   const [saveHandler, setSaveHandler] = useState<(() => void) | null>(null);
 
-  const registerSaveHandler = (handler: () => void) => {
+  const registerSaveHandler = useCallback((handler: () => void) => {
     setSaveHandler(() => handler);
-  };
+  }, []);
 
-  const unregisterSaveHandler = () => {
+  const unregisterSaveHandler = useCallback(() => {
     setSaveHandler(null);
-  };
+  }, []);
 
-  const requestSave = () => {
+  const requestSave = useCallback(() => {
     if (saveHandler) {
       saveHandler();
     }
-  };
+  }, [saveHandler]);
+
+  const value = useMemo(
+    () => ({ requestSave, registerSaveHandler, unregisterSaveHandler }),
+    [requestSave, registerSaveHandler, unregisterSaveHandler],
+  );
 
   return (
-    <MudPropertiesContext.Provider
-      value={{ requestSave, registerSaveHandler, unregisterSaveHandler }}
-    >
+    <MudPropertiesContext.Provider value={value}>
       {children}
     </MudPropertiesContext.Provider>
   );
