@@ -132,40 +132,59 @@ export interface SaveNotificationsPayload {
 // ============================================
 
 export interface LogAnalysisTabData {
-  logViewer: LogViewerConfig;
-  trendAnalysis: TrendAnalysisConfig;
-  reportGeneration: ReportGenerationConfig;
-  logArchive: LogArchiveConfig;
+  logResults: LogResultsConfig;
+  trendAnalysis: TrendPlotConfig;
+  alertNotifyAnalysis: AlertNotifyConfig;
+  responseTime: ResponseTimeConfig;
+  logEntries: LogEntry[];
 }
 
-export interface LogViewerConfig {
-  timeRange: string;
-  channels: string[];
-  filters: Record<string, unknown>;
+export interface LogResultsConfig {
+  dataFilterLevel: string;
+  startTime: string;
+  endTime: string;
 }
 
-export interface TrendAnalysisConfig {
+export interface TrendPlotConfig {
+  period: string;
+  plots: {
+    sbp: boolean;
+    spp: boolean;
+    bhp: boolean;
+    hlw: boolean;
+  };
+}
+
+export interface AlertNotifyConfig {
+  criticalAlerts: {
+    cb: number;
+    ch: number;
+    spp: number;
+    sbpAccepted: number;
+    arAlerts: number;
+  };
+  alertPlotEnabled: boolean;
+}
+
+export interface ResponseTimeConfig {
   enabled: boolean;
-  channels: string[];
-  anomalyDetection: boolean;
+  period: string;
 }
 
-export interface ReportGenerationConfig {
-  format: "pdf" | "csv";
-  schedule: string;
-}
-
-export interface LogArchiveConfig {
-  retentionDays: number;
-  storageUsed: number;
-  storageLimit: number;
+export interface LogEntry {
+  id: string;
+  problemId: string;
+  pigging: string;
+  time: string;
+  message: string;
+  severity: "high" | "medium" | "low" | "info";
 }
 
 export interface SaveLogAnalysisPayload {
-  logViewer: LogViewerConfig;
-  trendAnalysis: TrendAnalysisConfig;
-  reportGeneration: ReportGenerationConfig;
-  logArchive: LogArchiveConfig;
+  logResults: LogResultsConfig;
+  trendAnalysis: TrendPlotConfig;
+  alertNotifyAnalysis: AlertNotifyConfig;
+  responseTime: ResponseTimeConfig;
 }
 
 // ============================================

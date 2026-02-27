@@ -25,6 +25,7 @@ import type {
   SaveSystemSettingsPayload,
   SaveDownloadsPayload,
   NotificationsOptionsData,
+  LogAnalysisOptionsData,
 } from "./daq.types";
 
 // ============================================
@@ -250,25 +251,76 @@ const fetchLogAnalysisData = async (): Promise<
       resolve({
         success: true,
         data: {
-          logViewer: {
-            timeRange: "last-24h",
-            channels: ["pressure", "temperature"],
-            filters: {},
+          logResults: {
+            dataFilterLevel: "Level All",
+            startTime: "06 Feb 2026 | 16:18",
+            endTime: "06 Feb 2026 | 16:36",
           },
           trendAnalysis: {
+            period: "06 Feb 2026: 16:18 - 16:36",
+            plots: {
+              sbp: true,
+              spp: true,
+              bhp: true,
+              hlw: true,
+            },
+          },
+          alertNotifyAnalysis: {
+            criticalAlerts: {
+              cb: 1,
+              ch: 2,
+              spp: 2,
+              sbpAccepted: 7,
+              arAlerts: 2,
+            },
+            alertPlotEnabled: true,
+          },
+          responseTime: {
             enabled: true,
-            channels: ["pressure"],
-            anomalyDetection: true,
+            period: "30 min",
           },
-          reportGeneration: {
-            format: "pdf",
-            schedule: "daily",
-          },
-          logArchive: {
-            retentionDays: 90,
-            storageUsed: 45000,
-            storageLimit: 100000,
-          },
+          logEntries: [
+            {
+              id: "1",
+              problemId: "SBP HIGH: RM",
+              pigging: "SBP HIGH - ALARM",
+              time: "16:34",
+              message: "RECOMMEND: circulating or pit-monitoring or pit-monitoring clear",
+              severity: "high",
+            },
+            {
+              id: "2",
+              problemId: "CAUSE AMS",
+              pigging: "",
+              time: "16:34",
+              message: "spit-restriction: ACTION NEEDED",
+              severity: "medium",
+            },
+            {
+              id: "3",
+              problemId: "SBP D HIGH HI",
+              pigging: "",
+              time: "16:36",
+              message: "Sp limit perception: ACTION NEEDED",
+              severity: "medium",
+            },
+            {
+              id: "4",
+              problemId: "SBP FI: IME",
+              pigging: "",
+              time: "16:23",
+              message: "FRICTIONS within handy thresholds",
+              severity: "info",
+            },
+            {
+              id: "5",
+              problemId: "Partition Closed",
+              pigging: "",
+              time: "16:23",
+              message: "Alarm history and telemetry idle for 2 hours",
+              severity: "low",
+            },
+          ],
         },
         timestamp: new Date().toISOString(),
       });
@@ -943,7 +995,7 @@ export const useNotificationsOptions = () => {
 export const useLogAnalysisOptions = () => {
   return useQuery({
     queryKey: [...daqKeys.logAnalysis(), "options"],
-    queryFn: async () => {
+    queryFn: async (): Promise<ApiResponse<LogAnalysisOptionsData>> => {
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve({

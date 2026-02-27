@@ -25,7 +25,7 @@ const PanelCard = React.forwardRef<HTMLDivElement, PanelCardProps>(
       <Card
         ref={ref}
         className={cn(
-          "dashboard-panel h-full min-w-0 p-5 border-0 shadow-none",
+          "dashboard-panel h-full min-w-0 p-5 border border-border/50 dark:border-0 dark:border-0 shadow-none",
           className,
         )}
       >

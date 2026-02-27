@@ -13,6 +13,7 @@ interface ChartPanelProps {
   color?: string;
   status?: "normal" | "warning" | "critical";
   threshold?: { value: number; label: string };
+  contentClassName?: string;
 }
 
 const statusBorderColors = {
@@ -71,8 +72,8 @@ const LineChartContent = memo(function LineChartContent({
           symbol: "none",
           lineStyle: { width: 2, color },
           emphasis: {
-            focus: "series",
-            lineStyle: { width: 2 },
+            disabled: true,
+            lineStyle: { width: 3, color },
             itemStyle: {
               color,
               borderColor: "hsl(var(--background))",
@@ -123,13 +124,14 @@ export const ChartPanel = memo(function ChartPanel({
   color = "hsl(var(--primary))",
   status = "normal",
   threshold,
+  contentClassName,
 }: ChartPanelProps) {
   const [open, setOpen] = useState(false);
   const showSkeleton = useInitialSkeleton();
 
   if (showSkeleton) {
     return (
-      <div className={cn("dashboard-panel group", statusBorderColors[status])}>
+      <div className={cn("dashboard-panel border border-border/50 group", statusBorderColors[status])}>
         <div className="panel-header relative">
           <div className="flex items-center gap-3">
             <Skeleton className="h-4 w-24" />
@@ -139,7 +141,7 @@ export const ChartPanel = memo(function ChartPanel({
           </div>
         </div>
         <div className="p-3">
-          <Skeleton className="h-[140px] w-full" />
+          <Skeleton className={cn("w-full", contentClassName || "h-[140px]")} />
         </div>
       </div>
     );
@@ -147,7 +149,7 @@ export const ChartPanel = memo(function ChartPanel({
 
   return (
     <>
-      <div className={cn("dashboard-panel group", statusBorderColors[status])}>
+      <div className={cn("dashboard-panel border border-border/50 group", statusBorderColors[status])}>
         <div className="panel-header relative">
           <div className="flex items-center gap-3">
             <h3 className="panel-title">{title}</h3>
@@ -165,7 +167,7 @@ export const ChartPanel = memo(function ChartPanel({
           </div>
         </div>
 
-        <div className="p-3 h-[140px]">
+        <div className={cn("p-3", contentClassName || "h-[140px]")}>
           <LineChartContent data={data} color={color} threshold={threshold} />
         </div>
       </div>
