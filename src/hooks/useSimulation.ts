@@ -4,6 +4,11 @@ import {
   SimulationDataContext,
 } from "../context/Simulation";
 
+/**
+ * Combined hook to access both simulation state and real-time data.
+ * @returns Object containing isRunning, setRunning, chartData, etc.
+ * @throws Error if used outside of SimulationProvider
+ */
 export function useSimulation() {
   const state = useContext(SimulationStateContext);
   const data = useContext(SimulationDataContext);
@@ -15,6 +20,11 @@ export function useSimulation() {
   return { ...state, ...data };
 }
 
+/**
+ * Hook to access only the simulation control state (isRunning, setRunning).
+ * Use this to avoid unnecessary re-renders when only controls are needed.
+ * @returns SimulationStateContext value
+ */
 export function useSimulationState() {
   const state = useContext(SimulationStateContext);
   if (!state) {
@@ -25,6 +35,10 @@ export function useSimulationState() {
   return state;
 }
 
+/**
+ * Hook to access only the real-time simulation data (chartData, elapsedSeconds).
+ * @returns SimulationDataContext value
+ */
 export function useSimulationData() {
   const data = useContext(SimulationDataContext);
   if (!data) {

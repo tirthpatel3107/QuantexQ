@@ -85,6 +85,12 @@ interface ChartInnerProps {
   hideYAxis?: boolean;
 }
 
+/**
+ * Internal Chart Component
+ * 
+ * Renders the actual ECharts visualization for the vertical chart.
+ * Uses ResizeObserver to handle fluid layout container changes.
+ */
 const ChartInner = memo(function ChartInner({
   data,
   metrics,
@@ -96,6 +102,7 @@ const ChartInner = memo(function ChartInner({
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ width: 0, height: 0 });
 
+  // Dynamically track container size to ensure ECharts always fills its parent
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -116,7 +123,7 @@ const ChartInner = memo(function ChartInner({
   const option: EChartsOption = useMemo(() => {
     const times = data.map((d) => d.time);
 
-    // Theme-specific colors
+    // Dynamic color selection based on theme (Dark/Light)
     const axisColor = isDark
       ? COLORS.charts_ui.axis_dark
       : COLORS.charts_ui.axis_light;
@@ -159,7 +166,7 @@ const ChartInner = memo(function ChartInner({
           fontFamily: "inherit",
           fontWeight: 600,
         },
-        // Modern shadow and rounding for tooltip
+        // Premium UI: Tooltip styling with modern shadows and rounding
         extraCssText:
           "box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border-radius: 6px; z-index: 9999; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;",
         padding: [8, 12],
@@ -216,7 +223,7 @@ const ChartInner = memo(function ChartInner({
           fontSize: 11,
           fontWeight: "normal",
           color: axisColor,
-          rotate: 90, // Vertical chart display requirement
+          rotate: 90, // Crucial for vertical chart orientation
         },
         axisLine: { show: false },
         axisTick: { show: true, lineStyle: { color: axisColor } },
@@ -225,14 +232,14 @@ const ChartInner = memo(function ChartInner({
       yAxis: {
         type: "category",
         data: times,
-        inverse: true,
-        boundaryGap: false, // Align grid lines exactly with labels
+        inverse: true, // Newest values at the top
+        boundaryGap: false,
         show: true,
         axisLine: { show: false },
         axisTick: { show: !hideYAxis, lineStyle: { color: axisColor } },
         axisLabel: {
           show: !hideYAxis,
-          interval: Math.floor(data.length / 10), // Show roughly 10 labels
+          interval: Math.floor(data.length / 10), // Adaptive label spacing
           fontSize: 11,
           fontWeight: "normal",
           color: axisColor,
@@ -243,7 +250,7 @@ const ChartInner = memo(function ChartInner({
         },
       },
       series: series as LineSeriesOption[],
-      animation: false, // Performance: disable animations for high-frequency updates
+      animation: false, // Performance: Disable animations for high-frequency streaming data
     };
   }, [data, metrics, badgeColors, isDark, hideYAxis]);
 
@@ -264,6 +271,20 @@ const ChartInner = memo(function ChartInner({
   );
 });
 
+/**
+ * Vertical Chart Card Component
+ * 
+ * A specialized data visualization card designed for drilling metrics.
+ * It displays data trending vertically (latest data at top) to mirror 
+ * real-world logging tools.
+ * 
+ * Features:
+ * - Real-time streaming line charts via Apache ECharts
+ * - Hover tooltips for precise value reading
+ * - Modal expansion for detailed analysis
+ * - Skeleton loading state for smooth initial transition
+ * - Status-aware border colors (Normal, Warning, Critical)
+ */
 export const VerticalChartCard = memo(function VerticalChartCard({
   title,
   icon: Icon,
@@ -279,6 +300,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
   const [expandOpen, setExpandOpen] = useState(false);
   const { theme } = useTheme();
 
+  // Helper to determine background/foreground colors for the chart based on current theme
   const isDark = useMemo(() => {
     if (theme === "system") {
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -286,7 +308,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
     return theme === "dark" || theme === "midnight";
   }, [theme]);
 
-  // Use the color property directly defined on each metric
+  // Extract the color palette for the chart series to ensure visual consistency
   const seriesLineColors = useMemo(() => {
     return metrics.map((m) => m.color || COLORS.data.out);
   }, [metrics]);
@@ -329,7 +351,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
       onDoubleClick={onDoubleClick}
       onClick={(e) => e.stopPropagation()}
     >
-      {/* Header: left = Icon + Title, right = main count */}
+      {/* Header: Branding, Title, and Interaction Controls */}
       <div className="panel-header flex items-center justify-between gap-2 min-w-0">
         <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
           <CommonTooltip content="Expand chart">
@@ -366,8 +388,9 @@ export const VerticalChartCard = memo(function VerticalChartCard({
 
       <hr />
 
-      {/* Chart area */}
+      {/* Primary Visualization Area */}
       <div className="vertical-line-chart flex flex-col p-3 flex-1 w-full overflow-hidden relative">
+        {/* Real-time Metric Value Displays */}
         <div className="flex justify-between gap-3 pointer-events-none h-[60px]">
           {metrics.map((m, i) => (
             <MetricDisplay
@@ -379,6 +402,8 @@ export const VerticalChartCard = memo(function VerticalChartCard({
             />
           ))}
         </div>
+        
+        {/* The ECharts Instance */}
         <div className="flex-1 min-h-0">
           <ChartInner
             data={data}
@@ -391,6 +416,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
         </div>
       </div>
 
+      {/* Expanded Detail Modal: Triggered by the expand button or double-click */}
       <CommonDialog
         open={expandOpen}
         onOpenChange={setExpandOpen}

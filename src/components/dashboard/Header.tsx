@@ -40,10 +40,17 @@ import {
 import { formatTime, formatDate } from "@/utils/lib/date-utils";
 
 /**
- * Header component for the dashboard.
- * Contains branding, global clock, simulation controls, notifications, and settings.
+ * Header Component
+ * 
+ * Provides the primary navigation and control interface for the dashboard.
+ * 
+ * Key features:
+ * - Real-time global clock and date display
+ * - Simulation controls (Start/Stop) with confirmation dialogs
+ * - Theme switching (Light/Dark)
+ * - Notification system integration
+ * - User profile and logout navigation
  */
-
 export function Header() {
   const [time, setTime] = useState(() => new Date());
   const { isRunning, setRunning } = useSimulationState();
@@ -53,11 +60,15 @@ export function Header() {
   const [startConfirmOpen, setStartConfirmOpen] = useState(false);
   const navigate = useNavigate();
 
+  // Update the global clock every second
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  /**
+   * Toggles between dark and light themes
+   */
   const toggleTheme = useCallback(() => {
     setTheme(theme === "dark" ? "light" : "dark");
   }, [theme, setTheme]);
@@ -65,7 +76,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 min-h-14 h-auto border-b border-border bg-card px-3 sm:px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 backdrop-blur-md">
       <SideDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
-      {/* Hamburger + Brand */}
+      
+      {/* Left Section: Menu Toggle and Brand Identity */}
       <div className="flex items-center gap-2 shrink-0 min-w-0 w-full sm:w-auto">
         <CommonTooltip content="Open menu">
           <CommonButton
@@ -97,23 +109,22 @@ export function Header() {
         </Link>
       </div>
 
-      {/* Center - Project Info */}
+      {/* Center Section: Project and Well Information (Desktop only) */}
       <div className="hidden lg:flex items-center gap-3 text-sm min-w-0">
         <div className="flex items-center gap-1">
-          {/* <span className="text-muted-foreground">Project:</span> */}
           <span className="font-medium text-foreground">
             Offshore Block A-7
           </span>
         </div>
         <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-1">
-          {/* <span className="text-muted-foreground">Well:</span> */}
           <span className="font-medium text-foreground">DW-0347</span>
         </div>
       </div>
 
-      {/* Right - Time & Actions */}
+      {/* Right Section: Time Display and Global Actions */}
       <div className="flex w-full sm:w-auto items-center gap-2 sm:gap-3 justify-between sm:justify-end flex-wrap">
+        {/* Real-time Clock */}
         <div className="text-right leading-tight">
           <div className="text-base sm:text-lg font-bold tabular-nums text-foreground/90">
             {formatTime(time)}
@@ -126,6 +137,7 @@ export function Header() {
         <div className="hidden sm:block h-8 w-px bg-border" />
 
         <div className="flex items-center gap-2">
+          {/* Simulation Toggle: Start/Stop */}
           {!isRunning ? (
             <CommonTooltip content="Start operation">
               <CommonButton
@@ -149,75 +161,10 @@ export function Header() {
               </CommonButton>
             </CommonTooltip>
           )}
+          
           <div className="hidden sm:block h-8 w-px bg-border" />
-          {/* <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <CommonButton
-                variant="ghost"
-                size="icon"
-                className="bg-accent text-foreground hover:bg-accent/80"
-                aria-label="Dashboard filters"
-                icon={Filter}
-              />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-64 p-0 flex flex-col max-h-[min(70vh,320px)]">
-              <ScrollArea className="h-[220px] shrink-0">
-                <div className="p-2 space-y-1">
-                  <div className="px-3 pt-2 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
-                    Severity
-                  </div>
-                  {SEVERITY_OPTIONS.map((option) => (
-                    <DropdownMenuItem
-                      key={option.key}
-                      onSelect={() => setFilters((f) => ({ ...f, severity: option.key }))}
-                      className="cursor-pointer flex items-center justify-between"
-                    >
-                      <span>{option.label}</span>
-                      {filters.severity === option.key && <Check className="h-4 w-4 text-primary" />}
-                    </DropdownMenuItem>
-                  ))}
-
-                  <div className="px-3 pt-3 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
-                    Timeframe
-                  </div>
-                  {TIMEFRAME_OPTIONS.map((option) => (
-                    <DropdownMenuItem
-                      key={option.key}
-                      onSelect={() => setFilters((f) => ({ ...f, timeframe: option.key }))}
-                      className="cursor-pointer flex items-center justify-between"
-                    >
-                      <span>{option.label}</span>
-                      {filters.timeframe === option.key && <Check className="h-4 w-4 text-primary" />}
-                    </DropdownMenuItem>
-                  ))}
-
-                  <div className="px-3 pt-3 pb-1 text-[11px] font-semibold text-muted-foreground uppercase">
-                    System
-                  </div>
-                  {SYSTEM_OPTIONS.map((option) => (
-                    <DropdownMenuItem
-                      key={option.key}
-                      onSelect={() => setFilters((f) => ({ ...f, system: option.key }))}
-                      className="cursor-pointer flex items-center justify-between"
-                    >
-                      <span>{option.label}</span>
-                      {filters.system === option.key && <Check className="h-4 w-4 text-primary" />}
-                    </DropdownMenuItem>
-                  ))}
-                </div>
-              </ScrollArea>
-              <div className="px-3 py-2 border-t border-border shrink-0 bg-card">
-                <CommonButton
-                  variant="secondary"
-                  className="w-full bg-secondary/40 hover:bg-secondary/60"
-                  onClick={() => setFilters(INITIAL_FILTERS)}
-                  icon={SlidersHorizontal}
-                >
-                  Reset filters
-                </CommonButton>
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu> */}
+          
+          {/* Theme Toggle Button */}
           <CommonTooltip
             content={
               theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
@@ -233,6 +180,7 @@ export function Header() {
             />
           </CommonTooltip>
 
+          {/* Notifications Drawer Toggle */}
           <Sheet>
             <CommonTooltip content="View notifications">
               <SheetTrigger asChild>
@@ -305,6 +253,8 @@ export function Header() {
               </ScrollArea>
             </SheetContent>
           </Sheet>
+
+          {/* User Profile and Navigation Menu */}
           <DropdownMenu>
             <CommonTooltip content="User menu">
               <DropdownMenuTrigger asChild>
@@ -335,11 +285,13 @@ export function Header() {
         </div>
       </div>
 
+      {/* Persistent Timer Widget for active simulations */}
       <SimulationTimerWidget
         useOwnStopDialog={false}
         onStopClick={() => setStopConfirmOpen(true)}
       />
 
+      {/* Global Confirmation Dialogs */}
       <CommonAlertDialog
         open={stopConfirmOpen}
         onOpenChange={setStopConfirmOpen}

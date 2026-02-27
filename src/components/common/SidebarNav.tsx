@@ -36,20 +36,7 @@ export const SidebarNav = memo(function SidebarNav({
             <button
               onClick={() =>
                 ![
-                  // ---- Setting ------
-                  // "ui",
-                  // "signals",
-
-                  // ---- Network ------
-                  // "sources",
-                  // "protocols",
-                  // "routing",
-                  // "security",
-                  // "diagnostics",
-
                   // ---- DAQ ------
-                  // "notifications",
-                  // "log-analysis",
                   // "downloads",
                   // "system-settings",
                 ].includes(item.id) && navigate(`${baseRoute}/${item.id}`)

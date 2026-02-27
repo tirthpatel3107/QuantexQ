@@ -24,11 +24,21 @@ import { SystemSettings } from "./SystemSettings";
 import { Downloads } from "./Downloads";
 import { DAQProvider, useDAQContext } from "../../context/DAQ/DAQContext";
 
+/**
+ * DAQ (Data Acquisition) Dashboard Content
+ * 
+ * This component manages the sub-navigation within the DAQ module.
+ * It uses the URL path to determine which configuration sub-section to render.
+ */
 function DAQContent() {
   const { section } = useParams();
   const activeSection = section || "daq";
   const { requestSave } = useDAQContext();
 
+  /**
+   * Action buttons for the page header.
+   * These provide global module-level controls (Save, Discard, Import).
+   */
   const headerActions = (
     <>
       <CommonTooltip content="Save DAQ settings">
@@ -54,8 +64,10 @@ function DAQContent() {
     </>
   );
 
+  // Find the active navigation item metadata based on the current URL
   const activeNav = DAQ_NAV.find((n) => n.id === activeSection);
 
+  // Sidebar navigation component for switching between DAQ sub-modules
   const sidebarNav = (
     <SidebarNav
       items={DAQ_NAV}
@@ -64,6 +76,10 @@ function DAQContent() {
     />
   );
 
+  /**
+   * Routing logic for DAQ sub-sections.
+   * Dynamically renders the appropriate component based on the 'section' URL parameter.
+   */
   const renderSection = () => {
     switch (activeSection) {
       case "daq":
@@ -101,6 +117,7 @@ function DAQContent() {
           </p>
         }
       >
+        {/* Page title and metadata bar with contextual actions */}
         <PageHeaderBar
           icon={
             activeNav?.icon ? (
@@ -120,6 +137,10 @@ function DAQContent() {
   );
 }
 
+/**
+ * Main DAQ (Data Acquisition) Module.
+ * Wraps the content in a DAQProvider to provide shared state across all sub-sections.
+ */
 export default function DAQ() {
   return (
     <DAQProvider>
