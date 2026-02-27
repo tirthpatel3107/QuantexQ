@@ -48,10 +48,10 @@ export const SidebarNav = memo(function SidebarNav({
                   // "diagnostics",
 
                   // ---- DAQ ------
-                  "notifications",
-                  "log-analysis",
-                  "downloads",
-                  "system-settings",
+                  // "notifications",
+                  // "log-analysis",
+                  // "downloads",
+                  // "system-settings",
                 ].includes(item.id) && navigate(`${baseRoute}/${item.id}`)
               }
               title={isCollapsed ? item.label : ""}
