@@ -1,6 +1,6 @@
 import { CommonInput } from "./CommonInput";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 
 export interface LabeledInputWithUnitProps {
   label: string;

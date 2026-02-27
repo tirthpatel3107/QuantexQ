@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SKELETON_DURATION_MS } from "@/constants/config";
+import { SKELETON_DURATION_MS } from "@/utils/constants/config";
 
 /**
  * Shows skeleton UI for a short initial period (e.g. dashboard cards).

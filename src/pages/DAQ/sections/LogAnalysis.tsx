@@ -7,7 +7,7 @@ import {
   FormSaveDialog,
 } from "@/components/common";
 import { Filter } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import {
   useLogAnalysisData,
   useSaveLogAnalysisData,

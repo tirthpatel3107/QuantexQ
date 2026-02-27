@@ -16,7 +16,7 @@ import {
 } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RefreshCw, Download, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
 // Services & Types

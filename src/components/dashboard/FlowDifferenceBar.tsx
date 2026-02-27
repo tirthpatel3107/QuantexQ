@@ -13,10 +13,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { useSimulationData } from "@/hooks/useSimulation";
-import { COLORS } from "@/constants/colors";
-import { DASHBOARD_LIMITS } from "@/constants/dashboard";
+import { COLORS } from "@/utils/constants/colors";
+import { DASHBOARD_LIMITS } from "@/utils/constants/dashboard";
 import { SemiCircleGauge } from "./SemiCircleGauge";
 import { SegmentedBar } from "./SegmentedBar";
 import { FlowControlStack } from "./FlowControlStack";

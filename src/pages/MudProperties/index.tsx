@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { Droplets, Save, RotateCcw, Download } from "lucide-react";
 
-import { ROUTES } from "@/constants/routes";
+import { ROUTES } from "@/utils/constants/routes";
 import {
   PageLayout,
   SidebarLayout,
@@ -21,8 +21,8 @@ import { GasCompressibility } from "./sections/GasCompressibility";
 import { Calibration } from "./sections/Calibration";
 import { Summary } from "./sections/Summary";
 import { MudPropertiesSidebar } from "./components/MudPropertiesSidebar";
-import { MUD_NAV } from "@/constants";
-import { FluidData } from "@/types/mud";
+import { MUD_NAV } from "@/utils/constants";
+import { FluidData } from "@/utils/types/mud";
 import {
   MudPropertiesProvider,
   useMudPropertiesContext,

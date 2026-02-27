@@ -10,11 +10,11 @@ import {
   Binary,
   Tally4,
 } from "lucide-react";
-import { ChartDataPoint } from "@/types/chart";
-import type { VerticalCardConfig } from "@/types/chart";
-import type { VerticalChartMetric } from "@/types/chart";
+import { ChartDataPoint } from "@/utils/types/chart";
+import type { VerticalCardConfig } from "@/utils/types/chart";
+import type { VerticalChartMetric } from "@/utils/types/chart";
 
-import { COLORS } from "@/constants/colors";
+import { COLORS } from "@/utils/constants/colors";
 
 /** Build metric rows with values from latest data point; use "—" when no point. */
 export function metricsFromLatestPoint(

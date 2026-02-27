@@ -1,13 +1,13 @@
 import { memo, useMemo, useEffect, useRef, useState } from "react";
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
-import { COLORS } from "@/constants/colors";
+import { COLORS } from "@/utils/constants/colors";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTheme } from "@/hooks/useTheme";
 import { Clock } from "lucide-react";
-import { ChartDataPoint } from "@/types/chart";
+import { ChartDataPoint } from "@/utils/types/chart";
 
 interface TimeAxisCardProps {
   data: ChartDataPoint[];

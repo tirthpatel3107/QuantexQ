@@ -6,8 +6,8 @@ import {
   standpipePressureData,
   bottomHolePressureData,
   chokeChartData,
-} from "@/data/mockData";
-import { ChartDataKey, ChartDataset } from "@/types/chart";
+} from "@/utils/data/mockData";
+import { ChartDataKey, ChartDataset } from "@/utils/types/chart";
 
 export type ChartDataState = Record<ChartDataKey, ChartDataset>;
 

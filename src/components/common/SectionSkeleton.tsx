@@ -1,5 +1,5 @@
 import { CommonSkeleton } from "./CommonSkeleton";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 
 interface SectionSkeletonProps {
   /** Number of cards to display, default is 6 */

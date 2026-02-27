@@ -2,7 +2,7 @@
  * Mock chart data: deterministic series generation and sliding-window updates.
  * Used by useSimulation for dashboard charts.
  */
-import { ChartDataPoint, ChartDataset } from "@/types/chart";
+import { ChartDataPoint, ChartDataset } from "@/utils/types/chart";
 
 const mulberry32 = (seed: number) => {
   seed |= 0;

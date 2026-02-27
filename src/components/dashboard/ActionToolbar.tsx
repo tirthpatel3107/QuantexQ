@@ -14,7 +14,7 @@ import {
   CommonButton,
   CommonTooltip,
 } from "@/components/common";
-import { SimulationAction } from "@/types/dashboard";
+import { SimulationAction } from "@/utils/types/dashboard";
 
 /**
  * ActionToolbar provides quick access to system settings, configuration,

@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 
 interface CommonSkeletonProps {
   variant?: "card" | "table" | "list" | "form" | "custom";

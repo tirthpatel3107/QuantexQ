@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { CategoryCard } from "@/components/dashboard/CategoryCard";
-import { ROUTES } from "@/constants/routes";
-import { SETTINGS_CATEGORY_CARDS as CATEGORY_CARDS } from "@/constants";
+import { ROUTES } from "@/utils/constants/routes";
+import { SETTINGS_CATEGORY_CARDS as CATEGORY_CARDS } from "@/utils/constants";
 
 export function SettingsOverview() {
   const navigate = useNavigate();

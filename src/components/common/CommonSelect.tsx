@@ -1,6 +1,6 @@
 import { Check, ChevronsUpDown } from "lucide-react";
 import React from "react"; // Changed from `import { useState } from "react";` to `import React from "react";` because `React.useState` is used. If `useState` was imported directly, `React.useState` would need to be changed to `useState`. Given the instruction is to remove *unused* variables/imports, and `React` is used via `React.useState` and `React.useMemo`, `React` should be imported.
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,

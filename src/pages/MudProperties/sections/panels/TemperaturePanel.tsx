@@ -3,7 +3,7 @@ import {
   RestoreDefaultsButton,
   LabeledInputWithUnit,
 } from "@/components/common";
-import { FluidData } from "@/types/mud";
+import { FluidData } from "@/utils/types/mud";
 
 interface TemperaturePanelProps {
   fluid: FluidData;

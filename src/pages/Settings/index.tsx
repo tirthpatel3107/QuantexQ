@@ -7,7 +7,7 @@ import {
   Upload,
 } from "lucide-react";
 
-import { ROUTES } from "@/constants/routes";
+import { ROUTES } from "@/utils/constants/routes";
 import {
   PageLayout,
   SidebarLayout,
@@ -29,8 +29,8 @@ import { HydraulicsModel } from "./sections/HydraulicsModel";
 import { UiDisplay } from "./sections/UiDisplay";
 import { UsersRoles } from "./sections/userRoles";
 import { AboutDiagnostics } from "./sections/AboutDiagnostics";
-import { SETTINGS_NAV } from "@/constants";
-import { GeneralSettingsData } from "@/types/settings";
+import { SETTINGS_NAV } from "@/utils/constants";
+import { GeneralSettingsData } from "@/utils/types/settings";
 import { SettingsProvider, useSettingsContext } from "../../context/Settings/SettingsContext";
 
 function SettingsContent() {

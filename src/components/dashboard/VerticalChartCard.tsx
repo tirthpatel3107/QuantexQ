@@ -3,14 +3,14 @@ import type { LucideIcon } from "lucide-react";
 import { Maximize2 } from "lucide-react";
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption, LineSeriesOption } from "echarts";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CommonDialog, CommonButton, CommonTooltip } from "@/components/common";
-import type { VerticalChartMetric } from "@/types/chart";
-import { COLORS } from "@/constants/colors";
+import type { VerticalChartMetric } from "@/utils/types/chart";
+import { COLORS } from "@/utils/constants/colors";
 import { useTheme } from "@/hooks/useTheme";
-import { ChartDataPoint } from "@/types/chart";
+import { ChartDataPoint } from "@/utils/types/chart";
 
 export type { VerticalChartMetric };
 

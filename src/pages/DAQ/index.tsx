@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Activity, Save, RotateCcw, Upload } from "lucide-react";
 
-import { ROUTES } from "@/constants/routes";
+import { ROUTES } from "@/utils/constants/routes";
 import {
   PageLayout,
   SidebarLayout,
@@ -11,7 +11,7 @@ import {
   CommonTooltip,
 } from "@/components/common";
 
-import { DAQ_NAV } from "@/constants";
+import { DAQ_NAV } from "@/utils/constants";
 import { DaqOverview } from "./sections/DaqOverview";
 import { Display } from "./sections/Display";
 import { Streaming } from "./sections/Streaming";

@@ -5,7 +5,7 @@ import {
   CommonInput,
   CommonToggle,
 } from "@/components/common";
-import { FluidData } from "@/types/mud";
+import { FluidData } from "@/utils/types/mud";
 
 interface RheologyPanelProps {
   fluid: FluidData;

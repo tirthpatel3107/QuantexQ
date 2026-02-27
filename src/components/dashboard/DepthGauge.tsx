@@ -1,7 +1,7 @@
 import { memo, useMemo } from "react";
 
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface DepthGaugeProps {

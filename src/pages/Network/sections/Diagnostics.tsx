@@ -10,7 +10,7 @@ import type { EChartsOption } from "echarts";
 // Components - UI & Icons
 import { Badge } from "@/components/ui/badge";
 import { Play, FileDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   CommonButton,

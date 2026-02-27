@@ -35,7 +35,7 @@ import {
   FormSaveDialog,
   CommonAlertDialog,
 } from "@/components/common";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 
 // Services & Types

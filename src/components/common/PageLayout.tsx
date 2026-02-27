@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Header } from "@/components/dashboard/Header";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 
 export interface PageLayoutProps {
   /** Main content; Header is rendered above. */

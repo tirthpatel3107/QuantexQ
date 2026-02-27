@@ -9,7 +9,7 @@ import {
   notifications,
   pumpStatus,
   operationalStatus,
-} from "@/data/mockData";
+} from "@/utils/data/mockData";
 
 /**
  * Service hook to fetch dashboard chart data.

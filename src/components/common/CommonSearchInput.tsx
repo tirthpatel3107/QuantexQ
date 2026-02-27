@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { CommonTooltip } from "./CommonTooltip";
 
 export interface CommonSearchInputProps {

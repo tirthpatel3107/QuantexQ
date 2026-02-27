@@ -1,6 +1,6 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { AlertTriangle, Info, CheckCircle, XCircle, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import {
   CommonAlertDialog,
   CommonButton,

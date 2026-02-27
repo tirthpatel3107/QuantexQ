@@ -6,9 +6,9 @@ import {
   useMemo,
   type ReactNode,
 } from "react";
-import { formatElapsedSeconds } from "@/lib/date-utils";
-import { appendChartPoint } from "@/data/mockData";
-import { CHART_UPDATE_INTERVAL_MS, TIMER_TICK_MS } from "@/constants/config";
+import { formatElapsedSeconds } from "@/utils/lib/date-utils";
+import { appendChartPoint } from "@/utils/data/mockData";
+import { CHART_UPDATE_INTERVAL_MS, TIMER_TICK_MS } from "@/utils/constants/config";
 import {
   SimulationStateContext,
   SimulationDataContext,

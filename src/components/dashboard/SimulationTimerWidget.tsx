@@ -8,7 +8,7 @@ import {
   CommonTooltip,
 } from "@/components/common";
 
-import { SIMULATION_TIMER_STORAGE_KEY } from "@/constants/config";
+import { SIMULATION_TIMER_STORAGE_KEY } from "@/utils/constants/config";
 
 function loadPosition(): { x: number; y: number } | null {
   try {

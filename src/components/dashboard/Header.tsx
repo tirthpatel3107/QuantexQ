@@ -10,7 +10,7 @@ import {
   CircleUser,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { ROUTES } from "@/constants/routes";
+import { ROUTES } from "@/utils/constants/routes";
 import {
   Sheet,
   SheetContent,
@@ -26,8 +26,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
-import { notifications } from "@/data/mockData";
+import { cn } from "@/utils/lib/utils";
+import { notifications } from "@/utils/data/mockData";
 import { useSimulationState } from "@/hooks/useSimulation";
 import { SimulationTimerWidget } from "@/components/dashboard/SimulationTimerWidget";
 import { useTheme } from "@/hooks/useTheme";
@@ -37,7 +37,7 @@ import {
   CommonTooltip,
 } from "@/components/common";
 
-import { formatTime, formatDate } from "@/lib/date-utils";
+import { formatTime, formatDate } from "@/utils/lib/date-utils";
 
 /**
  * Header component for the dashboard.

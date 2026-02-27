@@ -1,5 +1,5 @@
 import { memo, type ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 
 export interface PageHeaderBarProps {
   /** Icon or element shown next to title. */

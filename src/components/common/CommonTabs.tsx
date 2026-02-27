@@ -5,7 +5,7 @@ import {
   TabsTrigger as BaseTabsTrigger,
   TabsContent as BaseTabsContent,
 } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 
 export type CommonTabsProps = React.ComponentPropsWithoutRef<typeof BaseTabs>;
 

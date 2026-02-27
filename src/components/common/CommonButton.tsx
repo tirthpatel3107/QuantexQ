@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, type ButtonProps } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { Loader2 } from "lucide-react";
 
 export interface CommonButtonProps extends ButtonProps {

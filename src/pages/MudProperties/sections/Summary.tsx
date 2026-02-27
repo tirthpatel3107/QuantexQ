@@ -1,6 +1,6 @@
 import { SectionSkeleton } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { FluidData } from "@/types/mud";
+import { FluidData } from "@/utils/types/mud";
 import { useSummaryData } from "@/services/api/mudproperties/mudproperties.api";
 
 interface SummaryProps {

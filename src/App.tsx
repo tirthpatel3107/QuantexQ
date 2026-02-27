@@ -9,8 +9,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "./context/Sidebar/SidebarContext.tsx";
 import { AccentColorProvider } from "@/hooks/useAccentColor";
-import { ROUTES } from "@/constants/routes";
-import { THEME_STORAGE_KEY } from "@/constants/config";
+import { ROUTES } from "@/utils/constants/routes.ts";
+import { THEME_STORAGE_KEY } from "@/utils/constants/config.ts";
 
 const Index = lazy(() => import("./pages/Index"));
 const NotFound = lazy(() => import("./pages/NotFound"));

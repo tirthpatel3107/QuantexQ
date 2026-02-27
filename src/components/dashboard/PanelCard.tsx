@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 
 export interface PanelCardProps {
   /** Card section title (string or node for icon + text) */

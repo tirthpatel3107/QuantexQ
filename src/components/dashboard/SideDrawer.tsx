@@ -30,8 +30,8 @@ import {
 } from "@/components/ui/collapsible";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { memo, useState } from "react";
-import { cn } from "@/lib/utils";
-import { ROUTES } from "@/constants/routes";
+import { cn } from "@/utils/lib/utils";
+import { ROUTES } from "@/utils/constants/routes";
 
 interface SideDrawerProps {
   open: boolean;

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { Header } from "@/components/dashboard/Header";
 import { VerticalChartCard } from "@/components/dashboard/VerticalChartCard";
 import { DepthGauge } from "@/components/dashboard/DepthGauge";
@@ -8,7 +8,7 @@ import { useSimulationData } from "@/hooks/useSimulation";
 import {
   CENTER_CARDS,
   metricsFromLatestPoint,
-} from "@/data/dashboardChartConfig";
+} from "@/utils/data/dashboardChartConfig";
 
 import { TimeAxisCard } from "@/components/dashboard/TimeAxisCard";
 import { FlowDifferenceBar } from "@/components/dashboard/FlowDifferenceBar";

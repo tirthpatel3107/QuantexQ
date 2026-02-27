@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Check, LucideIcon, Search, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,

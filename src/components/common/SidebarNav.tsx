@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { useNavigate } from "react-router-dom";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { useSidebarContext } from "@/hooks/useSidebarContext";
 import { LucideIcon } from "lucide-react";
 

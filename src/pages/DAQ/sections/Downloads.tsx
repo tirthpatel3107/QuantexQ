@@ -10,7 +10,7 @@ import {
 } from "@/components/common/CommonTabs";
 import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 import { Download, FolderOpen, FileText, File } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import {
   useDownloadsData,
   useSaveDownloadsData,

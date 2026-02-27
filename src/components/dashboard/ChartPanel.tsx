@@ -2,7 +2,7 @@ import { memo, useState, useMemo } from "react";
 import { Maximize2 } from "lucide-react";
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CommonDialog, CommonTooltip } from "@/components/common";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";

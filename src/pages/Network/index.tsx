@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Network as NetworkIcon, Save, RotateCcw, Upload } from "lucide-react";
 
-import { ROUTES } from "@/constants/routes";
+import { ROUTES } from "@/utils/constants/routes";
 import {
   PageLayout,
   SidebarLayout,
@@ -11,7 +11,7 @@ import {
   CommonTooltip,
 } from "@/components/common";
 
-import { NETWORK_NAV } from "@/constants";
+import { NETWORK_NAV } from "@/utils/constants";
 import { NetworkOverview } from "./sections/NetworkOverview";
 import { Sources } from "./sections/Sources";
 import { Protocols } from "./sections/Protocols";
