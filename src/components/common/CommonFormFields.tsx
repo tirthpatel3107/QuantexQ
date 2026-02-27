@@ -4,6 +4,7 @@ import { Control, Controller, FieldPath, FieldValues } from "react-hook-form";
 import { CommonInput, CommonInputProps } from "./CommonInput";
 import { CommonSelect, CommonSelectProps } from "./CommonSelect";
 import { CommonToggle, CommonToggleProps } from "./CommonToggle";
+import { CommonCheckbox, CommonCheckboxProps } from "./CommonCheckbox";
 
 // ============================================
 // CommonFormInput
@@ -106,6 +107,45 @@ export function CommonFormToggle<
             checked={field.value} 
             onCheckedChange={field.onChange} 
             {...props} 
+          />
+          {fieldState.error && (
+            <p className="text-sm text-destructive ml-1">
+              {fieldState.error.message}
+            </p>
+          )}
+        </div>
+      )}
+    />
+  );
+}
+
+// ============================================
+// CommonFormCheckbox
+// ============================================
+
+export type CommonFormCheckboxProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> = Omit<CommonCheckboxProps, "checked" | "onCheckedChange"> & {
+  control: Control<TFieldValues>;
+  name: TName;
+  containerClassName?: string;
+};
+
+export function CommonFormCheckbox<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({ control, name, containerClassName, ...props }: CommonFormCheckboxProps<TFieldValues, TName>) {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field, fieldState }) => (
+        <div className={containerClassName}>
+          <CommonCheckbox
+            checked={field.value}
+            onCheckedChange={field.onChange}
+            {...props}
           />
           {fieldState.error && (
             <p className="text-sm text-destructive ml-1">

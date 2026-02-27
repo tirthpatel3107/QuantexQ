@@ -24,6 +24,7 @@ import type {
   SaveHydraulicsPayload,
   SaveSystemSettingsPayload,
   SaveDownloadsPayload,
+  NotificationsOptionsData,
 } from "./daq.types";
 
 // ============================================
@@ -167,34 +168,55 @@ const fetchNotificationsData = async (): Promise<
       resolve({
         success: true,
         data: {
-          alarmRules: [
-            {
-              id: "alarm-1",
-              name: "High Pressure Alert",
-              channel: "pressure-1",
-              threshold: 500,
-              enabled: true,
-            },
-          ],
-          channels: [
-            {
-              id: "ch-1",
-              type: "email",
-              address: "operator@example.com",
-              enabled: true,
-            },
-          ],
-          escalation: {
-            enabled: true,
-            levels: [
-              {
-                level: 1,
-                delay: 300,
-                contacts: ["operator@example.com"],
-              },
-            ],
+          settings: {
+            alarmSound: "factory_alert.mp3",
+            alarmNotifications: true,
+            acceptableWrns: true,
+            acceptableCmpncs: true,
+            validityCompletion: true,
           },
-          muteRules: [],
+          store: {
+            remindOnReset: true,
+            selfDismissing: true,
+            unusetComplessible: false,
+            enableNewAlarm: true,
+            alarmClearDiagnostics: true,
+            inboundRate: false,
+          },
+          log: [
+            {
+              id: "1",
+              type: "high",
+              mention: "SBP HIGH: RLHea...09j",
+              message: "SBP LIMIT RECOMMENDED: (Cushioning) or pit-monitoring clear",
+              severity: "SBP HIGH Hea...",
+              status: "OK",
+            },
+            {
+              id: "2",
+              type: "medium",
+              mention: "Enable OF: Alarms...ON",
+              message: "Friction Losses within thresholds again",
+              severity: "Slow DIAG...",
+              status: "OK",
+            },
+            {
+              id: "3",
+              type: "medium",
+              mention: "Cause OF Alarms...ON",
+              message: "SPP LIMIT EXCEEDED: ACTION NEEDED",
+              severity: "SLEF NEEDED...",
+              status: "OK",
+            },
+            {
+              id: "4",
+              type: "high",
+              mention: "Alert MMI: Alarms...ON",
+              message: "LGS Analysis complete: 8.3% (set:) 5.0%",
+              severity: "SWS NEEDED...",
+              status: "OK",
+            },
+          ],
         },
         timestamp: new Date().toISOString(),
       });
@@ -892,7 +914,7 @@ export const useStreamingOptions = () => {
 export const useNotificationsOptions = () => {
   return useQuery({
     queryKey: [...daqKeys.notifications(), "options"],
-    queryFn: async () => {
+    queryFn: async (): Promise<ApiResponse<NotificationsOptionsData>> => {
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve({

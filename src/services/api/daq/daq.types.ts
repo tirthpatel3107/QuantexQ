@@ -87,52 +87,44 @@ export interface SaveStreamingPayload {
 // Notifications Tab
 // ============================================
 
+/** Settings & Summary panel */
+export interface NotificationsSettingsSummary {
+  alarmSound: string;
+  alarmNotifications: boolean;
+  acceptableWrns: boolean;
+  acceptableCmpncs: boolean;
+  validityCompletion: boolean;
+}
+
+/** Notificating Store panel */
+export interface NotificationsStore {
+  remindOnReset: boolean;
+  selfDismissing: boolean;
+  unusetComplessible: boolean;
+  enableNewAlarm: boolean;
+  alarmClearDiagnostics: boolean;
+  inboundRate: boolean;
+}
+
+/** Notification Log entry (read-only, fetched not saved) */
+export interface NotificationLogEntry {
+  id: string;
+  type: "high" | "medium" | "low";
+  mention: string;
+  message: string;
+  severity: string;
+  status: "OK" | "DIAG" | "NEEDED";
+}
+
 export interface NotificationsTabData {
-  alarmRules: AlarmRule[];
-  channels: NotificationChannel[];
-  escalation: EscalationPolicy;
-  muteRules: MuteRule[];
-}
-
-export interface AlarmRule {
-  id: string;
-  name: string;
-  channel: string;
-  threshold: number;
-  enabled: boolean;
-}
-
-export interface NotificationChannel {
-  id: string;
-  type: "email" | "sms" | "in-app";
-  address: string;
-  enabled: boolean;
-}
-
-export interface EscalationPolicy {
-  enabled: boolean;
-  levels: EscalationLevel[];
-}
-
-export interface EscalationLevel {
-  level: number;
-  delay: number;
-  contacts: string[];
-}
-
-export interface MuteRule {
-  id: string;
-  name: string;
-  startTime: string;
-  endTime: string;
-  enabled: boolean;
+  settings: NotificationsSettingsSummary;
+  store: NotificationsStore;
+  log: NotificationLogEntry[];
 }
 
 export interface SaveNotificationsPayload {
-  alarmRules: AlarmRule[];
-  channels: NotificationChannel[];
-  escalation: EscalationPolicy;
-  muteRules: MuteRule[];
+  settings: NotificationsSettingsSummary;
+  store: NotificationsStore;
 }
 
 // ============================================

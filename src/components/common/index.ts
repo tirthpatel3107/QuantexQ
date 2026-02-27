@@ -45,4 +45,5 @@ export {
   CommonFormInput,
   CommonFormSelect,
   CommonFormToggle,
+  CommonFormCheckbox,
 } from "./CommonFormFields";

@@ -1,32 +1,108 @@
-import { useState, useMemo } from "react";
-import { useSectionForm } from "@/hooks/useSectionForm";
+// React & Hooks
+import { useState, useEffect } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Components – UI & Icons
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   CommonButton,
-  CommonToggle,
-  CommonCheckbox,
-  CommonSelect,
+  CommonFormToggle,
+  CommonFormCheckbox,
+  CommonFormSelect,
   SectionSkeleton,
   FormSaveDialog,
+  CommonToast,
 } from "@/components/common";
 import { Volume2, Play, Bell } from "lucide-react";
 import { cn } from "@/utils/lib/utils";
+
+// Services & Types
 import {
   useNotificationsData,
   useSaveNotificationsData,
   useNotificationsOptions,
 } from "@/services/api/daq/daq.api";
-import type { SaveNotificationsPayload } from "@/services/api/daq/daq.types";
+import type {
+  SaveNotificationsPayload,
+  NotificationLogEntry,
+  NotificationsSettingsSummary,
+  NotificationsStore,
+} from "@/services/api/daq/daq.types";
+
+// Context
 import { useDAQContext } from "../../../context/DAQ/DAQContext";
 
-interface NotificationLogEntry {
-  id: string;
-  type: "high" | "medium" | "low";
-  timestamp: string;
-  message: string;
-  severity: string;
-  status: "OK" | "DIAG" | "NEEDED";
-}
+// ============================================
+// Zod Schema
+// ============================================
+
+export const notificationsFormSchema = z.object({
+  settings: z.object({
+    alarmSound: z.string().min(1, "Alarm sound is required"),
+    alarmNotifications: z.boolean(),
+    acceptableWrns: z.boolean(),
+    acceptableCmpncs: z.boolean(),
+    validityCompletion: z.boolean(),
+  }),
+  store: z.object({
+    remindOnReset: z.boolean(),
+    selfDismissing: z.boolean(),
+    unusetComplessible: z.boolean(),
+    enableNewAlarm: z.boolean(),
+    alarmClearDiagnostics: z.boolean(),
+    inboundRate: z.boolean(),
+  }),
+});
+
+type NotificationsFormValues = z.infer<typeof notificationsFormSchema>;
+
+// ============================================
+// Helpers
+// ============================================
+
+const getTypeIcon = (type: string) => {
+  switch (type) {
+    case "high":
+      return "!!";
+    case "medium":
+      return "!!";
+    case "low":
+      return "i";
+    default:
+      return "i";
+  }
+};
+
+const getTypeColor = (type: string) => {
+  switch (type) {
+    case "high":
+      return "bg-red-500/20 text-red-400 border-red-500/30";
+    case "medium":
+      return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+    case "low":
+      return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+    default:
+      return "bg-muted text-muted-foreground";
+  }
+};
+
+const getSeverityColor = (severity: string) => {
+  const upper = severity.toUpperCase();
+  if (upper.includes("HIGH") || upper.includes("ALARM"))
+    return "bg-red-500/10 text-red-500 border border-red-500/20";
+  if (upper.includes("DIAG") || upper.includes("SLOW"))
+    return "bg-amber-500/10 text-amber-500 border border-amber-500/20";
+  if (upper.includes("NEEDED") || upper.includes("SWS"))
+    return "bg-rose-500/10 text-rose-500 border border-rose-500/20";
+  return "bg-slate-500/10 text-slate-400 border border-slate-500/20";
+};
+
+// ============================================
+// Component
+// ============================================
 
 export function Notifications() {
   const { data: notificationsResponse, isLoading } = useNotificationsData();
@@ -36,125 +112,81 @@ export function Notifications() {
 
   const options = optionsResponse?.data;
 
-  const initialData = useMemo(() => {
-    if (!notificationsResponse?.data) return undefined;
-    const { alarmRules, channels, escalation, muteRules } =
-      notificationsResponse.data;
-    return { alarmRules, channels, escalation, muteRules };
-  }, [notificationsResponse?.data]);
-
-  const form = useSectionForm<SaveNotificationsPayload>({
-    initialData,
-    onSave: (data) => {
-      return new Promise((resolve, reject) => {
-        saveNotificationsData(data, {
-          onSuccess: () => resolve(),
-          onError: (error) => reject(error),
-        });
-      });
-    },
-    registerSaveHandler,
-    unregisterSaveHandler,
-    successMessage: "Notifications settings saved successfully",
-    errorMessage: "Failed to save notifications settings",
-    confirmTitle: "Save Notifications Settings",
-    confirmDescription:
-      "Are you sure you want to save these notifications changes?",
+  // React Hook Form
+  const formMethods = useForm<NotificationsFormValues>({
+    resolver: zodResolver(notificationsFormSchema),
   });
 
-  // Settings & Summary state
-  const [alarmSound, setAlarmSound] = useState("factory_alert.mp3");
-  const [acceptableWrns, setAcceptableWrns] = useState(true);
-  const [acceptableCmpncs, setAcceptableCmpncs] = useState(true);
-  const [validityCompletion, setValidityCompletion] = useState(true);
+  const { reset, control, handleSubmit } = formMethods;
 
-  // Notificating Store state
-  const [remindOnReset, setRemindOnReset] = useState(true);
-  const [selfDismissing, setSelfDismissing] = useState(true);
-  const [unusetComplessible, setUnusetComplessible] = useState(false);
-  const [enableNewAlarm, setEnableNewAlarm] = useState(true);
-  const [alarmClearDiagnostics, setAlarmClearDiagnostics] = useState(true);
-  const [inboundRate, setInboundRate] = useState(false);
+  // Track if we have set initial data
+  const [hasSetInitial, setHasSetInitial] = useState(false);
 
-  // Notification Log state
-  const [logEntries] = useState<NotificationLogEntry[]>([
-    {
-      id: "1",
-      type: "high",
-      timestamp: "SBP HIGH: RLHea...09j",
-      message: "SBP LIMIT RECOMMENDED: (Cushioning) or pit-monitoring clear",
-      severity: "SBP HIGH Hea...",
-      status: "OK",
-    },
-    {
-      id: "2",
-      type: "medium",
-      timestamp: "Enable OF: Alarms...ON",
-      message: "Friction Losses within thresholds again",
-      severity: "Slow DIAG...",
-      status: "OK",
-    },
-    {
-      id: "3",
-      type: "medium",
-      timestamp: "Cause OF Alarms...ON",
-      message: "SPP LIMIT EXCEEDED: ACTION NEEDED",
-      severity: "SLEF NEEDED...",
-      status: "OK",
-    },
-    {
-      id: "4",
-      type: "high",
-      timestamp: "Alert MMI: Alarms...ON",
-      message: "LGS Analysis complete: 8.3% (set:) 5.0%",
-      severity: "SWS NEEDED...",
-      status: "OK",
-    },
+  // Notification log entries (read-only from API, not saved)
+  const [logEntries, setLogEntries] = useState<NotificationLogEntry[]>([]);
+
+  useEffect(() => {
+    if (notificationsResponse?.data && !hasSetInitial) {
+      const { settings, store, log } = notificationsResponse.data;
+      reset({ settings, store });
+      setLogEntries(log);
+      setHasSetInitial(true);
+    }
+  }, [notificationsResponse, hasSetInitial, reset]);
+
+  // Handle save and confirmation using the same UI flow as useSectionForm
+  const saveWithConfirmation =
+    useSaveWithConfirmation<SaveNotificationsPayload>({
+      onSave: (data) => {
+        return new Promise<void>((resolve, reject) => {
+          saveNotificationsData(data, {
+            onSuccess: () => resolve(),
+            onError: (error) => reject(error),
+          });
+        });
+      },
+      successMessage: "Notifications settings saved successfully",
+      errorMessage: "Failed to save notifications settings",
+      confirmTitle: "Save Notifications Settings",
+      confirmDescription:
+        "Are you sure you want to save these notifications changes?",
+    });
+
+  // Attach context's save to RHF handleSubmit
+  useEffect(() => {
+    const handleSave = handleSubmit((validData) => {
+      // Build the save payload from the validated form data
+      const payload: SaveNotificationsPayload = {
+        settings: validData.settings as NotificationsSettingsSummary,
+        store: validData.store as NotificationsStore,
+      };
+      saveWithConfirmation.requestSave(payload);
+    });
+
+    registerSaveHandler(handleSave);
+    return () => {
+      unregisterSaveHandler();
+    };
+  }, [
+    handleSubmit,
+    registerSaveHandler,
+    unregisterSaveHandler,
+    saveWithConfirmation,
   ]);
 
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case "high":
-        return "!!";
-      case "medium":
-        return "!!";
-      case "low":
-        return "i";
-      default:
-        return "i";
-    }
+  const handleTestSound = () => {
+    const sound = formMethods.getValues("settings.alarmSound");
+    CommonToast.info(`Testing alarm sound: ${sound}`);
   };
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case "high":
-        return "bg-red-500/20 text-red-400 border-red-500/30";
-      case "medium":
-        return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
-      case "low":
-        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
-      default:
-        return "bg-muted text-muted-foreground";
-    }
-  };
-
-  const getSeverityColor = (severity: string) => {
-    if (severity.includes("HIGH")) return "bg-red-900/40 text-red-300";
-    if (severity.includes("DIAG")) return "bg-amber-900/40 text-amber-300";
-    if (severity.includes("NEEDED")) return "bg-red-900/40 text-red-300";
-    return "bg-muted text-muted-foreground";
-  };
-
-  if (isLoading || !form.formData) {
+  if (isLoading || !hasSetInitial) {
     return <SectionSkeleton count={6} />;
   }
-
-  const { alarmRules, channels, escalation, muteRules } = form.formData;
 
   return (
     <>
       <div className="space-y-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {/* Settings & Summary Panel */}
           <PanelCard title="Settings & Summary">
             <div className="space-y-4">
@@ -166,19 +198,18 @@ export function Notifications() {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex-1">
-                    <CommonSelect
+                    <CommonFormSelect
+                      name="settings.alarmSound"
+                      control={control}
                       options={options?.alarmSoundOptions || []}
-                      value={alarmSound}
-                      onValueChange={setAlarmSound}
                       placeholder="Select alarm sound"
-                      className="mb-0"
-                      triggerClassName="h-10"
                     />
                   </div>
                   <CommonButton
                     variant="outline"
-                    className="h-10 px-4 mt-2"
+                    className="px-4 mt-2"
                     icon={Play}
+                    onClick={handleTestSound}
                   >
                     Test
                   </CommonButton>
@@ -187,26 +218,32 @@ export function Notifications() {
 
               {/* Alarm Notifications */}
               <div className="space-y-3 pt-4">
-                <h4 className="text-sm font-medium">Alarm Notifications</h4>
-                <CommonToggle
+                <CommonFormToggle
+                  id="alarm-notifications"
+                  label="Alarm Notifications"
+                  name="settings.alarmNotifications"
+                  control={control}
+                />
+
+                <CommonFormToggle
                   id="acceptable-wrns"
                   label="Acceptable Wrns"
-                  checked={acceptableWrns}
-                  onCheckedChange={setAcceptableWrns}
+                  name="settings.acceptableWrns"
+                  control={control}
                 />
 
-                <CommonToggle
+                <CommonFormToggle
                   id="acceptable-cmpncs"
                   label="Acceptable Cmpncs"
-                  checked={acceptableCmpncs}
-                  onCheckedChange={setAcceptableCmpncs}
+                  name="settings.acceptableCmpncs"
+                  control={control}
                 />
 
-                <CommonToggle
+                <CommonFormToggle
                   id="validity-completion"
                   label="Validity Completion"
-                  checked={validityCompletion}
-                  onCheckedChange={setValidityCompletion}
+                  name="settings.validityCompletion"
+                  control={control}
                 />
               </div>
             </div>
@@ -215,53 +252,47 @@ export function Notifications() {
           {/* Notificating Store Panel */}
           <PanelCard title="Notificating Store">
             <div className="space-y-3">
-              <CommonCheckbox
+              <CommonFormCheckbox
                 id="remind-reset"
                 label="Remind on reset"
-                checked={remindOnReset}
-                onCheckedChange={(checked) =>
-                  setRemindOnReset(checked === true)
-                }
+                name="store.remindOnReset"
+                control={control}
               />
 
-              <CommonCheckbox
+              <CommonFormCheckbox
                 id="self-dismissing"
                 label="Self-dismissing alarms"
-                checked={selfDismissing}
-                onCheckedChange={(checked) =>
-                  setSelfDismissing(checked === true)
-                }
+                name="store.selfDismissing"
+                control={control}
               />
 
-              <CommonCheckbox
+              <CommonFormCheckbox
                 id="unuset-complessible"
                 label="Unusetcomplessible"
-                checked={unusetComplessible}
-                onCheckedChange={(checked) =>
-                  setUnusetComplessible(checked === true)
-                }
+                name="store.unusetComplessible"
+                control={control}
               />
 
-              <CommonToggle
+              <CommonFormToggle
                 id="enable-new-alarm"
                 label="Enable (new alarm principle)"
-                checked={enableNewAlarm}
-                onCheckedChange={setEnableNewAlarm}
+                name="store.enableNewAlarm"
+                control={control}
                 className="pt-3"
               />
 
-              <CommonToggle
+              <CommonFormToggle
                 id="alarm-clear"
                 label="Alarm clear diagnostics"
-                checked={alarmClearDiagnostics}
-                onCheckedChange={setAlarmClearDiagnostics}
+                name="store.alarmClearDiagnostics"
+                control={control}
               />
 
-              <CommonToggle
+              <CommonFormToggle
                 id="inbound-rate"
                 label="inbound rate"
-                checked={inboundRate}
-                onCheckedChange={setInboundRate}
+                name="store.inboundRate"
+                control={control}
               />
             </div>
           </PanelCard>
@@ -278,7 +309,7 @@ export function Notifications() {
           headerAction={
             <div className="flex items-center gap-2">
               <CommonButton variant="outline" size="sm">
-                Edit Severity & Filter
+                Edit Severity &amp; Filter
               </CommonButton>
             </div>
           }
@@ -319,7 +350,7 @@ export function Notifications() {
                     >
                       {getTypeIcon(entry.type)}
                     </div>
-                    <span className="text-sm truncate">{entry.timestamp}</span>
+                    <span className="text-sm truncate">{entry.mention}</span>
                   </div>
                   <div className="col-span-5">
                     <span className="text-sm">{entry.message}</span>
@@ -352,7 +383,8 @@ export function Notifications() {
         </PanelCard>
       </div>
 
-      <FormSaveDialog form={form} />
+      {/* FormSaveDialog needs the shape returned by useSaveWithConfirmation */}
+      <FormSaveDialog form={saveWithConfirmation} />
     </>
   );
 }
