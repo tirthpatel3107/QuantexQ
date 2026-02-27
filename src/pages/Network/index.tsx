@@ -12,12 +12,12 @@ import {
 } from "@/components/common";
 
 import { NETWORK_NAV } from "@/utils/constants";
-import { NetworkOverview } from "./sections/NetworkOverview";
-import { Sources } from "./sections/Sources";
-import { Protocols } from "./sections/Protocols";
-import { Routing } from "./sections/Routing";
-import { Security } from "./sections/Security";
-import { Diagnostics } from "./sections/Diagnostics";
+import { NetworkOverview } from "./NetworkOverview";
+import { Sources } from "./Sources";
+import { Protocols } from "./Protocols";
+import { Routing } from "./Routing";
+import { Security } from "./Security";
+import { Diagnostics } from "./Diagnostics";
 import { NetworkProvider, useNetworkContext } from "../../context/Network/NetworkContext";
 
 function NetworkContent() {

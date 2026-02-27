@@ -56,10 +56,21 @@ export function useSectionForm<T>({
     setFormData((prev) => (prev ? { ...prev, ...updates } : null));
   }, []);
 
+  /**
+   * Helper to update a single field in the form data
+   */
+  const updateField = useCallback(
+    <K extends keyof T>(key: K, value: T[K]) => {
+      updateLocalField({ [key]: value } as unknown as Partial<T>);
+    },
+    [updateLocalField]
+  );
+
   return {
     formData,
     setFormData,
     updateLocalField,
+    updateField,
     ...saveWithConfirmation,
   };
 }

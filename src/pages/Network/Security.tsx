@@ -21,7 +21,7 @@ import {
 import { RadioGroup } from "@/components/ui/radio-group";
 
 // Components - Local
-import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
+import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";
 
 // Services & Types
 import {
@@ -32,7 +32,7 @@ import {
 import type { SaveSecurityPayload } from "@/services/api/network/network.types";
 
 // Context
-import { useNetworkContext } from "../../../context/Network/NetworkContext";
+import { useNetworkContext } from "../../context/Network/NetworkContext";
 
 export const securityFormSchema = z.object({
   rigPlc: z.object({

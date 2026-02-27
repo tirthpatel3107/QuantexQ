@@ -16,8 +16,9 @@ import {
   useSaveDownloadsData,
   useDownloadsOptions,
 } from "@/services/api/daq/daq.api";
-import type { SaveDownloadsPayload } from "@/services/api/daq/daq.types";
-import { useDAQContext } from "../../../context/DAQ/DAQContext";
+import type { SaveDownloadsPayload, DownloadsOptionsData } from "@/services/api/daq/daq.types";
+import { useDAQContext } from "../../context/DAQ/DAQContext";
+import type { ApiResponse } from "@/services/api/types";
 
 interface FileItem {
   name: string;
@@ -98,7 +99,7 @@ export function Downloads() {
   const { mutate: saveDownloadsData } = useSaveDownloadsData();
   const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
-  const options = optionsResponse?.data;
+  const options = (optionsResponse as ApiResponse<DownloadsOptionsData> | undefined)?.data;
 
   const initialData = useMemo(() => {
     if (!downloadsResponse?.data) return undefined;

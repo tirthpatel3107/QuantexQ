@@ -15,7 +15,7 @@ import {
   useStreamingOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveStreamingPayload, StreamingOptionsData } from "@/services/api/daq/daq.types";
-import { useDAQContext } from "../../../context/DAQ/DAQContext";
+import { useDAQContext } from "../../context/DAQ/DAQContext";
 import type { ApiResponse } from "@/services/api/types";
 
 export function Streaming() {

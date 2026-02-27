@@ -8,7 +8,7 @@ import {
   useSaveDisplayData,
 } from "@/services/api/daq/daq.api";
 import type { SaveDisplayPayload } from "@/services/api/daq/daq.types";
-import { useDAQContext } from "../../../context/DAQ/DAQContext";
+import { useDAQContext } from "../../context/DAQ/DAQContext";
 
 export function Display() {
   const { data: displayResponse, isLoading } = useDisplayData();

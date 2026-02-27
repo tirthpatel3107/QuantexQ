@@ -12,14 +12,14 @@ import {
   CommonTooltip,
 } from "@/components/common";
 
-import { MudPropertiesOverview } from "./sections/MudPropertiesOverview";
-import { FluidOverview } from "./sections/FluidOverview";
-import { Rheology } from "./sections/Rheology";
-import { Density } from "./sections/Density";
-import { Temperature } from "./sections/Temperature";
-import { GasCompressibility } from "./sections/GasCompressibility";
-import { Calibration } from "./sections/Calibration";
-import { Summary } from "./sections/Summary";
+import { MudPropertiesOverview } from "./MudPropertiesOverview";
+import { FluidOverview } from "./FluidOverview";
+import { Rheology } from "./Rheology";
+import { Density } from "./Density";
+import { Temperature } from "./Temperature";
+import { GasCompressibility } from "./GasCompressibility";
+import { Calibration } from "./Calibration";
+import { Summary } from "./Summary";
 import { MudPropertiesSidebar } from "../../components/mudProperties/MudPropertiesSidebar";
 import { MUD_NAV } from "@/utils/constants";
 import { FluidData } from "@/utils/types/mud";

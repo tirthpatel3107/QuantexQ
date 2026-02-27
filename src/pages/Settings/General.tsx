@@ -21,7 +21,7 @@ import {
 } from "@/services/api/settings/settings.api";
 
 // Context
-import { useSettingsContext } from "../../../context/Settings/SettingsContext";
+import { useSettingsContext } from "../../context/Settings/SettingsContext";
 
 export function GeneralSettings() {
   const { data: generalResponse, isLoading } = useGeneralSettings();

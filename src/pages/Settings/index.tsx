@@ -17,18 +17,18 @@ import {
   CommonTooltip,
 } from "@/components/common";
 
-import { SettingsOverview } from "./sections/SettingsOverview";
-import { GeneralSettings } from "./sections/General";
-import { Units } from "./sections/Units";
-import { DataTime } from "./sections/DataTime";
-import { Signals } from "./sections/Signals";
-import { Alarms } from "./sections/Alarms";
-import { AutoControl } from "./sections/AutoControl";
-import { ChokePumps } from "./sections/ChokePumps";
-import { HydraulicsModel } from "./sections/HydraulicsModel";
-import { UiDisplay } from "./sections/UiDisplay";
-import { UsersRoles } from "./sections/userRoles";
-import { AboutDiagnostics } from "./sections/AboutDiagnostics";
+import { SettingsOverview } from "./SettingsOverview";
+import { GeneralSettings } from "./General";
+import { Units } from "./Units";
+import { DataTime } from "./DataTime";
+import { Signals } from "./Signals";
+import { Alarms } from "./Alarms";
+import { AutoControl } from "./AutoControl";
+import { ChokePumps } from "./ChokePumps";
+import { HydraulicsModel } from "./HydraulicsModel";
+import { UiDisplay } from "./UiDisplay";
+import { UsersRoles } from "./userRoles";
+import { AboutDiagnostics } from "./AboutDiagnostics";
 import { SETTINGS_NAV } from "@/utils/constants";
 import { GeneralSettingsData } from "@/utils/types/settings";
 import { SettingsProvider, useSettingsContext } from "../../context/Settings/SettingsContext";

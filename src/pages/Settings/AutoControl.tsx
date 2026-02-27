@@ -7,33 +7,33 @@ import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 
 // Services & Types
 import {
-  useHydraulicsModelSettings,
-  useSaveHydraulicsModelSettings,
-  useHydraulicsModelOptions,
+  useAutoControlSettings,
+  useSaveAutoControlSettings,
+  useAutoControlOptions,
 } from "@/services/api/settings/settings.api";
 
 // Context
-import { useSettingsContext } from "../../../context/Settings/SettingsContext";
+import { useSettingsContext } from "../../context/Settings/SettingsContext";
 
-export function HydraulicsModel() {
-  const { data: hydraulicsResponse, isLoading } = useHydraulicsModelSettings();
-  const { data: optionsResponse } = useHydraulicsModelOptions();
-  const { mutate: saveHydraulicsModelData } = useSaveHydraulicsModelSettings();
+export function AutoControl() {
+  const { data: autoControlResponse, isLoading } = useAutoControlSettings();
+  const { data: optionsResponse } = useAutoControlOptions();
+  const { mutate: saveAutoControlData } = useSaveAutoControlSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
   const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
-    return hydraulicsResponse?.data;
-  }, [hydraulicsResponse?.data]);
+    return autoControlResponse?.data;
+  }, [autoControlResponse?.data]);
 
   // Use the reusable form hook
   const form = useSectionForm<any>({
     initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
-        saveHydraulicsModelData(data, {
+        saveAutoControlData(data, {
           onSuccess: () => resolve(),
           onError: (error) => reject(error),
         });
@@ -41,11 +41,11 @@ export function HydraulicsModel() {
     },
     registerSaveHandler,
     unregisterSaveHandler,
-    successMessage: "Hydraulics Model settings saved successfully",
-    errorMessage: "Failed to save hydraulics model settings",
-    confirmTitle: "Save Hydraulics Model Settings",
+    successMessage: "Auto control settings saved successfully",
+    errorMessage: "Failed to save auto control settings",
+    confirmTitle: "Save Auto Control Settings",
     confirmDescription:
-      "Are you sure you want to save these hydraulics model changes?",
+      "Are you sure you want to save these auto control changes?",
   });
 
   if (isLoading || !form.formData) {
@@ -56,7 +56,7 @@ export function HydraulicsModel() {
     <>
       <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
         <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-          Hydraulics Model Settings Section - Implementation Pending
+          Auto Control Settings Section - Implementation Pending
         </div>
       </div>
 

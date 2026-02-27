@@ -12,16 +12,16 @@ import {
 } from "@/components/common";
 
 import { DAQ_NAV } from "@/utils/constants";
-import { DaqOverview } from "./sections/DaqOverview";
-import { Display } from "./sections/Display";
-import { Streaming } from "./sections/Streaming";
-import { Notifications } from "./sections/Notifications";
-import { LogAnalysis } from "./sections/LogAnalysis";
-import { SensorPerms } from "./sections/SensorPerms";
-import { Calibration } from "./sections/Calibration";
-import { Hydraulics } from "./sections/Hydraulics";
-import { SystemSettings } from "./sections/SystemSettings";
-import { Downloads } from "./sections/Downloads";
+import { DaqOverview } from "./DaqOverview";
+import { Display } from "./Display";
+import { Streaming } from "./Streaming";
+import { Notifications } from "./Notifications";
+import { LogAnalysis } from "./LogAnalysis";
+import { SensorPerms } from "./SensorPerms";
+import { Calibration } from "./Calibration";
+import { Hydraulics } from "./Hydraulics";
+import { SystemSettings } from "./SystemSettings";
+import { Downloads } from "./Downloads";
 import { DAQProvider, useDAQContext } from "../../context/DAQ/DAQContext";
 
 function DAQContent() {

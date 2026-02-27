@@ -7,33 +7,34 @@ import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 
 // Services & Types
 import {
-  useChokePumpsSettings,
-  useSaveChokePumpsSettings,
-  useChokePumpsOptions,
+  useAboutDiagnosticsSettings,
+  useSaveAboutDiagnosticsSettings,
+  useAboutDiagnosticsOptions,
 } from "@/services/api/settings/settings.api";
 
 // Context
-import { useSettingsContext } from "../../../context/Settings/SettingsContext";
+import { useSettingsContext } from "../../context/Settings/SettingsContext";
 
-export function ChokePumps() {
-  const { data: chokePumpsResponse, isLoading } = useChokePumpsSettings();
-  const { data: optionsResponse } = useChokePumpsOptions();
-  const { mutate: saveChokePumpsData } = useSaveChokePumpsSettings();
+export function AboutDiagnostics() {
+  const { data: aboutResponse, isLoading } = useAboutDiagnosticsSettings();
+  const { data: optionsResponse } = useAboutDiagnosticsOptions();
+  const { mutate: saveAboutDiagnosticsData } =
+    useSaveAboutDiagnosticsSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
   const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
-    return chokePumpsResponse?.data;
-  }, [chokePumpsResponse?.data]);
+    return aboutResponse?.data;
+  }, [aboutResponse?.data]);
 
   // Use the reusable form hook
   const form = useSectionForm<any>({
     initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {
-        saveChokePumpsData(data, {
+        saveAboutDiagnosticsData(data, {
           onSuccess: () => resolve(),
           onError: (error) => reject(error),
         });
@@ -41,11 +42,10 @@ export function ChokePumps() {
     },
     registerSaveHandler,
     unregisterSaveHandler,
-    successMessage: "Choke & Pumps settings saved successfully",
-    errorMessage: "Failed to save choke & pumps settings",
-    confirmTitle: "Save Choke & Pumps Settings",
-    confirmDescription:
-      "Are you sure you want to save these choke & pumps changes?",
+    successMessage: "About & Diagnostics settings saved successfully",
+    errorMessage: "Failed to save about & diagnostics settings",
+    confirmTitle: "Save About & Diagnostics Settings",
+    confirmDescription: "Are you sure you want to save these changes?",
   });
 
   if (isLoading || !form.formData) {
@@ -56,7 +56,7 @@ export function ChokePumps() {
     <>
       <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
         <div className="p-4 border border-dashed rounded-lg text-muted-foreground italic">
-          Choke & Pumps Settings Section - Implementation Pending
+          About / Diagnostics Settings Section - Implementation Pending
         </div>
       </div>
 

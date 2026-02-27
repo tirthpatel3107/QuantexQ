@@ -19,7 +19,7 @@ import {
 } from "@/components/common";
 
 // Components - Local
-import { HealthMonitoringPanel } from "../HealthMonitoringPanel";
+import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";
 
 // Services & Types
 import {
@@ -30,7 +30,7 @@ import {
 import type { SaveRoutingPayload } from "@/services/api/network/network.types";
 
 // Context
-import { useNetworkContext } from "../../../context/Network/NetworkContext";
+import { useNetworkContext } from "../../context/Network/NetworkContext";
 
 export const routingFormSchema = z.object({
   rigPlc: z.object({

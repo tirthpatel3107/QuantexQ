@@ -7,7 +7,7 @@ import {
   useSensorPermsOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveSensorPermsPayload } from "@/services/api/daq/daq.types";
-import { useDAQContext } from "../../../context/DAQ/DAQContext";
+import { useDAQContext } from "../../context/DAQ/DAQContext";
 
 export function SensorPerms() {
   const { data: sensorPermsResponse, isLoading } = useSensorPermsData();
