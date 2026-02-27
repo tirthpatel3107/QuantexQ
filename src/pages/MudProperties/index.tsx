@@ -20,7 +20,7 @@ import { Temperature } from "./sections/Temperature";
 import { GasCompressibility } from "./sections/GasCompressibility";
 import { Calibration } from "./sections/Calibration";
 import { Summary } from "./sections/Summary";
-import { MudPropertiesSidebar } from "./components/MudPropertiesSidebar";
+import { MudPropertiesSidebar } from "../../components/mudProperties/MudPropertiesSidebar";
 import { MUD_NAV } from "@/utils/constants";
 import { FluidData } from "@/utils/types/mud";
 import {
@@ -110,17 +110,17 @@ function MudPropertiesContent() {
       case "mud-properties":
         return <MudPropertiesOverview />;
       case "overview":
-        return <FluidOverview fluid={fluid} setFluid={setFluid} />;
+        return <FluidOverview />;
       case "rheology":
-        return <Rheology fluid={fluid} setFluid={setFluid} />;
+        return <Rheology />;
       case "density":
-        return <Density fluid={fluid} setFluid={setFluid} />;
+        return <Density />;
       case "temperature":
-        return <Temperature fluid={fluid} setFluid={setFluid} />;
+        return <Temperature />;
       case "gas":
-        return <GasCompressibility fluid={fluid} setFluid={setFluid} />;
+        return <GasCompressibility />;
       case "calibration":
-        return <Calibration fluid={fluid} setFluid={setFluid} />;
+        return <Calibration />;
       case "summary":
         return <Summary fluid={fluid} />;
       default:

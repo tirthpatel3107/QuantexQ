@@ -86,85 +86,85 @@ export function Alarms() {
     confirmDescription: "Are you sure you want to save these alarms changes?",
   });
 
-  if (isLoading || !form.formData) {
-    return <SectionSkeleton count={6} />;
-  }
+  const sensorsData = form.formData?.sensors || [];
 
-  const { formData } = form;
-  const sensorsData = formData.sensors || [];
-
-  const columns = [
-    sensorColumnHelper.accessor("name", {
-      header: "Sensor Name",
-      cell: (info) => (
-        <span className="text-[13px] font-medium text-foreground/90">
-          {info.getValue()}
-        </span>
-      ),
-    }),
-    sensorColumnHelper.accessor("lowLimit", {
-      header: "Low Limit",
-      cell: (info) => (
-        <CommonInput
-          value={info.getValue()}
-          className="h-8 w-24 text-center text-[12px]"
-          onChange={(e) => {
-            const newValue = e.target.value;
-            const updatedSensors = sensorsData.map((item: SensorLimit) =>
-              item.id === info.row.original.id
-                ? { ...item, lowLimit: newValue }
-                : item,
-            );
-            form.updateLocalField({ sensors: updatedSensors });
-          }}
-        />
-      ),
-    }),
-    sensorColumnHelper.accessor("highLimit", {
-      header: "High Limit",
-      cell: (info) => (
-        <CommonInput
-          value={info.getValue()}
-          className="h-8 w-24 text-center text-[12px]"
-          onChange={(e) => {
-            const newValue = e.target.value;
-            const updatedSensors = sensorsData.map((item: SensorLimit) =>
-              item.id === info.row.original.id
-                ? { ...item, highLimit: newValue }
-                : item,
-            );
-            form.updateLocalField({ sensors: updatedSensors });
-          }}
-        />
-      ),
-    }),
-    sensorColumnHelper.accessor("unit", {
-      header: "Units",
-      cell: (info) => (
-        <span className="text-[12px] text-muted-foreground">
-          {info.getValue()}
-        </span>
-      ),
-    }),
-    sensorColumnHelper.display({
-      id: "actions",
-      header: "",
-      cell: (info) => (
-        <div className="flex justify-end pr-2">
-          <button
-            className="p-1.5 rounded-md text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
-            title="Delete Sensor"
-            onClick={() => {
-              setSelectedSensor(info.row.original);
-              setIsDeleteConfirmOpen(true);
+  const columns = useMemo(
+    () => [
+      sensorColumnHelper.accessor("name", {
+        header: "Sensor Name",
+        cell: (info) => (
+          <span className="text-[13px] font-medium text-foreground/90">
+            {info.getValue()}
+          </span>
+        ),
+      }),
+      sensorColumnHelper.accessor("lowLimit", {
+        header: "Low Limit",
+        cell: (info) => (
+          <CommonInput
+            value={info.getValue()}
+            className="h-8 w-24 text-center text-[12px]"
+            onChange={(e) => {
+              const newValue = e.target.value;
+              const currentSensors = form.formData?.sensors || [];
+              const updatedSensors = currentSensors.map((item: SensorLimit) =>
+                item.id === info.row.original.id
+                  ? { ...item, lowLimit: newValue }
+                  : item,
+              );
+              form.updateLocalField({ sensors: updatedSensors });
             }}
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
-      ),
-    }),
-  ];
+          />
+        ),
+      }),
+      sensorColumnHelper.accessor("highLimit", {
+        header: "High Limit",
+        cell: (info) => (
+          <CommonInput
+            value={info.getValue()}
+            className="h-8 w-24 text-center text-[12px]"
+            onChange={(e) => {
+              const newValue = e.target.value;
+              const currentSensors = form.formData?.sensors || [];
+              const updatedSensors = currentSensors.map((item: SensorLimit) =>
+                item.id === info.row.original.id
+                  ? { ...item, highLimit: newValue }
+                  : item,
+              );
+              form.updateLocalField({ sensors: updatedSensors });
+            }}
+          />
+        ),
+      }),
+      sensorColumnHelper.accessor("unit", {
+        header: "Units",
+        cell: (info) => (
+          <span className="text-[12px] text-muted-foreground">
+            {info.getValue()}
+          </span>
+        ),
+      }),
+      sensorColumnHelper.display({
+        id: "actions",
+        header: "",
+        cell: (info) => (
+          <div className="flex justify-end pr-2">
+            <button
+              className="p-1.5 rounded-md text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+              title="Delete Sensor"
+              onClick={() => {
+                setSelectedSensor(info.row.original);
+                setIsDeleteConfirmOpen(true);
+              }}
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        ),
+      }),
+    ],
+    [form.formData?.sensors, form.updateLocalField],
+  );
 
   const sensorsTable = useReactTable({
     data: sensorsData,
@@ -176,6 +176,12 @@ export function Alarms() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
+
+  if (isLoading || !form.formData) {
+    return <SectionSkeleton count={6} />;
+  }
+
+  const { formData } = form;
 
   const tabs = [
     { value: "kick", label: "Kick and Loss" },
