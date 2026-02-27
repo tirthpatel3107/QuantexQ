@@ -10,7 +10,6 @@ import { TemperaturePanel } from "./panels/TemperaturePanel";
 import {
   useTemperatureData,
   useSaveTemperatureData,
-  useTemperatureOptions,
 } from "@/services/api/mudproperties/mudproperties.api";
 import type { SaveTemperaturePayload } from "@/services/api/mudproperties/mudproperties.types";
 
@@ -19,12 +18,9 @@ import { useMudPropertiesContext } from "@/context/MudProperties";
 
 export function Temperature() {
   const { data: temperatureResponse, isLoading } = useTemperatureData();
-  const { data: optionsResponse } = useTemperatureOptions();
   const { mutate: saveTemperatureData } = useSaveTemperatureData();
   const { registerSaveHandler, unregisterSaveHandler } =
     useMudPropertiesContext();
-
-  const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
@@ -71,11 +67,11 @@ export function Temperature() {
 
   // Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter
   const setFluidAdapter = useCallback(
-    (update: any) => {
+    (update: unknown) => {
       if (typeof update === "function") {
-        form.setFormData(update);
+        form.setFormData(update as React.SetStateAction<SaveTemperaturePayload | null>);
       } else {
-        form.updateLocalField(update);
+        form.updateLocalField(update as Partial<SaveTemperaturePayload>);
       }
     },
     [form],
@@ -90,7 +86,10 @@ export function Temperature() {
   return (
     <>
       <div className="grid gap-4 mb-4 grid-cols-1 max-w-2xl">
-        <TemperaturePanel fluid={fluid as any} setFluid={setFluidAdapter} />
+        <TemperaturePanel 
+          fluid={fluid as unknown as import("@/utils/types/mud").FluidData} 
+          setFluid={setFluidAdapter as React.Dispatch<React.SetStateAction<import("@/utils/types/mud").FluidData>>} 
+        />
       </div>
 
       <FormSaveDialog form={form} />

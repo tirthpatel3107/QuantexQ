@@ -26,6 +26,7 @@ import {
   CommonAlertDialog,
 } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
+import type { CommonSelectOption } from "@/components/common/CommonSelect";
 
 // Services & Types
 import {
@@ -45,6 +46,29 @@ type SensorLimit = {
   unit: string;
 };
 
+type AlarmsFormData = {
+  sensors: SensorLimit[];
+  dynamicLimitsEnabled: boolean;
+  kickLimit: string;
+  lossLimit: string;
+  pitGainLimit: string;
+  sppHighLimit: string;
+  pppHighLimit: string;
+  pitVolumeHighLimit: string;
+  pitVolumeHighLimitBbl: string;
+  logicActivateWhenGainsStop: boolean;
+  logicActivateStickyAlarms: boolean;
+  logicActivateSecondaryAlarms: boolean;
+  logicDelay: string;
+  logicMonitorDuration: string;
+  notifyOfflineAlarm: boolean;
+  notifyOnlineAlarm: boolean;
+  kickDelay: string;
+  lossDelay: string;
+  offlineOutput: string;
+  onlineOutput: string;
+};
+
 const sensorColumnHelper = createColumnHelper<SensorLimit>();
 
 export function Alarms() {
@@ -53,7 +77,7 @@ export function Alarms() {
   const { mutate: saveAlarmsData } = useSaveAlarmsSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
-  const options = optionsResponse?.data;
+  const options = (optionsResponse?.data || {}) as Record<string, CommonSelectOption[]>;
   const [activeTab, setActiveTab] = useState("kick");
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [selectedSensor, setSelectedSensor] = useState<SensorLimit | null>(
@@ -64,14 +88,14 @@ export function Alarms() {
   // Memoize initial data
   const initialData = useMemo(() => {
     if (!alarmsResponse?.data) return undefined;
-    return alarmsResponse.data;
+    return alarmsResponse.data as AlarmsFormData;
   }, [alarmsResponse?.data]);
 
   // Use the reusable form hook
-  const form = useSectionForm<any>({
+  const form = useSectionForm<AlarmsFormData>({
     initialData,
     onSave: (data) => {
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         saveAlarmsData(data, {
           onSuccess: () => resolve(),
           onError: (error) => reject(error),
@@ -163,7 +187,7 @@ export function Alarms() {
         ),
       }),
     ],
-    [form.formData?.sensors, form.updateLocalField],
+    [form],
   );
 
   const sensorsTable = useReactTable({
@@ -221,7 +245,7 @@ export function Alarms() {
                   id="dynamic-limits"
                   checked={formData.dynamicLimitsEnabled}
                   onCheckedChange={(checked) =>
-                    form.updateLocalField({ dynamicLimitsEnabled: checked })
+                    form.updateLocalField({ dynamicLimitsEnabled: checked as boolean })
                   }
                   label="Enable adjustable dynamic limits"
                   containerClassName="gap-2"
@@ -310,7 +334,7 @@ export function Alarms() {
                     checked={formData.logicActivateWhenGainsStop}
                     onCheckedChange={(checked) =>
                       form.updateLocalField({
-                        logicActivateWhenGainsStop: checked,
+                        logicActivateWhenGainsStop: checked as boolean,
                       })
                     }
                     label="Activate when gains / losses stop"
@@ -320,7 +344,7 @@ export function Alarms() {
                     checked={formData.logicActivateStickyAlarms}
                     onCheckedChange={(checked) =>
                       form.updateLocalField({
-                        logicActivateStickyAlarms: checked,
+                        logicActivateStickyAlarms: checked as boolean,
                       })
                     }
                     label="Activate sticky alarms"
@@ -330,7 +354,7 @@ export function Alarms() {
                     checked={formData.logicActivateSecondaryAlarms}
                     onCheckedChange={(checked) =>
                       form.updateLocalField({
-                        logicActivateSecondaryAlarms: checked,
+                        logicActivateSecondaryAlarms: checked as boolean,
                       })
                     }
                     label="Activate secondary alarms"
@@ -378,7 +402,7 @@ export function Alarms() {
                     id="notify-offline"
                     checked={formData.notifyOfflineAlarm}
                     onCheckedChange={(checked) =>
-                      form.updateLocalField({ notifyOfflineAlarm: checked })
+                      form.updateLocalField({ notifyOfflineAlarm: checked as boolean })
                     }
                     label="Activate offline alarm output when connections are down"
                   />
@@ -386,7 +410,7 @@ export function Alarms() {
                     id="notify-online"
                     checked={formData.notifyOnlineAlarm}
                     onCheckedChange={(checked) =>
-                      form.updateLocalField({ notifyOnlineAlarm: checked })
+                      form.updateLocalField({ notifyOnlineAlarm: checked as boolean })
                     }
                     label="Use rig online alarm output when connected"
                   />

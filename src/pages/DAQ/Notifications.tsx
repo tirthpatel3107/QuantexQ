@@ -39,7 +39,7 @@ import { useDAQContext } from "../../context/DAQ/DAQContext";
 // Zod Schema
 // ============================================
 
-export const notificationsFormSchema = z.object({
+const notificationsFormSchema = z.object({
   settings: z.object({
     alarmSound: z.string().min(1, "Alarm sound is required"),
     alarmNotifications: z.boolean(),

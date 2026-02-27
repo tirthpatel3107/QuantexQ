@@ -9,27 +9,34 @@ import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 import {
   useDataTimeSettings,
   useSaveDataTimeSettings,
-  useDataTimeOptions,
 } from "@/services/api/settings/settings.api";
 
 // Context
 import { useSettingsContext } from "../../context/Settings/SettingsContext";
 
+interface DataTimeFormData {
+  ntpEnabled: boolean;
+  ntpServer?: string;
+  timezone?: string;
+  dateFormat?: string;
+  timeFormat?: string;
+  syncInterval?: number;
+  lastSync?: string;
+  [key: string]: unknown;
+}
+
 export function DataTime() {
   const { data: dataTimeResponse, isLoading } = useDataTimeSettings();
-  const { data: optionsResponse } = useDataTimeOptions();
   const { mutate: saveDataTimeData } = useSaveDataTimeSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
-  const options = optionsResponse?.data;
-
   // Memoize initial data
   const initialData = useMemo(() => {
-    return dataTimeResponse?.data;
+    return dataTimeResponse?.data as unknown as DataTimeFormData;
   }, [dataTimeResponse?.data]);
 
   // Use the reusable form hook
-  const form = useSectionForm<any>({
+  const form = useSectionForm<DataTimeFormData>({
     initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {

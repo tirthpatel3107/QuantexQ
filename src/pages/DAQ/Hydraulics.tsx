@@ -42,7 +42,7 @@ export function Hydraulics() {
     return <SectionSkeleton count={6} />;
   }
 
-  const { modelsUsed, parameterLists } = form.formData;
+  const { modelsUsed } = form.formData;
 
   return (
     <>

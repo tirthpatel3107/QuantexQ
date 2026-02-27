@@ -26,7 +26,7 @@ export function usePerformanceMonitor(componentName: string, enabled = import.me
 /**
  * Measure and log the execution time of a function
  */
-export function measurePerformance<T extends (...args: any[]) => any>(
+export function measurePerformance<T extends (...args: never[]) => unknown>(
   fn: T,
   label: string
 ): T {

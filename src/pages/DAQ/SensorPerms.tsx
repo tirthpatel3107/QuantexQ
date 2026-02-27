@@ -4,18 +4,16 @@ import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 import {
   useSensorPermsData,
   useSaveSensorPermsData,
-  useSensorPermsOptions,
 } from "@/services/api/daq/daq.api";
 import type { SaveSensorPermsPayload } from "@/services/api/daq/daq.types";
 import { useDAQContext } from "../../context/DAQ/DAQContext";
 
 export function SensorPerms() {
   const { data: sensorPermsResponse, isLoading } = useSensorPermsData();
-  const { data: optionsResponse } = useSensorPermsOptions();
   const { mutate: saveSensorPermsData } = useSaveSensorPermsData();
   const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
-  const options = optionsResponse?.data;
+
 
   const initialData = useMemo(() => {
     if (!sensorPermsResponse?.data) return undefined;
@@ -46,7 +44,7 @@ export function SensorPerms() {
     return <SectionSkeleton count={6} />;
   }
 
-  const { sensors, defaultPermissions } = form.formData;
+  const { sensors } = form.formData;
 
   return (
     <>

@@ -4,6 +4,7 @@ import { useSectionForm } from "@/hooks/useSectionForm";
 import { useTheme } from "@/hooks/useTheme";
 import { useAccentColor, type AccentColor } from "@/hooks/useAccentColor";
 import { type Theme } from "@/context/Theme/ThemeContext";
+import type { CommonSelectOption } from "@/components/common/CommonSelect";
 
 // Components - UI & Icons
 import {
@@ -86,13 +87,24 @@ const ACCENT_COLORS = [
   },
 ];
 
+interface UiDisplayFormData {
+  highlightAlerts: boolean;
+  language: string;
+  dateFormat: string;
+  timeFormat: string;
+  uiScale: number;
+  theme: string;
+  accentColor: string;
+  [key: string]: unknown;
+}
+
 export function UiDisplay() {
   const { data: uiDisplayResponse, isLoading } = useUiDisplaySettings();
   const { data: optionsResponse } = useUiDisplayOptions();
   const { mutate: saveUiDisplayData } = useSaveUiDisplaySettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
-  const options = optionsResponse?.data;
+  const options = (optionsResponse?.data || {}) as Record<string, CommonSelectOption[]>;
   const { theme, setTheme } = useTheme();
   const { accentColor, setAccentColor } = useAccentColor();
 
@@ -101,22 +113,22 @@ export function UiDisplay() {
     if (!uiDisplayResponse?.data) return undefined;
     const data = uiDisplayResponse.data;
     return {
-      highlightAlerts: data.highlightAlerts ?? true,
-      language: data.language || "en",
-      dateFormat: data.dateFormat || "dd-mmm-yyyy",
-      timeFormat: data.timeFormat || "24h",
-      uiScale: data.uiScale || 100,
-      theme: data.theme || theme,
-      accentColor: data.accentColor || accentColor,
-    };
+      highlightAlerts: (data.highlightAlerts as boolean) ?? true,
+      language: (data.language as string) || "en",
+      dateFormat: (data.dateFormat as string) || "dd-mmm-yyyy",
+      timeFormat: (data.timeFormat as string) || "24h",
+      uiScale: (data.uiScale as number) || 100,
+      theme: (data.theme as string) || theme,
+      accentColor: (data.accentColor as string) || accentColor,
+    } as UiDisplayFormData;
   }, [uiDisplayResponse?.data, theme, accentColor]);
 
   // Use the reusable form hook
-  const form = useSectionForm<any>({
+  const form = useSectionForm<UiDisplayFormData>({
     initialData,
     onSave: (data) => {
       // Sync global theme/accent before saving if needed, or let API handle it
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         saveUiDisplayData(data, {
           onSuccess: () => resolve(),
           onError: (error) => reject(error),

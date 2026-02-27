@@ -9,14 +9,13 @@ import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   SectionSkeleton,
-  FormSaveDialog,
   CommonButton,
-  CommonFormToggle,
+  FormSaveDialog,
   CommonFormInput,
   CommonFormSelect,
 } from "@/components/common";
 import { Badge } from "@/components/ui/badge";
-import { Filter, Download, Activity, AlertTriangle, Clock } from "lucide-react";
+import { Filter, Download, AlertTriangle } from "lucide-react";
 import { cn } from "@/utils/lib/utils";
 
 // Services & Types
@@ -25,7 +24,7 @@ import {
   useSaveLogAnalysisData,
   useLogAnalysisOptions,
 } from "@/services/api/daq/daq.api";
-import type { SaveLogAnalysisPayload, LogEntry } from "@/services/api/daq/daq.types";
+import type { SaveLogAnalysisPayload } from "@/services/api/daq/daq.types";
 
 // Context
 import { useDAQContext } from "../../context/DAQ/DAQContext";

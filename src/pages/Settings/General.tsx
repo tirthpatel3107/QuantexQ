@@ -23,6 +23,16 @@ import {
 // Context
 import { useSettingsContext } from "../../context/Settings/SettingsContext";
 
+interface GeneralFormData {
+  defaultWellName: string;
+  defaultRigName: string;
+  defaultScenario: string;
+  startupScreen1: string;
+  startupScreen2: string;
+  safetyConfirmations: boolean;
+  [key: string]: unknown;
+}
+
 export function GeneralSettings() {
   const { data: generalResponse, isLoading } = useGeneralSettings();
   const { data: optionsResponse } = useGeneralOptions();
@@ -36,17 +46,17 @@ export function GeneralSettings() {
     if (!generalResponse?.data) return undefined;
     const data = generalResponse.data;
     return {
-      defaultWellName: data.applicationName,
-      defaultRigName: data.defaultRigName || "",
-      defaultScenario: data.defaultScenario || "",
-      startupScreen1: data.startupScreen1 || "",
-      startupScreen2: data.startupScreen2 || "",
-      safetyConfirmations: true, // Assuming default or from data if available
-    };
+      defaultWellName: (data.applicationName as string) || "Quantex Q",
+      defaultRigName: (data.defaultRigName as string) || "",
+      defaultScenario: (data.defaultScenario as string) || "",
+      startupScreen1: (data.startupScreen1 as string) || "",
+      startupScreen2: (data.startupScreen2 as string) || "",
+      safetyConfirmations: true,
+    } as GeneralFormData;
   }, [generalResponse?.data]);
 
   // Use the reusable form hook
-  const form = useSectionForm<any>({
+  const form = useSectionForm<GeneralFormData>({
     initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {

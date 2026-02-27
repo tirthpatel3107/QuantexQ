@@ -9,7 +9,6 @@ import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 import {
   useAboutDiagnosticsSettings,
   useSaveAboutDiagnosticsSettings,
-  useAboutDiagnosticsOptions,
 } from "@/services/api/settings/settings.api";
 
 // Context
@@ -17,12 +16,9 @@ import { useSettingsContext } from "../../context/Settings/SettingsContext";
 
 export function AboutDiagnostics() {
   const { data: aboutResponse, isLoading } = useAboutDiagnosticsSettings();
-  const { data: optionsResponse } = useAboutDiagnosticsOptions();
   const { mutate: saveAboutDiagnosticsData } =
     useSaveAboutDiagnosticsSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
-
-  const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
@@ -30,7 +26,7 @@ export function AboutDiagnostics() {
   }, [aboutResponse?.data]);
 
   // Use the reusable form hook
-  const form = useSectionForm<any>({
+  const form = useSectionForm<Record<string, unknown>>({
     initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {

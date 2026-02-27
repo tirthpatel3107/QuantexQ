@@ -9,7 +9,6 @@ import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 import {
   useUnitsSettings,
   useSaveUnitsSettings,
-  useUnitsOptions,
 } from "@/services/api/settings/settings.api";
 
 // Context
@@ -17,19 +16,16 @@ import { useSettingsContext } from "../../context/Settings/SettingsContext";
 
 export function Units() {
   const { data: unitsResponse, isLoading } = useUnitsSettings();
-  const { data: optionsResponse } = useUnitsOptions();
   const { mutate: saveUnitsData } = useSaveUnitsSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
-  const options = optionsResponse?.data;
-
   // Memoize initial data
   const initialData = useMemo(() => {
-    return unitsResponse?.data;
+    return unitsResponse?.data as unknown as { pressure: string };
   }, [unitsResponse?.data]);
 
   // Use the reusable form hook
-  const form = useSectionForm<any>({
+  const form = useSectionForm<{ pressure: string }>({
     initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {

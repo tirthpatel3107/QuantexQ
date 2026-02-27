@@ -10,7 +10,6 @@ import { RheologyPanel } from "./panels/RheologyPanel";
 import {
   useRheologyData,
   useSaveRheologyData,
-  useRheologyOptions,
 } from "@/services/api/mudproperties/mudproperties.api";
 import type { SaveRheologyPayload } from "@/services/api/mudproperties/mudproperties.types";
 
@@ -19,12 +18,11 @@ import { useMudPropertiesContext } from "@/context/MudProperties";
 
 export function Rheology() {
   const { data: rheologyResponse, isLoading } = useRheologyData();
-  const { data: optionsResponse } = useRheologyOptions();
   const { mutate: saveRheologyData } = useSaveRheologyData();
   const { registerSaveHandler, unregisterSaveHandler } =
     useMudPropertiesContext();
 
-  const options = optionsResponse?.data;
+
 
   // Memoize initial data
   const initialData = useMemo(() => {
@@ -55,11 +53,11 @@ export function Rheology() {
 
   // Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter
   const setFluidAdapter = useCallback(
-    (update: any) => {
+    (update: unknown) => {
       if (typeof update === "function") {
-        form.setFormData(update);
+        form.setFormData(update as React.SetStateAction<SaveRheologyPayload | null>);
       } else {
-        form.updateLocalField(update);
+        form.updateLocalField(update as Partial<SaveRheologyPayload>);
       }
     },
     [form],
@@ -74,7 +72,14 @@ export function Rheology() {
   return (
     <>
       <div className="grid gap-4 mb-4 grid-cols-1 max-w-2xl">
-        <RheologyPanel fluid={fluid as any} setFluid={setFluidAdapter} />
+        <RheologyPanel
+          fluid={fluid as unknown as import("@/utils/types/mud").FluidData}
+          setFluid={
+            setFluidAdapter as React.Dispatch<
+              React.SetStateAction<import("@/utils/types/mud").FluidData>
+            >
+          }
+        />
       </div>
 
       <FormSaveDialog form={form} />

@@ -1,5 +1,5 @@
 // React & Hooks
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -71,14 +71,14 @@ export function Signals() {
   // Memoize initial data
   const initialData = useMemo(() => {
     if (!signalsResponse?.data?.signals) return undefined;
-    return { signals: signalsResponse.data.signals };
+    return { signals: signalsResponse.data.signals as Signal[] };
   }, [signalsResponse?.data]);
 
   // Use the reusable form hook
   const form = useSectionForm<{ signals: Signal[] }>({
     initialData,
     onSave: (data) => {
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         saveSignalsData(data, {
           onSuccess: () => resolve(),
           onError: (error) => reject(error),
@@ -109,21 +109,29 @@ export function Signals() {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [selectedSignal, setSelectedSignal] = useState<Signal | null>(null);
 
-  const signals = form.formData?.signals || [];
+  const signals = useMemo(() => form.formData?.signals || [], [form.formData?.signals]);
 
-  const toggleFavorite = (id: number) => {
-    const updatedSignals = signals.map((signal) =>
-      signal.id === id ? { ...signal, isFavorite: !signal.isFavorite } : signal,
-    );
-    form.updateLocalField({ signals: updatedSignals });
-  };
+  const toggleFavorite = useCallback(
+    (id: number) => {
+      const updatedSignals = signals.map((signal) =>
+        signal.id === id
+          ? { ...signal, isFavorite: !signal.isFavorite }
+          : signal,
+      );
+      form.updateLocalField({ signals: updatedSignals });
+    },
+    [signals, form],
+  );
 
-  const toggleInUse = (id: number) => {
-    const updatedSignals = signals.map((signal) =>
-      signal.id === id ? { ...signal, inUse: !signal.inUse } : signal,
-    );
-    form.updateLocalField({ signals: updatedSignals });
-  };
+  const toggleInUse = useCallback(
+    (id: number) => {
+      const updatedSignals = signals.map((signal) =>
+        signal.id === id ? { ...signal, inUse: !signal.inUse } : signal,
+      );
+      form.updateLocalField({ signals: updatedSignals });
+    },
+    [signals, form],
+  );
 
   const handleDeleteSignal = () => {
     if (selectedSignal) {
@@ -240,7 +248,7 @@ export function Signals() {
         ),
       }),
     ],
-    [signals],
+    [toggleFavorite, toggleInUse],
   );
 
   const filteredData = useMemo(() => {

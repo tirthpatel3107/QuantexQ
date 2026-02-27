@@ -9,7 +9,6 @@ import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 import {
   useHydraulicsModelSettings,
   useSaveHydraulicsModelSettings,
-  useHydraulicsModelOptions,
 } from "@/services/api/settings/settings.api";
 
 // Context
@@ -17,11 +16,8 @@ import { useSettingsContext } from "../../context/Settings/SettingsContext";
 
 export function HydraulicsModel() {
   const { data: hydraulicsResponse, isLoading } = useHydraulicsModelSettings();
-  const { data: optionsResponse } = useHydraulicsModelOptions();
   const { mutate: saveHydraulicsModelData } = useSaveHydraulicsModelSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
-
-  const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
@@ -29,7 +25,7 @@ export function HydraulicsModel() {
   }, [hydraulicsResponse?.data]);
 
   // Use the reusable form hook
-  const form = useSectionForm<any>({
+  const form = useSectionForm<Record<string, unknown>>({
     initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {

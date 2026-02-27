@@ -16,7 +16,6 @@ import {
 import {
   useGasCompressibilityData,
   useSaveGasCompressibilityData,
-  useGasCompressibilityOptions,
 } from "@/services/api/mudproperties/mudproperties.api";
 import type { SaveGasCompressibilityPayload } from "@/services/api/mudproperties/mudproperties.types";
 
@@ -25,13 +24,10 @@ import { useMudPropertiesContext } from "@/context/MudProperties";
 
 export function GasCompressibility() {
   const { data: gasResponse, isLoading } = useGasCompressibilityData();
-  const { data: optionsResponse } = useGasCompressibilityOptions();
   const { mutate: saveGasCompressibilityData } =
     useSaveGasCompressibilityData();
   const { registerSaveHandler, unregisterSaveHandler } =
     useMudPropertiesContext();
-
-  const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {

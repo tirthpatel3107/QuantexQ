@@ -61,13 +61,13 @@ export function FluidOverview() {
 
   // Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter
   const setFluidAdapter = useCallback(
-    (update: any) => {
+    (update: unknown) => {
       if (typeof update === "function") {
-        // This is a bit tricky since form.formData might be null initially
-        // But useSectionForm ensures it's populated if initialData is there
-        form.setFormData(update);
+        form.setFormData(
+          update as React.SetStateAction<SaveFluidOverviewPayload | null>,
+        );
       } else {
-        form.updateLocalField(update);
+        form.updateLocalField(update as Partial<SaveFluidOverviewPayload>);
       }
     },
     [form],
@@ -83,15 +83,40 @@ export function FluidOverview() {
     <>
       <div className="grid gap-4 mb-4 grid-cols-1 md:grid-cols-2">
         <FluidSystemPanel
-          fluid={fluid as any}
-          setFluid={setFluidAdapter}
+          fluid={fluid as unknown as import("@/utils/types/mud").FluidData}
+          setFluid={
+            setFluidAdapter as React.Dispatch<
+              React.SetStateAction<import("@/utils/types/mud").FluidData>
+            >
+          }
           typeOptions={options?.typeOptions || []}
           baseFluidOptions={options?.baseFluidOptions || []}
           tempOptions={options?.tempOptions || []}
         />
-        <RheologyPanel fluid={fluid as any} setFluid={setFluidAdapter} />
-        <DensitySolidsPanel fluid={fluid as any} setFluid={setFluidAdapter} />
-        <TemperaturePanel fluid={fluid as any} setFluid={setFluidAdapter} />
+        <RheologyPanel
+          fluid={fluid as unknown as import("@/utils/types/mud").FluidData}
+          setFluid={
+            setFluidAdapter as React.Dispatch<
+              React.SetStateAction<import("@/utils/types/mud").FluidData>
+            >
+          }
+        />
+        <DensitySolidsPanel
+          fluid={fluid as unknown as import("@/utils/types/mud").FluidData}
+          setFluid={
+            setFluidAdapter as React.Dispatch<
+              React.SetStateAction<import("@/utils/types/mud").FluidData>
+            >
+          }
+        />
+        <TemperaturePanel
+          fluid={fluid as unknown as import("@/utils/types/mud").FluidData}
+          setFluid={
+            setFluidAdapter as React.Dispatch<
+              React.SetStateAction<import("@/utils/types/mud").FluidData>
+            >
+          }
+        />
       </div>
 
       <FormSaveDialog form={form} />

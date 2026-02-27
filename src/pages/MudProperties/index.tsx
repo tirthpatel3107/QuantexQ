@@ -35,7 +35,7 @@ function MudPropertiesContent() {
   const { requestSave } = useMudPropertiesContext();
 
   // Local fluid state - will be populated by individual tab API calls
-  const [fluid, setFluid] = useState<FluidData>({
+  const [fluid] = useState<FluidData>({
     type: "OBM",
     baseFluid: "Diesel",
     activePitsVolume: "600",

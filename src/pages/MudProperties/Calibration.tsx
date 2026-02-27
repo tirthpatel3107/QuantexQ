@@ -15,7 +15,6 @@ import {
 import {
   useCalibrationData,
   useSaveCalibrationData,
-  useCalibrationOptions,
 } from "@/services/api/mudproperties/mudproperties.api";
 import type { SaveCalibrationPayload } from "@/services/api/mudproperties/mudproperties.types";
 
@@ -24,12 +23,11 @@ import { useMudPropertiesContext } from "@/context/MudProperties";
 
 export function Calibration() {
   const { data: calibrationResponse, isLoading } = useCalibrationData();
-  const { data: optionsResponse } = useCalibrationOptions();
   const { mutate: saveCalibrationData } = useSaveCalibrationData();
   const { registerSaveHandler, unregisterSaveHandler } =
     useMudPropertiesContext();
 
-  const options = optionsResponse?.data;
+
 
   // Memoize initial data
   const initialData = useMemo(() => {

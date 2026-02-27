@@ -10,7 +10,6 @@ import { DensitySolidsPanel } from "./panels/DensitySolidsPanel";
 import {
   useDensityData,
   useSaveDensityData,
-  useDensityOptions,
 } from "@/services/api/mudproperties/mudproperties.api";
 import type { SaveDensityPayload } from "@/services/api/mudproperties/mudproperties.types";
 
@@ -19,12 +18,11 @@ import { useMudPropertiesContext } from "@/context/MudProperties";
 
 export function Density() {
   const { data: densityResponse, isLoading } = useDensityData();
-  const { data: optionsResponse } = useDensityOptions();
   const { mutate: saveDensityData } = useSaveDensityData();
   const { registerSaveHandler, unregisterSaveHandler } =
     useMudPropertiesContext();
 
-  const options = optionsResponse?.data;
+
 
   // Memoize initial data
   const initialData = useMemo(() => {
@@ -70,11 +68,13 @@ export function Density() {
 
   // Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter
   const setFluidAdapter = useCallback(
-    (update: any) => {
+    (update: unknown) => {
       if (typeof update === "function") {
-        form.setFormData(update);
+        form.setFormData(
+          update as React.SetStateAction<SaveDensityPayload | null>,
+        );
       } else {
-        form.updateLocalField(update);
+        form.updateLocalField(update as Partial<SaveDensityPayload>);
       }
     },
     [form],
@@ -89,7 +89,14 @@ export function Density() {
   return (
     <>
       <div className="grid gap-4 mb-4 grid-cols-1 max-w-2xl">
-        <DensitySolidsPanel fluid={fluid as any} setFluid={setFluidAdapter} />
+        <DensitySolidsPanel
+          fluid={fluid as unknown as import("@/utils/types/mud").FluidData}
+          setFluid={
+            setFluidAdapter as React.Dispatch<
+              React.SetStateAction<import("@/utils/types/mud").FluidData>
+            >
+          }
+        />
       </div>
 
       <FormSaveDialog form={form} />

@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { CategoryCard } from "@/components/dashboard/CategoryCard";
-import { ROUTES } from "@/utils/constants/routes";
+// import { ROUTES } from "@/utils/constants/routes";
 import { DAQ_SECTION_CARDS } from "@/utils/constants";
 
 export function DaqOverview() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 items-start">

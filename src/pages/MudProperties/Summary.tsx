@@ -8,7 +8,7 @@ interface SummaryProps {
 }
 
 export function Summary({ fluid }: SummaryProps) {
-  const { data: summaryResponse, isLoading, error } = useSummaryData();
+  const { data: summaryResponse, isLoading } = useSummaryData();
 
   const summaryData = summaryResponse?.data;
 

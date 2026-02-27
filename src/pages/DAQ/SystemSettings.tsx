@@ -19,13 +19,19 @@ import {
 import type { SaveSystemSettingsPayload } from "@/services/api/daq/daq.types";
 import { useDAQContext } from "../../context/DAQ/DAQContext";
 
+interface SystemSettingsOptions {
+  systemTypeOptions?: Array<{ label: string; value: string }>;
+  mudSystemOptions?: Array<{ label: string; value: string }>;
+  controlModeOptions?: Array<{ label: string; value: string }>;
+}
+
 export function SystemSettings() {
   const { data: systemSettingsResponse, isLoading } = useSystemSettingsData();
   const { data: optionsResponse } = useSystemSettingsOptions();
   const { mutate: saveSystemSettingsData } = useSaveSystemSettingsData();
   const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
-  const options = optionsResponse?.data;
+  const options = (optionsResponse?.data as SystemSettingsOptions) || {};
 
   const initialData = useMemo(() => {
     if (!systemSettingsResponse?.data) return undefined;
@@ -95,7 +101,7 @@ export function SystemSettings() {
     return <SectionSkeleton count={6} />;
   }
 
-  const { daqPreset, hardwareConfig } = form.formData;
+
 
   return (
     <>

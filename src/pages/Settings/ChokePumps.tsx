@@ -9,7 +9,6 @@ import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 import {
   useChokePumpsSettings,
   useSaveChokePumpsSettings,
-  useChokePumpsOptions,
 } from "@/services/api/settings/settings.api";
 
 // Context
@@ -17,11 +16,8 @@ import { useSettingsContext } from "../../context/Settings/SettingsContext";
 
 export function ChokePumps() {
   const { data: chokePumpsResponse, isLoading } = useChokePumpsSettings();
-  const { data: optionsResponse } = useChokePumpsOptions();
   const { mutate: saveChokePumpsData } = useSaveChokePumpsSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
-
-  const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
@@ -29,7 +25,7 @@ export function ChokePumps() {
   }, [chokePumpsResponse?.data]);
 
   // Use the reusable form hook
-  const form = useSectionForm<any>({
+  const form = useSectionForm<Record<string, unknown>>({
     initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {

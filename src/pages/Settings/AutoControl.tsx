@@ -9,7 +9,6 @@ import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 import {
   useAutoControlSettings,
   useSaveAutoControlSettings,
-  useAutoControlOptions,
 } from "@/services/api/settings/settings.api";
 
 // Context
@@ -17,11 +16,8 @@ import { useSettingsContext } from "../../context/Settings/SettingsContext";
 
 export function AutoControl() {
   const { data: autoControlResponse, isLoading } = useAutoControlSettings();
-  const { data: optionsResponse } = useAutoControlOptions();
   const { mutate: saveAutoControlData } = useSaveAutoControlSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
-
-  const options = optionsResponse?.data;
 
   // Memoize initial data
   const initialData = useMemo(() => {
@@ -29,7 +25,7 @@ export function AutoControl() {
   }, [autoControlResponse?.data]);
 
   // Use the reusable form hook
-  const form = useSectionForm<any>({
+  const form = useSectionForm<Record<string, unknown>>({
     initialData,
     onSave: (data) => {
       return new Promise((resolve, reject) => {

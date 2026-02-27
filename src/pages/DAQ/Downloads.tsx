@@ -9,16 +9,14 @@ import {
   CommonTabsTrigger,
 } from "@/components/common/CommonTabs";
 import { SectionSkeleton, FormSaveDialog } from "@/components/common";
-import { Download, FolderOpen, FileText, File } from "lucide-react";
+import { Download, FolderOpen, FileText } from "lucide-react";
 import { cn } from "@/utils/lib/utils";
 import {
   useDownloadsData,
   useSaveDownloadsData,
-  useDownloadsOptions,
 } from "@/services/api/daq/daq.api";
-import type { SaveDownloadsPayload, DownloadsOptionsData } from "@/services/api/daq/daq.types";
+import type { SaveDownloadsPayload } from "@/services/api/daq/daq.types";
 import { useDAQContext } from "../../context/DAQ/DAQContext";
-import type { ApiResponse } from "@/services/api/types";
 
 interface FileItem {
   name: string;
@@ -95,11 +93,10 @@ const downloadHistory: DownloadHistoryItem[] = [
 
 export function Downloads() {
   const { data: downloadsResponse, isLoading } = useDownloadsData();
-  const { data: optionsResponse } = useDownloadsOptions();
   const { mutate: saveDownloadsData } = useSaveDownloadsData();
   const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
-  const options = (optionsResponse as ApiResponse<DownloadsOptionsData> | undefined)?.data;
+
 
   const initialData = useMemo(() => {
     if (!downloadsResponse?.data) return undefined;
@@ -133,7 +130,7 @@ export function Downloads() {
     return <SectionSkeleton count={6} />;
   }
 
-  const { logs, quickExport } = form.formData;
+
 
   return (
     <>
