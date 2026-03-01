@@ -1,6 +1,11 @@
 import { useState, useMemo } from "react";
 import { useSectionForm } from "@/hooks/useSectionForm";
-import { SectionSkeleton, FormSaveDialog, CommonButton, CommonCheckbox } from "@/components/common";
+import {
+  SectionSkeleton,
+  FormSaveDialog,
+  CommonButton,
+  CommonCheckbox,
+} from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/utils/lib/utils";
@@ -37,17 +42,66 @@ interface CalibrationData {
 
 export function Calibration() {
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   // Mock initial data - replace with actual API call
   const initialData: CalibrationData = {
     permissions: [
-      { sensor: "Depth", depth: true, primary: true, secondary: false, validation: "OK", comments: "Comments" },
-      { sensor: "Gas Detector HP", depth: false, primary: false, secondary: true, validation: "", comments: "" },
-      { sensor: "SPP", depth: true, primary: true, secondary: false, validation: "OK", comments: "" },
-      { sensor: "Flowline Temp", depth: true, primary: true, secondary: false, validation: "HP Alarm", comments: "" },
-      { sensor: "Surface Temp", depth: true, primary: true, secondary: false, validation: "HP Alarm", comments: "" },
-      { sensor: "LGS", depth: true, primary: true, secondary: false, validation: "OK", comments: "" },
-      { sensor: "MW In Out Density", depth: false, primary: true, secondary: false, validation: "OK", comments: "Drill Variants" },
+      {
+        sensor: "Depth",
+        depth: true,
+        primary: true,
+        secondary: false,
+        validation: "OK",
+        comments: "Comments",
+      },
+      {
+        sensor: "Gas Detector HP",
+        depth: false,
+        primary: false,
+        secondary: true,
+        validation: "",
+        comments: "",
+      },
+      {
+        sensor: "SPP",
+        depth: true,
+        primary: true,
+        secondary: false,
+        validation: "OK",
+        comments: "",
+      },
+      {
+        sensor: "Flowline Temp",
+        depth: true,
+        primary: true,
+        secondary: false,
+        validation: "HP Alarm",
+        comments: "",
+      },
+      {
+        sensor: "Surface Temp",
+        depth: true,
+        primary: true,
+        secondary: false,
+        validation: "HP Alarm",
+        comments: "",
+      },
+      {
+        sensor: "LGS",
+        depth: true,
+        primary: true,
+        secondary: false,
+        validation: "OK",
+        comments: "",
+      },
+      {
+        sensor: "MW In Out Density",
+        depth: false,
+        primary: true,
+        secondary: false,
+        validation: "OK",
+        comments: "Drill Variants",
+      },
     ],
     applyType: "auto",
     weightOnBit: "manual",
@@ -79,14 +133,15 @@ export function Calibration() {
     successMessage: "Sensor permissions saved successfully",
     errorMessage: "Failed to save sensor permissions",
     confirmTitle: "Save Sensor Permissions",
-    confirmDescription: "Are you sure you want to save these permission changes?",
+    confirmDescription:
+      "Are you sure you want to save these permission changes?",
   });
 
   const filteredPermissions = useMemo(() => {
     if (!form.formData) return [];
     if (!searchQuery) return form.formData.permissions;
     return form.formData.permissions.filter((p) =>
-      p.sensor.toLowerCase().includes(searchQuery.toLowerCase())
+      p.sensor.toLowerCase().includes(searchQuery.toLowerCase()),
     );
   }, [form.formData, searchQuery]);
 
@@ -95,9 +150,9 @@ export function Calibration() {
   }
 
   return (
-    <div className="p-4 space-y-4">
+    <>
       {/* Top Section - Permissions Assignment & Table */}
-      <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-3">
         {/* Left Panel - Permissions Assignment */}
         <PanelCard title="Permissions Assignment">
           <div className="space-y-6">
@@ -137,7 +192,9 @@ export function Calibration() {
               </label>
               <div className="flex gap-3">
                 <CommonButton
-                  variant={form.formData.applyType === "auto" ? "default" : "outline"}
+                  variant={
+                    form.formData.applyType === "auto" ? "default" : "outline"
+                  }
                   size="sm"
                   className="flex-1"
                   onClick={() => form.updateField("applyType", "auto")}
@@ -145,7 +202,9 @@ export function Calibration() {
                   Auto
                 </CommonButton>
                 <CommonButton
-                  variant={form.formData.applyType === "manual" ? "default" : "outline"}
+                  variant={
+                    form.formData.applyType === "manual" ? "default" : "outline"
+                  }
                   size="sm"
                   className="flex-1"
                   onClick={() => form.updateField("applyType", "manual")}
@@ -153,7 +212,11 @@ export function Calibration() {
                   Manual
                 </CommonButton>
                 <CommonButton
-                  variant={form.formData.applyType === "acmPerms" ? "default" : "outline"}
+                  variant={
+                    form.formData.applyType === "acmPerms"
+                      ? "default"
+                      : "outline"
+                  }
                   size="sm"
                   className="flex-1"
                   onClick={() => form.updateField("applyType", "acmPerms")}
@@ -172,14 +235,18 @@ export function Calibration() {
                 <CommonCheckbox
                   id="weight-auto"
                   checked={form.formData.weightOnBit === "auto"}
-                  onCheckedChange={() => form.updateField("weightOnBit", "auto")}
+                  onCheckedChange={() =>
+                    form.updateField("weightOnBit", "auto")
+                  }
                   label="Auto"
                   containerClassName="flex-1 justify-center py-2 px-3 border border-border rounded hover:bg-muted/30"
                 />
                 <CommonCheckbox
                   id="weight-manual"
                   checked={form.formData.weightOnBit === "manual"}
-                  onCheckedChange={() => form.updateField("weightOnBit", "manual")}
+                  onCheckedChange={() =>
+                    form.updateField("weightOnBit", "manual")
+                  }
                   label="Manual"
                   containerClassName="flex-1 justify-center py-2 px-3 border border-border rounded hover:bg-muted/30"
                 />
@@ -306,13 +373,17 @@ export function Calibration() {
                       <td className="py-3 px-2">
                         {permission.validation && (
                           <Badge
-                            variant={permission.validation === "OK" ? "default" : "destructive"}
+                            variant={
+                              permission.validation === "OK"
+                                ? "default"
+                                : "destructive"
+                            }
                             className={cn(
                               "text-xs",
                               permission.validation === "OK" &&
                                 "bg-green-600/20 text-green-400 border-green-600/30",
                               permission.validation === "HP Alarm" &&
-                                "bg-orange-600/20 text-orange-400 border-orange-600/30"
+                                "bg-orange-600/20 text-orange-400 border-orange-600/30",
                             )}
                           >
                             {permission.validation}
@@ -352,7 +423,9 @@ export function Calibration() {
           <div className="space-y-4">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Total = 0.05</span>
-              <span className="text-muted-foreground">Expor Timeline (C.W)</span>
+              <span className="text-muted-foreground">
+                Expor Timeline (C.W)
+              </span>
             </div>
 
             {/* Chart Area */}
@@ -368,7 +441,11 @@ export function Calibration() {
 
               {/* Chart content */}
               <div className="ml-8 h-full flex items-end justify-center p-4">
-                <svg className="w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="none">
+                <svg
+                  className="w-full h-full"
+                  viewBox="0 0 400 200"
+                  preserveAspectRatio="none"
+                >
                   {/* Curved line */}
                   <path
                     d="M 0,180 Q 100,160 200,120 T 400,60"
@@ -379,13 +456,26 @@ export function Calibration() {
                   />
                   {/* Tooltip indicator */}
                   <circle cx="200" cy="120" r="4" fill="rgb(59, 130, 246)" />
-                  <line x1="200" y1="0" x2="200" y2="200" stroke="rgb(59, 130, 246)" strokeWidth="1" strokeDasharray="4 4" opacity="0.3" />
+                  <line
+                    x1="200"
+                    y1="0"
+                    x2="200"
+                    y2="200"
+                    stroke="rgb(59, 130, 246)"
+                    strokeWidth="1"
+                    strokeDasharray="4 4"
+                    opacity="0.3"
+                  />
                 </svg>
 
                 {/* Tooltip */}
                 <div className="absolute top-8 left-1/2 -translate-x-1/2 bg-background/95 border border-border rounded px-3 py-2 text-xs shadow-lg">
-                  <div className="text-muted-foreground">AAVM PREM REF (%) psi 7</div>
-                  <div className="text-muted-foreground">Pas B Permissions Open</div>
+                  <div className="text-muted-foreground">
+                    AAVM PREM REF (%) psi 7
+                  </div>
+                  <div className="text-muted-foreground">
+                    Pas B Permissions Open
+                  </div>
                 </div>
               </div>
 
@@ -440,7 +530,9 @@ export function Calibration() {
 
               {/* OPTI */}
               <div className="flex items-center gap-2">
-                <CommonCheckbox checked={form.formData.senectoPermissions.opti.enabled} />
+                <CommonCheckbox
+                  checked={form.formData.senectoPermissions.opti.enabled}
+                />
                 <span>OPTI:</span>
               </div>
               <div className="text-center">
@@ -451,7 +543,11 @@ export function Calibration() {
 
               {/* Gas Detector HP */}
               <div className="flex items-center gap-2">
-                <CommonCheckbox checked={form.formData.senectoPermissions.gasDetectorHP.enabled} />
+                <CommonCheckbox
+                  checked={
+                    form.formData.senectoPermissions.gasDetectorHP.enabled
+                  }
+                />
                 <span>Gas Detector HP</span>
               </div>
               <div className="text-center">
@@ -462,7 +558,9 @@ export function Calibration() {
 
               {/* SPP */}
               <div className="flex items-center gap-2">
-                <CommonCheckbox checked={form.formData.senectoPermissions.spp.enabled} />
+                <CommonCheckbox
+                  checked={form.formData.senectoPermissions.spp.enabled}
+                />
                 <span>SPP</span>
               </div>
               <div className="text-center">
@@ -473,7 +571,11 @@ export function Calibration() {
 
               {/* Flowline Temp */}
               <div className="flex items-center gap-2">
-                <CommonCheckbox checked={form.formData.senectoPermissions.flowlineTemp.enabled} />
+                <CommonCheckbox
+                  checked={
+                    form.formData.senectoPermissions.flowlineTemp.enabled
+                  }
+                />
                 <span>Flowline Temp</span>
               </div>
               <div className="text-center">
@@ -484,7 +586,9 @@ export function Calibration() {
 
               {/* Apply Perms */}
               <div className="flex items-center gap-2">
-                <CommonCheckbox checked={form.formData.senectoPermissions.applyPerms.enabled} />
+                <CommonCheckbox
+                  checked={form.formData.senectoPermissions.applyPerms.enabled}
+                />
                 <span>Apply Perms</span>
               </div>
               <div className="text-center">
@@ -499,7 +603,9 @@ export function Calibration() {
 
               {/* LGS */}
               <div className="flex items-center gap-2">
-                <CommonCheckbox checked={form.formData.senectoPermissions.lgs.enabled} />
+                <CommonCheckbox
+                  checked={form.formData.senectoPermissions.lgs.enabled}
+                />
                 <span>LGS</span>
               </div>
               <div className="text-center">
@@ -517,6 +623,6 @@ export function Calibration() {
       </div>
 
       <FormSaveDialog form={form} />
-    </div>
+    </>
   );
 }
