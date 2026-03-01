@@ -26,6 +26,7 @@ import type {
   SaveDownloadsPayload,
   NotificationsOptionsData,
   LogAnalysisOptionsData,
+  SystemSettingsOptionsData,
 } from "./daq.types";
 
 // ============================================
@@ -530,44 +531,44 @@ const fetchSystemSettingsData = async (): Promise<
       resolve({
         success: true,
         data: {
-          daqPreset: {
-            active: "preset-1",
-            name: "Standard Configuration",
-            profileOverrides: {},
+          systemSettings: {
+            systemType: "",
+            mudSystem: "",
+            controlMode: "",
+            exportCompatibility: "",
+            cursorDataRate: "",
+            displayLanguage: "",
+            quickLaunchGUI: "",
+            autoPresetRestoreTime: true,
+            restoreAfterHours: "",
+            presetToRestore: "",
           },
-          controlMode: {
-            mode: "auto",
-            mpdSystemState: "active",
+          alarmSettings: {
+            soundVolume: "",
+            alertLength: "",
+            surfaceTempOffset: "",
+            hpLow: "",
+            hpHigh: "",
+            bitSize: "",
+            bitSizeStandard: "",
+            bitSizePlus: "",
+            emailAlerts: "",
+            emailAudity: "",
+            realtimeStreamingEnabled: true,
+            realtimeStreaming: "",
+            autoMuteAlarms: true,
+            captureRecirculation: "",
           },
-          systemState: {
-            flowControlMode: "auto",
-            depth: 5000,
-            chokeStatus: "open",
-            gasDetectorHP: "normal",
+          accountSecurity: {
+            timeouts: "15min",
+            systemSecurity: "",
+            backupDirectory: "",
           },
-          systemValidation: {
-            ds: "OK",
-            kop: "OK",
-            surfaceTemp: "OK",
-            flowlineTemp: "OK",
-            status: "OK",
-          },
-          hardwareConfig: {
-            sensors: [
-              {
-                id: "hw-1",
-                name: "Pressure Transducer",
-                type: "analog",
-                firmware: "v2.1.0",
-              },
-            ],
-            ioChannels: [
-              {
-                id: "io-1",
-                channel: "AI-01",
-                assignment: "Pressure Sensor 1",
-              },
-            ],
+          scheduleTime: {
+            autoUTCSync: true,
+            syncTime: "",
+            clipTimeMode: "",
+            localTime: "",
           },
         },
         timestamp: new Date().toISOString(),
@@ -1105,7 +1106,7 @@ export const useSystemSettingsOptions = () => {
   return useQuery({
     queryKey: [...daqKeys.systemSettings(), "options"],
     queryFn: async () => {
-      return new Promise((resolve) => {
+      return new Promise<ApiResponse<SystemSettingsOptionsData>>((resolve) => {
         setTimeout(() => {
           resolve({
             success: true,
@@ -1122,6 +1123,79 @@ export const useSystemSettingsOptions = () => {
                 { label: "OBM", value: "OBM" },
                 { label: "WBM", value: "WBM" },
                 { label: "SBM", value: "SBM" },
+              ],
+              exportCompatibilityOptions: [
+                { label: "Compute Format", value: "Compute Format" },
+                { label: "Legacy Format", value: "Legacy Format" },
+              ],
+              displayLanguageOptions: [
+                { label: "English", value: "English" },
+                { label: "Spanish", value: "Spanish" },
+                { label: "French", value: "French" },
+              ],
+              quickLaunchGUIOptions: [
+                { label: "Summary", value: "Summary" },
+                { label: "Dashboard", value: "Dashboard" },
+                { label: "Detailed", value: "Detailed" },
+              ],
+              restoreAfterHoursOptions: [
+                { label: "After 15 hour", value: "15" },
+                { label: "After 20 hour", value: "20" },
+                { label: "After 24 hour", value: "24" },
+              ],
+              presetToRestoreOptions: [
+                { label: "Master.deGas", value: "Master.deGas" },
+                { label: "Default", value: "Default" },
+                { label: "Custom", value: "Custom" },
+              ],
+              soundVolumeOptions: [
+                { label: "Low", value: "Low" },
+                { label: "Medium", value: "Medium" },
+                { label: "High", value: "High" },
+              ],
+              alertLengthOptions: [
+                { label: "1 sec", value: "1 sec" },
+                { label: "3 sec", value: "3 sec" },
+                { label: "5 sec", value: "5 sec" },
+              ],
+              bitSizeStandardOptions: [
+                { label: "Standard", value: "Standard" },
+                { label: "+5°F", value: "+5°F" },
+                { label: "+5°E", value: "+5°E" },
+              ],
+              emailAlertsOptions: [
+                { label: "nfq-21@quantexq.com", value: "nfq-21@quantexq.com" },
+                { label: "admin@quantexq.com", value: "admin@quantexq.com" },
+              ],
+              emailAudityOptions: [
+                { label: "Audity", value: "Audity" },
+                { label: "Silent", value: "Silent" },
+              ],
+              realtimeStreamingOptions: [
+                { label: "DAQ-Notifications, Log Analysis", value: "DAQ-Notifications, Log Analysis" },
+                { label: "Other Option", value: "Other Option" },
+              ],
+              captureRecirculationOptions: [
+                { label: "Capture Recirculation", value: "12/DT" },
+              ],
+              timeoutsOptions: [
+                { label: "15min", value: "15min" },
+                { label: "30min", value: "30min" },
+                { label: "45min", value: "45min" },
+                { label: "60min", value: "60min" },
+              ],
+              clipTimeModeOptions: [
+                { label: "Clip Time Tumult", value: "Clip Time Tumult" },
+                { label: "Standard Time", value: "Standard Time" },
+              ],
+              localTimeFormatOptions: [
+                { label: "24-Hour format", value: "06 Feb 2026 / 16:37" },
+                { label: "12-Hour format", value: "06 Feb 2026 / 04:37 PM" },
+              ],
+              utcTimeOptions: [
+                { label: "UTC 0:00", value: "06 Feb 2026 / 16:37" },
+                { label: "UTC +1:00", value: "06 Feb 2026 / 17:37" },
+                { label: "UTC -1:00", value: "06 Feb 2026 / 15:37" },
               ],
             },
           });

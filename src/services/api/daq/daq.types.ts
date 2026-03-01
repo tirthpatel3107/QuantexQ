@@ -304,62 +304,48 @@ export interface SaveHydraulicsPayload {
 // ============================================
 
 export interface SystemSettingsTabData {
-  daqPreset: DaqPresetConfig;
-  controlMode: ControlModeConfig;
-  systemState: SystemStateData;
-  systemValidation: SystemValidationData;
-  hardwareConfig: HardwareConfigData;
+  systemSettings: {
+    systemType: string;
+    mudSystem: string;
+    controlMode: string;
+    exportCompatibility: string;
+    cursorDataRate: string;
+    displayLanguage: string;
+    quickLaunchGUI: string;
+    autoPresetRestoreTime: boolean;
+    restoreAfterHours: string;
+    presetToRestore: string;
+  };
+  alarmSettings: {
+    soundVolume: string;
+    alertLength: string;
+    surfaceTempOffset: string;
+    hpLow: string;
+    hpHigh: string;
+    bitSize: string;
+    bitSizeStandard: string;
+    bitSizePlus: string;
+    emailAlerts: string;
+    emailAudity: string;
+    realtimeStreamingEnabled: boolean;
+    realtimeStreaming: string;
+    autoMuteAlarms: boolean;
+    captureRecirculation: string;
+  };
+  accountSecurity: {
+    timeouts: string;
+    systemSecurity: string;
+    backupDirectory: string;
+  };
+  scheduleTime: {
+    autoUTCSync: boolean;
+    syncTime: string;
+    clipTimeMode: string;
+    localTime: string;
+  };
 }
 
-export interface DaqPresetConfig {
-  active: string;
-  name: string;
-  profileOverrides: Record<string, unknown>;
-}
-
-export interface ControlModeConfig {
-  mode: "manual" | "auto";
-  mpdSystemState: string;
-}
-
-export interface SystemStateData {
-  flowControlMode: string;
-  depth: number;
-  chokeStatus: string;
-  gasDetectorHP: string;
-}
-
-export interface SystemValidationData {
-  ds: string;
-  kop: string;
-  surfaceTemp: string;
-  flowlineTemp: string;
-  status: "OK" | "Warning" | "Error";
-}
-
-export interface HardwareConfigData {
-  sensors: HardwareSensor[];
-  ioChannels: IoChannel[];
-}
-
-export interface HardwareSensor {
-  id: string;
-  name: string;
-  type: string;
-  firmware: string;
-}
-
-export interface IoChannel {
-  id: string;
-  channel: string;
-  assignment: string;
-}
-
-export interface SaveSystemSettingsPayload {
-  daqPreset: DaqPresetConfig;
-  controlMode: ControlModeConfig;
-  hardwareConfig: HardwareConfigData;
-}
+export type SaveSystemSettingsPayload = SystemSettingsTabData;
 
 // ============================================
 // Downloads Tab
@@ -444,6 +430,22 @@ export interface SystemSettingsOptionsData {
   controlModeOptions: Array<{ label: string; value: string }>;
   systemTypeOptions: Array<{ label: string; value: string }>;
   mudSystemOptions: Array<{ label: string; value: string }>;
+  exportCompatibilityOptions: Array<{ label: string; value: string }>;
+  displayLanguageOptions: Array<{ label: string; value: string }>;
+  quickLaunchGUIOptions: Array<{ label: string; value: string }>;
+  restoreAfterHoursOptions: Array<{ label: string; value: string }>;
+  presetToRestoreOptions: Array<{ label: string; value: string }>;
+  soundVolumeOptions: Array<{ label: string; value: string }>;
+  alertLengthOptions: Array<{ label: string; value: string }>;
+  bitSizeStandardOptions: Array<{ label: string; value: string }>;
+  emailAlertsOptions: Array<{ label: string; value: string }>;
+  emailAudityOptions: Array<{ label: string; value: string }>;
+  realtimeStreamingOptions: Array<{ label: string; value: string }>;
+  captureRecirculationOptions: Array<{ label: string; value: string }>;
+  timeoutsOptions: Array<{ label: string; value: string }>;
+  clipTimeModeOptions: Array<{ label: string; value: string }>;
+  localTimeFormatOptions: Array<{ label: string; value: string }>;
+  utcTimeOptions: Array<{ label: string; value: string }>;
 }
 
 export interface DownloadsOptionsData {
