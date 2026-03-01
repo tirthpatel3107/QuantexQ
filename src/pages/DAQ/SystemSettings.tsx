@@ -1,13 +1,17 @@
-import { useState, useMemo } from "react";
-import { useSectionForm } from "@/hooks/useSectionForm";
+import { useState, useEffect } from "react";
+import { z } from "zod";
+import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
-  CommonSelect,
-  CommonInput,
-  CommonButton,
-  CommonToggle,
   SectionSkeleton,
   FormSaveDialog,
+  CommonButton,
+  CommonFormToggle,
+  CommonFormInput,
+  CommonFormSelect,
 } from "@/components/common";
 import { RestoreDefaultsButton } from "@/components/common/RestoreDefaultsButton";
 import { Settings } from "lucide-react";
@@ -19,11 +23,52 @@ import {
 import type { SaveSystemSettingsPayload } from "@/services/api/daq/daq.types";
 import { useDAQContext } from "../../context/DAQ/DAQContext";
 
-interface SystemSettingsOptions {
-  systemTypeOptions?: Array<{ label: string; value: string }>;
-  mudSystemOptions?: Array<{ label: string; value: string }>;
-  controlModeOptions?: Array<{ label: string; value: string }>;
-}
+export const systemSettingsFormSchema = z.object({
+  systemSettings: z.object({
+    systemType: z.string().min(1, "System Type is required"),
+    mudSystem: z.string().min(1, "Mud System is required"),
+    controlMode: z.string().min(1, "Control Mode is required"),
+    exportCompatibility: z.string().min(1, "Export Compatibility is required"),
+    cursorDataRate: z
+      .string()
+      .min(1, "Cursor Data Rate is required")
+      .regex(/^\d+$/, "Must be a number"),
+    displayLanguage: z.string().min(1, "Display Language is required"),
+    quickLaunchGUI: z.string().min(1, "Quick Launch GUI is required"),
+    autoPresetRestoreTime: z.boolean(),
+    restoreAfterHours: z.string(),
+    presetToRestore: z.string(),
+  }),
+  alarmSettings: z.object({
+    soundVolume: z.string().min(1, "Sound Volume is required"),
+    alertLength: z.string().min(1, "Alert Length is required"),
+    surfaceTempOffset: z.string(),
+    hpLow: z.string().regex(/^\d*$/, "HP Low must be a number"),
+    hpHigh: z.string().regex(/^\d*$/, "HP High must be a number"),
+    bitSize: z.string(),
+    bitSizeStandard: z.string(),
+    bitSizePlus: z.string(),
+    emailAlerts: z.string().email("Invalid email format"),
+    emailAudity: z.string(),
+    realtimeStreamingEnabled: z.boolean(),
+    realtimeStreaming: z.string(),
+    autoMuteAlarms: z.boolean(),
+    captureRecirculation: z.string(),
+  }),
+  accountSecurity: z.object({
+    timeouts: z.string(),
+    systemSecurity: z.string(),
+    backupDirectory: z.string(),
+  }),
+  scheduleTime: z.object({
+    autoUTCSync: z.boolean(),
+    syncTime: z.string(),
+    clipTimeMode: z.string(),
+    localTime: z.string(),
+  }),
+});
+
+type SystemSettingsFormValues = z.infer<typeof systemSettingsFormSchema>;
 
 export function SystemSettings() {
   const { data: systemSettingsResponse, isLoading } = useSystemSettingsData();
@@ -31,77 +76,83 @@ export function SystemSettings() {
   const { mutate: saveSystemSettingsData } = useSaveSystemSettingsData();
   const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
-  const options = (optionsResponse?.data as SystemSettingsOptions) || {};
+  const options = optionsResponse?.data;
 
-  const initialData = useMemo(() => {
-    if (!systemSettingsResponse?.data) return undefined;
-    const { daqPreset, controlMode, hardwareConfig } =
-      systemSettingsResponse.data;
-    return { daqPreset, controlMode, hardwareConfig };
-  }, [systemSettingsResponse?.data]);
-
-  const form = useSectionForm<SaveSystemSettingsPayload>({
-    initialData,
-    onSave: (data) => {
-      return new Promise((resolve, reject) => {
-        saveSystemSettingsData(data, {
-          onSuccess: () => resolve(),
-          onError: (error) => reject(error),
-        });
-      });
-    },
-    registerSaveHandler,
-    unregisterSaveHandler,
-    successMessage: "System settings saved successfully",
-    errorMessage: "Failed to save system settings",
-    confirmTitle: "Save System Settings",
-    confirmDescription:
-      "Are you sure you want to save these system settings changes?",
+  // Initialize form
+  const formMethods = useForm<SystemSettingsFormValues>({
+    resolver: zodResolver(systemSettingsFormSchema),
   });
 
-  // System Settings state
-  const [systemType, setSystemType] = useState("MPD");
-  const [mudSystem, setMudSystem] = useState("OBM");
-  const [controlMode, setControlMode] = useState("Manual");
-  const [autoPresetRestore, setAutoPresetRestore] = useState(false);
-  const [presetToRestore, setPresetToRestore] = useState("Master.deGas");
-  const [exportCompatibility, setExportCompatibility] =
-    useState("Compute Format");
-  const [cursorDataRate, setCursorDataRate] = useState("12");
-  const [displayLanguage, setDisplayLanguage] = useState("English");
-  const [quickLaunchGUI, setQuickLaunchGUI] = useState("Summary");
-  const [autoPresetRestoreTime, setAutoPresetRestoreTime] = useState(false);
-  const [restoreAfterHours, setRestoreAfterHours] = useState("15");
+  const { reset, control, handleSubmit } = formMethods;
 
-  // Alarm Settings state
-  const [soundVolume, setSoundVolume] = useState("Medium");
-  const [alertLength, setAlertLength] = useState("3 sec");
-  const [realtimeStreaming, setRealtimeStreaming] = useState("ON");
-  const [autoMuteAlarms, setAutoMuteAlarms] = useState(false);
-  const [captureRecirculation, setCaptureRecirculation] = useState("12/DT");
-  const [surfaceTempOffset, setSurfaceTempOffset] = useState("T1");
-  const [hpLow, setHpLow] = useState("1000");
-  const [hpHigh, setHpHigh] = useState("2500");
-  const [bitSize, setBitSize] = useState("20/11");
-  const [bitSizeStandard, setBitSizeStandard] = useState("Standard");
-  const [bitSizePlus, setBitSizePlus] = useState("+5°F");
-  const [emailAlerts, setEmailAlerts] = useState("nfq-21@quantexq.com");
-  const [emailAudity, setEmailAudity] = useState("Audity");
+  // Watch toggle states to conditionally show/hide fields
+  const autoPresetRestoreTime = useWatch({
+    control,
+    name: "systemSettings.autoPresetRestoreTime",
+  });
+  const realtimeStreamingEnabled = useWatch({
+    control,
+    name: "alarmSettings.realtimeStreamingEnabled",
+  });
+  const autoMuteAlarms = useWatch({
+    control,
+    name: "alarmSettings.autoMuteAlarms",
+  });
+  const autoUTCSync = useWatch({
+    control,
+    name: "scheduleTime.autoUTCSync",
+  });
 
-  // Account & Security state
-  const [timeouts, setTimeouts] = useState("45min");
-  const [systemSecurity, setSystemSecurity] = useState("Always Backup");
-  const [backupDirectory, setBackupDirectory] = useState("");
+  // Track if we have set initial data
+  const [hasSetInitial, setHasSetInitial] = useState(false);
 
-  // Schedule & Time state
-  const [autoUTCSync, setAutoUTCSync] = useState(false);
-  const [localTime, setLocalTime] = useState("06 Feb 2026 / 16:37");
+  useEffect(() => {
+    if (systemSettingsResponse?.data && !hasSetInitial) {
+      const { systemSettings, alarmSettings, accountSecurity, scheduleTime } =
+        systemSettingsResponse.data;
+      reset({ systemSettings, alarmSettings, accountSecurity, scheduleTime });
+      setHasSetInitial(true);
+    }
+  }, [systemSettingsResponse, hasSetInitial, reset]);
 
-  if (isLoading || !form.formData) {
+  // Handle save and confirmation using the same UI flow as useSectionForm
+  const saveWithConfirmation =
+    useSaveWithConfirmation<SaveSystemSettingsPayload>({
+      onSave: (data) => {
+        return new Promise<void>((resolve, reject) => {
+          saveSystemSettingsData(data, {
+            onSuccess: () => resolve(),
+            onError: (error) => reject(error),
+          });
+        });
+      },
+      successMessage: "System settings saved successfully",
+      errorMessage: "Failed to save system settings",
+      confirmTitle: "Save System Settings",
+      confirmDescription:
+        "Are you sure you want to save these system settings changes?",
+    });
+
+  // Attach context's save to RHF handleSubmit
+  useEffect(() => {
+    const handleSave = handleSubmit((validData) => {
+      saveWithConfirmation.requestSave(validData as SaveSystemSettingsPayload);
+    });
+
+    registerSaveHandler(handleSave);
+    return () => {
+      unregisterSaveHandler();
+    };
+  }, [
+    handleSubmit,
+    registerSaveHandler,
+    unregisterSaveHandler,
+    saveWithConfirmation,
+  ]);
+
+  if (isLoading || !hasSetInitial || !systemSettingsResponse?.data) {
     return <SectionSkeleton count={6} />;
   }
-
-
 
   return (
     <>
@@ -111,113 +162,100 @@ export function SystemSettings() {
           {/* System Settings Panel */}
           <PanelCard
             title={
-              <>
+              <div className="flex items-center gap-2">
                 <Settings className="h-4 w-4" />
                 System Settings
-              </>
+              </div>
             }
             headerAction={<RestoreDefaultsButton />}
           >
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
-              <CommonSelect
+              <CommonFormSelect
+                name="systemSettings.systemType"
+                control={control}
                 label="System Type"
                 options={options?.systemTypeOptions || []}
-                value={systemType}
-                onValueChange={setSystemType}
+                placeholder="Select System Type"
               />
 
-              <CommonSelect
+              <CommonFormSelect
+                name="systemSettings.mudSystem"
+                control={control}
                 label="Mud System"
                 options={options?.mudSystemOptions || []}
-                value={mudSystem}
-                onValueChange={setMudSystem}
+                placeholder="Select Mud System"
               />
 
-              <CommonSelect
+              <CommonFormSelect
+                name="systemSettings.controlMode"
+                control={control}
                 label="Control Mode"
                 options={options?.controlModeOptions || []}
-                value={controlMode}
-                onValueChange={setControlMode}
+                placeholder="Select Control Mode"
               />
-            </div>
-
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
-              <CommonToggle
-                label="Auto Preset Restore"
-                checked={autoPresetRestore}
-                onCheckedChange={setAutoPresetRestore}
-                className="py-5 pb-10"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
-              <CommonSelect
-                label="Preset to Restore"
-                options={[
-                  { label: "Master.deGas", value: "Master.deGas" },
-                  { label: "Default", value: "Default" },
-                  { label: "Custom", value: "Custom" },
-                ]}
-                value={presetToRestore}
-                onValueChange={setPresetToRestore}
-              />
-
-              <CommonSelect
+              <CommonFormSelect
+                name="systemSettings.exportCompatibility"
+                control={control}
                 label="Export Compatibility"
-                options={[
-                  { label: "Compute Format", value: "Compute Format" },
-                  { label: "Legacy Format", value: "Legacy Format" },
-                ]}
-                value={exportCompatibility}
-                onValueChange={setExportCompatibility}
+                options={options?.exportCompatibilityOptions || []}
+                placeholder="Select Export Compatibility"
               />
-
-              <CommonInput
+              <CommonFormInput
+                name="systemSettings.cursorDataRate"
+                control={control}
                 label="Cursor Data Rate"
-                value={cursorDataRate}
-                onChange={(e) => setCursorDataRate(e.target.value)}
+                type="text"
                 suffix="counts/sec"
+                placeholder="Enter Cursor Data Rate"
               />
 
-              <CommonSelect
+              <CommonFormSelect
+                name="systemSettings.displayLanguage"
+                control={control}
                 label="Display Language"
-                options={[
-                  { label: "English", value: "English" },
-                  { label: "Spanish", value: "Spanish" },
-                  { label: "French", value: "French" },
-                ]}
-                value={displayLanguage}
-                onValueChange={setDisplayLanguage}
+                options={options?.displayLanguageOptions || []}
+                placeholder="Select Display Language"
               />
 
-              <CommonSelect
+              <CommonFormSelect
+                name="systemSettings.quickLaunchGUI"
+                control={control}
                 label="Quick Launch GUI"
-                options={[
-                  { label: "Summary", value: "Summary" },
-                  { label: "Dashboard", value: "Dashboard" },
-                  { label: "Detailed", value: "Detailed" },
-                ]}
-                value={quickLaunchGUI}
-                onValueChange={setQuickLaunchGUI}
+                options={options?.quickLaunchGUIOptions || []}
+                placeholder="Select Quick Launch GUI"
               />
             </div>
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
-              <CommonToggle
-                label="Auto Preset Restore:"
-                checked={autoPresetRestoreTime}
-                onCheckedChange={setAutoPresetRestoreTime}
-              />
+            <hr className="my-5" />
 
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max mt-3">
-                <CommonInput
-                  value={restoreAfterHours}
-                  onChange={(e) => setRestoreAfterHours(e.target.value)}
-                  suffix="after"
-                  className="mb-0"
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
+              <div className="flex items-center">
+                <CommonFormToggle
+                  name="systemSettings.autoPresetRestoreTime"
+                  control={control}
+                  label="Auto Preset Restore"
+                  containerClassName="w-auto"
                 />
-                <CommonInput value="15 hours" readOnly className="mb-0" />
               </div>
+
+              {autoPresetRestoreTime && (
+                <>
+                  <CommonFormSelect
+                    name="systemSettings.restoreAfterHours"
+                    control={control}
+                    options={options?.restoreAfterHoursOptions || []}
+                    containerClassName="mb-0"
+                    placeholder="Select Hours"
+                  />
+                  <CommonFormSelect
+                    name="systemSettings.presetToRestore"
+                    control={control}
+                    label="Preset to Restore"
+                    options={options?.presetToRestoreOptions || []}
+                    placeholder="Select Preset"
+                  />
+                </>
+              )}
             </div>
           </PanelCard>
 
@@ -226,164 +264,163 @@ export function SystemSettings() {
             title="Alarm Settings"
             headerAction={<RestoreDefaultsButton />}
           >
-            <div className="space-y-1">
+            <div className="space-y-3">
               {/* Row 1: Sound Volume and Alert Length */}
-              <div className="grid grid-cols-2 gap-3">
-                <CommonSelect
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
+                <CommonFormSelect
+                  name="alarmSettings.soundVolume"
+                  control={control}
                   label="Sound Volume"
-                  options={[
-                    { label: "Low", value: "Low" },
-                    { label: "Medium", value: "Medium" },
-                    { label: "High", value: "High" },
-                  ]}
-                  value={soundVolume}
-                  onValueChange={setSoundVolume}
+                  options={options?.soundVolumeOptions || []}
+                  placeholder="Select Volume"
                 />
 
-                <CommonSelect
+                <CommonFormSelect
+                  name="alarmSettings.alertLength"
+                  control={control}
                   label="Alert Length"
-                  options={[
-                    { label: "1 sec", value: "1 sec" },
-                    { label: "3 sec", value: "3 sec" },
-                    { label: "5 sec", value: "5 sec" },
-                  ]}
-                  value={alertLength}
-                  onValueChange={setAlertLength}
+                  options={options?.alertLengthOptions || []}
+                  placeholder="Select Length"
                 />
-              </div>
-
-              {/* Row 2: Realtime Streaming */}
-              <div className="mb-5">
-                <label className="text-sm font-medium mb-2 block ml-[3px]">
-                  Realtime Streaming:
-                </label>
-                <div className="flex items-center gap-3">
-                  <div className="w-24">
-                    <CommonSelect
-                      options={[
-                        { label: "ON", value: "ON" },
-                        { label: "OFF", value: "OFF" },
-                      ]}
-                      value={realtimeStreaming}
-                      onValueChange={setRealtimeStreaming}
-                      className="mb-0"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <CommonSelect
-                      options={[
-                        {
-                          label: "DAQ-Notifications, Log Analysis",
-                          value: "DAQ-Notifications, Log Analysis",
-                        },
-                      ]}
-                      value="DAQ-Notifications, Log Analysis"
-                      onValueChange={() => {}}
-                      className="mb-0"
-                    />
-                  </div>
-                  <CommonButton variant="outline" size="sm">
-                    Edit Test Alerts
-                  </CommonButton>
-                </div>
-              </div>
-
-              {/* Row 3: Auto Mute and Capture Recirculation */}
-              <div className="mb-5">
-                <div className="flex items-center gap-3">
-                  <div className="flex-1">
-                    <CommonToggle
-                      label="Auto Mute Alarms for Sequence:"
-                      checked={autoMuteAlarms}
-                      onCheckedChange={setAutoMuteAlarms}
-                    />
-                  </div>
-                  <div className="w-56">
-                    <CommonSelect
-                      options={[
-                        {
-                          label: "Capture Recirculation",
-                          value: "Capture Recirculation",
-                        },
-                      ]}
-                      value="Capture Recirculation"
-                      onValueChange={() => {}}
-                      className="mb-0"
-                    />
-                  </div>
-                  <div className="w-24">
-                    <CommonInput
-                      value={captureRecirculation}
-                      onChange={(e) => setCaptureRecirculation(e.target.value)}
-                      className="mb-0"
-                    />
-                  </div>
-                </div>
               </div>
 
               {/* Row 4: Surface Temp, HP Low, HP High */}
-              <div className="grid grid-cols-3 gap-3 mb-5">
-                <CommonInput
-                  label="Surface Temp offset:"
-                  value={surfaceTempOffset}
-                  onChange={(e) => setSurfaceTempOffset(e.target.value)}
-                  className="mb-0"
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 auto-rows-max">
+                <CommonFormInput
+                  name="alarmSettings.surfaceTempOffset"
+                  control={control}
+                  label="Surface Temp offset"
+                  type="text"
+                  containerClassName="mb-0"
+                  placeholder="Enter Offset"
                 />
-                <CommonInput
+                <CommonFormInput
+                  name="alarmSettings.hpLow"
+                  control={control}
                   label="HP Low"
-                  value={hpLow}
-                  onChange={(e) => setHpLow(e.target.value)}
+                  type="text"
                   suffix="psi"
-                  className="mb-0"
+                  containerClassName="mb-0"
+                  placeholder="Enter HP Low"
                 />
-                <CommonInput
+                <CommonFormInput
+                  name="alarmSettings.hpHigh"
+                  control={control}
                   label="HP High"
-                  value={hpHigh}
-                  onChange={(e) => setHpHigh(e.target.value)}
+                  type="text"
                   suffix="psi"
-                  className="mb-0"
+                  containerClassName="mb-0"
+                  placeholder="Enter HP High"
                 />
               </div>
 
               {/* Row 5: Bit Size and Email Alerts */}
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 auto-rows-max">
-                <CommonInput
-                  label="Bit Size:"
-                  value={bitSize}
-                  onChange={(e) => setBitSize(e.target.value)}
-                  className="mb-0"
+                <CommonFormInput
+                  name="alarmSettings.bitSize"
+                  control={control}
+                  label="Bit Size"
+                  type="text"
+                  containerClassName="mb-0"
+                  placeholder="Enter Bit Size"
                 />
 
-                <CommonSelect
-                  options={[
-                    { label: "Standard", value: "Standard" },
-                    { label: "+5°F", value: "+5°F" },
-                    { label: "+5°E", value: "+5°E" },
-                  ]}
-                  value={bitSizeStandard}
-                  onValueChange={setBitSizeStandard}
-                  className="mb-0"
+                <CommonFormSelect
+                  name="alarmSettings.bitSizeStandard"
+                  control={control}
+                  options={options?.bitSizeStandardOptions || []}
+                  containerClassName="mt-6"
+                  placeholder="Select Standard"
                 />
 
-                <CommonInput
-                  value={bitSizePlus}
-                  onChange={(e) => setBitSizePlus(e.target.value)}
-                  className="mb-0"
+                <CommonFormInput
+                  name="alarmSettings.bitSizePlus"
+                  control={control}
+                  type="text"
+                  containerClassName="mt-8 mb-0"
+                  placeholder="Enter Value"
                 />
               </div>
+
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
-                <CommonInput
-                  label="Email Alerts:"
-                  value={emailAlerts}
-                  onChange={(e) => setEmailAlerts(e.target.value)}
-                  className="mb-0"
+                <CommonFormSelect
+                  name="alarmSettings.emailAlerts"
+                  control={control}
+                  label="Email Alerts"
+                  options={options?.emailAlertsOptions || []}
+                  containerClassName="mb-0"
+                  placeholder="Select Email"
                 />
-                <CommonInput
-                  value={emailAudity}
-                  onChange={(e) => setEmailAudity(e.target.value)}
-                  className="mb-0 mt-8"
+                <CommonFormSelect
+                  name="alarmSettings.emailAudity"
+                  control={control}
+                  options={options?.emailAudityOptions || []}
+                  containerClassName="mt-6 mb-0"
+                  placeholder="Select Audity"
                 />
               </div>
+            </div>
+
+            <hr className="my-5" />
+
+            {/* Row 2: Realtime Streaming */}
+            <div
+              className={`grid grid-cols-1 xl:grid-cols-[2fr_2fr_1fr] gap-3 items-center ${realtimeStreamingEnabled ? "mb-3" : "mb-5"} `}
+            >
+              <CommonFormToggle
+                name="alarmSettings.realtimeStreamingEnabled"
+                control={control}
+                label="Realtime Streaming"
+                containerClassName="w-auto"
+              />
+
+              {realtimeStreamingEnabled && (
+                <>
+                  <CommonFormSelect
+                    name="alarmSettings.realtimeStreaming"
+                    control={control}
+                    options={options?.realtimeStreamingOptions || []}
+                    placeholder="Select Realtime Streaming"
+                  />
+
+                  <CommonButton
+                    type="button"
+                    variant="outline"
+                    className="mt-2"
+                  >
+                    Edit Test Alerts
+                  </CommonButton>
+                </>
+              )}
+            </div>
+
+            {/* Row 3: Auto Mute and Capture Recirculation */}
+            <div className="grid grid-cols-1 xl:grid-cols-[2fr_2fr_1fr] gap-3 items-center">
+              <CommonFormToggle
+                name="alarmSettings.autoMuteAlarms"
+                control={control}
+                label="Auto Mute Alarms for Sequence"
+                containerClassName="w-auto"
+              />
+
+              {autoMuteAlarms && (
+                <>
+                  <CommonFormSelect
+                    name="alarmSettings.captureRecirculation"
+                    control={control}
+                    options={options?.captureRecirculationOptions || []}
+                    placeholder="Select Capture Settings"
+                  />
+
+                  <CommonFormInput
+                    name="alarmSettings.captureRecirculation"
+                    control={control}
+                    type="text"
+                    containerClassName="mt-2"
+                    placeholder="Enter Recirculation Value"
+                  />
+                </>
+              )}
             </div>
           </PanelCard>
         </div>
@@ -394,67 +431,71 @@ export function SystemSettings() {
           <PanelCard
             title="Account & Security"
             headerAction={
-              <CommonButton variant="outline" size="sm">
+              <CommonButton type="button" variant="outline">
                 Set Permissions
               </CommonButton>
             }
           >
-            <div className="space-y-1">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex-1">
-                  <CommonSelect
-                    label="Timeouts:"
-                    options={[
-                      { label: "15min", value: "15min" },
-                      { label: "30min", value: "30min" },
-                      { label: "45min", value: "45min" },
-                      { label: "60min", value: "60min" },
-                    ]}
-                    value={timeouts}
-                    onValueChange={setTimeouts}
-                    className="mb-0"
+            <div className="space-y-4">
+              {/* Row 1: Timeouts and Retrieve Decals */}
+              <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3 items-center">
+                <div className="flex items-center gap-3">
+                  <label className="text-sm font-medium">Timeouts</label>
+
+                  <CommonFormSelect
+                    name="accountSecurity.timeouts"
+                    control={control}
+                    options={options?.timeoutsOptions || []}
+                    containerClassName="w-60"
+                    placeholder="Select Timeout"
                   />
                 </div>
-                <CommonButton variant="outline" size="sm" className="mt-7">
-                  Retrieve Decals
+
+                <CommonButton
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                >
+                  Restore Defaults
                 </CommonButton>
               </div>
 
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex-1">
-                  <CommonButton variant="outline" className="w-full">
-                    User Login / Permissions
-                  </CommonButton>
-                </div>
-                <CommonButton variant="outline">Update Firewall</CommonButton>
+              {/* Row 2: User Login and Update Firewall */}
+              <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3 items-center">
+                <label className="text-sm font-medium">
+                  User Login / Permissions
+                </label>
+                <CommonButton
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                >
+                  Update Firewall
+                </CommonButton>
               </div>
 
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex-1">
-                  <CommonSelect
-                    label="System Security:"
-                    options={[
-                      { label: "Always Backup", value: "Always Backup" },
-                      { label: "Manual Backup", value: "Manual Backup" },
-                    ]}
-                    value={systemSecurity}
-                    onValueChange={setSystemSecurity}
-                    className="mb-0"
-                  />
-                </div>
+              {/* Row 3: System Security and Always Backup */}
+              <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3 items-center">
+                <label className="text-sm font-medium">System Security</label>
+                <CommonButton
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                >
+                  Always Backup
+                </CommonButton>
               </div>
 
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex-1">
-                  <CommonInput
-                    label="Backup Database to Directory"
-                    value={backupDirectory}
-                    onChange={(e) => setBackupDirectory(e.target.value)}
-                    placeholder="Select directory..."
-                    className="mb-0"
-                  />
-                </div>
-                <CommonButton variant="outline" size="sm" className="mt-7">
+              {/* Row 4: Backup Database and Change Password */}
+              <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3 items-center">
+                <label className="text-sm font-medium">
+                  Backup Database to Directory
+                </label>
+                <CommonButton
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                >
                   Change Password
                 </CommonButton>
               </div>
@@ -466,53 +507,66 @@ export function SystemSettings() {
             title="Schedule & Time"
             headerAction={<RestoreDefaultsButton />}
           >
-            <div className="space-y-1">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex-1">
-                  <CommonToggle
-                    label="Auto UTC Sync:"
-                    checked={autoUTCSync}
-                    onCheckedChange={setAutoUTCSync}
-                  />
-                </div>
-                <CommonButton variant="outline" size="sm">
-                  Remain
-                </CommonButton>
-                <CommonButton variant="outline" size="sm">
-                  Clip Time Tumult
-                </CommonButton>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr_1fr] gap-3 items-center">
+                <CommonFormToggle
+                  name="scheduleTime.autoUTCSync"
+                  control={control}
+                  label="Auto UTC Sync"
+                  containerClassName="w-auto"
+                />
+
+                {autoUTCSync && (
+                  <>
+                    <CommonFormInput
+                      name="scheduleTime.syncTime"
+                      control={control}
+                      type="text"
+                      containerClassName="mt-2"
+                      placeholder="Enter Sync Time (e.g. 2a.55 n0.am)"
+                    />
+                    <CommonFormSelect
+                      name="scheduleTime.clipTimeMode"
+                      control={control}
+                      options={options?.clipTimeModeOptions || []}
+                      placeholder="Select Time Mode"
+                    />
+                  </>
+                )}
               </div>
 
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex-1">
-                  <CommonInput
-                    label="Local Time:"
-                    value={localTime}
-                    onChange={(e) => setLocalTime(e.target.value)}
-                    className="mb-0"
-                  />
-                </div>
-                <div className="w-40 mt-7">
-                  <CommonSelect
-                    options={[
-                      { label: "24-Hour format", value: "24-Hour format" },
-                      { label: "12-Hour format", value: "12-Hour format" },
-                    ]}
-                    value="24-Hour format"
-                    onValueChange={() => {}}
-                    className="mb-0"
-                  />
-                </div>
-                <div className="w-32 mt-7">
-                  <CommonInput value="UTC 0:00" readOnly className="mb-0" />
-                </div>
+              <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr_1fr] gap-3 auto-rows-max">
+                <CommonFormInput
+                  name="scheduleTime.localTime"
+                  control={control}
+                  label="Local Time"
+                  type="text"
+                  containerClassName="mb-0"
+                  placeholder="Enter Local Time"
+                />
+
+                <CommonFormSelect
+                  name="scheduleTime.localTime"
+                  control={control}
+                  options={options?.localTimeFormatOptions || []}
+                  containerClassName="mt-6"
+                  placeholder="Select Format"
+                />
+
+                <CommonFormSelect
+                  name="scheduleTime.localTime"
+                  control={control}
+                  options={options?.utcTimeOptions || []}
+                  containerClassName="mt-6"
+                  placeholder="Select Timezone"
+                />
               </div>
             </div>
           </PanelCard>
         </div>
       </div>
 
-      <FormSaveDialog form={form} />
+      <FormSaveDialog form={saveWithConfirmation} />
     </>
   );
 }
