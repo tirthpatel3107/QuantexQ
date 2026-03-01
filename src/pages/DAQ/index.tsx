@@ -21,7 +21,7 @@ import { SensorPerms } from "./SensorPerms";
 // import { Calibration } from "./Calibration";
 import { Hydraulics } from "./Hydraulics";
 import { SystemSettings } from "./SystemSettings";
-import { Downloads } from "./Downloads";
+import { Downloads } from "./downloads/index";
 import { DAQProvider, useDAQContext } from "../../context/DAQ/DAQContext";
 
 /**
