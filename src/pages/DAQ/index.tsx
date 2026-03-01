@@ -20,8 +20,8 @@ import { LogAnalysis } from "./LogAnalysis";
 import { SensorPerms } from "./SensorPerms";
 // import { Calibration } from "./Calibration";
 import { Hydraulics } from "./Hydraulics";
-// import { SystemSettings } from "./SystemSettings";
-// import { Downloads } from "./Downloads";
+import { SystemSettings } from "./SystemSettings";
+import { Downloads } from "./Downloads";
 import { DAQProvider, useDAQContext } from "../../context/DAQ/DAQContext";
 
 /**
@@ -99,9 +99,9 @@ function DAQContent() {
       case "streaming":
         // return <Streaming />;
       case "system-settings":
-        // return <SystemSettings />;
+        return <SystemSettings />;
       case "downloads":
-        // return <Downloads />;
+        return <Downloads />;
       default:
         return <DaqOverview />;
     }
