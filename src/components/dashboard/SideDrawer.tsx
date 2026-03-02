@@ -57,7 +57,7 @@ const menuSections = [
       { label: "DAQ", to: ROUTES.DAQ, icon: Activity },
       { label: "Mud Properties", to: ROUTES.MUD_PROPERTIES, icon: Droplets },
       { label: "Network", to: ROUTES.NETWORK, icon: Network },
-      { label: "Valve Config", to: "#", icon: Sliders },
+      // { label: "Valve Config", to: "#", icon: Sliders },
     ],
   },
   {

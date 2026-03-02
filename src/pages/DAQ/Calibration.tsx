@@ -306,9 +306,7 @@ export function Calibration() {
               </div>
             }
             headerAction={
-              <CommonButton variant="ghost" size="sm">
-                Filter Glint
-              </CommonButton>
+              <CommonButton variant="outline">Filters</CommonButton>
             }
           >
             <div className="space-y-4">
