@@ -20,13 +20,13 @@ import { Temperature } from "./Temperature";
 import { GasCompressibility } from "./GasCompressibility";
 import { Calibration } from "./Calibration";
 import { Summary } from "./Summary";
-import { MudPropertiesSidebar } from "../../components/mudProperties/MudPropertiesSidebar";
+import { MudPropertiesSidebar } from "@/components/mudProperties/MudPropertiesSidebar";
 import { MUD_NAV } from "@/utils/constants";
 import { FluidData } from "@/utils/types/mud";
 import {
   MudPropertiesProvider,
   useMudPropertiesContext,
-} from "../../context/MudProperties/MudPropertiesContext";
+} from "@/context/MudProperties";
 
 function MudPropertiesContent() {
   const { section } = useParams();

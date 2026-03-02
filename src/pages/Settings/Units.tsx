@@ -12,7 +12,7 @@ import {
 } from "@/services/api/settings/settings.api";
 
 // Context
-import { useSettingsContext } from "../../context/Settings/SettingsContext";
+import { useSettingsContext } from "@/context/Settings";
 
 export function Units() {
   const { data: unitsResponse, isLoading } = useUnitsSettings();

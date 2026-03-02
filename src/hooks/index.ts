@@ -10,6 +10,6 @@ export { useTheme } from './useTheme';
 export { useSimulation } from './useSimulation';
 export { useSidebarContext } from './useSidebarContext';
 export { useInitialSkeleton } from './useInitialSkeleton';
-export { useAccentColor } from './useAccentColor';
+export { useAccentColor } from './useAccentColorHook';
 export { useSectionForm } from './useSectionForm';
 export { useSaveWithConfirmation } from './useSaveWithConfirmation';

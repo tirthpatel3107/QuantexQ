@@ -6,8 +6,9 @@ import {
   useSaveHydraulicsData,
 } from "@/services/api/daq/daq.api";
 import type { SaveHydraulicsPayload } from "@/services/api/daq/daq.types";
-import { useDAQContext } from "../../context/DAQ/DAQContext";
 
+// Context
+import { useDAQContext } from "@/context/DAQ";
 export function Hydraulics() {
   const { data: hydraulicsResponse, isLoading } = useHydraulicsData();
   const { mutate: saveHydraulicsData } = useSaveHydraulicsData();

@@ -18,7 +18,7 @@ import { Protocols } from "./Protocols";
 import { Routing } from "./Routing";
 import { Security } from "./Security";
 import { Diagnostics } from "./Diagnostics";
-import { NetworkProvider, useNetworkContext } from "../../context/Network/NetworkContext";
+import { NetworkProvider, useNetworkContext } from "@/context/Network";
 
 function NetworkContent() {
   const { section } = useParams();

@@ -1,9 +1,9 @@
 // React & Hooks
 import { useState, useEffect } from "react";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { diagnosticsFormSchema, MOCK_CHART_DATA, type DiagnosticsFormValues } from "@/utils/schemas/diagnostics-schema";
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
 
@@ -32,34 +32,8 @@ import {
 import type { SaveDiagnosticsPayload } from "@/services/api/network/network.types";
 
 // Context
-import { useNetworkContext } from "../../context/Network/NetworkContext";
+import { useNetworkContext } from "@/context/Network";
 
-export const diagnosticsFormSchema = z.object({
-  packetCapture: z.object({
-    enabled: z.boolean(),
-    duration: z.string().min(1, "Duration is required"),
-  }),
-  jitterAnalysis: z.object({
-    showMask: z.boolean().default(false),
-  }),
-});
-
-export const MOCK_CHART_DATA = {
-  latency: Array.from({ length: 20 }, (_, i) => ({
-    time: i.toString(),
-    value: Math.floor(Math.random() * 400) + 100,
-  })),
-  dropRate: Array.from({ length: 20 }, (_, i) => ({
-    time: i.toString(),
-    value: Math.random() * 2,
-  })),
-  messages: Array.from({ length: 20 }, (_, i) => ({
-    time: i.toString(),
-    value: Math.floor(Math.random() * 50) + 100,
-  })),
-};
-
-type DiagnosticsFormValues = z.infer<typeof diagnosticsFormSchema>;
 
 export function Diagnostics() {
   const { data: diagnosticsResponse, isLoading } = useDiagnosticsData();

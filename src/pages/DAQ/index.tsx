@@ -22,8 +22,7 @@ import { Calibration } from "./Calibration";
 import { Hydraulics } from "./Hydraulics";
 import { SystemSettings } from "./SystemSettings";
 import { Downloads } from "./downloads/index";
-import { DAQProvider, useDAQContext } from "../../context/DAQ/DAQContext";
-
+import { DAQProvider, useDAQContext } from "@/context/DAQ";
 /**
  * DAQ (Data Acquisition) Dashboard Content
  *
@@ -97,11 +96,13 @@ function DAQContent() {
       case "downloads":
         return <Downloads />;
       case "calibration":
-      return <Calibration />;
+        return <Calibration />;
       case "display":
-      // return <Display />;
+        // return <Display />;
+        break;
       case "streaming":
-      // return <Streaming />;
+        // return <Streaming />;
+        break;
       default:
         return <DaqOverview />;
     }

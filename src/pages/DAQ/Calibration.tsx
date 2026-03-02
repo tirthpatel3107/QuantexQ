@@ -1,9 +1,9 @@
 // React & Hooks
 import { useState, useEffect, useMemo, Fragment } from "react";
-import { z } from "zod";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { calibrationFormSchema, type CalibrationFormValues } from "@/utils/schemas/calibration-schema";
 
 // Components - Common
 import {
@@ -34,49 +34,9 @@ import {
 import type { SaveCalibrationPayload } from "@/services/api/daq/daq.types";
 
 // Context
-import { useDAQContext } from "@/context/DAQ/DAQContext";
+import { useDAQContext } from "@/context/DAQ";
 
 // ============================================
-// Zod Schema
-// ============================================
-
-export const calibrationFormSchema = z.object({
-  onPermissions: z.string().min(1, "Permission type is required"),
-  applyType: z.enum(["auto", "manual", "acmPerms"]),
-  weightOnBit: z.enum(["auto", "manual", "own"]),
-  permissions: z.array(
-    z.object({
-      sensor: z.string(),
-      depth: z.boolean(),
-      primary: z.boolean(),
-      secondary: z.boolean(),
-      validation: z.string(),
-      comments: z.string(),
-    }),
-  ),
-  defaultPermissions: z.array(
-    z.object({
-      name: z.string(),
-      auto: z.boolean(),
-    }),
-  ),
-  senectoPermissions: z.array(
-    z.object({
-      key: z.string(),
-      label: z.string(),
-      enabled: z.boolean(),
-      hydrations: z.boolean(),
-      edits: z.coerce.number().min(0, "Must be at least 0").max(1, "Must be at most 1"),
-      hasSelectType: z.boolean(),
-    }),
-  ).refine((items) => items.every((item) => item.edits !== null && item.edits !== undefined), {
-    message: "All edits fields are required",
-  }),
-  sensorPermissionsOk: z.boolean(),
-  validateAll: z.boolean(),
-});
-
-type CalibrationFormValues = z.infer<typeof calibrationFormSchema>;
 
 // ============================================
 // Dropdown options (static, can be fetched from API later)
@@ -189,10 +149,9 @@ export function Calibration() {
   }, [permissions, searchQuery]);
 
   // Chart data from API response (read-only, not in form)
-  const chartData = calibrationResponse?.data?.chartData ?? [];
-
-  const chartOption = useMemo(
-    () => ({
+  const chartOption = useMemo(() => {
+    const chartData = calibrationResponse?.data?.chartData ?? [];
+    return {
       backgroundColor: "transparent",
       tooltip: {
         trigger: "axis",
@@ -242,9 +201,8 @@ export function Calibration() {
           },
         },
       ],
-    }),
-    [chartData],
-  );
+    };
+  }, [calibrationResponse?.data?.chartData]);
 
   // ── Loading guard ─────────────────────────────────────────────────────────
   if (isLoading || !hasSetInitial || !calibrationResponse?.data) {

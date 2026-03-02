@@ -31,7 +31,7 @@ import { UsersRoles } from "./userRoles";
 import { AboutDiagnostics } from "./AboutDiagnostics";
 import { SETTINGS_NAV } from "@/utils/constants";
 import { GeneralSettingsData } from "@/utils/types/settings";
-import { SettingsProvider, useSettingsContext } from "../../context/Settings/SettingsContext";
+import { SettingsProvider, useSettingsContext } from "@/context/Settings";
 
 function SettingsContent() {
   const { section } = useParams();

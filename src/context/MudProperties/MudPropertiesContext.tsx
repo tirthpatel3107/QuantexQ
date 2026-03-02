@@ -1,21 +1,12 @@
 import {
-  createContext,
-  useContext,
   useState,
   useMemo,
   useCallback,
   ReactNode,
 } from "react";
+import { MudPropertiesContext, type MudPropertiesContextType } from "./context";
 
-interface MudPropertiesContextType {
-  requestSave: () => void;
-  registerSaveHandler: (handler: () => void) => void;
-  unregisterSaveHandler: () => void;
-}
-
-const MudPropertiesContext = createContext<
-  MudPropertiesContextType | undefined
->(undefined);
+export type { MudPropertiesContextType };
 
 export function MudPropertiesProvider({ children }: { children: ReactNode }) {
   const [saveHandler, setSaveHandler] = useState<(() => void) | null>(null);
@@ -44,14 +35,4 @@ export function MudPropertiesProvider({ children }: { children: ReactNode }) {
       {children}
     </MudPropertiesContext.Provider>
   );
-}
-
-export function useMudPropertiesContext() {
-  const context = useContext(MudPropertiesContext);
-  if (!context) {
-    throw new Error(
-      "useMudPropertiesContext must be used within MudPropertiesProvider",
-    );
-  }
-  return context;
 }

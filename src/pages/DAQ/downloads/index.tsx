@@ -6,9 +6,10 @@ import {
   useSaveDownloadsData,
 } from "@/services/api/daq/daq.api";
 import type { SaveDownloadsPayload } from "@/services/api/daq/daq.types";
-import { useDAQContext } from "../../../context/DAQ/DAQContext";
 import { DownloadPanel } from "./download";
 import { DownloadHistory } from "./DownloadHistory";
+// Context
+import { useDAQContext } from "@/context/DAQ";
 
 export function Downloads() {
   const { data: downloadsResponse, isLoading } = useDownloadsData();

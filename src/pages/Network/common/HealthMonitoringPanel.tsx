@@ -8,81 +8,12 @@ import {
 } from "@/components/common";
 import { Badge } from "@/components/ui/badge";
 import { Settings } from "lucide-react";
-
-export const DEFAULT_HEALTH_METRICS = [
-  { label: "Last packet time:", value: "2 seconds ago" },
-  { label: "Latency:", value: "19 ms" },
-  { label: "Drop rate:", value: "0 %" },
-  { label: "Messages/sec:", value: "74 / sec" },
-  { label: "Clock drift:", value: "+10 ms ahead" },
-];
-
-export const DEFAULT_DEVICE_HEALTH = [
-  {
-    name: "Chokes",
-    status: "OK",
-    statusColor: "green" as const,
-    percentage: "100%",
-    badge: "≤ 3",
-  },
-  {
-    name: "Flow_Meter",
-    status: "95%",
-    statusColor: "yellow" as const,
-    percentage: "95%",
-    badge: "≤ 3",
-  },
-  {
-    name: "PWD",
-    status: "WARN",
-    statusColor: "orange" as const,
-    percentage: "PWD_BHP",
-    badge: "≤ 1",
-  },
-];
-
-export const DEFAULT_CONNECTION_LOGS = [
-  {
-    timestamp: "23 Apr | 14:56",
-    message: "Chokes connected via Modbus TCP",
-  },
-  { timestamp: "23 Apr | 14:47", message: "Flow Meter: Tag coverage 95%" },
-  {
-    timestamp: "23 Apr | 14:41",
-    message: "Tag coverage 96% (1 missing):",
-    badge: "PWD",
-  },
-];
-
-export interface HealthMetric {
-  label: string;
-  value: string;
-}
-
-export interface DeviceHealthItem {
-  name: string;
-  status: string;
-  statusColor: "green" | "yellow" | "orange" | "red";
-  percentage: string;
-  badge: string;
-}
-
-export interface ConnectionLogEntry {
-  timestamp: string;
-  message: string;
-  badge?: string;
-}
-
-export interface HealthMonitoringPanelProps {
-  connectionStatus?: "CONNECTED" | "DISCONNECTED" | "WARNING";
-  liveHealthMetrics?: HealthMetric[];
-  deviceHealthItems?: DeviceHealthItem[];
-  connectionLogEntries?: ConnectionLogEntry[];
-  showFailoverSimulation?: boolean;
-  showDiagnosticsResults?: boolean;
-  onFailoverChange?: (enabled: boolean) => void;
-  onDeviceSettingsClick?: () => void;
-}
+import {
+  DEFAULT_HEALTH_METRICS,
+  DEFAULT_DEVICE_HEALTH,
+  DEFAULT_CONNECTION_LOGS,
+  type HealthMonitoringPanelProps,
+} from "@/utils/constants/health-monitoring-constants";
 
 export function HealthMonitoringPanel({
   connectionStatus = "CONNECTED",

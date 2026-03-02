@@ -1,21 +1,12 @@
 import {
-  createContext,
-  useContext,
   useState,
   useMemo,
   useCallback,
   ReactNode,
 } from "react";
+import { SettingsContext, type SettingsContextType } from "./context";
 
-interface SettingsContextType {
-  requestSave: () => void;
-  registerSaveHandler: (handler: () => void) => void;
-  unregisterSaveHandler: () => void;
-}
-
-const SettingsContext = createContext<SettingsContextType | undefined>(
-  undefined,
-);
+export type { SettingsContextType };
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [saveHandler, setSaveHandler] = useState<(() => void) | null>(null);
@@ -44,12 +35,4 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       {children}
     </SettingsContext.Provider>
   );
-}
-
-export function useSettingsContext() {
-  const context = useContext(SettingsContext);
-  if (!context) {
-    throw new Error("useSettingsContext must be used within SettingsProvider");
-  }
-  return context;
 }

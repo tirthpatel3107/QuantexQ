@@ -1,9 +1,9 @@
 // React & Hooks
 import { useState, useEffect } from "react";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { sourcesFormSchema, type SourcesFormValues } from "@/utils/schemas/sources-schema";
 
 // Components - UI & Icons
 import { PanelCard } from "@/components/dashboard/PanelCard";
@@ -26,36 +26,11 @@ import {
   useSaveSourcesData,
   useSourcesOptions,
 } from "@/services/api/network/network.api";
-import type { SaveSourcesPayload, DeviceSource } from "@/services/api/network/network.types";
+import type { SaveSourcesPayload } from "@/services/api/network/network.types";
 
 // Context
-import { useNetworkContext } from "../../context/Network/NetworkContext";
+import { useNetworkContext } from "@/context/Network";
 
-export const sourcesFormSchema = z.object({
-  rigPlc: z.object({
-    enabled: z.boolean(),
-    connectionStatus: z.enum(["Primary", "Connected", "Disconnected"]),
-    sourceType: z.string(),
-    endpoint: z.string().min(1, "Endpoint is required"),
-    port: z.string().min(1, "Port is required").regex(/^\d+$/, "Port must be a number"),
-    tagMap: z.string().min(1, "Tag Map is required"),
-    dataRate: z.string().min(1, "Data rate is required"),
-  }),
-  pwdWits: z.object({
-    enabled: z.boolean(),
-    endpoint: z.string().min(1, "Endpoint is required"),
-    port: z.string().min(1, "Port is required").regex(/^\d+$/, "Port must be a number"),
-    dataRate: z.string().min(1, "Data rate is required"),
-    frequency: z.string().min(1, "Frequency is required"),
-    tagMap: z.string().min(1, "Tag Map is required"),
-  }),
-  devices: z.object({
-    enabled: z.boolean().default(true),
-    items: z.custom<DeviceSource[]>(),
-  }),
-});
-
-type SourcesFormValues = z.infer<typeof sourcesFormSchema>;
 
 export function Sources() {
   const { data: sourcesResponse, isLoading } = useSourcesData();

@@ -1,9 +1,9 @@
 // React & Hooks
 import { useState, useEffect, useRef } from "react";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+import { securityFormSchema, type SecurityFormValues } from "@/utils/schemas/security-schema";
 
 // Components - UI & Icons
 import { Badge } from "@/components/ui/badge";
@@ -32,45 +32,8 @@ import {
 import type { SaveSecurityPayload } from "@/services/api/network/network.types";
 
 // Context
-import { useNetworkContext } from "../../context/Network/NetworkContext";
+import { useNetworkContext } from "@/context/Network";
 
-export const securityFormSchema = z.object({
-  rigPlc: z.object({
-    enabled: z.boolean(),
-    endpoint: z.string().min(1, "Endpoint is required"),
-    subnet: z.string().min(1, "Subnet is required"),
-    port: z.string().min(1, "Port is required"),
-    portConfig: z.string().min(1, "Port config is required"),
-  }),
-  authentication: z.object({
-    method: z.enum(["none", "user-pass", "certificate"]),
-    username: z.string().optional(),
-    password: z.string().optional(),
-  }).refine((data) => {
-    if (data.method === "user-pass") {
-      return data.username && data.username.length > 0 && data.password && data.password.length > 0;
-    }
-    return true;
-  }, {
-    message: "Username and password are required when User/Pass is selected",
-    path: ["username"],
-  }),
-  pwd: z.object({
-    authMethod: z.enum(["none", "user-pass", "certificate"]),
-    username: z.string().optional(),
-    password: z.string().optional(),
-  }).refine((data) => {
-    if (data.authMethod === "user-pass") {
-      return data.username && data.username.length > 0 && data.password && data.password.length > 0;
-    }
-    return true;
-  }, {
-    message: "Username and password are required when User/Pass is selected",
-    path: ["username"],
-  }),
-});
-
-type SecurityFormValues = z.infer<typeof securityFormSchema>;
 
 // ---- Certificate Upload Component ----
 function CertificateUpload({
