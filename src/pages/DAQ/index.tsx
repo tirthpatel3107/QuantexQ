@@ -18,7 +18,7 @@ import { DaqOverview } from "./DaqOverview";
 import { Notifications } from "./Notifications";
 import { LogAnalysis } from "./LogAnalysis";
 import { SensorPerms } from "./SensorPerms";
-// import { Calibration } from "./Calibration";
+import { Calibration } from "./Calibration";
 import { Hydraulics } from "./Hydraulics";
 import { SystemSettings } from "./SystemSettings";
 import { Downloads } from "./downloads/index";
@@ -97,7 +97,7 @@ function DAQContent() {
       case "downloads":
         return <Downloads />;
       case "calibration":
-      // return <Calibration />;
+      return <Calibration />;
       case "display":
       // return <Display />;
       case "streaming":

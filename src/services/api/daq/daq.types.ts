@@ -220,38 +220,59 @@ export interface SaveSensorPermsPayload {
 // Calibration Tab
 // ============================================
 
+/** A single sensor row in the Sensor Permissions table */
+export interface CalibrationSensorPermission {
+  sensor: string;
+  depth: boolean;
+  primary: boolean;
+  secondary: boolean;
+  validation: string; // e.g. "OK", "HP Alarm", ""
+  comments: string;
+}
+
+/** A named preset list item (WildLife, Depth, etc.) */
+export interface CalibrationDefaultPermissionItem {
+  name: string;
+  auto: boolean;
+}
+
+/** A single row in the Default Settings Permissions table */
+export interface CalibrationSenectoPermission {
+  key: string; // "opti" | "gasDetectorHP" | "spp" | "flowlineTemp" | "applyPerms" | "lgs"
+  label: string;
+  enabled: boolean;
+  hydrations: boolean;
+  edits: number;
+  hasSelectType: boolean;
+}
+
+/** A single point on the Perm Permissions chart */
+export interface CalibrationChartPoint {
+  label: string; // X-axis label
+  value: number; // Y-axis value
+}
+
 export interface CalibrationTabData {
-  calibrations: CalibrationProfile[];
-  history: CalibrationHistory[];
-  permissions: CalibrationPermissions;
-}
-
-export interface CalibrationProfile {
-  id: string;
-  sensorId: string;
-  sensorName: string;
-  zeroPoint: number;
-  span: number;
-  lastCalibrated: string;
-  status: "valid" | "expired" | "pending";
-}
-
-export interface CalibrationHistory {
-  id: string;
-  sensorId: string;
-  timestamp: string;
-  performedBy: string;
-  drift: number;
-}
-
-export interface CalibrationPermissions {
-  canPerform: string[];
-  canApprove: string[];
+  onPermissions: string;
+  applyType: string;
+  weightOnBit: string;
+  permissions: CalibrationSensorPermission[];
+  defaultPermissions: CalibrationDefaultPermissionItem[];
+  senectoPermissions: CalibrationSenectoPermission[];
+  sensorPermissionsOk: boolean;
+  validateAll: boolean;
+  chartData: CalibrationChartPoint[];
 }
 
 export interface SaveCalibrationPayload {
-  calibrations: CalibrationProfile[];
-  permissions: CalibrationPermissions;
+  onPermissions: string;
+  applyType: string;
+  weightOnBit: string;
+  permissions: CalibrationSensorPermission[];
+  defaultPermissions: CalibrationDefaultPermissionItem[];
+  senectoPermissions: CalibrationSenectoPermission[];
+  sensorPermissionsOk: boolean;
+  validateAll: boolean;
 }
 
 // ============================================

@@ -412,30 +412,38 @@ const fetchCalibrationData = async (): Promise<
       resolve({
         success: true,
         data: {
-          calibrations: [
-            {
-              id: "cal-1",
-              sensorId: "sensor-1",
-              sensorName: "Pressure Sensor 1",
-              zeroPoint: 0.0,
-              span: 500.0,
-              lastCalibrated: "2026-02-20T10:30:00Z",
-              status: "valid",
-            },
+          onPermissions: "Primary",
+          applyType: "auto",
+          weightOnBit: "manual",
+          permissions: [
+            { sensor: "Depth", depth: true, primary: true, secondary: false, validation: "OK", comments: "Comments" },
+            { sensor: "Gas Detector HP", depth: false, primary: false, secondary: true, validation: "", comments: "" },
+            { sensor: "SPP", depth: true, primary: true, secondary: false, validation: "OK", comments: "" },
+            { sensor: "Flowline Temp", depth: true, primary: true, secondary: false, validation: "HP Alarm", comments: "" },
+            { sensor: "Surface Temp", depth: true, primary: true, secondary: false, validation: "HP Alarm", comments: "" },
+            { sensor: "LGS", depth: true, primary: true, secondary: false, validation: "OK", comments: "" },
+            { sensor: "MW In Out Density", depth: false, primary: true, secondary: false, validation: "OK", comments: "Drill Variants" },
           ],
-          history: [
-            {
-              id: "hist-1",
-              sensorId: "sensor-1",
-              timestamp: "2026-02-20T10:30:00Z",
-              performedBy: "John Doe",
-              drift: 0.05,
-            },
+          defaultPermissions: [
+            { name: "WildLife", auto: true },
+            { name: "Depth", auto: true },
           ],
-          permissions: {
-            canPerform: ["technician", "engineer"],
-            canApprove: ["engineer", "supervisor"],
-          },
+          senectoPermissions: [
+            { key: "opti", label: "OPTI:", enabled: true, hydrations: true, edits: 0.5, hasSelectType: false },
+            { key: "gasDetectorHP", label: "Gas Detector HP", enabled: true, hydrations: true, edits: 0.3, hasSelectType: false },
+            { key: "spp", label: "SPP", enabled: true, hydrations: true, edits: 0.3, hasSelectType: false },
+            { key: "flowlineTemp", label: "Flowline Temp", enabled: true, hydrations: true, edits: 0.3, hasSelectType: false },
+            { key: "applyPerms", label: "Apply Perms", enabled: true, hydrations: true, edits: 0.3, hasSelectType: true },
+            { key: "lgs", label: "LGS", enabled: true, hydrations: true, edits: 0.3, hasSelectType: true },
+          ],
+          sensorPermissionsOk: true,
+          validateAll: false,
+          chartData: [
+            { label: "Gallery", value: -33 },
+            { label: "Set Perms", value: -22 },
+            { label: "Summary", value: -11 },
+            { label: "Summary 00", value: 7 },
+          ],
         },
         timestamp: new Date().toISOString(),
       });
