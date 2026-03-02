@@ -1,17 +1,18 @@
 // React & Hooks
 import { useState, useEffect } from "react";
+
+// Form & Validation
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import {
-  protocolsFormSchema,
-  type ProtocolsFormValues,
-} from "@/utils/schemas/protocols-schema";
 
-// Components - UI & Icons
+// Hooks
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Components - UI
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup } from "@/components/ui/radio-group";
-import { PanelCard } from "@/components/dashboard/PanelCard";
+
+// Components - Common
 import {
   CommonInput,
   CommonRadio,
@@ -21,23 +22,42 @@ import {
 
 // Components - Local
 import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";
+import { PanelCard } from "@/components/dashboard/PanelCard";
 
-// Services & Types
+// Services & API
 import {
   useProtocolsData,
   useSaveProtocolsData,
 } from "@/services/api/network/network.api";
+
+// Types & Schemas
+import {
+  protocolsFormSchema,
+  type ProtocolsFormValues,
+} from "@/utils/schemas/protocols-schema";
 import type { SaveProtocolsPayload } from "@/services/api/network/network.types";
 
-// Context
+// Contexts
 import { useNetworkContext } from "@/context/Network";
 
+/**
+ * Protocols Component
+ *
+ * Configures the communication protocols for Rig PLC (Primary) and PWD (Secondary).
+ * Supports Modbus TCP, OPC-UA, Ethernet/IP for PLC, and various WITS/MQTT protocols for PWD.
+ *
+ * @returns JSX.Element
+ */
 export function Protocols() {
+  // ---- Data & State ----
   const { data: protocolsResponse, isLoading } = useProtocolsData();
   const { mutate: saveProtocolsData } = useSaveProtocolsData();
   const { registerSaveHandler, unregisterSaveHandler } = useNetworkContext();
 
-  // Initialize form
+  // Track if we have set initial data from API to prevent unnecessary form resets
+  const [hasSetInitial, setHasSetInitial] = useState(false);
+
+  // ---- Form Management ----
   const formMethods = useForm<ProtocolsFormValues>({
     resolver: zodResolver(protocolsFormSchema),
   });
@@ -50,9 +70,12 @@ export function Protocols() {
     formState: { errors },
   } = formMethods;
 
-  // Track if we have set initial data
-  const [hasSetInitial, setHasSetInitial] = useState(false);
+  // ---- Effects & Side Effects ----
 
+  /**
+   * Sync form with fetched data
+   * Only runs once when data is initially loaded
+   */
   useEffect(() => {
     if (protocolsResponse?.data && !hasSetInitial) {
       const { rigPlc, pwd } = protocolsResponse.data;
@@ -61,7 +84,10 @@ export function Protocols() {
     }
   }, [protocolsResponse, hasSetInitial, reset]);
 
-  // Handle save and confirmation using the same UI flow as Sources
+  /**
+   * Handle save and confirmation using the unified confirmation hook.
+   * This logic is shared across network pages for a consistent experience.
+   */
   const saveWithConfirmation = useSaveWithConfirmation<SaveProtocolsPayload>({
     onSave: (data) => {
       return new Promise<void>((resolve, reject) => {
@@ -78,7 +104,10 @@ export function Protocols() {
       "Are you sure you want to save these protocols changes?",
   });
 
-  // Attach context's save to RHF handleSubmit
+  /**
+   * Register the save handler with the NetworkContext.
+   * This allows the global 'Save' button in the layout to trigger this form's submission.
+   */
   useEffect(() => {
     const handleSave = handleSubmit((validData) => {
       saveWithConfirmation.requestSave(validData as SaveProtocolsPayload);
@@ -95,6 +124,7 @@ export function Protocols() {
     saveWithConfirmation,
   ]);
 
+  // ---- Loading State ----
   if (isLoading || !hasSetInitial || !protocolsResponse?.data) {
     return <SectionSkeleton count={6} />;
   }
@@ -107,7 +137,7 @@ export function Protocols() {
       <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3 auto-rows-max">
-          {/* Rig PLC Card */}
+          {/* ---- Rig PLC Protocol Section ---- */}
           <PanelCard
             title={
               <div className="flex items-center gap-2">
@@ -133,7 +163,7 @@ export function Protocols() {
                 }
                 className="space-y-3"
               >
-                {/* Modbus TCP */}
+                {/* Modbus TCP Option */}
                 <div className="space-y-3">
                   <CommonRadio
                     id="modbus-tcp"
@@ -198,7 +228,7 @@ export function Protocols() {
                   )}
                 </div>
 
-                {/* OPC-UA */}
+                {/* OPC-UA Option */}
                 <div className="space-y-3">
                   <CommonRadio
                     id="opc-ua"
@@ -225,7 +255,7 @@ export function Protocols() {
                   )}
                 </div>
 
-                {/* Ethernet/IP */}
+                {/* Ethernet/IP Option */}
                 <div className="space-y-3">
                   <CommonRadio
                     id="ethernet-ip"
@@ -255,7 +285,7 @@ export function Protocols() {
             </div>
           </PanelCard>
 
-          {/* PWD Card */}
+          {/* ---- PWD Protocol Section ---- */}
           <PanelCard
             title={
               <div className="flex items-center gap-2">
@@ -338,12 +368,13 @@ export function Protocols() {
           </PanelCard>
         </div>
 
+        {/* ---- Sidebar Content ---- */}
         <div className="grid grid-cols-1 gap-3 auto-rows-max">
           <HealthMonitoringPanel />
         </div>
       </div>
 
-      {/* FormSaveDialog needs the shape returned by useSaveWithConfirmation */}
+      {/* Confirmation Dialog for form submission */}
       <FormSaveDialog form={saveWithConfirmation} />
     </>
   );

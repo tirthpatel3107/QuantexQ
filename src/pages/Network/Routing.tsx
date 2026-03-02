@@ -1,17 +1,17 @@
 // React & Hooks
 import { useState, useEffect } from "react";
+
+// Form & Validation
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import {
-  routingFormSchema,
-  ROUTING_INITIAL_DATA,
-  type RoutingFormValues,
-} from "@/utils/schemas/routing-schema";
 
-// Components - UI & Icons
-import { Plus } from "lucide-react";
+// Hooks
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Components - UI
 import { PanelCard } from "@/components/dashboard/PanelCard";
+
+// Components - Common
 import {
   CommonButton,
   SectionSkeleton,
@@ -25,18 +25,37 @@ import {
 // Components - Local
 import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";
 
-// Services & Types
+// Services & API
 import {
   useRoutingData,
   useSaveRoutingData,
   useRoutingOptions,
 } from "@/services/api/network/network.api";
+
+// Types & Schemas
+import {
+  routingFormSchema,
+  ROUTING_INITIAL_DATA,
+  type RoutingFormValues,
+} from "@/utils/schemas/routing-schema";
 import type { SaveRoutingPayload } from "@/services/api/network/network.types";
 
-// Context
+// Contexts
 import { useNetworkContext } from "@/context/Network";
 
+// Icons
+import { Plus } from "lucide-react";
+
+/**
+ * Routing Component
+ *
+ * Manages the data routing rules between inputs (Rig PLC, PWD) and output channels.
+ * Configures single loop control, dualQ control, and custom routing rules.
+ *
+ * @returns JSX.Element
+ */
 export function Routing() {
+  // ---- Data & State ----
   const { data: routingResponse, isLoading } = useRoutingData();
   const { data: optionsResponse } = useRoutingOptions();
   const { mutate: saveRoutingData } = useSaveRoutingData();
@@ -44,26 +63,34 @@ export function Routing() {
 
   const options = optionsResponse?.data;
 
-  // Initialize form
+  // Track if we have set initial data from API to prevent unnecessary form resets
+  const [hasSetInitial, setHasSetInitial] = useState(false);
+
+  // ---- Form Management ----
   const formMethods = useForm<RoutingFormValues>({
     resolver: zodResolver(routingFormSchema),
   });
 
   const { reset, control, handleSubmit } = formMethods;
 
-  // Track if we have set initial data
-  const [hasSetInitial, setHasSetInitial] = useState(false);
+  // ---- Effects & Side Effects ----
 
+  /**
+   * Sync form with fetched data
+   * Only runs once when data is initially loaded.
+   */
   useEffect(() => {
     if (routingResponse?.data && !hasSetInitial) {
-      // Initialize form with API data
-
+      // NOTE: Using initial data constant for now as per previous implementation logic
       reset(ROUTING_INITIAL_DATA);
       setHasSetInitial(true);
     }
   }, [routingResponse, hasSetInitial, reset]);
 
-  // Handle save and confirmation using the same UI flow as Sources
+  /**
+   * Handle save and confirmation using the unified confirmation hook.
+   * Transforms the flat form structure back into the API-expected format.
+   */
   const saveWithConfirmation = useSaveWithConfirmation<SaveRoutingPayload>({
     onSave: () => {
       // Transform form data back to API format
@@ -84,7 +111,10 @@ export function Routing() {
     confirmDescription: "Are you sure you want to save these routing changes?",
   });
 
-  // Attach context's save to RHF handleSubmit
+  /**
+   * Register the save handler with the NetworkContext.
+   * This allows the global 'Save' button in the layout to trigger this form's submission.
+   */
   useEffect(() => {
     const handleSave = handleSubmit(() => {
       saveWithConfirmation.requestSave({} as SaveRoutingPayload);
@@ -101,6 +131,7 @@ export function Routing() {
     saveWithConfirmation,
   ]);
 
+  // ---- Loading State ----
   if (isLoading || !hasSetInitial) {
     return <SectionSkeleton count={6} />;
   }
@@ -111,7 +142,7 @@ export function Routing() {
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 gap-3 auto-rows-max">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 auto-rows-max">
-            {/* Rig PLC Primary Card */}
+            {/* ---- Rig PLC Source Section ---- */}
             <PanelCard
               title={
                 <div className="flex items-center gap-2">
@@ -136,7 +167,7 @@ export function Routing() {
                   (optional)
                 </p>
 
-                {/* Input Data */}
+                {/* Network Connectivity Inputs */}
                 <div className="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-3 text-sm">
                   <div className="flex gap-2">
                     <CommonFormInput
@@ -174,7 +205,7 @@ export function Routing() {
               </div>
             </PanelCard>
 
-            {/* PWD Secondary Card */}
+            {/* ---- PWD Secondary Source Section ---- */}
             <PanelCard
               title={
                 <div className="flex items-center gap-2">
@@ -210,16 +241,17 @@ export function Routing() {
               </div>
             </PanelCard>
           </div>
+
           <div className="grid grid-cols-1 gap-3 auto-rows-max">
-            {/* Routing Card */}
+            {/* ---- Detailed Routing Rules Section ---- */}
             <PanelCard title="Routing">
               <div className="space-y-4">
                 <p className="text-sm text-muted-foreground mb-8">
                   Input Data: Rig PLC (Tags)
                 </p>
 
-                {/* Output Channels */}
                 <div className="space-y-3">
+                  {/* Output Channels Group */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between gap-4">
                       <span className="text-sm font-medium">
@@ -238,7 +270,7 @@ export function Routing() {
                       </div>
                     </div>
 
-                    {/* First row */}
+                    {/* Primary Channel Configuration */}
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2 items-center">
                       <CommonFormInput
                         name="outputChannels.chokeA"
@@ -260,7 +292,7 @@ export function Routing() {
                       />
                     </div>
 
-                    {/* Second row */}
+                    {/* Supplementary Channel Configuration */}
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2 items-center">
                       <CommonFormInput
                         name="outputChannels.sbInCoop"
@@ -283,11 +315,11 @@ export function Routing() {
                     </div>
                   </div>
 
-                  {/* DualQ Control */}
+                  {/* DualQ Control Group */}
                   <div className="pt-5">
                     <span className="text-sm font-medium">DualQ Control</span>
 
-                    {/* First row */}
+                    {/* Primary DualQ Inputs */}
                     <div className="grid grid-cols-[1fr_1fr_2fr] gap-2 items-center">
                       <CommonFormInput
                         name="dualQControl.mpdQIn"
@@ -310,7 +342,7 @@ export function Routing() {
                       </div>
                     </div>
 
-                    {/* Second row */}
+                    {/* Flow and Alternate Inputs */}
                     <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2">
                       <CommonFormInput
                         name="dualQControl.flowQIn"
@@ -332,7 +364,7 @@ export function Routing() {
                       />
                     </div>
 
-                    {/* Third row */}
+                    {/* Auxiliary and Setpoint Inputs */}
                     <div className="grid grid-cols-3 xl:grid-cols-[1fr_1fr_2fr] gap-2">
                       <CommonFormInput
                         name="dualQControl.mpdQAux"
@@ -360,13 +392,13 @@ export function Routing() {
           </div>
         </div>
 
-        {/* Health Monitoring Panel */}
+        {/* Sidebar Sidebar Content */}
         <div className="grid grid-cols-1 gap-3 auto-rows-max">
           <HealthMonitoringPanel />
         </div>
       </div>
 
-      {/* FormSaveDialog needs the shape returned by useSaveWithConfirmation */}
+      {/* Confirmation Dialog for form submission */}
       <FormSaveDialog form={saveWithConfirmation} />
     </>
   );

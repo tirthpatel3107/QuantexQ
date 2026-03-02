@@ -1,28 +1,46 @@
 // React & Hooks
 import { useMemo, useCallback } from "react";
+
+// Hooks
 import { useSectionForm } from "@/hooks/useSectionForm";
 
-// Components
+// Components - Common
 import { SectionSkeleton, FormSaveDialog } from "@/components/common";
+
+// Components - Local
 import { DensitySolidsPanel } from "./panels/DensitySolidsPanel";
 
-// Services & Types
+// Services & API
 import {
   useDensityData,
   useSaveDensityData,
 } from "@/services/api/mudproperties/mudproperties.api";
+
+// Types & Schemas
 import type { SaveDensityPayload } from "@/services/api/mudproperties/mudproperties.types";
 
-// Context
+// Contexts
 import { useMudPropertiesContext } from "@/context/MudProperties";
 
+/**
+ * Density Component
+ *
+ * Manages the fluid density and solids content configuration.
+ * Provides inputs for mud weight (In/Out), salinity, and various solids categories.
+ *
+ * @returns JSX.Element
+ */
 export function Density() {
+  // ---- Data & State ----
   const { data: densityResponse, isLoading } = useDensityData();
   const { mutate: saveDensityData } = useSaveDensityData();
   const { registerSaveHandler, unregisterSaveHandler } =
     useMudPropertiesContext();
 
-  // Memoize initial data
+  /**
+   * Memoize initial data from the API response.
+   * This provides a stable object for the form initialization.
+   */
   const initialData = useMemo(() => {
     if (!densityResponse?.data) return undefined;
     const {
@@ -45,7 +63,7 @@ export function Density() {
     };
   }, [densityResponse?.data]);
 
-  // Use the reusable form hook
+  // ---- Form Management ----
   const form = useSectionForm<SaveDensityPayload>({
     initialData,
     onSave: (data) => {
@@ -64,7 +82,10 @@ export function Density() {
     confirmDescription: "Are you sure you want to save these density changes?",
   });
 
-  // Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter
+  /**
+   * Adapter for existing panels that expect (prev => ({...prev, ...new})) style setter.
+   * Helps bridge between the useSectionForm hook and legacy component prop patterns.
+   */
   const setFluidAdapter = useCallback(
     (update: unknown) => {
       if (typeof update === "function") {

@@ -1,8 +1,8 @@
+// React & Hooks
 import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { Droplets, Save, RotateCcw, Download } from "lucide-react";
 
-import { ROUTES } from "@/utils/constants/routes";
+// Components - Common
 import {
   PageLayout,
   SidebarLayout,
@@ -12,6 +12,7 @@ import {
   CommonTooltip,
 } from "@/components/common";
 
+// Components - Local
 import { MudPropertiesOverview } from "./MudPropertiesOverview";
 import { FluidOverview } from "./FluidOverview";
 import { Rheology } from "./Rheology";
@@ -20,15 +21,35 @@ import { Temperature } from "./Temperature";
 import { GasCompressibility } from "./GasCompressibility";
 import { Calibration } from "./Calibration";
 import { Summary } from "./Summary";
+
+// Components - UI
 import { MudPropertiesSidebar } from "@/components/mudProperties/MudPropertiesSidebar";
-import { MUD_NAV } from "@/utils/constants";
-import { FluidData } from "@/utils/types/mud";
+
+// Contexts
 import {
   MudPropertiesProvider,
   useMudPropertiesContext,
 } from "@/context/MudProperties";
 
+// Constants & Types
+import { ROUTES } from "@/utils/constants/routes";
+import { MUD_NAV } from "@/utils/constants";
+import { FluidData } from "@/utils/types/mud";
+
+// Icons
+import { Droplets, Save, RotateCcw, Download } from "lucide-react";
+
+/**
+ * MudPropertiesContent Component
+ *
+ * The internal layout for the Mud Properties module.
+ * Handles sub-section routing (Fluid, Rheology, Density, etc.) and provides
+ * a shared header with module-wide actions like Save and Import.
+ *
+ * @returns JSX.Element
+ */
 function MudPropertiesContent() {
+  // ---- Data & State ----
   const { section } = useParams();
   const activeSection = section || "mud-properties";
   const [, setDirty] = useState(true);
@@ -57,6 +78,8 @@ function MudPropertiesContent() {
     densityCalDate: "",
     tempSensorOffset: "",
   });
+
+  // ---- Render Helpers ----
 
   const headerActions = useMemo(
     () => (
@@ -105,6 +128,9 @@ function MudPropertiesContent() {
     [activeSection],
   );
 
+  /**
+   * Navigates to the active sub-section of the Mud Properties module.
+   */
   const renderSection = () => {
     switch (activeSection) {
       case "mud-properties":
@@ -168,6 +194,14 @@ function MudPropertiesContent() {
   );
 }
 
+/**
+ * Mud Properties Module Entry Point
+ *
+ * Wraps the MudPropertiesContent with MudPropertiesProvider to enable centralized
+ * form saving and data synchronization across different sub-sections.
+ *
+ * @returns JSX.Element
+ */
 export default function MudProperties() {
   return (
     <MudPropertiesProvider>

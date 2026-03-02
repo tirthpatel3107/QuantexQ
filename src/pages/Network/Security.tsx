@@ -1,17 +1,18 @@
 // React & Hooks
 import { useState, useEffect, useRef } from "react";
+
+// Form & Validation
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import {
-  securityFormSchema,
-  type SecurityFormValues,
-} from "@/utils/schemas/security-schema";
+import { RadioGroup } from "@/components/ui/radio-group";
 
-// Components - UI & Icons
+// Hooks
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Components - UI
 import { Badge } from "@/components/ui/badge";
-import { Plus, UploadCloud, X, FileCheck2 } from "lucide-react";
-import { PanelCard } from "@/components/dashboard/PanelCard";
+
+// Components - Common
 import {
   CommonButton,
   SectionSkeleton,
@@ -21,21 +22,30 @@ import {
   CommonFormSelect,
   CommonRadio,
 } from "@/components/common";
-import { RadioGroup } from "@/components/ui/radio-group";
 
 // Components - Local
 import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";
+import { PanelCard } from "@/components/dashboard/PanelCard";
 
-// Services & Types
+// Services & API
 import {
   useSecurityData,
   useSaveSecurityData,
   useSecurityOptions,
 } from "@/services/api/network/network.api";
+
+// Types & Schemas
+import {
+  securityFormSchema,
+  type SecurityFormValues,
+} from "@/utils/schemas/security-schema";
 import type { SaveSecurityPayload } from "@/services/api/network/network.types";
 
-// Context
+// Contexts
 import { useNetworkContext } from "@/context/Network";
+
+// Icons
+import { Plus, UploadCloud, X, FileCheck2 } from "lucide-react";
 
 // ---- Certificate Upload Component ----
 function CertificateUpload({
@@ -131,7 +141,16 @@ function CertificateUpload({
   );
 }
 
+/**
+ * Security Component
+ *
+ * Manages security profiles for network connections, including SSL/TLS certificates,
+ * authentication methods (User/Pass, Certificate), and endpoint-specific security settings.
+ *
+ * @returns JSX.Element
+ */
 export function Security() {
+  // ---- Data & State ----
   const { data: securityResponse, isLoading } = useSecurityData();
   const { data: optionsResponse } = useSecurityOptions();
   const { mutate: saveSecurityData } = useSaveSecurityData();
@@ -139,7 +158,14 @@ export function Security() {
 
   const options = optionsResponse?.data;
 
-  // Initialize form
+  // Track if we have set initial data from API to prevent unnecessary form resets
+  const [hasSetInitial, setHasSetInitial] = useState(false);
+
+  // Certificate file states (managed separately from react-hook-form for upload handling)
+  const [authCertFile, setAuthCertFile] = useState<File | null>(null);
+  const [pwdCertFile, setPwdCertFile] = useState<File | null>(null);
+
+  // ---- Form Management ----
   const formMethods = useForm<SecurityFormValues>({
     resolver: zodResolver(securityFormSchema),
     defaultValues: {
@@ -161,21 +187,21 @@ export function Security() {
 
   const { reset, control, handleSubmit, watch } = formMethods;
 
-  // Track if we have set initial data
-  const [hasSetInitial, setHasSetInitial] = useState(false);
-
-  // Certificate file states
-  const [authCertFile, setAuthCertFile] = useState<File | null>(null);
-  const [pwdCertFile, setPwdCertFile] = useState<File | null>(null);
-
   const authMethod = watch("authentication.method");
   const pwdAuthMethod = watch("pwd.authMethod");
 
+  // ---- Effects & Side Effects ----
+
+  /**
+   * Sync form with fetched data
+   * Only runs once when data is initially loaded.
+   * Maps individual security profiles into the form structure.
+   */
   useEffect(() => {
     if (securityResponse?.data && !hasSetInitial) {
       const { securityProfiles } = securityResponse.data;
 
-      // Map API securityProfiles to component form structure
+      // Extract specific profiles from the collection
       const rigPlcProfile = securityProfiles.find(
         (p) => p.id === "rig-plc-security",
       );
@@ -215,10 +241,12 @@ export function Security() {
     }
   }, [securityResponse, hasSetInitial, reset]);
 
-  // Handle save and confirmation using the same UI flow as Sources
+  /**
+   * Handle save and confirmation using the unified confirmation hook.
+   * Transforms the flat form structure back into the API-expected array of profiles.
+   */
   const saveWithConfirmation = useSaveWithConfirmation<SaveSecurityPayload>({
     onSave: () => {
-      // Transform form data back to API format (securityProfiles array)
       const formData = formMethods.getValues();
 
       const payload: SaveSecurityPayload = {
@@ -280,7 +308,10 @@ export function Security() {
     confirmDescription: "Are you sure you want to save these security changes?",
   });
 
-  // Attach context's save to RHF handleSubmit
+  /**
+   * Register the save handler with the NetworkContext.
+   * This allows the global 'Save' button in the layout to trigger this form's submission.
+   */
   useEffect(() => {
     const handleSave = handleSubmit(() => {
       saveWithConfirmation.requestSave({} as SaveSecurityPayload);

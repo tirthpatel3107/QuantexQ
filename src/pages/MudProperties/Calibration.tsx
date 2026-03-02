@@ -1,9 +1,10 @@
 // React & Hooks
 import { useMemo } from "react";
+
+// Hooks
 import { useSectionForm } from "@/hooks/useSectionForm";
 
-// Components
-import { PanelCard } from "@/components/dashboard/PanelCard";
+// Components - Common
 import {
   RestoreDefaultsButton,
   CommonInput,
@@ -11,23 +12,40 @@ import {
   FormSaveDialog,
 } from "@/components/common";
 
-// Services & Types
+// Components - Local
+import { PanelCard } from "@/components/dashboard/PanelCard";
+
+// Services & API
 import {
   useCalibrationData,
   useSaveCalibrationData,
 } from "@/services/api/mudproperties/mudproperties.api";
+
+// Types & Schemas
 import type { SaveCalibrationPayload } from "@/services/api/mudproperties/mudproperties.types";
 
-// Context
+// Contexts
 import { useMudPropertiesContext } from "@/context/MudProperties";
 
+/**
+ * Calibration Component
+ *
+ * Manages the calibration dates and offsets for various sensors including
+ * viscometers, density meters, and temperature sensors.
+ *
+ * @returns JSX.Element
+ */
 export function Calibration() {
+  // ---- Data & State ----
   const { data: calibrationResponse, isLoading } = useCalibrationData();
   const { mutate: saveCalibrationData } = useSaveCalibrationData();
   const { registerSaveHandler, unregisterSaveHandler } =
     useMudPropertiesContext();
 
-  // Memoize initial data
+  /**
+   * Memoize initial data from the API response.
+   * This provides a stable object for the form initialization.
+   */
   const initialData = useMemo(() => {
     if (!calibrationResponse?.data) return undefined;
     const {
@@ -50,7 +68,7 @@ export function Calibration() {
     };
   }, [calibrationResponse?.data]);
 
-  // Use the reusable form hook
+  // ---- Form Management ----
   const form = useSectionForm<SaveCalibrationPayload>({
     initialData,
     onSave: (data) => {

@@ -1,21 +1,18 @@
 // React & Hooks
 import { useState, useEffect } from "react";
+
+// Form & Validation
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import {
-  diagnosticsFormSchema,
-  MOCK_CHART_DATA,
-  type DiagnosticsFormValues,
-} from "@/utils/schemas/diagnostics-schema";
-import ReactECharts from "echarts-for-react";
-import type { EChartsOption } from "echarts";
 
-// Components - UI & Icons
+// Hooks
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Components - UI
 import { Badge } from "@/components/ui/badge";
-import { Play, FileDown } from "lucide-react";
-import { cn } from "@/utils/lib/utils";
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import ReactECharts from "echarts-for-react";
+
+// Components - Common
 import {
   CommonButton,
   SectionSkeleton,
@@ -26,19 +23,41 @@ import {
 
 // Components - Local
 import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";
+import { PanelCard } from "@/components/dashboard/PanelCard";
 
-// Services & Types
+// Services & API
 import {
   useDiagnosticsData,
   useSaveDiagnosticsData,
   useDiagnosticsOptions,
 } from "@/services/api/network/network.api";
-import type { SaveDiagnosticsPayload } from "@/services/api/network/network.types";
 
-// Context
+// Types & Schemas
+import {
+  diagnosticsFormSchema,
+  MOCK_CHART_DATA,
+  type DiagnosticsFormValues,
+} from "@/utils/schemas/diagnostics-schema";
+import type { SaveDiagnosticsPayload } from "@/services/api/network/network.types";
+import type { EChartsOption } from "echarts";
+
+// Contexts
 import { useNetworkContext } from "@/context/Network";
 
+// Icons & Utils
+import { Play, FileDown } from "lucide-react";
+import { cn } from "@/utils/lib/utils";
+
+/**
+ * Diagnostics Component
+ *
+ * Provides network diagnostic tools including ping tests, jitter/latency analysis,
+ * packet capture, and data integrity summaries.
+ *
+ * @returns JSX.Element
+ */
 export function Diagnostics() {
+  // ---- Data & State ----
   const { data: diagnosticsResponse, isLoading } = useDiagnosticsData();
   const { data: optionsResponse } = useDiagnosticsOptions();
   const { mutate: saveDiagnosticsData } = useSaveDiagnosticsData();
@@ -46,7 +65,10 @@ export function Diagnostics() {
 
   const options = optionsResponse?.data;
 
-  // Initialize form
+  // Track if we have set initial data from API to prevent unnecessary form resets
+  const [hasSetInitial, setHasSetInitial] = useState(false);
+
+  // ---- Form Management ----
   const formMethods = useForm<DiagnosticsFormValues>({
     resolver: zodResolver(diagnosticsFormSchema),
     defaultValues: {
@@ -63,9 +85,12 @@ export function Diagnostics() {
   const { reset, control, handleSubmit, watch } = formMethods;
   const showMask = watch("jitterAnalysis.showMask");
 
-  // Track if we have set initial data
-  const [hasSetInitial, setHasSetInitial] = useState(false);
+  // ---- Effects & Side Effects ----
 
+  /**
+   * Sync form with fetched data
+   * Only runs once when data is initially loaded.
+   */
   useEffect(() => {
     if (diagnosticsResponse?.data && !hasSetInitial) {
       const advTools = diagnosticsResponse.data.diagnosticTools.find(
@@ -92,7 +117,10 @@ export function Diagnostics() {
     }
   }, [diagnosticsResponse, hasSetInitial, reset]);
 
-  // Handle save and confirmation using the same UI flow as Sources
+  /**
+   * Handle save and confirmation using the unified confirmation hook.
+   * Logic shared across network pages for consistent experience.
+   */
   const saveWithConfirmation = useSaveWithConfirmation<DiagnosticsFormValues>({
     onSave: (data) => {
       // Map form values to API payload structure
@@ -146,7 +174,10 @@ export function Diagnostics() {
       "Are you sure you want to save these diagnostics changes?",
   });
 
-  // Attach context's save to RHF handleSubmit
+  /**
+   * Register the save handler with the NetworkContext.
+   * Allows the global 'Save' button in the layout to trigger this form's submission.
+   */
   useEffect(() => {
     const handleSave = handleSubmit((validData) => {
       saveWithConfirmation.requestSave(validData);

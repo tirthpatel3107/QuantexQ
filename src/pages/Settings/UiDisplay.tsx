@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import { useSectionForm } from "@/hooks/useSectionForm";
 import { useTheme } from "@/hooks/useTheme";
-import { useAccentColor, type AccentColor } from "@/hooks/useAccentColorHook";
+import { useAccentColor } from "@/hooks/useAccentColorHook";
 import { type Theme } from "@/context/Theme/ThemeContext";
 import type { CommonSelectOption } from "@/components/common/CommonSelect";
 
@@ -29,6 +29,7 @@ import {
 
 // Context
 import { useSettingsContext } from "@/context/Settings";
+import { AccentColor } from "@/hooks/accent-color-context";
 
 const THEME_OPTIONS = [
   { label: "Dark", value: "dark" },

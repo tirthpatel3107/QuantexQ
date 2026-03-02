@@ -1,7 +1,7 @@
+// React & Hooks
 import { useParams } from "react-router-dom";
-import { Network as NetworkIcon, Save, RotateCcw, Upload } from "lucide-react";
 
-import { ROUTES } from "@/utils/constants/routes";
+// Components - Common
 import {
   PageLayout,
   SidebarLayout,
@@ -11,16 +11,34 @@ import {
   CommonTooltip,
 } from "@/components/common";
 
-import { NETWORK_NAV } from "@/utils/constants";
+// Components - Local
 import { NetworkOverview } from "./NetworkOverview";
 import { Sources } from "./Sources";
 import { Protocols } from "./Protocols";
 import { Routing } from "./Routing";
 import { Security } from "./Security";
 import { Diagnostics } from "./Diagnostics";
+
+// Contexts
 import { NetworkProvider, useNetworkContext } from "@/context/Network";
 
+// Constants
+import { ROUTES } from "@/utils/constants/routes";
+import { NETWORK_NAV } from "@/utils/constants";
+
+// Icons
+import { Network as NetworkIcon, Save, RotateCcw, Upload } from "lucide-react";
+
+/**
+ * NetworkContent Component
+ *
+ * The internal layout for the Network module.
+ * Handles section-based routing and provides a shared header with global actions (Save, Discard, Import).
+ *
+ * @returns JSX.Element
+ */
 function NetworkContent() {
+  // ---- Data & State ----
   const { section } = useParams();
   const activeSection = section || "network";
   const { requestSave } = useNetworkContext();
@@ -60,6 +78,11 @@ function NetworkContent() {
     />
   );
 
+  // ---- Render Helpers ----
+
+  /**
+   * Navigates to the active sub-section of the Network module.
+   */
   const renderSection = () => {
     switch (activeSection) {
       case "network":
@@ -108,6 +131,14 @@ function NetworkContent() {
   );
 }
 
+/**
+ * Network Module Entry Point
+ *
+ * Wraps the NetworkContent with NetworkProvider to enable centralized
+ * form saving and data synchronization across different sub-sections.
+ *
+ * @returns JSX.Element
+ */
 export default function Network() {
   return (
     <NetworkProvider>

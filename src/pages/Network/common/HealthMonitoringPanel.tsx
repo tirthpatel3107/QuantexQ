@@ -1,13 +1,21 @@
+// React & Hooks
 import { useState } from "react";
-import { PanelCard } from "@/components/dashboard/PanelCard";
+
+// Components - UI
+import { Badge } from "@/components/ui/badge";
+
+// Components - Common
 import {
   CommonButton,
   CommonToggle,
   CommonCheckbox,
   StatusBadge,
 } from "@/components/common";
-import { Badge } from "@/components/ui/badge";
-import { Settings } from "lucide-react";
+
+// Components - Local
+import { PanelCard } from "@/components/dashboard/PanelCard";
+
+// Constants & Types
 import {
   DEFAULT_HEALTH_METRICS,
   DEFAULT_DEVICE_HEALTH,
@@ -15,6 +23,18 @@ import {
   type HealthMonitoringPanelProps,
 } from "@/utils/constants/health-monitoring-constants";
 
+// Icons
+import { Settings } from "lucide-react";
+
+/**
+ * HealthMonitoringPanel Component
+ *
+ * Provides a real-time sidebar/panel for monitoring system health, device status,
+ * and connection logs. Supports simulation modes and diagnostic result display.
+ *
+ * @param props - Monitoring data and event handlers
+ * @returns JSX.Element
+ */
 export function HealthMonitoringPanel({
   connectionStatus = "CONNECTED",
   liveHealthMetrics = DEFAULT_HEALTH_METRICS,
@@ -25,13 +45,21 @@ export function HealthMonitoringPanel({
   onFailoverChange,
   onDeviceSettingsClick,
 }: HealthMonitoringPanelProps) {
+  // ---- Data & State ----
   const [failoverSimulation, setFailoverSimulation] = useState(false);
+
+  // ---- Event Handlers ----
 
   const handleFailoverChange = (checked: boolean) => {
     setFailoverSimulation(checked);
     onFailoverChange?.(checked);
   };
 
+  // ---- Render Helpers ----
+
+  /**
+   * Returns Tailwind background color classes based on status string.
+   */
   const getDeviceStatusColor = (color: string) => {
     switch (color) {
       case "green":
@@ -47,6 +75,9 @@ export function HealthMonitoringPanel({
     }
   };
 
+  /**
+   * Returns Tailwind background color classes for the status badges.
+   */
   const getDeviceBadgeColor = (color: string) => {
     switch (color) {
       case "green":

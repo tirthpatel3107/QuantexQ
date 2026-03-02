@@ -61,6 +61,7 @@ export interface DeviceHealthItem {
   status: string;
   statusColor: "green" | "yellow" | "orange" | "red";
   badge: string;
+  percentage?: string | number;
 }
 
 export interface ConnectionLogEntry {
@@ -70,10 +71,13 @@ export interface ConnectionLogEntry {
 }
 
 export interface HealthMonitoringPanelProps {
-  connectionStatus?: "CONNECTED" | "DISCONNECTED" | "WARNING";
+  connectionStatus?: string;
   liveHealthMetrics?: HealthMetric[];
   deviceHealthItems?: DeviceHealthItem[];
-  connectionLogs?: ConnectionLogEntry[];
+  connectionLogEntries?: ConnectionLogEntry[];
+  showFailoverSimulation?: boolean;
+  showDiagnosticsResults?: boolean;
+  onFailoverChange?: (checked: boolean) => void;
   onDeviceSettingsClick?: () => void;
   onRefreshClick?: () => void;
   onExportLogsClick?: () => void;

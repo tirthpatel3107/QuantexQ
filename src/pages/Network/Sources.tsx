@@ -1,15 +1,14 @@
 // React & Hooks
 import { useState, useEffect } from "react";
+
+// Form & Validation
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import {
-  sourcesFormSchema,
-  type SourcesFormValues,
-} from "@/utils/schemas/sources-schema";
 
-// Components - UI & Icons
-import { PanelCard } from "@/components/dashboard/PanelCard";
+// Hooks
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Components - Common
 import {
   CommonAccordionItem,
   SectionSkeleton,
@@ -22,19 +21,36 @@ import {
 
 // Components - Local
 import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";
+import { PanelCard } from "@/components/dashboard/PanelCard";
 
-// Services & Types
+// Services & API
 import {
   useSourcesData,
   useSaveSourcesData,
   useSourcesOptions,
 } from "@/services/api/network/network.api";
+
+// Types & Schemas
+import {
+  sourcesFormSchema,
+  type SourcesFormValues,
+} from "@/utils/schemas/sources-schema";
 import type { SaveSourcesPayload } from "@/services/api/network/network.types";
 
-// Context
+// Contexts
 import { useNetworkContext } from "@/context/Network";
 
+/**
+ * Sources Component
+ *
+ * Manages the configuration for data sources including Rig PLC settings,
+ * Device lists from the PLC, and PWD WITS configuration.
+ * Integrates with NetworkContext for centralized save management.
+ *
+ * @returns JSX.Element
+ */
 export function Sources() {
+  // ---- Data & State ----
   const { data: sourcesResponse, isLoading } = useSourcesData();
   const { data: optionsResponse } = useSourcesOptions();
   const { mutate: saveSourcesData } = useSaveSourcesData();
@@ -42,16 +58,22 @@ export function Sources() {
 
   const options = optionsResponse?.data;
 
-  // Initialize form
+  // Track if we have set initial data from API to prevent unnecessary form resets
+  const [hasSetInitial, setHasSetInitial] = useState(false);
+
+  // ---- Form Management ----
   const formMethods = useForm<SourcesFormValues>({
     resolver: zodResolver(sourcesFormSchema),
   });
 
   const { reset, control, handleSubmit } = formMethods;
 
-  // Track if we have set initial data
-  const [hasSetInitial, setHasSetInitial] = useState(false);
+  // ---- Effects & Side Effects ----
 
+  /**
+   * Sync form with fetched data
+   * Only runs once when data is initially loaded
+   */
   useEffect(() => {
     if (sourcesResponse?.data && !hasSetInitial) {
       const { rigPlc, pwdWits, devices } = sourcesResponse.data;
@@ -60,7 +82,10 @@ export function Sources() {
     }
   }, [sourcesResponse, hasSetInitial, reset]);
 
-  // Handle save and confirmation using the same UI flow as useSectionForm
+  /**
+   * Handle save and confirmation using the unified confirmation hook.
+   * This logic is shared across network pages for a consistent experience.
+   */
   const saveWithConfirmation = useSaveWithConfirmation<SaveSourcesPayload>({
     onSave: (data) => {
       return new Promise<void>((resolve, reject) => {
@@ -76,7 +101,10 @@ export function Sources() {
     confirmDescription: "Are you sure you want to save these sources changes?",
   });
 
-  // Attach context's save to RHF handleSubmit
+  /**
+   * Register the save handler with the NetworkContext.
+   * This allows the global 'Save' button in the layout to trigger this form's submission.
+   */
   useEffect(() => {
     const handleSave = handleSubmit((validData) => {
       saveWithConfirmation.requestSave(validData as SaveSourcesPayload);
@@ -93,6 +121,7 @@ export function Sources() {
     saveWithConfirmation,
   ]);
 
+  // ---- Loading State ----
   if (isLoading || !hasSetInitial || !sourcesResponse?.data) {
     return <SectionSkeleton count={6} />;
   }
@@ -105,7 +134,7 @@ export function Sources() {
     <>
       <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
-          {/* Rig PLC Source */}
+          {/* ---- Rig PLC Source Section ---- */}
           <PanelCard
             title={
               <div className="flex items-center gap-2">
@@ -167,7 +196,7 @@ export function Sources() {
             </div>
           </PanelCard>
 
-          {/* Devices (from PLC) */}
+          {/* ---- Devices List (from PLC) ---- */}
           <PanelCard
             title="Devices (from PLC)"
             headerAction={
@@ -193,7 +222,7 @@ export function Sources() {
             </div>
           </PanelCard>
 
-          {/* PWD WITS */}
+          {/* ---- PWD WITS Configuration ---- */}
           <PanelCard
             title="PWD WITS (TCP)"
             headerAction={
@@ -254,12 +283,14 @@ export function Sources() {
             </div>
           </PanelCard>
         </div>
+
+        {/* ---- Sidebar Content ---- */}
         <div className="grid grid-cols-1 gap-3 auto-rows-max">
           <HealthMonitoringPanel />
         </div>
       </div>
 
-      {/* FormSaveDialog needs the shape returned by useSaveWithConfirmation */}
+      {/* Confirmation Dialog for form submission */}
       <FormSaveDialog form={saveWithConfirmation} />
     </>
   );

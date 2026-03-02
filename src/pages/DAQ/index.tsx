@@ -1,7 +1,7 @@
+// React & Hooks
 import { useParams } from "react-router-dom";
-import { Activity, Save, RotateCcw, Upload } from "lucide-react";
 
-import { ROUTES } from "@/utils/constants/routes";
+// Components - Common
 import {
   PageLayout,
   SidebarLayout,
@@ -11,10 +11,8 @@ import {
   CommonTooltip,
 } from "@/components/common";
 
-import { DAQ_NAV } from "@/utils/constants";
+// Components - Local
 import { DaqOverview } from "./DaqOverview";
-// import { Display } from "./Display";
-// import { Streaming } from "./Streaming";
 import { Notifications } from "./Notifications";
 import { LogAnalysis } from "./LogAnalysis";
 import { SensorPerms } from "./SensorPerms";
@@ -22,14 +20,27 @@ import { Calibration } from "./Calibration";
 import { Hydraulics } from "./Hydraulics";
 import { SystemSettings } from "./SystemSettings";
 import { Downloads } from "./downloads/index";
+
+// Contexts
 import { DAQProvider, useDAQContext } from "@/context/DAQ";
+
+// Constants
+import { ROUTES } from "@/utils/constants/routes";
+import { DAQ_NAV } from "@/utils/constants";
+
+// Icons
+import { Activity, Save, RotateCcw, Upload } from "lucide-react";
 /**
- * DAQ (Data Acquisition) Dashboard Content
+ * DAQContent Component
  *
- * This component manages the sub-navigation within the DAQ module.
- * It uses the URL path to determine which configuration sub-section to render.
+ * The internal layout for the Data Acquisition (DAQ) module.
+ * Handles sub-section routing (Notifications, Log Analysis, Hydraulics, etc.)
+ * and provides a shared header with module-wide actions.
+ *
+ * @returns JSX.Element
  */
 function DAQContent() {
+  // ---- Data & State ----
   const { section } = useParams();
   const activeSection = section || "daq";
   const { requestSave } = useDAQContext();
@@ -79,6 +90,11 @@ function DAQContent() {
    * Routing logic for DAQ sub-sections.
    * Dynamically renders the appropriate component based on the 'section' URL parameter.
    */
+  // ---- Render Helpers ----
+
+  /**
+   * Navigates to the active sub-section of the DAQ module.
+   */
   const renderSection = () => {
     switch (activeSection) {
       case "daq":
@@ -97,12 +113,6 @@ function DAQContent() {
         return <Downloads />;
       case "calibration":
         return <Calibration />;
-      case "display":
-        // return <Display />;
-        break;
-      case "streaming":
-        // return <Streaming />;
-        break;
       default:
         return <DaqOverview />;
     }
@@ -139,8 +149,12 @@ function DAQContent() {
 }
 
 /**
- * Main DAQ (Data Acquisition) Module.
- * Wraps the content in a DAQProvider to provide shared state across all sub-sections.
+ * DAQ Module Entry Point
+ *
+ * Wraps the DAQContent with DAQProvider to enable centralized
+ * form saving and data synchronization across different sub-sections.
+ *
+ * @returns JSX.Element
  */
 export default function DAQ() {
   return (

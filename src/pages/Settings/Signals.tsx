@@ -10,19 +10,14 @@ import {
   type SortingState,
   type PaginationState,
 } from "@tanstack/react-table";
+
+// Hooks
 import { useSectionForm } from "@/hooks/useSectionForm";
 
-// Components - UI & Icons
-import {
-  Star,
-  Plus,
-  Settings,
-  Upload,
-  Download,
-  Filter,
-  Pencil,
-  Trash2,
-} from "lucide-react";
+// Components - UI
+import { Checkbox } from "@/components/ui/checkbox";
+
+// Components - Common
 import {
   CommonButton,
   CommonSelect,
@@ -34,21 +29,35 @@ import {
   SectionSkeleton,
   FormSaveDialog,
   CommonAlertDialog,
+  type CommonDropdownOption,
+  type CommonSelectOption,
 } from "@/components/common";
-import { cn } from "@/utils/lib/utils";
-import { Checkbox } from "@/components/ui/checkbox";
 
-// Services & Types
+// Services & API
 import {
   useSignalsSettings,
   useSaveSignalsSettings,
   useSignalsOptions,
 } from "@/services/api/settings/settings.api";
 
-// Context
+// Contexts
 import { useSettingsContext } from "@/context/Settings";
 
-type Signal = {
+// Icons & Utils
+import {
+  Star,
+  Plus,
+  Settings,
+  Upload,
+  Download,
+  Filter,
+  Pencil,
+  Trash2,
+} from "lucide-react";
+import { cn } from "@/utils/lib/utils";
+
+// Types & Schemas
+interface Signal {
   id: number;
   name: string;
   subsystem: string;
@@ -56,25 +65,40 @@ type Signal = {
   unit: string;
   valueRange: string;
   isFavorite: boolean;
-};
+}
+
+interface SignalOptions {
+  subsystemOptions: CommonDropdownOption[];
+}
 
 const signalColumnHelper = createColumnHelper<Signal>();
 
+/**
+ * Signals Component
+ *
+ * Manages the library of available signals used across the system.
+ * Allows tagging, favoriting, and enabling/disabling signals for use in calculations or displays.
+ *
+ * @returns JSX.Element
+ */
 export function Signals() {
+  // ---- Data & State ----
   const { data: signalsResponse, isLoading } = useSignalsSettings();
   const { data: optionsResponse } = useSignalsOptions();
   const { mutate: saveSignalsData } = useSaveSignalsSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
-  const options = optionsResponse?.data;
+  const options = optionsResponse?.data as unknown as SignalOptions;
 
-  // Memoize initial data
+  /**
+   * Memoize initial data from the API response.
+   */
   const initialData = useMemo(() => {
     if (!signalsResponse?.data?.signals) return undefined;
     return { signals: signalsResponse.data.signals as Signal[] };
   }, [signalsResponse?.data]);
 
-  // Use the reusable form hook
+  // ---- Form Management ----
   const form = useSectionForm<{ signals: Signal[] }>({
     initialData,
     onSave: (data) => {
@@ -109,11 +133,19 @@ export function Signals() {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [selectedSignal, setSelectedSignal] = useState<Signal | null>(null);
 
+  /**
+   * Stabilize the signals list from form data
+   */
   const signals = useMemo(
     () => form.formData?.signals || [],
     [form.formData?.signals],
   );
 
+  // ---- Event Handlers ----
+
+  /**
+   * Toggles the favorite status of a signal.
+   */
   const toggleFavorite = useCallback(
     (id: number) => {
       const updatedSignals = signals.map((signal) =>
@@ -126,6 +158,9 @@ export function Signals() {
     [signals, form],
   );
 
+  /**
+   * Toggles the "In Use" status of a signal.
+   */
   const toggleInUse = useCallback(
     (id: number) => {
       const updatedSignals = signals.map((signal) =>
@@ -136,6 +171,9 @@ export function Signals() {
     [signals, form],
   );
 
+  /**
+   * Deletes a signal from the library.
+   */
   const handleDeleteSignal = () => {
     if (selectedSignal) {
       const updatedSignals = signals.filter(
@@ -147,6 +185,9 @@ export function Signals() {
     }
   };
 
+  /**
+   * Table column definitions.
+   */
   const columns = useMemo(
     () => [
       signalColumnHelper.display({
@@ -254,6 +295,9 @@ export function Signals() {
     [toggleFavorite, toggleInUse],
   );
 
+  /**
+   * Filtered signals based on search query and active filters.
+   */
   const filteredData = useMemo(() => {
     return signals.filter((s) => {
       // Search filter
@@ -276,6 +320,9 @@ export function Signals() {
     });
   }, [signals, search, filterBy, subsystemFilters]);
 
+  /**
+   * TanStack Table instance for managing grid state.
+   */
   const table = useReactTable({
     data: filteredData,
     columns,
@@ -290,6 +337,8 @@ export function Signals() {
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
+  // ---- Render Helpers ----
 
   const totalSignals = signals.length;
   const usedSignals = signals.filter((s) => s.inUse).length;
@@ -428,7 +477,9 @@ export function Signals() {
             />
             <CommonSelect
               label="Subsystem"
-              options={options?.subsystemOptions || []}
+              options={
+                (options?.subsystemOptions as CommonSelectOption[]) || []
+              }
               value=""
               onValueChange={() => {}}
               placeholder="Select subsystem"
@@ -517,7 +568,9 @@ export function Signals() {
             />
             <CommonSelect
               label="Subsystem"
-              options={options?.subsystemOptions || []}
+              options={
+                (options?.subsystemOptions as CommonSelectOption[]) || []
+              }
               value={selectedSignal?.subsystem || ""}
               onValueChange={() => {}}
               placeholder="Select subsystem"
