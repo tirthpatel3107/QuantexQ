@@ -43,12 +43,13 @@ export const settingsKeys = {
 // API Base URL
 // ============================================
 
-
 // ============================================
 // GET: General Settings Tab
 // ============================================
 
-const fetchGeneralSettings = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchGeneralSettings = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/settings/general`);
   // if (!response.ok) throw new Error('Failed to fetch general settings');
@@ -86,7 +87,9 @@ export const useGeneralSettings = () => {
 // GET: General Settings Options (Dropdown Data)
 // ============================================
 
-const fetchGeneralOptions = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchGeneralOptions = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // MOCK RESPONSE
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -125,7 +128,9 @@ export const useGeneralOptions = () => {
 // GET: UI Display Settings Tab
 // ============================================
 
-const fetchUiDisplaySettings = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchUiDisplaySettings = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/settings/ui-display`);
   // if (!response.ok) throw new Error('Failed to fetch UI display settings');
@@ -164,7 +169,9 @@ export const useUiDisplaySettings = () => {
 // GET: UI Display Options (Dropdown Data)
 // ============================================
 
-const fetchUiDisplayOptions = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchUiDisplayOptions = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // MOCK RESPONSE
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -204,7 +211,9 @@ export const useUiDisplayOptions = () => {
 // GET: Units Settings Tab
 // ============================================
 
-const fetchUnitsSettings = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchUnitsSettings = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/settings/units`);
   // if (!response.ok) throw new Error('Failed to fetch units settings');
@@ -242,7 +251,9 @@ export const useUnitsSettings = () => {
 // GET: Units Options (Dropdown Data)
 // ============================================
 
-const fetchUnitsOptions = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchUnitsOptions = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // MOCK RESPONSE
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -286,7 +297,9 @@ export const useUnitsOptions = () => {
 // GET: Data & Time Settings Tab
 // ============================================
 
-const fetchDataTimeSettings = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchDataTimeSettings = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/settings/data-time`);
   // if (!response.ok) throw new Error('Failed to fetch data time settings');
@@ -324,7 +337,9 @@ export const useDataTimeSettings = () => {
 // GET: Data & Time Options (Dropdown Data)
 // ============================================
 
-const fetchDataTimeOptions = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchDataTimeOptions = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // MOCK RESPONSE
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -368,7 +383,9 @@ export const useDataTimeOptions = () => {
 // GET: Alarms Settings Tab
 // ============================================
 
-const fetchAlarmsSettings = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchAlarmsSettings = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/settings/alarms`);
   // if (!response.ok) throw new Error('Failed to fetch alarms settings');
@@ -419,7 +436,9 @@ export const useAlarmsSettings = () => {
 // GET: Alarms Options (Dropdown Data)
 // ============================================
 
-const fetchAlarmsOptions = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchAlarmsOptions = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // MOCK RESPONSE
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -462,7 +481,9 @@ export const useAlarmsOptions = () => {
 // GET: Signals Settings Tab
 // ============================================
 
-const fetchSignalsSettings = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchSignalsSettings = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/settings/signals`);
   // if (!response.ok) throw new Error('Failed to fetch signals settings');
@@ -585,7 +606,9 @@ export const useSignalsSettings = () => {
 // GET: Signals Options (Dropdown Data)
 // ============================================
 
-const fetchSignalsOptions = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchSignalsOptions = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // MOCK RESPONSE
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -622,7 +645,9 @@ export const useSignalsOptions = () => {
 // GET: Choke & Pumps Settings Tab
 // ============================================
 
-const fetchChokePumpsSettings = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchChokePumpsSettings = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/settings/choke-pumps`);
   // if (!response.ok) throw new Error('Failed to fetch choke pumps settings');
@@ -680,7 +705,9 @@ export const useChokePumpsSettings = () => {
 // GET: Choke & Pumps Options (Dropdown Data)
 // ============================================
 
-const fetchChokePumpsOptions = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchChokePumpsOptions = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // MOCK RESPONSE
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -716,7 +743,9 @@ export const useChokePumpsOptions = () => {
 // GET: Auto Control Settings Tab
 // ============================================
 
-const fetchAutoControlSettings = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchAutoControlSettings = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/settings/auto-control`);
   // if (!response.ok) throw new Error('Failed to fetch auto control settings');
@@ -767,7 +796,9 @@ export const useAutoControlSettings = () => {
 // GET: Auto Control Options (Dropdown Data)
 // ============================================
 
-const fetchAutoControlOptions = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchAutoControlOptions = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // MOCK RESPONSE
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -802,7 +833,9 @@ export const useAutoControlOptions = () => {
 // GET: Hydraulics Model Settings Tab
 // ============================================
 
-const fetchHydraulicsModelSettings = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchHydraulicsModelSettings = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/settings/hydraulics-model`);
   // if (!response.ok) throw new Error('Failed to fetch hydraulics model settings');
@@ -848,7 +881,9 @@ export const useHydraulicsModelSettings = () => {
 // GET: Hydraulics Model Options (Dropdown Data)
 // ============================================
 
-const fetchHydraulicsModelOptions = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchHydraulicsModelOptions = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // MOCK RESPONSE
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -889,7 +924,9 @@ export const useHydraulicsModelOptions = () => {
 // GET: About & Diagnostics Settings Tab
 // ============================================
 
-const fetchAboutDiagnosticsSettings = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchAboutDiagnosticsSettings = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // TODO: Uncomment when real API is ready
   // const response = await fetch(`${API_BASE_URL}/settings/about-diagnostics`);
   // if (!response.ok) throw new Error('Failed to fetch about diagnostics settings');
@@ -939,7 +976,9 @@ export const useAboutDiagnosticsSettings = () => {
 // GET: About & Diagnostics Options (Dropdown Data)
 // ============================================
 
-const fetchAboutDiagnosticsOptions = async (): Promise<ApiResponse<Record<string, unknown>>> => {
+const fetchAboutDiagnosticsOptions = async (): Promise<
+  ApiResponse<Record<string, unknown>>
+> => {
   // MOCK RESPONSE
   return new Promise((resolve) => {
     setTimeout(() => {

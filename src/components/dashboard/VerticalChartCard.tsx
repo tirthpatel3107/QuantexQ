@@ -87,7 +87,7 @@ interface ChartInnerProps {
 
 /**
  * Internal Chart Component
- * 
+ *
  * Renders the actual ECharts visualization for the vertical chart.
  * Uses ResizeObserver to handle fluid layout container changes.
  */
@@ -273,11 +273,11 @@ const ChartInner = memo(function ChartInner({
 
 /**
  * Vertical Chart Card Component
- * 
+ *
  * A specialized data visualization card designed for drilling metrics.
- * It displays data trending vertically (latest data at top) to mirror 
+ * It displays data trending vertically (latest data at top) to mirror
  * real-world logging tools.
- * 
+ *
  * Features:
  * - Real-time streaming line charts via Apache ECharts
  * - Hover tooltips for precise value reading
@@ -402,7 +402,7 @@ export const VerticalChartCard = memo(function VerticalChartCard({
             />
           ))}
         </div>
-        
+
         {/* The ECharts Instance */}
         <div className="flex-1 min-h-0">
           <ChartInner

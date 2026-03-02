@@ -131,7 +131,12 @@ export const ChartPanel = memo(function ChartPanel({
 
   if (showSkeleton) {
     return (
-      <div className={cn("dashboard-panel border border-border/50 group", statusBorderColors[status])}>
+      <div
+        className={cn(
+          "dashboard-panel border border-border/50 group",
+          statusBorderColors[status],
+        )}
+      >
         <div className="panel-header relative">
           <div className="flex items-center gap-3">
             <Skeleton className="h-4 w-24" />
@@ -149,7 +154,12 @@ export const ChartPanel = memo(function ChartPanel({
 
   return (
     <>
-      <div className={cn("dashboard-panel border border-border/50 group", statusBorderColors[status])}>
+      <div
+        className={cn(
+          "dashboard-panel border border-border/50 group",
+          statusBorderColors[status],
+        )}
+      >
         <div className="panel-header relative">
           <div className="flex items-center gap-3">
             <h3 className="panel-title">{title}</h3>

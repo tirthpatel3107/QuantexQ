@@ -130,7 +130,13 @@ export interface ProtocolsTabData {
     ethernetEndpoint?: string;
   };
   pwd: {
-    type: "direct-wits" | "witsml-left" | "mqtt" | "tcp-udp-left" | "witsml-right" | "tcp-udp-right";
+    type:
+      | "direct-wits"
+      | "witsml-left"
+      | "mqtt"
+      | "tcp-udp-left"
+      | "witsml-right"
+      | "tcp-udp-right";
     endpoint?: string;
   };
 }
@@ -143,7 +149,13 @@ export interface SaveProtocolsPayload {
     ethernetEndpoint?: string;
   };
   pwd: {
-    type: "direct-wits" | "witsml-left" | "mqtt" | "tcp-udp-left" | "witsml-right" | "tcp-udp-right";
+    type:
+      | "direct-wits"
+      | "witsml-left"
+      | "mqtt"
+      | "tcp-udp-left"
+      | "witsml-right"
+      | "tcp-udp-right";
     endpoint?: string;
   };
 }

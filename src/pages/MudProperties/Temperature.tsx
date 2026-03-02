@@ -69,7 +69,9 @@ export function Temperature() {
   const setFluidAdapter = useCallback(
     (update: unknown) => {
       if (typeof update === "function") {
-        form.setFormData(update as React.SetStateAction<SaveTemperaturePayload | null>);
+        form.setFormData(
+          update as React.SetStateAction<SaveTemperaturePayload | null>,
+        );
       } else {
         form.updateLocalField(update as Partial<SaveTemperaturePayload>);
       }
@@ -86,9 +88,13 @@ export function Temperature() {
   return (
     <>
       <div className="grid gap-4 mb-4 grid-cols-1 max-w-2xl">
-        <TemperaturePanel 
-          fluid={fluid as unknown as import("@/utils/types/mud").FluidData} 
-          setFluid={setFluidAdapter as React.Dispatch<React.SetStateAction<import("@/utils/types/mud").FluidData>>} 
+        <TemperaturePanel
+          fluid={fluid as unknown as import("@/utils/types/mud").FluidData}
+          setFluid={
+            setFluidAdapter as React.Dispatch<
+              React.SetStateAction<import("@/utils/types/mud").FluidData>
+            >
+          }
         />
       </div>
 

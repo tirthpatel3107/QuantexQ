@@ -1,9 +1,4 @@
-import {
-  useState,
-  useMemo,
-  useCallback,
-  ReactNode,
-} from "react";
+import { useState, useMemo, useCallback, ReactNode } from "react";
 import { DAQContext, type DAQContextType } from "./context";
 
 export type { DAQContextType };
@@ -30,9 +25,5 @@ export function DAQProvider({ children }: { children: ReactNode }) {
     [requestSave, registerSaveHandler, unregisterSaveHandler],
   );
 
-  return (
-    <DAQContext.Provider value={value}>
-      {children}
-    </DAQContext.Provider>
-  );
+  return <DAQContext.Provider value={value}>{children}</DAQContext.Provider>;
 }

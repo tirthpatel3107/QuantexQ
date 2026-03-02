@@ -3,7 +3,10 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import { sourcesFormSchema, type SourcesFormValues } from "@/utils/schemas/sources-schema";
+import {
+  sourcesFormSchema,
+  type SourcesFormValues,
+} from "@/utils/schemas/sources-schema";
 
 // Components - UI & Icons
 import { PanelCard } from "@/components/dashboard/PanelCard";
@@ -30,7 +33,6 @@ import type { SaveSourcesPayload } from "@/services/api/network/network.types";
 
 // Context
 import { useNetworkContext } from "@/context/Network";
-
 
 export function Sources() {
   const { data: sourcesResponse, isLoading } = useSourcesData();
@@ -84,7 +86,12 @@ export function Sources() {
     return () => {
       unregisterSaveHandler();
     };
-  }, [handleSubmit, registerSaveHandler, unregisterSaveHandler, saveWithConfirmation]);
+  }, [
+    handleSubmit,
+    registerSaveHandler,
+    unregisterSaveHandler,
+    saveWithConfirmation,
+  ]);
 
   if (isLoading || !hasSetInitial || !sourcesResponse?.data) {
     return <SectionSkeleton count={6} />;
@@ -172,15 +179,17 @@ export function Sources() {
             }
           >
             <div className="space-y-4">
-              {devicesItems.map(({ id, name, tags, healthStatus, healthCount }) => (
-                <CommonAccordionItem
-                  key={id}
-                  title={name}
-                  tags={tags}
-                  healthStatus={healthStatus}
-                  healthCount={healthCount}
-                />
-              ))}
+              {devicesItems.map(
+                ({ id, name, tags, healthStatus, healthCount }) => (
+                  <CommonAccordionItem
+                    key={id}
+                    title={name}
+                    tags={tags}
+                    healthStatus={healthStatus}
+                    healthCount={healthCount}
+                  />
+                ),
+              )}
             </div>
           </PanelCard>
 

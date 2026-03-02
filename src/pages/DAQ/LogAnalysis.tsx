@@ -87,7 +87,8 @@ export function LogAnalysis() {
   useEffect(() => {
     const data = logAnalysisResponse?.data;
     if (data && !hasSetInitial) {
-      const { logResults, trendAnalysis, alertNotifyAnalysis, responseTime } = data;
+      const { logResults, trendAnalysis, alertNotifyAnalysis, responseTime } =
+        data;
       reset({ logResults, trendAnalysis, alertNotifyAnalysis, responseTime });
       setHasSetInitial(true);
     }
@@ -106,7 +107,8 @@ export function LogAnalysis() {
     successMessage: "Log analysis settings saved successfully",
     errorMessage: "Failed to save log analysis settings",
     confirmTitle: "Save Log Analysis Settings",
-    confirmDescription: "Are you sure you want to save these log analysis changes?",
+    confirmDescription:
+      "Are you sure you want to save these log analysis changes?",
   });
 
   // Attach context's save to RHF handleSubmit
@@ -119,7 +121,12 @@ export function LogAnalysis() {
     return () => {
       unregisterSaveHandler();
     };
-  }, [handleSubmit, registerSaveHandler, unregisterSaveHandler, saveWithConfirmation]);
+  }, [
+    handleSubmit,
+    registerSaveHandler,
+    unregisterSaveHandler,
+    saveWithConfirmation,
+  ]);
 
   // Mock trend data - memoized to prevent re-generation on every render
   const mockTrendData = useMemo(
@@ -151,7 +158,6 @@ export function LogAnalysis() {
         return "bg-muted text-muted-foreground border-border";
     }
   };
-
 
   return (
     <>
@@ -192,9 +198,9 @@ export function LogAnalysis() {
                 containerClassName="flex-1"
               />
               <div className="pb-0.5">
-                 <CommonButton variant="secondary" size="sm">
-                   Filter Logs
-                 </CommonButton>
+                <CommonButton variant="secondary" size="sm">
+                  Filter Logs
+                </CommonButton>
               </div>
             </div>
 
@@ -238,7 +244,7 @@ export function LogAnalysis() {
         </PanelCard>
 
         {/* Trend Analysis Panel */}
-        <PanelCard 
+        <PanelCard
           title="SBP (ps) Trend"
           headerAction={
             <div className="flex items-center gap-2">
@@ -256,113 +262,166 @@ export function LogAnalysis() {
           }
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-             <ChartPanel title="SBP (ps)" data={mockTrendData} color="hsl(var(--primary))" />
-             <ChartPanel title="SPP (ps)" data={mockTrendData} color="hsl(var(--warning))" />
-             <ChartPanel title="BHP (psi)" data={mockTrendData} color="hsl(var(--info))" />
-             <ChartPanel title="HLW IN / Out (pp)" data={mockTrendData} color="hsl(var(--destructive))" />
+            <ChartPanel
+              title="SBP (ps)"
+              data={mockTrendData}
+              color="hsl(var(--primary))"
+            />
+            <ChartPanel
+              title="SPP (ps)"
+              data={mockTrendData}
+              color="hsl(var(--warning))"
+            />
+            <ChartPanel
+              title="BHP (psi)"
+              data={mockTrendData}
+              color="hsl(var(--info))"
+            />
+            <ChartPanel
+              title="HLW IN / Out (pp)"
+              data={mockTrendData}
+              color="hsl(var(--destructive))"
+            />
           </div>
         </PanelCard>
 
         <div className="grid grid-cols-1 xl:grid-cols-5 gap-3">
-           {/* Alert/Notify Analysis */}
-           <div className="xl:col-span-3">
-             <PanelCard 
-                title="Alert/Notify Analysis"
-             >
-                <div className="space-y-4">
-                   <div className="flex flex-wrap items-center justify-between p-4 bg-muted/20 rounded-lg border border-border/40 min-h-[80px]">
-                      {/* Critical Alerts Group */}
-                      <div className="flex flex-col gap-2">
-                         <span className="text-sm text-muted-foreground font-bold uppercase tracking-wider">Critical Alerts</span>
-                         <div className="flex gap-2.5">
-                            <Badge variant="destructive" className="rounded-md gap-1.5 px-3 py-1 text-sm font-bold uppercase shadow-sm">
-                               <AlertTriangle className="h-3.5 w-3.5" /> CB / {logAnalysisResponse.data.alertNotifyAnalysis.criticalAlerts.cb}
-                            </Badge>
-                            <Badge variant="secondary" className="rounded-md gap-1.5 px-3 py-1 text-sm font-bold uppercase border border-border/50">
-                               CH / {logAnalysisResponse.data.alertNotifyAnalysis.criticalAlerts.ch}
-                            </Badge>
-                            <Badge variant="secondary" className="rounded-md gap-1.5 px-3 py-1 text-sm font-bold uppercase border border-border/50">
-                               SPP / {logAnalysisResponse.data.alertNotifyAnalysis.criticalAlerts.spp}
-                            </Badge>
-                         </div>
-                      </div>
+          {/* Alert/Notify Analysis */}
+          <div className="xl:col-span-3">
+            <PanelCard title="Alert/Notify Analysis">
+              <div className="space-y-4">
+                <div className="flex flex-wrap items-center justify-between p-4 bg-muted/20 rounded-lg border border-border/40 min-h-[80px]">
+                  {/* Critical Alerts Group */}
+                  <div className="flex flex-col gap-2">
+                    <span className="text-sm text-muted-foreground font-bold uppercase tracking-wider">
+                      Critical Alerts
+                    </span>
+                    <div className="flex gap-2.5">
+                      <Badge
+                        variant="destructive"
+                        className="rounded-md gap-1.5 px-3 py-1 text-sm font-bold uppercase shadow-sm"
+                      >
+                        <AlertTriangle className="h-3.5 w-3.5" /> CB /{" "}
+                        {
+                          logAnalysisResponse.data.alertNotifyAnalysis
+                            .criticalAlerts.cb
+                        }
+                      </Badge>
+                      <Badge
+                        variant="secondary"
+                        className="rounded-md gap-1.5 px-3 py-1 text-sm font-bold uppercase border border-border/50"
+                      >
+                        CH /{" "}
+                        {
+                          logAnalysisResponse.data.alertNotifyAnalysis
+                            .criticalAlerts.ch
+                        }
+                      </Badge>
+                      <Badge
+                        variant="secondary"
+                        className="rounded-md gap-1.5 px-3 py-1 text-sm font-bold uppercase border border-border/50"
+                      >
+                        SPP /{" "}
+                        {
+                          logAnalysisResponse.data.alertNotifyAnalysis
+                            .criticalAlerts.spp
+                        }
+                      </Badge>
+                    </div>
+                  </div>
 
-                      <div className="h-10 w-px bg-border/40 mx-4 hidden lg:block" />
+                  <div className="h-10 w-px bg-border/40 mx-4 hidden lg:block" />
 
-                      {/* SBP Accepted Group */}
-                      <div className="flex flex-col gap-1 items-center md:items-start flex-1">
-                         <span className="text-sm text-muted-foreground font-bold uppercase tracking-wider">SBP Accepted</span>
-                         <div className="flex items-baseline gap-2">
-                            <span className="text-3xl font-extrabold text-success tracking-tight leading-none">
-                               {logAnalysisResponse.data.alertNotifyAnalysis.criticalAlerts.sbpAccepted}
-                            </span>
-                            <span className="text-sm font-medium text-muted-foreground/80 lowercase italic antialiased">
-                               minted
-                            </span>
-                         </div>
-                      </div>
+                  {/* SBP Accepted Group */}
+                  <div className="flex flex-col gap-1 items-center md:items-start flex-1">
+                    <span className="text-sm text-muted-foreground font-bold uppercase tracking-wider">
+                      SBP Accepted
+                    </span>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-extrabold text-success tracking-tight leading-none">
+                        {
+                          logAnalysisResponse.data.alertNotifyAnalysis
+                            .criticalAlerts.sbpAccepted
+                        }
+                      </span>
+                      <span className="text-sm font-medium text-muted-foreground/80 lowercase italic antialiased">
+                        minted
+                      </span>
+                    </div>
+                  </div>
 
-                      <div className="h-10 w-px bg-border/40 mx-4 hidden lg:block" />
+                  <div className="h-10 w-px bg-border/40 mx-4 hidden lg:block" />
 
-                      {/* AR: Alerts Group */}
-                      <div className="flex flex-col gap-1 items-center md:items-start flex-1">
-                         <span className="text-sm text-muted-foreground font-bold uppercase tracking-wider whitespace-nowrap">AR: Alerts</span>
-                         <div className="flex items-baseline gap-2">
-                            <span className="text-3xl font-extrabold text-warning tracking-tight leading-none">
-                               {logAnalysisResponse.data.alertNotifyAnalysis.criticalAlerts.arAlerts}
-                            </span>
-                            <span className="text-sm font-medium text-muted-foreground/80 antialiased">
-                               Alert
-                            </span>
-                         </div>
-                      </div>
-                   </div>
-
-                   <div className="relative">
-                      <h4 className="text-sm font-bold mb-2">Alertt</h4>
-                       <div className="bg-accent/10 rounded-lg border border-border/30 overflow-hidden relative">
-                         <ChartPanel 
-                            title="" 
-                            data={mockTrendData} 
-                            color="hsl(var(--warning))" 
-                            threshold={{ value: 35, label: "DLIMIT EXCEEDED: ACTION NEEDED" }}
-                             contentClassName="h-[235px]"
-                         />
-                      </div>
-                   </div>
+                  {/* AR: Alerts Group */}
+                  <div className="flex flex-col gap-1 items-center md:items-start flex-1">
+                    <span className="text-sm text-muted-foreground font-bold uppercase tracking-wider whitespace-nowrap">
+                      AR: Alerts
+                    </span>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-3xl font-extrabold text-warning tracking-tight leading-none">
+                        {
+                          logAnalysisResponse.data.alertNotifyAnalysis
+                            .criticalAlerts.arAlerts
+                        }
+                      </span>
+                      <span className="text-sm font-medium text-muted-foreground/80 antialiased">
+                        Alert
+                      </span>
+                    </div>
+                  </div>
                 </div>
-             </PanelCard>
-           </div>
 
-           {/* Mean Response Time */}
-           <div className="xl:col-span-2">
-             <PanelCard 
-                title="Mean Response Time"
-                headerAction={
-                   <CommonButton variant="outline" size="sm">
-                      Export Timeline (CSV)
-                   </CommonButton>
-                }
-             >
-                <div className="flex flex-col h-full space-y-3">
-                   <div className="flex-1">
-                      <ChartPanel 
-                        title="" 
-                        data={mockTrendData} 
-                        color="hsl(var(--info))" 
-                        contentClassName="h-[310px]"
-                      />
-                   </div>
-                   <div className="flex justify-between items-center text-sm text-muted-foreground px-2">
-                      <span>History window: {logAnalysisResponse.data.responseTime.period}</span>
-                      <span>Average: 30 min</span>
-                   </div>
+                <div className="relative">
+                  <h4 className="text-sm font-bold mb-2">Alertt</h4>
+                  <div className="bg-accent/10 rounded-lg border border-border/30 overflow-hidden relative">
+                    <ChartPanel
+                      title=""
+                      data={mockTrendData}
+                      color="hsl(var(--warning))"
+                      threshold={{
+                        value: 35,
+                        label: "DLIMIT EXCEEDED: ACTION NEEDED",
+                      }}
+                      contentClassName="h-[235px]"
+                    />
+                  </div>
                 </div>
-             </PanelCard>
-           </div>
+              </div>
+            </PanelCard>
+          </div>
+
+          {/* Mean Response Time */}
+          <div className="xl:col-span-2">
+            <PanelCard
+              title="Mean Response Time"
+              headerAction={
+                <CommonButton variant="outline" size="sm">
+                  Export Timeline (CSV)
+                </CommonButton>
+              }
+            >
+              <div className="flex flex-col h-full space-y-3">
+                <div className="flex-1">
+                  <ChartPanel
+                    title=""
+                    data={mockTrendData}
+                    color="hsl(var(--info))"
+                    contentClassName="h-[310px]"
+                  />
+                </div>
+                <div className="flex justify-between items-center text-sm text-muted-foreground px-2">
+                  <span>
+                    History window:{" "}
+                    {logAnalysisResponse.data.responseTime.period}
+                  </span>
+                  <span>Average: 30 min</span>
+                </div>
+              </div>
+            </PanelCard>
+          </div>
         </div>
       </div>
-      
+
       {/* FormSaveDialog needs the shape returned by useSaveWithConfirmation */}
       <FormSaveDialog form={saveWithConfirmation} />
     </>

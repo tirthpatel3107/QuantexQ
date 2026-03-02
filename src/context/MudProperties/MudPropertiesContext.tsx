@@ -1,9 +1,4 @@
-import {
-  useState,
-  useMemo,
-  useCallback,
-  ReactNode,
-} from "react";
+import { useState, useMemo, useCallback, ReactNode } from "react";
 import { MudPropertiesContext, type MudPropertiesContextType } from "./context";
 
 export type { MudPropertiesContextType };

@@ -77,7 +77,10 @@ export function Alarms() {
   const { mutate: saveAlarmsData } = useSaveAlarmsSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
-  const options = (optionsResponse?.data || {}) as Record<string, CommonSelectOption[]>;
+  const options = (optionsResponse?.data || {}) as Record<
+    string,
+    CommonSelectOption[]
+  >;
   const [activeTab, setActiveTab] = useState("kick");
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [selectedSensor, setSelectedSensor] = useState<SensorLimit | null>(
@@ -245,7 +248,9 @@ export function Alarms() {
                   id="dynamic-limits"
                   checked={formData.dynamicLimitsEnabled}
                   onCheckedChange={(checked) =>
-                    form.updateLocalField({ dynamicLimitsEnabled: checked as boolean })
+                    form.updateLocalField({
+                      dynamicLimitsEnabled: checked as boolean,
+                    })
                   }
                   label="Enable adjustable dynamic limits"
                   containerClassName="gap-2"
@@ -402,7 +407,9 @@ export function Alarms() {
                     id="notify-offline"
                     checked={formData.notifyOfflineAlarm}
                     onCheckedChange={(checked) =>
-                      form.updateLocalField({ notifyOfflineAlarm: checked as boolean })
+                      form.updateLocalField({
+                        notifyOfflineAlarm: checked as boolean,
+                      })
                     }
                     label="Activate offline alarm output when connections are down"
                   />
@@ -410,7 +417,9 @@ export function Alarms() {
                     id="notify-online"
                     checked={formData.notifyOnlineAlarm}
                     onCheckedChange={(checked) =>
-                      form.updateLocalField({ notifyOnlineAlarm: checked as boolean })
+                      form.updateLocalField({
+                        notifyOnlineAlarm: checked as boolean,
+                      })
                     }
                     label="Use rig online alarm output when connected"
                   />

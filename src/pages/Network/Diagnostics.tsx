@@ -3,7 +3,11 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import { diagnosticsFormSchema, MOCK_CHART_DATA, type DiagnosticsFormValues } from "@/utils/schemas/diagnostics-schema";
+import {
+  diagnosticsFormSchema,
+  MOCK_CHART_DATA,
+  type DiagnosticsFormValues,
+} from "@/utils/schemas/diagnostics-schema";
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
 
@@ -33,7 +37,6 @@ import type { SaveDiagnosticsPayload } from "@/services/api/network/network.type
 
 // Context
 import { useNetworkContext } from "@/context/Network";
-
 
 export function Diagnostics() {
   const { data: diagnosticsResponse, isLoading } = useDiagnosticsData();
@@ -99,14 +102,16 @@ export function Diagnostics() {
             id: "jitter-analysis",
             name: "Jitter & Latency",
             type: "jitter",
-            description: "Real-time packet arrival analysis, dropped frame detection, and round-trip time.",
+            description:
+              "Real-time packet arrival analysis, dropped frame detection, and round-trip time.",
             status: "idle",
           },
           {
             id: "integrity-check",
             name: "Data Integrity Summary",
             type: "integrity",
-            description: "Check sum validation, range clamping status, and stale data detection.",
+            description:
+              "Check sum validation, range clamping status, and stale data detection.",
             status: "idle",
           },
           {
@@ -120,7 +125,8 @@ export function Diagnostics() {
             id: "diag-report",
             name: "Diagnostic Report",
             type: "report",
-            description: "Run Full Diagnostic and Export Report (PDF/CSV) — Report ID: DIAG-000128, last run: 06 Feb 2026 16:41.",
+            description:
+              "Run Full Diagnostic and Export Report (PDF/CSV) — Report ID: DIAG-000128, last run: 06 Feb 2026 16:41.",
             status: "completed",
           },
         ],
@@ -136,7 +142,8 @@ export function Diagnostics() {
     successMessage: "Diagnostics settings saved successfully",
     errorMessage: "Failed to save diagnostics settings",
     confirmTitle: "Save Diagnostics Settings",
-    confirmDescription: "Are you sure you want to save these diagnostics changes?",
+    confirmDescription:
+      "Are you sure you want to save these diagnostics changes?",
   });
 
   // Attach context's save to RHF handleSubmit
@@ -434,9 +441,7 @@ export function Diagnostics() {
                   </div>
                 </div>
               </div>
-
             </PanelCard>
-
           </div>
         </div>
         <div className="grid grid-cols-1 gap-3 auto-rows-max">

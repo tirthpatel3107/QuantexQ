@@ -22,8 +22,6 @@ export function Rheology() {
   const { registerSaveHandler, unregisterSaveHandler } =
     useMudPropertiesContext();
 
-
-
   // Memoize initial data
   const initialData = useMemo(() => {
     if (!rheologyResponse?.data) return undefined;
@@ -55,7 +53,9 @@ export function Rheology() {
   const setFluidAdapter = useCallback(
     (update: unknown) => {
       if (typeof update === "function") {
-        form.setFormData(update as React.SetStateAction<SaveRheologyPayload | null>);
+        form.setFormData(
+          update as React.SetStateAction<SaveRheologyPayload | null>,
+        );
       } else {
         form.updateLocalField(update as Partial<SaveRheologyPayload>);
       }

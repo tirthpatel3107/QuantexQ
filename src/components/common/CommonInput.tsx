@@ -24,7 +24,11 @@ const CommonInput = React.forwardRef<HTMLInputElement, CommonInputProps>(
     const isPassword = type === "password";
     const [showPassword, setShowPassword] = React.useState(false);
 
-    const resolvedType = isPassword ? (showPassword ? "text" : "password") : type;
+    const resolvedType = isPassword
+      ? showPassword
+        ? "text"
+        : "password"
+      : type;
 
     // Password toggle takes precedence over suffix when type is password
     const hasSuffix = !isPassword && !!suffix;

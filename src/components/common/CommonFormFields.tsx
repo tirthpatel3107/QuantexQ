@@ -12,7 +12,7 @@ import { CommonCheckbox, CommonCheckboxProps } from "./CommonCheckbox";
 
 export type CommonFormInputProps<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = Omit<CommonInputProps, "name" | "value" | "onChange" | "onBlur" | "ref"> & {
   control: Control<TFieldValues>;
   name: TName;
@@ -21,8 +21,13 @@ export type CommonFormInputProps<
 
 export function CommonFormInput<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->({ control, name, containerClassName, ...props }: CommonFormInputProps<TFieldValues, TName>) {
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>({
+  control,
+  name,
+  containerClassName,
+  ...props
+}: CommonFormInputProps<TFieldValues, TName>) {
   return (
     <Controller
       name={name}
@@ -47,7 +52,7 @@ export function CommonFormInput<
 
 export type CommonFormSelectProps<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = Omit<CommonSelectProps, "value" | "onValueChange"> & {
   control: Control<TFieldValues>;
   name: TName;
@@ -56,18 +61,23 @@ export type CommonFormSelectProps<
 
 export function CommonFormSelect<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->({ control, name, containerClassName, ...props }: CommonFormSelectProps<TFieldValues, TName>) {
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>({
+  control,
+  name,
+  containerClassName,
+  ...props
+}: CommonFormSelectProps<TFieldValues, TName>) {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState }) => (
         <div className={containerClassName}>
-          <CommonSelect 
-            value={field.value} 
-            onValueChange={field.onChange} 
-            {...props} 
+          <CommonSelect
+            value={field.value}
+            onValueChange={field.onChange}
+            {...props}
           />
           {fieldState.error && (
             <p className="text-sm text-destructive ml-1">
@@ -86,7 +96,7 @@ export function CommonFormSelect<
 
 export type CommonFormToggleProps<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = Omit<CommonToggleProps, "checked" | "onCheckedChange"> & {
   control: Control<TFieldValues>;
   name: TName;
@@ -95,18 +105,23 @@ export type CommonFormToggleProps<
 
 export function CommonFormToggle<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->({ control, name, containerClassName, ...props }: CommonFormToggleProps<TFieldValues, TName>) {
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>({
+  control,
+  name,
+  containerClassName,
+  ...props
+}: CommonFormToggleProps<TFieldValues, TName>) {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState }) => (
         <div className={containerClassName}>
-          <CommonToggle 
-            checked={field.value} 
-            onCheckedChange={field.onChange} 
-            {...props} 
+          <CommonToggle
+            checked={field.value}
+            onCheckedChange={field.onChange}
+            {...props}
           />
           {fieldState.error && (
             <p className="text-sm text-destructive ml-1">
@@ -125,7 +140,7 @@ export function CommonFormToggle<
 
 export type CommonFormCheckboxProps<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = Omit<CommonCheckboxProps, "checked" | "onCheckedChange"> & {
   control: Control<TFieldValues>;
   name: TName;
@@ -134,8 +149,13 @@ export type CommonFormCheckboxProps<
 
 export function CommonFormCheckbox<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
->({ control, name, containerClassName, ...props }: CommonFormCheckboxProps<TFieldValues, TName>) {
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>({
+  control,
+  name,
+  containerClassName,
+  ...props
+}: CommonFormCheckboxProps<TFieldValues, TName>) {
   return (
     <Controller
       name={name}

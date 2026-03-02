@@ -3,7 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import { securityFormSchema, type SecurityFormValues } from "@/utils/schemas/security-schema";
+import {
+  securityFormSchema,
+  type SecurityFormValues,
+} from "@/utils/schemas/security-schema";
 
 // Components - UI & Icons
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +36,6 @@ import type { SaveSecurityPayload } from "@/services/api/network/network.types";
 
 // Context
 import { useNetworkContext } from "@/context/Network";
-
 
 // ---- Certificate Upload Component ----
 function CertificateUpload({
@@ -72,18 +74,23 @@ function CertificateUpload({
         tabIndex={0}
         onClick={() => inputRef.current?.click()}
         onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
-        onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragging(true);
+        }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
         className={`flex flex-col items-center gap-1.5 px-4 py-4 rounded-md border-2 border-dashed cursor-pointer transition-all duration-200 ${
           dragging
             ? "border-primary bg-primary/10"
             : file
-            ? "border-primary/40 bg-primary/5 hover:border-primary/60"
-            : "border-border/50 hover:border-primary/50 hover:bg-accent/60"
+              ? "border-primary/40 bg-primary/5 hover:border-primary/60"
+              : "border-border/50 hover:border-primary/50 hover:bg-accent/60"
         }`}
       >
-        <UploadCloud className={`h-5 w-5 ${dragging || file ? "text-primary" : "text-muted-foreground"}`} />
+        <UploadCloud
+          className={`h-5 w-5 ${dragging || file ? "text-primary" : "text-muted-foreground"}`}
+        />
         <span className="text-xs text-muted-foreground text-center">
           <span className="text-primary font-medium">
             {file ? "Replace file" : "Click to upload"}
@@ -91,7 +98,9 @@ function CertificateUpload({
           {!file && "or drag & drop"}
         </span>
         {!file && (
-          <span className="text-[10px] text-muted-foreground/70">.pem, .crt, .cer, .p12, .pfx</span>
+          <span className="text-[10px] text-muted-foreground/70">
+            .pem, .crt, .cer, .p12, .pfx
+          </span>
         )}
       </div>
 
@@ -99,7 +108,9 @@ function CertificateUpload({
       {file && (
         <div className="flex items-center gap-2 px-3 py-2 rounded-md border border-primary/40 bg-primary/5 text-sm">
           <FileCheck2 className="h-4 w-4 text-primary flex-shrink-0" />
-          <span className="flex-1 truncate text-foreground font-medium">{file.name}</span>
+          <span className="flex-1 truncate text-foreground font-medium">
+            {file.name}
+          </span>
           <span className="text-[10px] text-muted-foreground/60 flex-shrink-0">
             {(file.size / 1024).toFixed(1)} KB
           </span>
@@ -163,12 +174,16 @@ export function Security() {
   useEffect(() => {
     if (securityResponse?.data && !hasSetInitial) {
       const { securityProfiles } = securityResponse.data;
-      
+
       // Map API securityProfiles to component form structure
-      const rigPlcProfile = securityProfiles.find(p => p.id === "rig-plc-security");
-      const authProfile = securityProfiles.find(p => p.id === "authentication");
-      const pwdProfile = securityProfiles.find(p => p.id === "pwd-security");
-      
+      const rigPlcProfile = securityProfiles.find(
+        (p) => p.id === "rig-plc-security",
+      );
+      const authProfile = securityProfiles.find(
+        (p) => p.id === "authentication",
+      );
+      const pwdProfile = securityProfiles.find((p) => p.id === "pwd-security");
+
       reset({
         rigPlc: {
           enabled: rigPlcProfile?.enabled ?? true,
@@ -178,12 +193,20 @@ export function Security() {
           portConfig: (rigPlcProfile?.settings?.portConfig as string) || "",
         },
         authentication: {
-          method: (authProfile?.settings?.authMethod as "none" | "user-pass" | "certificate") || "certificate",
+          method:
+            (authProfile?.settings?.authMethod as
+              | "none"
+              | "user-pass"
+              | "certificate") || "certificate",
           username: (authProfile?.settings?.username as string) || "",
           password: (authProfile?.settings?.password as string) || "",
         },
         pwd: {
-          authMethod: (pwdProfile?.settings?.authMethod as "none" | "user-pass" | "certificate") || "none",
+          authMethod:
+            (pwdProfile?.settings?.authMethod as
+              | "none"
+              | "user-pass"
+              | "certificate") || "none",
           username: (pwdProfile?.settings?.username as string) || "",
           password: (pwdProfile?.settings?.password as string) || "",
         },
@@ -197,7 +220,7 @@ export function Security() {
     onSave: () => {
       // Transform form data back to API format (securityProfiles array)
       const formData = formMethods.getValues();
-      
+
       const payload: SaveSecurityPayload = {
         securityProfiles: [
           {
@@ -365,7 +388,7 @@ export function Security() {
             >
               <div className="space-y-3">
                 <CommonRadio value="none" id="auth-none" label="None" />
-                
+
                 <div>
                   <CommonRadio
                     value="user-pass"
@@ -430,7 +453,7 @@ export function Security() {
             >
               <div className="space-y-3">
                 <CommonRadio value="none" id="pwd-auth-none" label="None" />
-                
+
                 <div>
                   <CommonRadio
                     value="user-pass"

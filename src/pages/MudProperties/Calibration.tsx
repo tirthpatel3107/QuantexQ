@@ -27,8 +27,6 @@ export function Calibration() {
   const { registerSaveHandler, unregisterSaveHandler } =
     useMudPropertiesContext();
 
-
-
   // Memoize initial data
   const initialData = useMemo(() => {
     if (!calibrationResponse?.data) return undefined;

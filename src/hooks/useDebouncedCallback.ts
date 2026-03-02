@@ -1,15 +1,15 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef } from "react";
 
 /**
  * Creates a debounced version of a callback function
- * 
+ *
  * @param callback - The function to debounce
  * @param delay - Delay in milliseconds (default: 300ms)
  * @returns A debounced version of the callback
  */
 export function useDebouncedCallback<T extends (...args: never[]) => unknown>(
   callback: T,
-  delay: number = 300
+  delay: number = 300,
 ): (...args: Parameters<T>) => void {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -23,6 +23,6 @@ export function useDebouncedCallback<T extends (...args: never[]) => unknown>(
         callback(...args);
       }, delay);
     },
-    [callback, delay]
+    [callback, delay],
   );
 }

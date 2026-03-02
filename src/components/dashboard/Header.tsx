@@ -41,9 +41,9 @@ import { formatTime, formatDate } from "@/utils/lib/date-utils";
 
 /**
  * Header Component
- * 
+ *
  * Provides the primary navigation and control interface for the dashboard.
- * 
+ *
  * Key features:
  * - Real-time global clock and date display
  * - Simulation controls (Start/Stop) with confirmation dialogs
@@ -76,7 +76,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 min-h-14 h-auto border-b border-border bg-card px-3 sm:px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 backdrop-blur-md">
       <SideDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
-      
+
       {/* Left Section: Menu Toggle and Brand Identity */}
       <div className="flex items-center gap-2 shrink-0 min-w-0 w-full sm:w-auto">
         <CommonTooltip content="Open menu">
@@ -161,9 +161,9 @@ export function Header() {
               </CommonButton>
             </CommonTooltip>
           )}
-          
+
           <div className="hidden sm:block h-8 w-px bg-border" />
-          
+
           {/* Theme Toggle Button */}
           <CommonTooltip
             content={

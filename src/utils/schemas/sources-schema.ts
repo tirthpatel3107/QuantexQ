@@ -27,7 +27,7 @@ export const sourcesFormSchema = z.object({
         tags: z.string(),
         healthStatus: z.enum(["OK", "Warning", "Error"]),
         healthCount: z.string(),
-      })
+      }),
     ),
   }),
 });

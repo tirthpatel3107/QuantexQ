@@ -5,7 +5,12 @@ export interface StatusBadgeProps extends BadgeProps {
   status: string;
 }
 
-export function StatusBadge({ status, className, children, ...props }: StatusBadgeProps) {
+export function StatusBadge({
+  status,
+  className,
+  children,
+  ...props
+}: StatusBadgeProps) {
   const getStatusColor = (s: string) => {
     switch (s.toLowerCase()) {
       case "primary":

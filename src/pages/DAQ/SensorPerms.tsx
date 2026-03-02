@@ -14,8 +14,6 @@ export function SensorPerms() {
   const { mutate: saveSensorPermsData } = useSaveSensorPermsData();
   const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
-
-
   const initialData = useMemo(() => {
     if (!sensorPermsResponse?.data) return undefined;
     const { sensors, defaultPermissions } = sensorPermsResponse.data;

@@ -1,9 +1,4 @@
-import {
-  useState,
-  useMemo,
-  useCallback,
-  ReactNode,
-} from "react";
+import { useState, useMemo, useCallback, ReactNode } from "react";
 import { SettingsContext, type SettingsContextType } from "./context";
 
 export type { SettingsContextType };

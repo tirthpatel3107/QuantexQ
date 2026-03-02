@@ -22,8 +22,6 @@ export function Density() {
   const { registerSaveHandler, unregisterSaveHandler } =
     useMudPropertiesContext();
 
-
-
   // Memoize initial data
   const initialData = useMemo(() => {
     if (!densityResponse?.data) return undefined;

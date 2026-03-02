@@ -3,7 +3,10 @@ import { useState, useEffect, useMemo, Fragment } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import { calibrationFormSchema, type CalibrationFormValues } from "@/utils/schemas/calibration-schema";
+import {
+  calibrationFormSchema,
+  type CalibrationFormValues,
+} from "@/utils/schemas/calibration-schema";
 
 // Components - Common
 import {
@@ -136,7 +139,12 @@ export function Calibration() {
     return () => {
       unregisterSaveHandler();
     };
-  }, [handleSubmit, registerSaveHandler, unregisterSaveHandler, saveWithConfirmation]);
+  }, [
+    handleSubmit,
+    registerSaveHandler,
+    unregisterSaveHandler,
+    saveWithConfirmation,
+  ]);
 
   // Filtered permission rows for the sensor table
   const permissions = watch("permissions");
@@ -309,16 +317,20 @@ export function Calibration() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-border">
-                      {["Depth", "Primary", "Secondary", "Validation", "Comments"].map(
-                        (col) => (
-                          <th
-                            key={col}
-                            className="text-left py-3 px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide"
-                          >
-                            {col}
-                          </th>
-                        ),
-                      )}
+                      {[
+                        "Depth",
+                        "Primary",
+                        "Secondary",
+                        "Validation",
+                        "Comments",
+                      ].map((col) => (
+                        <th
+                          key={col}
+                          className="text-left py-3 px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide"
+                        >
+                          {col}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
@@ -350,14 +362,22 @@ export function Calibration() {
                                       field.onChange(checked);
                                       // If depth is unchecked, also uncheck primary and secondary
                                       if (!checked) {
-                                        formMethods.setValue(`permissions.${i}.primary`, false);
-                                        formMethods.setValue(`permissions.${i}.secondary`, false);
+                                        formMethods.setValue(
+                                          `permissions.${i}.primary`,
+                                          false,
+                                        );
+                                        formMethods.setValue(
+                                          `permissions.${i}.secondary`,
+                                          false,
+                                        );
                                       }
                                     }}
                                   />
                                 )}
                               />
-                              <span className="text-sm">{permission.sensor}</span>
+                              <span className="text-sm">
+                                {permission.sensor}
+                              </span>
                             </div>
                           </td>
 
@@ -430,7 +450,9 @@ export function Calibration() {
               {/* Chart header */}
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Total = 0.05</span>
-                <span className="text-muted-foreground">Expor Timeline (C.W)</span>
+                <span className="text-muted-foreground">
+                  Expor Timeline (C.W)
+                </span>
               </div>
 
               {/* ECharts line chart */}
@@ -485,7 +507,10 @@ export function Calibration() {
                 {(watch("senectoPermissions") ?? []).map((item, index) => (
                   <Fragment key={item.key}>
                     {/* Permissions label + enabled checkbox */}
-                    <div key={`${item.key}-label`} className="flex items-center gap-2 py-2">
+                    <div
+                      key={`${item.key}-label`}
+                      className="flex items-center gap-2 py-2"
+                    >
                       <CommonFormCheckbox
                         name={`senectoPermissions.${index}.enabled`}
                         control={control}
@@ -494,7 +519,10 @@ export function Calibration() {
                     </div>
 
                     {/* Hydrations checkbox */}
-                    <div key={`${item.key}-hydrations`} className="flex justify-center items-center">
+                    <div
+                      key={`${item.key}-hydrations`}
+                      className="flex justify-center items-center"
+                    >
                       <CommonFormCheckbox
                         name={`senectoPermissions.${index}.hydrations`}
                         control={control}
@@ -502,7 +530,10 @@ export function Calibration() {
                     </div>
 
                     {/* Edits input field */}
-                    <div key={`${item.key}-edits`} className="flex items-center justify-center">
+                    <div
+                      key={`${item.key}-edits`}
+                      className="flex items-center justify-center"
+                    >
                       <CommonFormInput
                         name={`senectoPermissions.${index}.edits`}
                         control={control}
@@ -518,9 +549,16 @@ export function Calibration() {
                     </div>
 
                     {/* Sacnesions – "Select Type" button for applicable rows */}
-                    <div key={`${item.key}-sac`} className="flex justify-center items-center">
+                    <div
+                      key={`${item.key}-sac`}
+                      className="flex justify-center items-center"
+                    >
                       {item.hasSelectType ? (
-                        <CommonButton variant="ghost" size="sm" className="h-7 px-2">
+                        <CommonButton
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 px-2"
+                        >
                           Select Type
                         </CommonButton>
                       ) : null}

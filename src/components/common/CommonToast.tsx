@@ -1,6 +1,11 @@
 import { toast } from "@/hooks/use-toast";
 
-export type ToastVariant = "default" | "destructive" | "success" | "warning" | "info";
+export type ToastVariant =
+  | "default"
+  | "destructive"
+  | "success"
+  | "warning"
+  | "info";
 
 interface ShowToastParams {
   title: string;

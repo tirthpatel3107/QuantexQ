@@ -14,10 +14,10 @@ import { FlowDifferenceBar } from "@/components/dashboard/FlowDifferenceBar";
 
 /**
  * Dashboard Component
- * 
- * The main operational view of the application. It displays real-time 
+ *
+ * The main operational view of the application. It displays real-time
  * drilling metrics through a series of vertical charts and gauges.
- * 
+ *
  * Key features:
  * - Responsive grid layout with dynamic chart expansion
  * - Unified time axis for synchronized data visualization
@@ -35,7 +35,7 @@ export default function Dashboard() {
   /**
    * Toggles the expansion state of a chart card.
    * On double click, the card takes more space in the grid.
-   * 
+   *
    * @param id The unique identifier of the card to toggle
    */
   const handleCardDoubleClick = useCallback((id: string) => {
@@ -65,7 +65,6 @@ export default function Dashboard() {
     >
       <div className="flex flex-col gap-3 flex-1 min-h-0">
         <div className="grid flex-1 min-h-0 gap-3 grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,12%)]">
-          
           {/* Left/Center Section: Primary Data Visualization Charts */}
           <div className="min-w-0 flex flex-col gap-3 overflow-x-hidden">
             <div className="flex gap-2 items-stretch w-full flex-1 min-h-0">
@@ -87,7 +86,7 @@ export default function Dashboard() {
                   card.metrics,
                   latestPoint,
                 );
-                
+
                 const isExpanded = expandedCardId === card.id;
 
                 return (

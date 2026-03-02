@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import { systemSettingsFormSchema, type SystemSettingsFormValues } from "@/utils/schemas/system-settings-schema";
+import {
+  systemSettingsFormSchema,
+  type SystemSettingsFormValues,
+} from "@/utils/schemas/system-settings-schema";
 
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {

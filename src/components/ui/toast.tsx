@@ -1,7 +1,13 @@
 import * as React from "react";
 import * as ToastPrimitives from "@radix-ui/react-toast";
 import { cva, type VariantProps } from "class-variance-authority";
-import { X, CheckCircle2, AlertCircle, Info, AlertTriangle } from "lucide-react";
+import {
+  X,
+  CheckCircle2,
+  AlertCircle,
+  Info,
+  AlertTriangle,
+} from "lucide-react";
 
 import { cn } from "@/utils/lib/utils";
 
@@ -35,8 +41,7 @@ const toastVariants = cva(
           "border-green-500/50 bg-green-50/95 text-green-900 dark:bg-green-950/95 dark:text-green-50 backdrop-blur-md supports-[backdrop-filter]:bg-green-50/90 dark:supports-[backdrop-filter]:bg-green-950/90 shadow-green-500/20",
         warning:
           "border-amber-500/50 bg-amber-50/95 text-amber-900 dark:bg-amber-950/95 dark:text-amber-50 backdrop-blur-md supports-[backdrop-filter]:bg-amber-50/90 dark:supports-[backdrop-filter]:bg-amber-950/90 shadow-amber-500/20",
-        info:
-          "border-blue-500/50 bg-blue-50/95 text-blue-900 dark:bg-blue-950/95 dark:text-blue-50 backdrop-blur-md supports-[backdrop-filter]:bg-blue-50/90 dark:supports-[backdrop-filter]:bg-blue-950/90 shadow-blue-500/20",
+        info: "border-blue-500/50 bg-blue-50/95 text-blue-900 dark:bg-blue-950/95 dark:text-blue-50 backdrop-blur-md supports-[backdrop-filter]:bg-blue-50/90 dark:supports-[backdrop-filter]:bg-blue-950/90 shadow-blue-500/20",
       },
     },
     defaultVariants: {
@@ -74,17 +79,31 @@ const Toast = React.forwardRef<
 
   const getIcon = () => {
     if (!showIcon) return null;
-    
+
     const iconClass = "h-5 w-5 shrink-0 mt-0.5";
     switch (variant) {
       case "success":
-        return <CheckCircle2 className={cn(iconClass, "text-green-600 dark:text-green-400")} />;
+        return (
+          <CheckCircle2
+            className={cn(iconClass, "text-green-600 dark:text-green-400")}
+          />
+        );
       case "destructive":
-        return <AlertCircle className={cn(iconClass, "text-red-600 dark:text-red-400")} />;
+        return (
+          <AlertCircle
+            className={cn(iconClass, "text-red-600 dark:text-red-400")}
+          />
+        );
       case "warning":
-        return <AlertTriangle className={cn(iconClass, "text-amber-600 dark:text-amber-400")} />;
+        return (
+          <AlertTriangle
+            className={cn(iconClass, "text-amber-600 dark:text-amber-400")}
+          />
+        );
       case "info":
-        return <Info className={cn(iconClass, "text-blue-600 dark:text-blue-400")} />;
+        return (
+          <Info className={cn(iconClass, "text-blue-600 dark:text-blue-400")} />
+        );
       default:
         return <Info className={cn(iconClass, "text-foreground/60")} />;
     }
@@ -101,9 +120,7 @@ const Toast = React.forwardRef<
       {...props}
     >
       {getIcon()}
-      <div className="flex-1 space-y-1">
-        {props.children}
-      </div>
+      <div className="flex-1 space-y-1">{props.children}</div>
       {duration && duration > 0 && (
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/5 dark:bg-white/5">
           <div
@@ -113,7 +130,7 @@ const Toast = React.forwardRef<
               variant === "destructive" && "bg-red-500",
               variant === "warning" && "bg-amber-500",
               variant === "info" && "bg-blue-500",
-              variant === "default" && "bg-foreground/40"
+              variant === "default" && "bg-foreground/40",
             )}
             style={{ width: `${progress}%` }}
           />

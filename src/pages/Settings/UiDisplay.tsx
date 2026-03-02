@@ -104,7 +104,10 @@ export function UiDisplay() {
   const { mutate: saveUiDisplayData } = useSaveUiDisplaySettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
-  const options = (optionsResponse?.data || {}) as Record<string, CommonSelectOption[]>;
+  const options = (optionsResponse?.data || {}) as Record<
+    string,
+    CommonSelectOption[]
+  >;
   const { theme, setTheme } = useTheme();
   const { accentColor, setAccentColor } = useAccentColor();
 

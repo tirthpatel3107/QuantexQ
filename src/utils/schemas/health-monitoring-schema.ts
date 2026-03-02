@@ -28,4 +28,6 @@ export const HEALTH_INITIAL_DATA = {
   },
 };
 
-export type HealthMonitoringFormValues = z.infer<typeof healthMonitoringFormSchema>;
+export type HealthMonitoringFormValues = z.infer<
+  typeof healthMonitoringFormSchema
+>;

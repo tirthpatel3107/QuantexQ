@@ -20,18 +20,27 @@ export const calibrationFormSchema = z.object({
       auto: z.boolean(),
     }),
   ),
-  senectoPermissions: z.array(
-    z.object({
-      key: z.string(),
-      label: z.string(),
-      enabled: z.boolean(),
-      hydrations: z.boolean(),
-      edits: z.coerce.number().min(0, "Must be at least 0").max(1, "Must be at most 1"),
-      hasSelectType: z.boolean(),
-    }),
-  ).refine((items) => items.every((item) => item.edits !== null && item.edits !== undefined), {
-    message: "All edits fields are required",
-  }),
+  senectoPermissions: z
+    .array(
+      z.object({
+        key: z.string(),
+        label: z.string(),
+        enabled: z.boolean(),
+        hydrations: z.boolean(),
+        edits: z.coerce
+          .number()
+          .min(0, "Must be at least 0")
+          .max(1, "Must be at most 1"),
+        hasSelectType: z.boolean(),
+      }),
+    )
+    .refine(
+      (items) =>
+        items.every((item) => item.edits !== null && item.edits !== undefined),
+      {
+        message: "All edits fields are required",
+      },
+    ),
   sensorPermissionsOk: z.boolean(),
   validateAll: z.boolean(),
 });

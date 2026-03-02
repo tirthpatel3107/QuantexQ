@@ -63,7 +63,7 @@ export function useSectionForm<T>({
     <K extends keyof T>(key: K, value: T[K]) => {
       updateLocalField({ [key]: value } as unknown as Partial<T>);
     },
-    [updateLocalField]
+    [updateLocalField],
   );
 
   return {

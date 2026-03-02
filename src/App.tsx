@@ -30,7 +30,7 @@ const queryClient = new QueryClient({
 
 /**
  * Root Application Component
- * 
+ *
  * This component sets up the global provider stack and routing infrastructure.
  * The provider order is significant:
  * 1. Theme and Accent Color (Styling)
@@ -47,7 +47,7 @@ const App = () => (
           {/* Global UI feedback components */}
           <Toaster />
           <Sonner />
-          
+
           <BrowserRouter>
             <SidebarProvider>
               <SimulationProvider>
@@ -57,7 +57,7 @@ const App = () => (
                     {/* Main Entry Points */}
                     <Route path={ROUTES.HOME} element={<Index />} />
                     <Route path={ROUTES.PROFILE} element={<Profile />} />
-                    
+
                     {/* Feature Modules with optional sub-sections */}
                     <Route
                       path={`${ROUTES.MUD_PROPERTIES}/:section?`}
@@ -72,7 +72,7 @@ const App = () => (
                       path={`${ROUTES.NETWORK}/:section?`}
                       element={<Network />}
                     />
-                    
+
                     {/* Fallback for unknown routes */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>

@@ -8,7 +8,10 @@ import {
 } from "react";
 import { formatElapsedSeconds } from "@/utils/lib/date-utils";
 import { appendChartPoint } from "@/utils/data/mockData";
-import { CHART_UPDATE_INTERVAL_MS, TIMER_TICK_MS } from "@/utils/constants/config";
+import {
+  CHART_UPDATE_INTERVAL_MS,
+  TIMER_TICK_MS,
+} from "@/utils/constants/config";
 import {
   SimulationStateContext,
   SimulationDataContext,
@@ -24,7 +27,7 @@ import {
  * - Running status of the operations
  * - Accumulated chart data for all metrics
  * - Elapsed mission time
- * 
+ *
  * Performance optimizations:
  * - Memoized context values to prevent unnecessary re-renders
  * - Batched chart updates with configurable intervals
@@ -51,7 +54,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       }
       return;
     }
-    
+
     // Batch chart updates for better performance
     intervalRef.current = setInterval(() => {
       // Use functional update to avoid stale closures
@@ -64,7 +67,7 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
         return next;
       });
     }, CHART_UPDATE_INTERVAL_MS);
-    
+
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);

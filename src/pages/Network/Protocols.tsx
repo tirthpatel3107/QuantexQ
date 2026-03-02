@@ -3,7 +3,10 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import { protocolsFormSchema, type ProtocolsFormValues } from "@/utils/schemas/protocols-schema";
+import {
+  protocolsFormSchema,
+  type ProtocolsFormValues,
+} from "@/utils/schemas/protocols-schema";
 
 // Components - UI & Icons
 import { Badge } from "@/components/ui/badge";
@@ -29,7 +32,6 @@ import type { SaveProtocolsPayload } from "@/services/api/network/network.types"
 // Context
 import { useNetworkContext } from "@/context/Network";
 
-
 export function Protocols() {
   const { data: protocolsResponse, isLoading } = useProtocolsData();
   const { mutate: saveProtocolsData } = useSaveProtocolsData();
@@ -40,7 +42,13 @@ export function Protocols() {
     resolver: zodResolver(protocolsFormSchema),
   });
 
-  const { reset, handleSubmit, watch, setValue, formState: { errors } } = formMethods;
+  const {
+    reset,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = formMethods;
 
   // Track if we have set initial data
   const [hasSetInitial, setHasSetInitial] = useState(false);
@@ -66,7 +74,8 @@ export function Protocols() {
     successMessage: "Protocols settings saved successfully",
     errorMessage: "Failed to save protocols settings",
     confirmTitle: "Save Protocols Settings",
-    confirmDescription: "Are you sure you want to save these protocols changes?",
+    confirmDescription:
+      "Are you sure you want to save these protocols changes?",
   });
 
   // Attach context's save to RHF handleSubmit
@@ -79,7 +88,12 @@ export function Protocols() {
     return () => {
       unregisterSaveHandler();
     };
-  }, [handleSubmit, registerSaveHandler, unregisterSaveHandler, saveWithConfirmation]);
+  }, [
+    handleSubmit,
+    registerSaveHandler,
+    unregisterSaveHandler,
+    saveWithConfirmation,
+  ]);
 
   if (isLoading || !hasSetInitial || !protocolsResponse?.data) {
     return <SectionSkeleton count={6} />;
@@ -109,9 +123,14 @@ export function Protocols() {
                 Source Type: PRIMARY (PLC) Chokes | Flow Meter | PWD (optional)
               </p>
 
-              <RadioGroup 
+              <RadioGroup
                 value={rigPlcType}
-                onValueChange={(value) => setValue("rigPlc.type", value as "modbus-tcp" | "opc-ua" | "ethernet-ip")}
+                onValueChange={(value) =>
+                  setValue(
+                    "rigPlc.type",
+                    value as "modbus-tcp" | "opc-ua" | "ethernet-ip",
+                  )
+                }
                 className="space-y-3"
               >
                 {/* Modbus TCP */}
@@ -136,7 +155,8 @@ export function Protocols() {
                             placeholder="10.1.0.1:13:502"
                             value={watch("rigPlc.modbusEndpoints.0") || ""}
                             onChange={(e) => {
-                              const endpoints = watch("rigPlc.modbusEndpoints") || [];
+                              const endpoints =
+                                watch("rigPlc.modbusEndpoints") || [];
                               const newEndpoints = [...endpoints];
                               newEndpoints[0] = e.target.value;
                               setValue("rigPlc.modbusEndpoints", newEndpoints);
@@ -153,7 +173,8 @@ export function Protocols() {
                             placeholder="10.1.0.113:502"
                             value={watch("rigPlc.modbusEndpoints.1") || ""}
                             onChange={(e) => {
-                              const endpoints = watch("rigPlc.modbusEndpoints") || [];
+                              const endpoints =
+                                watch("rigPlc.modbusEndpoints") || [];
                               const newEndpoints = [...endpoints];
                               newEndpoints[1] = e.target.value;
                               setValue("rigPlc.modbusEndpoints", newEndpoints);
@@ -166,11 +187,13 @@ export function Protocols() {
                           )}
                         </div>
                       </div>
-                      {errors.rigPlc?.modbusEndpoints && typeof errors.rigPlc.modbusEndpoints === 'object' && 'message' in errors.rigPlc.modbusEndpoints && (
-                        <p className="text-xs text-destructive mt-1">
-                          {errors.rigPlc.modbusEndpoints.message as string}
-                        </p>
-                      )}
+                      {errors.rigPlc?.modbusEndpoints &&
+                        typeof errors.rigPlc.modbusEndpoints === "object" &&
+                        "message" in errors.rigPlc.modbusEndpoints && (
+                          <p className="text-xs text-destructive mt-1">
+                            {errors.rigPlc.modbusEndpoints.message as string}
+                          </p>
+                        )}
                     </div>
                   )}
                 </div>
@@ -188,7 +211,9 @@ export function Protocols() {
                         <CommonInput
                           placeholder="opc.tcp 10.1.0.113:49320"
                           value={watch("rigPlc.opcEndpoint") || ""}
-                          onChange={(e) => setValue("rigPlc.opcEndpoint", e.target.value)}
+                          onChange={(e) =>
+                            setValue("rigPlc.opcEndpoint", e.target.value)
+                          }
                         />
                         {errors.rigPlc?.opcEndpoint && (
                           <p className="text-xs text-destructive mt-1">
@@ -213,7 +238,9 @@ export function Protocols() {
                         <CommonInput
                           placeholder="100.10.1.14:10.13:40818"
                           value={watch("rigPlc.ethernetEndpoint") || ""}
-                          onChange={(e) => setValue("rigPlc.ethernetEndpoint", e.target.value)}
+                          onChange={(e) =>
+                            setValue("rigPlc.ethernetEndpoint", e.target.value)
+                          }
                         />
                         {errors.rigPlc?.ethernetEndpoint && (
                           <p className="text-xs text-destructive mt-1">
@@ -249,9 +276,20 @@ export function Protocols() {
                 </Badge>
               </div>
 
-              <RadioGroup 
+              <RadioGroup
                 value={pwdType}
-                onValueChange={(value) => setValue("pwd.type", value as "direct-wits" | "witsml-left" | "mqtt" | "tcp-udp-left" | "witsml-right" | "tcp-udp-right")}
+                onValueChange={(value) =>
+                  setValue(
+                    "pwd.type",
+                    value as
+                      | "direct-wits"
+                      | "witsml-left"
+                      | "mqtt"
+                      | "tcp-udp-left"
+                      | "witsml-right"
+                      | "tcp-udp-right",
+                  )
+                }
                 className="space-y-3 pt-3"
               >
                 {/* Direct WITS */}

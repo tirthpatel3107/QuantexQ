@@ -109,7 +109,10 @@ export function Signals() {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [selectedSignal, setSelectedSignal] = useState<Signal | null>(null);
 
-  const signals = useMemo(() => form.formData?.signals || [], [form.formData?.signals]);
+  const signals = useMemo(
+    () => form.formData?.signals || [],
+    [form.formData?.signals],
+  );
 
   const toggleFavorite = useCallback(
     (id: number) => {
@@ -263,7 +266,10 @@ export function Signals() {
       if (filterBy === "notInUse" && s.inUse) return false;
 
       // Subsystem filter
-      if (subsystemFilters.length > 0 && !subsystemFilters.includes(s.subsystem))
+      if (
+        subsystemFilters.length > 0 &&
+        !subsystemFilters.includes(s.subsystem)
+      )
         return false;
 
       return true;

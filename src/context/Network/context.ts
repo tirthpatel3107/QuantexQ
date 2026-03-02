@@ -6,4 +6,6 @@ export interface NetworkContextType {
   unregisterSaveHandler: () => void;
 }
 
-export const NetworkContext = createContext<NetworkContextType | undefined>(undefined);
+export const NetworkContext = createContext<NetworkContextType | undefined>(
+  undefined,
+);
