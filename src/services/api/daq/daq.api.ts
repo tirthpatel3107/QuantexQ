@@ -476,7 +476,7 @@ const fetchCalibrationData = async (): Promise<
             },
           ],
           defaultPermissions: [
-            { name: "WildLife", auto: true },
+            { name: "Wdidate", auto: true },
             { name: "Depth", auto: true },
           ],
           senectoPermissions: [
