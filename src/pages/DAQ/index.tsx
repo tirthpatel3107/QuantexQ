@@ -92,16 +92,16 @@ function DAQContent() {
         return <Hydraulics />;
       case "sensor-perms":
         return <SensorPerms />;
-      case "calibration":
-        // return <Calibration />;
-      case "display":
-        // return <Display />;
-      case "streaming":
-        // return <Streaming />;
       case "system-settings":
         return <SystemSettings />;
       case "downloads":
         return <Downloads />;
+      case "calibration":
+      // return <Calibration />;
+      case "display":
+      // return <Display />;
+      case "streaming":
+      // return <Streaming />;
       default:
         return <DaqOverview />;
     }
