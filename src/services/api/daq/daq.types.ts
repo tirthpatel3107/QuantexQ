@@ -290,10 +290,11 @@ export interface HydraulicModel {
 export interface HydraulicParameterList {
   id: string;
   name: string;
-  mudOut: number;
+  mudOut: string;
+  mudIn: string; // was 85.01 in UI
   mudType: string;
-  temp: number;
-  bbt: number;
+  temp: string;
+  bbt: string;
 }
 
 export interface HydraulicsAnalysis {
@@ -302,16 +303,28 @@ export interface HydraulicsAnalysis {
 }
 
 export interface FrictionLossesSummary {
-  calculatedPs: number;
-  circulatedFlow: number;
-  annularFrictionLoss: number;
+  calculatedBy: string;
+  circulatedFlow: string;
   circulatingFlowIn: number;
   circulatingFlowOut: number;
+  psValue: string;
+  flowValue: string;
+  outFlowValue: string;
+  temperature: string;
+  simplified: string;
+  vedPuff: string;
+  nippleInnerDiameter: string;
+  outerDiameter: string;
+  panelCostInfo: string;
+  simulated: boolean;
+  ssAf: boolean;
+  mp73Pf: boolean;
 }
 
 export interface SaveHydraulicsPayload {
   modelsUsed: HydraulicModel[];
   parameterLists: HydraulicParameterList[];
+  frictionLosses: FrictionLossesSummary;
 }
 
 // ============================================
@@ -441,6 +454,12 @@ export interface CalibrationOptionsData {
 export interface HydraulicsOptionsData {
   modelTypeOptions: Array<{ label: string; value: string }>;
   mudTypeOptions: Array<{ label: string; value: string }>;
+  calculatedByOptions: Array<{ label: string; value: string }>;
+  circulatedFlowOptions: Array<{ label: string; value: string }>;
+  temperatureOptions: Array<{ label: string; value: string }>;
+  simplifiedOptions: Array<{ label: string; value: string }>;
+  vedPuffOptions: Array<{ label: string; value: string }>;
+  outerDiameterOptions: Array<{ label: string; value: string }>;
 }
 
 export interface SystemSettingsOptionsData {
