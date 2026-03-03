@@ -44,44 +44,38 @@ export interface SaveDisplayPayload {
 // ============================================
 
 export interface StreamingTabData {
-  witsStream: WitsStreamConfig;
-  edrLogging: EdrLoggingConfig;
-  dataRate: DataRateConfig;
-  liveExport: LiveExportConfig;
+  streaming: {
+    enabled: boolean;
+    realTimeLevel: string;
+    destination: string;
+  };
+  loggingStatus: {
+    enabled: boolean;
+    frequency: string;
+    autoCache: boolean;
+    startLoggingUponSystemReady: boolean;
+    appendOnLogStop: boolean;
+  };
+  loggingDestinations: {
+    exportLogFiles: {
+      destinationLogsTo: string;
+      anotherDirectory: string;
+      diskCacheDirectory: string;
+    };
+    network: {
+      networkLocation: string;
+      directory: string;
+    };
+  };
+  ftpServer: {
+    ftpUrl1: string;
+    ftpUrl2: string;
+    ftpPas: string;
+  };
 }
 
-export interface WitsStreamConfig {
-  enabled: boolean;
-  level: "0" | "1";
-  endpoint: string;
-  baudRate: number;
-}
+export type SaveStreamingPayload = StreamingTabData;
 
-export interface EdrLoggingConfig {
-  enabled: boolean;
-  rate: number;
-  channels: string[];
-  format: "csv" | "json" | "binary";
-}
-
-export interface DataRateConfig {
-  frequency: number;
-  bufferSize: number;
-  downsampling: boolean;
-}
-
-export interface LiveExportConfig {
-  enabled: boolean;
-  targets: string[];
-  format: "csv" | "json";
-}
-
-export interface SaveStreamingPayload {
-  witsStream: WitsStreamConfig;
-  edrLogging: EdrLoggingConfig;
-  dataRate: DataRateConfig;
-  liveExport: LiveExportConfig;
-}
 
 // ============================================
 // Notifications Tab
@@ -419,9 +413,11 @@ export interface DisplayOptionsData {
 
 export interface StreamingOptionsData {
   witsLevelOptions: Array<{ label: string; value: string }>;
+  destinationOptions: Array<{ label: string; value: string }>;
   formatOptions: Array<{ label: string; value: string }>;
   baudRateOptions: Array<{ label: string; value: number }>;
 }
+
 
 export interface NotificationsOptionsData {
   alarmSoundOptions: Array<{ label: string; value: string }>;

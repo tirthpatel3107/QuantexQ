@@ -115,29 +115,40 @@ const fetchStreamingData = async (): Promise<ApiResponse<StreamingTabData>> => {
       resolve({
         success: true,
         data: {
-          witsStream: {
-            enabled: true,
-            level: "1",
-            endpoint: "tcp://192.168.1.100:5000",
-            baudRate: 9600,
-          },
-          edrLogging: {
-            enabled: true,
-            rate: 1000,
-            channels: ["pressure", "temperature", "flow"],
-            format: "csv",
-          },
-          dataRate: {
-            frequency: 100,
-            bufferSize: 10000,
-            downsampling: false,
-          },
-          liveExport: {
+          streaming: {
             enabled: false,
-            targets: [],
-            format: "json",
+            realTimeLevel: "",
+            destination: "",
+          },
+          loggingStatus: {
+            enabled: false,
+            frequency: "",
+            autoCache: false,
+            startLoggingUponSystemReady: false,
+            appendOnLogStop: false,
+          },
+          loggingDestinations: {
+            exportLogFiles: {
+              destinationLogsTo: "Desktop",
+              anotherDirectory:
+                "F:/Documents/Manektech%20Utils/Quantex%20Q/Logging.png",
+              diskCacheDirectory:
+                "F:/Documents/Manektech%20Utils/Quantex%20Q/Logging.png",
+            },
+            network: {
+              networkLocation:
+                "F:/Documents/Manektech%20Utils/Quantex%20Q/Logging.png",
+              directory:
+                "F:/Documents/Manektech%20Utils/Quantex%20Q/Logging.png",
+            },
+          },
+          ftpServer: {
+            ftpUrl1: "",
+            ftpUrl2: "",
+            ftpPas: "",
           },
         },
+
         timestamp: new Date().toISOString(),
       });
     }, 500);
@@ -1042,19 +1053,11 @@ export const useStreamingOptions = () => {
             success: true,
             data: {
               witsLevelOptions: [
-                { label: "Level 0", value: "0" },
-                { label: "Level 1", value: "1" },
+                { label: "Level 0", value: "Level 0" },
+                { label: "Level 1", value: "Level 1" },
+                { label: "Level 2", value: "Level 2" },
               ],
-              formatOptions: [
-                { label: "CSV", value: "csv" },
-                { label: "JSON", value: "json" },
-                { label: "Binary", value: "binary" },
-              ],
-              baudRateOptions: [
-                { label: "9600", value: 9600 },
-                { label: "19200", value: 19200 },
-                { label: "38400", value: 38400 },
-              ],
+              destinationOptions: [{ label: "All", value: "all" }],
             },
           });
         }, 300);
