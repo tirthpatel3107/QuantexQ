@@ -195,8 +195,8 @@ export function Density() {
           {
             title: "Solids",
             data: {
-              "lgs": validData.solids.lgs,
-              "hgs": validData.solids.hgs,
+              lgs: validData.solids.lgs,
+              hgs: validData.solids.hgs,
             },
           },
           {
@@ -208,7 +208,7 @@ export function Density() {
           {
             title: "Salinity",
             data: {
-              "salinity": validData.salinity,
+              salinity: validData.salinity,
             },
           },
         ],
@@ -649,10 +649,10 @@ function DensityDepthChart({ mwOut }: { mwOut: number }) {
       title={
         <div className="flex items-center justify-between w-full">
           <span>Density at Surface vs. Depth</span>
-          <CommonButton variant="ghost" size="sm">
-            Export Data (CSV)
-          </CommonButton>
         </div>
+      }
+      headerAction={
+        <CommonButton variant="outline">Export CSV Data</CommonButton>
       }
     >
       <div className="h-[300px] w-full">
