@@ -149,13 +149,13 @@ const fetchDensityData = async (): Promise<ApiResponse<DensityTabData>> => {
       resolve({
         success: true,
         data: {
-          mudWeightIn: "12.5",
+          mudWeightIn: "12.4",
           mudWeightOut: "12.4",
           oilWaterRatio: "70/30",
           salinity: "15.0",
-          solidsContent: "8.5",
-          lowGravitySolids: "4.2",
-          highGravitySolids: "4.3",
+          solidsContent: "17.8",
+          lowGravitySolids: "8.3",
+          highGravitySolids: "9.5",
         },
         timestamp: new Date().toISOString(),
       });
