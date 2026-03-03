@@ -127,20 +127,49 @@ export interface SaveGasCompressibilityPayload {
 // Calibration Tab
 // ============================================
 
+export interface AuditLogEntry {
+  id: string;
+  timestamp: string;
+  checkType: string;
+  matchCount: number;
+  details?: string;
+}
+
 export interface CalibrationTabData {
-  viscometerCalDate: string;
-  densityCalDate: string;
-  tempSensorOffset: string;
-  pressureSensorCal: string;
-  flowMeterCal: string;
-  lastCalibrationBy: string;
-  nextCalibrationDue: string;
+  gasCompressibility: {
+    densitySensorOffset?: string;
+    pvYpCorrectionFactor?: string;
+    temperatureSensorOffset?: string;
+    gasCut?: string;
+  };
+  sanityCheck: {
+    enabled: boolean;
+    lastCheck?: string;
+    densityMatch?: boolean;
+    rheologyMatch?: boolean;
+    temperatureMatch?: boolean;
+  };
+  validationStatus: {
+    annularTemperature: string;
+    ecdAtBit: string;
+    requiredInputs: boolean;
+    densityWithinRange: boolean;
+    tempPressureLogic: boolean;
+    requiredInputsComplete: string;
+  };
+  auditLog: AuditLogEntry[];
 }
 
 export interface SaveCalibrationPayload {
-  viscometerCalDate: string;
-  densityCalDate: string;
-  tempSensorOffset: string;
+  gasCompressibility: {
+    densitySensorOffset?: string;
+    pvYpCorrectionFactor?: string;
+    temperatureSensorOffset?: string;
+    gasCut?: string;
+  };
+  sanityCheck: {
+    enabled: boolean;
+  };
 }
 
 // ============================================
@@ -194,5 +223,11 @@ export interface GasCompressibilityOptionsData {
 }
 
 export interface CalibrationOptionsData {
-  calibrationTypeOptions: SelectOption[];
+  sgOptions: SelectOption[];
+  typicalSensorOffsets: {
+    obm: string;
+    wbm: string;
+    visco: string;
+    temp: string;
+  };
 }

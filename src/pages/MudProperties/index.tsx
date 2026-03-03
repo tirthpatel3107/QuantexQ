@@ -186,7 +186,7 @@ function MudPropertiesContent() {
           <div className="flex flex-1 min-w-0 gap-4 overflow-auto">
             <div className="flex-1 min-w-0 space-y-4">{renderSection()}</div>
 
-            {activeSection !== "mud-properties" && <MudPropertiesSidebar />}
+            {/* {activeSection !== "mud-properties" && <MudPropertiesSidebar />} */}
           </div>
         </main>
       </SidebarLayout>
