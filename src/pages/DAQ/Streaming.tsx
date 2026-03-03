@@ -85,7 +85,6 @@ export function Streaming() {
         ftpUrl2: "",
         ftpPas: "",
       },
-
     },
   });
 
@@ -135,19 +134,18 @@ export function Streaming() {
     <>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
         {/* Card 1: Streaming */}
-        <PanelCard title="Streaming">
+        <PanelCard
+          title="Streaming"
+          headerAction={
+            <Switch
+              checked={streamingEnabled}
+              onCheckedChange={(checked) =>
+                form.setValue("streaming.enabled", checked)
+              }
+            />
+          }
+        >
           <div className="space-y-6">
-            {/* Enable Streaming Toggle */}
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Enable streaming</span>
-              <Switch
-                checked={streamingEnabled}
-                onCheckedChange={(checked) =>
-                  form.setValue("streaming.enabled", checked)
-                }
-              />
-            </div>
-
             {/* Real-time Streaming Section */}
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
@@ -155,6 +153,7 @@ export function Streaming() {
                   control={form.control}
                   name="streaming.realTimeLevel"
                   label=" Real-time streaming"
+                  disabled={!streamingEnabled}
                   options={
                     options?.witsLevelOptions || [
                       { label: "Level 0", value: "Level 0" },
@@ -169,6 +168,7 @@ export function Streaming() {
                   control={form.control}
                   name="streaming.destination"
                   label="Streaming Destinations"
+                  disabled={!streamingEnabled}
                   options={
                     options?.destinationOptions || [
                       { label: "All", value: "all" },
@@ -260,11 +260,13 @@ export function Streaming() {
                 control={form.control}
                 name="loggingStatus.startLoggingUponSystemReady"
                 label="Start logging upon system ready"
+                disabled={!loggingEnabled}
               />
               <CommonFormCheckbox
                 control={form.control}
                 name="loggingStatus.appendOnLogStop"
                 label="Append on log stop"
+                disabled={!loggingEnabled}
               />
             </div>
           </div>
@@ -405,13 +407,13 @@ export function Streaming() {
                 <CommonFormInput
                   control={form.control}
                   name="ftpServer.ftpUrl1"
-                  label="FTP URL"
+                  label="FTP URL 1"
                   placeholder="tcp://192.168.1.100:5000"
                 />
                 <CommonFormInput
                   control={form.control}
                   name="ftpServer.ftpUrl2"
-                  label="FTP URL"
+                  label="FTP URL 2"
                   placeholder="tcp://192.168.1.100:5000"
                 />
 
