@@ -266,7 +266,7 @@ export function Density() {
 
   return (
     <>
-      <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-3">
+      <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
         <div className="grid grid-cols-1 xl:grid-cols-1 gap-3 auto-rows-max">
           {/* ---- Density & Solids Panel ---- */}
           <PanelCard
