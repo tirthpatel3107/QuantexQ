@@ -44,22 +44,99 @@ export interface SaveFluidOverviewPayload {
 // ============================================
 
 export interface RheologyTabData {
-  rheologySource: string;
-  pv: string;
-  yp: string;
-  gel10s: string;
-  gel10m: string;
-  n: string;
-  k: string;
-  tau0: string;
+  rheologyModel: {
+    model: string;
+    formula: string;
+  };
+  pv: {
+    value: string;
+    unit: string;
+  };
+  yp: {
+    value: string;
+    unit: string;
+  };
+  deriveFromViscometer: boolean;
+  calibration: {
+    viscosityVsShearRate: Array<{
+      shearRate: number;
+      viscosity: number;
+    }>;
+  };
+  temperature: {
+    shearStressVsShearRate: Array<{
+      shearRate: number;
+      shearStress: number;
+    }>;
+  };
+  rheologyOutputs: {
+    flowlineTemperature: {
+      value: string;
+      unit: string;
+    };
+    annularVelocity: {
+      value: string;
+      unit: string;
+    };
+    shearRate: {
+      value: string;
+      unit: string;
+    };
+    pvOutput: {
+      value: string;
+      unit: string;
+      status: "OK" | "Warning" | "Error";
+    };
+    ypOutput: {
+      value: string;
+      unit: string;
+      status: "OK" | "Warning" | "Error";
+    };
+    gel10s: {
+      value: string;
+      unit: string;
+      status: "OK" | "Warning" | "Error";
+    };
+    gel10m: {
+      value: string;
+      unit: string;
+      status: "OK" | "Warning" | "Error";
+    };
+  };
+  pressureDrop: {
+    psl: {
+      value: string;
+      unit: string;
+    };
+    flow: {
+      value: string;
+      unit: string;
+    };
+    drillpipe: {
+      value: string;
+      unit: string;
+    };
+    bit: {
+      value: string;
+      unit: string;
+    };
+  };
 }
 
 export interface SaveRheologyPayload {
-  rheologySource: string;
-  pv: string;
-  yp: string;
-  gel10s: string;
-  gel10m: string;
+  rheologyModel: {
+    model: string;
+    formula: string;
+  };
+  pv: {
+    value: string;
+    unit: string;
+  };
+  yp: {
+    value: string;
+    unit: string;
+  };
+  deriveFromViscometer: boolean;
 }
 
 // ============================================
@@ -178,7 +255,7 @@ export interface FluidOverviewOptionsData {
 }
 
 export interface RheologyOptionsData {
-  rheologySourceOptions: SelectOption[];
+  rheologyModelOptions: SelectOption[];
 }
 
 export interface DensityOptionsData {

@@ -110,14 +110,90 @@ const fetchRheologyData = async (): Promise<ApiResponse<RheologyTabData>> => {
       resolve({
         success: true,
         data: {
-          rheologySource: "viscometer",
-          pv: "20",
-          yp: "15",
-          gel10s: "12",
-          gel10m: "20",
-          n: "0.65",
-          k: "0.85",
-          tau0: "8.5",
+          rheologyModel: {
+            model: "bingham-plastic",
+            formula: "τ = PV × γ + YP",
+          },
+          pv: {
+            value: "20",
+            unit: "cP",
+          },
+          yp: {
+            value: "15",
+            unit: "lb/100ft²",
+          },
+          deriveFromViscometer: false,
+          calibration: {
+            viscosityVsShearRate: [
+              { shearRate: 0, viscosity: 50 },
+              { shearRate: 10, viscosity: 100 },
+              { shearRate: 100, viscosity: 200 },
+              { shearRate: 200, viscosity: 250 },
+              { shearRate: 400, viscosity: 300 },
+              { shearRate: 600, viscosity: 350 },
+            ],
+          },
+          temperature: {
+            shearStressVsShearRate: [
+              { shearRate: 0, shearStress: 50 },
+              { shearRate: 100, shearStress: 75 },
+              { shearRate: 300, shearStress: 100 },
+              { shearRate: 400, shearStress: 125 },
+              { shearRate: 600, shearStress: 150 },
+            ],
+          },
+          rheologyOutputs: {
+            flowlineTemperature: {
+              value: "85",
+              unit: "°F",
+            },
+            annularVelocity: {
+              value: "260",
+              unit: "ft/min",
+            },
+            shearRate: {
+              value: "256",
+              unit: "s⁻¹",
+            },
+            pvOutput: {
+              value: "20",
+              unit: "cP",
+              status: "OK",
+            },
+            ypOutput: {
+              value: "15",
+              unit: "OK",
+              status: "OK",
+            },
+            gel10s: {
+              value: "12",
+              unit: "lb/100ft²",
+              status: "OK",
+            },
+            gel10m: {
+              value: "20",
+              unit: "OK",
+              status: "OK",
+            },
+          },
+          pressureDrop: {
+            psl: {
+              value: "120",
+              unit: "psi",
+            },
+            flow: {
+              value: "120",
+              unit: "psi",
+            },
+            drillpipe: {
+              value: "261",
+              unit: "psi",
+            },
+            bit: {
+              value: "173",
+              unit: "psi",
+            },
+          },
         },
         timestamp: new Date().toISOString(),
       });
@@ -572,10 +648,10 @@ const fetchRheologyOptions = async (): Promise<
       resolve({
         success: true,
         data: {
-          rheologySourceOptions: [
-            { value: "viscometer", label: "Viscometer" },
-            { value: "manual", label: "Manual Entry" },
-            { value: "calculated", label: "Calculated" },
+          rheologyModelOptions: [
+            { value: "bingham-plastic", label: "Bingham Plastic" },
+            { value: "power-law", label: "Power Law" },
+            { value: "herschel-bulkley", label: "Herschel-Bulkley" },
           ],
         },
         timestamp: new Date().toISOString(),
