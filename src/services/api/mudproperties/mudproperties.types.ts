@@ -91,17 +91,31 @@ export interface TemperatureTabData {
   surfaceTemp: string;
   bottomholeTemp: string;
   tempGradient: string;
-  flowlineTemp: string;
-  ambientTemp: string;
-  staticTemp: string;
-  circulatingTemp: string;
+  densitometryTempSett: string;
+  applyTempCorrection: boolean;
+  viscosityModel: string;
+  tempRange: {
+    status: "OK" | "WARN" | "BAD";
+    surfaceTemp: string;
+    bottomholeTemp: string;
+    applyViscosityCorrection: boolean;
+    tempSurfaceDrop: string;
+    wuCased: string;
+    bottomholeDefine: string;
+  };
+  chartData: Array<{
+    depth: number;
+    temperature: number;
+  }>;
 }
 
 export interface SaveTemperaturePayload {
   surfaceTemp: string;
   bottomholeTemp: string;
   tempGradient: string;
-  flowlineTemp: string;
+  densitometryTempSett: string;
+  applyTempCorrection: boolean;
+  viscosityModel: string;
 }
 
 // ============================================
@@ -187,6 +201,7 @@ export interface DensityOptionsData {
 
 export interface TemperatureOptionsData {
   unitOptions: SelectOption[];
+  viscosityModelOptions: SelectOption[];
 }
 
 export interface GasCompressibilityOptionsData {
