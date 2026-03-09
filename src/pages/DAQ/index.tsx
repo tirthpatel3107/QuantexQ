@@ -13,6 +13,7 @@ import {
 
 // Components - Local
 import { DaqOverview } from "./DaqOverview";
+import { Display } from "./Display";
 import { Streaming } from "./Streaming";
 import { Notifications } from "./Notifications";
 import { LogAnalysis } from "./LogAnalysis";
@@ -98,6 +99,8 @@ function DAQContent() {
    */
   const renderSection = () => {
     switch (activeSection) {
+      case "display":
+        return <Display />;
       case "daq":
         return <DaqOverview />;
       case "streaming":
