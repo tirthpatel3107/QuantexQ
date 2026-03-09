@@ -59,8 +59,8 @@ export function CommonTable<TData>({
         <Table className="bg-transparent border-collapse table-fixed w-full">
           <TableHeader
             className={cn(
-              "bg-muted/50 border-y border-border",
-              isLightTheme && !isDarkTheme && "bg-slate-50 border-y-slate-200",
+              "bg-muted/30 border-y border-border/60",
+              isLightTheme && !isDarkTheme && "bg-slate-100/50 border-y-slate-200/80",
             )}
           >
             {table.getHeaderGroups().map((headerGroup) => (
@@ -73,7 +73,8 @@ export function CommonTable<TData>({
                     key={header.id}
                     style={{ width: header.column.getSize() }}
                     className={cn(
-                      "text-[12px] uppercase tracking-widest font-bold py-3 text-muted-foreground",
+                      "text-[11px] uppercase tracking-widest font-black py-4 text-muted-foreground/80",
+                      isLightTheme && !isDarkTheme && "text-slate-500",
                     )}
                   >
                     {header.isPlaceholder ? null : (
