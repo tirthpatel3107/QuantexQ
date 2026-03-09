@@ -1,49 +1,45 @@
-import { memo } from "react";
 import { cn } from "@/utils/lib/utils";
 
-interface StatRowProps {
+export interface StatRowProps {
+  /** Label text */
   label: string;
-  value: string;
+  /** Value to display */
+  value: string | number;
+  /** Unit of measurement */
   unit?: string;
-  subValue?: string;
-  highlight?: boolean;
+  /** Optional value color class */
+  valueClassName?: string;
+  /** Optional label color class */
+  labelClassName?: string;
+  /** Optional container class */
+  className?: string;
 }
 
-export const StatRow = memo(function StatRow({
+/**
+ * StatRow - Common component for displaying label-value pairs
+ * Used across dashboard panels for consistent stat display
+ */
+export function StatRow({
   label,
   value,
   unit,
-  subValue,
-  highlight,
+  valueClassName,
+  labelClassName,
+  className,
 }: StatRowProps) {
   return (
-    <div className="flex flex-col min-w-0">
-      <span className="text-xs text-muted-foreground font-medium mb-1 truncate">
+    <div className={cn("flex justify-between items-center", className)}>
+      <span className={cn("text-sm text-muted-foreground", labelClassName)}>
         {label}
       </span>
-      <div className="flex items-baseline gap-1.5">
-        <span
-          className={cn(
-            "text-2xl font-bold tracking-tight truncate",
-            highlight ? "text-primary shadow-glow-sm" : "text-foreground",
-          )}
-        >
+      <div className="text-right">
+        <span className={cn("text-base font-bold", valueClassName)}>
           {value}
         </span>
         {unit && (
-          <span className="text-xs text-muted-foreground font-medium">
-            {unit}
-          </span>
+          <span className="text-[14px] text-muted-foreground ml-1">{unit}</span>
         )}
       </div>
-      {subValue && (
-        <div className="h-4 mt-1 flex items-center">
-          <span className="text-[10px] text-muted-foreground truncate opacity-70">
-            {subValue}
-          </span>
-        </div>
-      )}
-      {!subValue && <div className="h-4 mt-1" />}
     </div>
   );
-});
+}
