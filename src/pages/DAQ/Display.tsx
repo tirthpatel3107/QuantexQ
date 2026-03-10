@@ -318,9 +318,9 @@ export function Display() {
   return (
     <div className="space-y-4 ">
       {/* Dashboard Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-3">
         <div className="grid grid-cols-1 gap-3 auto-rows-max">
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             {/* Row 1, Col 1: Pressures */}
             <PanelCard
               title={<span>Pressures </span>}
@@ -397,7 +397,7 @@ export function Display() {
             </PanelCard>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             {/* Row 1, Col 2: Flow */}
             <PanelCard
               title={<span>Flow </span>}
@@ -605,7 +605,7 @@ export function Display() {
             </PanelCard>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr] gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3">
             {/* Visual Live Strip Chart (Mockup Ref) */}
             <LiveSensorStrip />
 
@@ -701,7 +701,7 @@ export function Display() {
           </PanelCard>
 
           <PanelCard title="Sensor Validation">
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
                 <p className="text-sm text-muted-foreground uppercase mb-1.5">
                   Surface Temp

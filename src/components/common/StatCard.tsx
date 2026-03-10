@@ -35,7 +35,7 @@ export function StatCard({
       </div>
       <div
         className={cn(
-          "text-2xl font-mono font-black text-foreground/95 flex items-baseline gap-1.5 group-hover:scale-110 transition-transform origin-right",
+          "text-2xl font-mono font-black text-foreground/95 flex items-baseline gap-1.5 transition-transform origin-right",
           valueClassName
         )}
       >

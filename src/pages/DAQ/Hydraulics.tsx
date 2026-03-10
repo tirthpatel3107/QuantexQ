@@ -741,7 +741,7 @@ export function Hydraulics() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 mt-5">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-5">
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2">
                 <span className="text-sm uppercase">L FB1:</span>
@@ -822,13 +822,13 @@ export function Hydraulics() {
               <StatCard
                 label="Circulated Flow"
                 subtitle="Noniuatic Los"
-                value="600 / 5m"
+                value="600/5m"
                 valueClassName="text-xl"
               />
               <StatCard
                 label="Flow In / Out"
                 subtitle={
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <span className="text-sm font-black text-orange-500">
                       492 psi
                     </span>
@@ -837,8 +837,8 @@ export function Hydraulics() {
                     </span>
                   </div>
                 }
-                value="510 / 5m"
-                valueClassName="text-xl text-green-500"
+                value="510/5m"
+                valueClassName="text-xl"
               />
             </div>
 

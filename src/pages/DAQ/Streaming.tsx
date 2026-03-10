@@ -403,7 +403,7 @@ export function Streaming() {
             <div className="space-y-4 border-l pl-6">
               <h4 className="text-sm font-medium">FTP Server</h4>
 
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
                 <CommonFormInput
                   control={form.control}
                   name="ftpServer.ftpUrl1"
