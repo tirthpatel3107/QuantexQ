@@ -60,7 +60,9 @@ export function CommonTable<TData>({
           <TableHeader
             className={cn(
               "bg-muted/30 border-y border-border/60",
-              isLightTheme && !isDarkTheme && "bg-slate-100/50 border-y-slate-200/80",
+              isLightTheme &&
+                !isDarkTheme &&
+                "bg-slate-100/50 border-y-slate-200/80",
             )}
           >
             {table.getHeaderGroups().map((headerGroup) => (

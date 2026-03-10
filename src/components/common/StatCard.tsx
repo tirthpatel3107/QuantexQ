@@ -20,7 +20,7 @@ export function StatCard({
     <div
       className={cn(
         "flex justify-between items-center bg-foreground/[0.03] p-3 border border-border/10 px-4 group hover:bg-foreground/[0.06] hover:border-primary/20 transition-all cursor-default",
-        className
+        className,
       )}
     >
       <div className="space-y-1">
@@ -36,7 +36,7 @@ export function StatCard({
       <div
         className={cn(
           "text-2xl font-mono font-black text-foreground/95 flex items-baseline gap-1.5 transition-transform origin-right",
-          valueClassName
+          valueClassName,
         )}
       >
         {value}

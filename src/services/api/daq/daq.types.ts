@@ -76,7 +76,6 @@ export interface StreamingTabData {
 
 export type SaveStreamingPayload = StreamingTabData;
 
-
 // ============================================
 // Notifications Tab
 // ============================================
@@ -430,7 +429,6 @@ export interface StreamingOptionsData {
   formatOptions: Array<{ label: string; value: string }>;
   baudRateOptions: Array<{ label: string; value: number }>;
 }
-
 
 export interface NotificationsOptionsData {
   alarmSoundOptions: Array<{ label: string; value: string }>;
