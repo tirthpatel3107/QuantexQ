@@ -42,6 +42,7 @@ export { SectionSkeleton } from "./SectionSkeleton";
 export { CommonToast, showToast } from "./CommonToast";
 export type { ToastVariant } from "./CommonToast";
 export { StatusBadge } from "./StatusBadge";
+export { StatCard } from "./StatCard";
 export {
   CommonFormInput,
   CommonFormSelect,

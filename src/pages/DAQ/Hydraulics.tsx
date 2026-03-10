@@ -27,6 +27,7 @@ import {
   SectionSkeleton,
   FormSaveDialog,
   CommonTable,
+  StatCard,
 } from "@/components/common";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -223,10 +224,15 @@ export function Hydraulics() {
     () => [
       columnHelper.accessor("name", {
         header: "MDC ID",
-        size: 140,
+        size: 200,
         cell: (info) => (
-          <div className="font-black text-foreground/90 -mx-4 px-4 transition-colors h-full flex items-center uppercase tracking-tight">
+          <div className="font-black text-foreground/90 -mx-4 px-4 transition-colors h-full flex items-center gap-2 uppercase tracking-tight">
             {info.getValue()}
+            {info.row.index === 0 && (
+              <Badge variant="default" className="text-sm">
+                Primary
+              </Badge>
+            )}
           </div>
         ),
       }),
@@ -435,14 +441,75 @@ export function Hydraulics() {
     [],
   );
 
+  const analysisChart1 = useMemo(
+    () => ({
+      backgroundColor: "transparent",
+      grid: { left: 10, right: 10, top: 10, bottom: 10 },
+      xAxis: {
+        type: "category",
+        data: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+        show: false,
+      },
+      yAxis: { type: "value", show: false },
+      series: [
+        {
+          data: [15, 20, 15, 30, 25, 40, 35, 50, 45, 60],
+          type: "line",
+          smooth: true,
+          color: "#22c55e",
+          lineStyle: { width: 2 },
+          symbol: "none",
+        },
+        {
+          data: [10, 15, 10, 25, 20, 35, 30, 45, 40, 55],
+          type: "line",
+          smooth: true,
+          color: "#94a3b8",
+          lineStyle: { width: 1.5, type: "dashed" },
+          symbol: "none",
+        },
+      ],
+    }),
+    [],
+  );
+
+  const analysisChart2 = useMemo(
+    () => ({
+      backgroundColor: "transparent",
+      grid: { left: 10, right: 10, top: 10, bottom: 10 },
+      xAxis: {
+        type: "category",
+        data: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+        show: false,
+      },
+      yAxis: { type: "value", show: false },
+      series: [
+        {
+          data: [5, 10, 5, 60, 5, 10, 5, 80, 5, 10],
+          type: "line",
+          smooth: true,
+          color: "#3b82f6",
+          lineStyle: { width: 2.5 },
+          symbol: "none",
+          areaStyle: {
+            color: "rgba(59, 130, 246, 0.1)",
+          },
+        },
+      ],
+    }),
+    [],
+  );
+
   if (isLoading) {
     return <SectionSkeleton count={6} />;
   }
 
   return (
     <div className="grid grid-cols-1 gap-3">
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-3">
-        <PanelCard title="Models Used" className="h-auto">
+      {/* Top Section: Models Used and Parameter Lists */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-3">
+        {/* Left Column: Models */}
+        <PanelCard title={<span>Models Used</span>} className="h-auto">
           <div className="space-y-5 p-1">
             <div className="relative pl-8 space-y-4">
               <div className="absolute left-0 top-0 text-orange-500">
@@ -473,9 +540,6 @@ export function Hydraulics() {
             </div>
 
             <div className="pt-4 border-t border-border/20">
-              <div className="text-sm font-bold text-foreground/70 mb-3 uppercase tracking-wider">
-                Hydraulic Parameter Lists
-              </div>
               <div className="space-y-4">
                 <div className="flex items-center gap-3 justify-between w-full">
                   <div className="relative group w-full">
@@ -496,7 +560,6 @@ export function Hydraulics() {
                   </CommonButton>
                 </div>
                 <div className="border border-border/20 bg-foreground/[0.02] dark:bg-card/40">
-                  {/* Header */}
                   <div className="grid grid-cols-[120px_100px_1fr] gap-4 bg-foreground/[0.04] dark:bg-muted/30 border-b border-border/10 py-3 px-4 shadow-sm">
                     <div className="font-black text-foreground/50 dark:text-muted-foreground/60 uppercase tracking-[0.15em] text-[10px]">
                       MDC ID
@@ -509,7 +572,6 @@ export function Hydraulics() {
                     </div>
                   </div>
 
-                  {/* Body */}
                   <div className="divide-y divide-border/5">
                     {watchedParameterLists
                       .slice(0, 3)
@@ -557,108 +619,90 @@ export function Hydraulics() {
             </div>
           </div>
         </PanelCard>
-        <PanelCard
-          className="h-auto"
-          title={<span>Hydraulic Parameter Lists</span>}
-          headerAction={
-            <Badge
-              variant="outline"
-              className="h-7 px-3 text-sm font-black bg-primary/10 border-primary/25 text-primary uppercase cursor-pointer hover:bg-primary/20 transition-all shadow-sm"
-            >
-              Names Frictionless Model
-            </Badge>
-          }
-        >
-          <>
-            <div className="border-b border-border/20 flex items-center justify-between gap-4 mt-[-15px] mb-20px">
-              <div className="flex items-center gap-3">
-                <CommonFormSelect
-                  name="applyParameter"
-                  control={control}
-                  options={[{ label: "Apply Parameter:", value: "apply" }]}
-                  placeholder="Apply Params"
-                  className="text-sm font-black uppercase tracking-widest bg-muted/40 border-border/40 hover:border-primary/40 focus:border-primary/50 transition-all rounded-lg"
-                />
-              </div>
-              <div className="relative group w-64">
-                <input
-                  type="text"
-                  placeholder="SEARCH PARAMETERS..."
-                  value={tableSearch}
-                  onChange={(e) => setTableSearch(e.target.value)}
-                  className="w-full bg-muted/40 border border-border/40 rounded-lg h-9 px-4 pr-10 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/70 focus:outline-none focus:border-primary/50 transition-all placeholder:text-muted-foreground/40"
-                />
-                <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-primary transition-colors cursor-pointer" />
-              </div>
-            </div>
-            <CommonTable table={table} showPagination={false} isLightTheme={!isDark} />
-          </>
 
-          <div className="flex justify-between items-center mt-6 px-2">
-            <div className="flex items-center gap-3">
-              <Badge
-                variant="outline"
-                className="bg-muted/10 border-border/20 text-muted-foreground/50 text-sm font-black uppercase tracking-[0.1em]"
-              >
-                BATCH ACTION
+        {/* Right Column: Table and Depth Charts */}
+        <div className="flex flex-col gap-3">
+          <PanelCard
+            className="h-auto"
+            title={<span>Hydraulic Parameter Lists</span>}
+            headerAction={
+              <Badge variant="default" className="text-sm">
+                Names Frictionless Model
               </Badge>
-              <div className="text-sm text-muted-foreground/50 font-black uppercase tracking-[0.1em] opacity-40">
-                Apply Barammeter Dimens
+            }
+          >
+            <div className="space-y-4">
+              <div className="border-b border-border/20 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <CommonFormSelect
+                    name="applyParameter"
+                    control={control}
+                    options={[{ label: "Apply Parameter:", value: "apply" }]}
+                    placeholder="Apply Params"
+                    className="text-sm font-black uppercase tracking-widest bg-muted/40 border-border/40"
+                  />
+                </div>
+                <div className="relative group w-64">
+                  <input
+                    type="text"
+                    placeholder="SEARCH PARAMETERS..."
+                    value={tableSearch}
+                    onChange={(e) => setTableSearch(e.target.value)}
+                    className="w-full bg-muted/40 border border-border/40 rounded-lg h-9 px-4 pr-10 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/70"
+                  />
+                  <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/40" />
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <CommonFormSelect
-                name="applyBatch"
-                control={control}
-                options={[{ label: "Batch Parameter", value: "apply" }]}
-                placeholder="Batch Parameter"
-                className="w-44 text-sm font-black uppercase tracking-widest bg-muted/20 border-border/30 rounded-lg"
+
+              <CommonTable
+                table={table}
+                showPagination={false}
+                isLightTheme={!isDark}
               />
-              <CommonButton
-                variant="outline"
-                size="sm"
-                className="px-4 text-sm font-black uppercase tracking-widest border-2 border-dashed border-border/50 hover:border-primary/50 hover:text-primary transition-all group rounded-lg"
-              >
-                <RotateCcw className="w-3.5 h-3.5 mr-2 group-hover:rotate-180 transition-transform duration-700" />
-                Revert Changes
-              </CommonButton>
-            </div>
-          </div>
-        </PanelCard>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        <PanelCard
-          title="Hydraulics Analysis:"
-          headerAction={
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="secondary"
-                className="bg-primary/20 text-primary border-primary/40 h-7 px-4 text-sm font-black uppercase tracking-[0.2em]"
-              >
-                BBT ANALYTICS
-              </Badge>
-            </div>
-          }
-        >
-          <div className="grid grid-cols-2 gap-4">
-            <div className="h-48 border border-border/20 rounded-xl bg-card/40 overflow-hidden relative group shadow-inner">
-              <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5 pointer-events-none">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
-                <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.8)]" />
+              <div className="flex justify-between items-center mt-6 px-2">
+                <div className="flex items-center gap-3">
+                  <Badge
+                    variant="outline"
+                    className="text-sm font-black uppercase tracking-[0.1em]"
+                  >
+                    BATCH ACTION
+                  </Badge>
+                  <div className="text-sm text-muted-foreground/50 font-black uppercase tracking-[0.1em]">
+                    Apply Barammeter Dimens
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <CommonFormSelect
+                    name="applyBatch"
+                    control={control}
+                    options={[{ label: "Batch Parameter", value: "apply" }]}
+                    placeholder="Batch Parameter"
+                    className="w-44 text-sm font-black uppercase"
+                  />
+                  <CommonButton
+                    variant="outline"
+                    size="sm"
+                    className="px-4 text-sm font-black uppercase"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 mr-2" />
+                    Revert Changes
+                  </CommonButton>
+                </div>
               </div>
+            </div>
+          </PanelCard>
+
+          {/* Depth Charts (Graph 1 & 2) */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="h-56 p-4">
               <ReactECharts
                 option={chartOption1}
                 style={{ height: "100%", width: "100%" }}
                 theme={isDark ? "dark" : "light"}
               />
             </div>
-            <div className="h-48 border border-border/20 rounded-xl bg-card/40 overflow-hidden relative group shadow-inner">
-              <div className="absolute top-3 right-3 z-10 pointer-events-none opacity-40 group-hover:opacity-100 transition-opacity">
-                <div className="bg-green-500/10 p-1 rounded border border-green-500/20">
-                  <AlertTriangle className="w-3 h-3 text-green-500" />
-                </div>
-              </div>
+            <div className="h-56 p-4">
               <ReactECharts
                 option={chartOption2}
                 style={{ height: "100%", width: "100%" }}
@@ -666,229 +710,187 @@ export function Hydraulics() {
               />
             </div>
           </div>
+        </div>
+      </div>
 
-          <div className="grid grid-cols-2 gap-8 mt-5">
-            <div className="grid grid-cols-2 gap-x-6 gap-y-3 px-1">
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-muted-foreground uppercase font-black tracking-widest opacity-40">
-                  L. FB1
-                </span>
-                <span className="text-sm font-black text-foreground/80 group-hover:text-primary transition-colors">
-                  3PP99 A
-                </span>
+      {/* Bottom Section: Analysis and Friction Losses */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        {/* Analytics Charts (Graph 3 & 4) */}
+        <PanelCard
+          title="Hydraulics Analysis"
+          headerAction={
+            <Badge variant="default" className="text-sm">
+              BBT ANALYTICS
+            </Badge>
+          }
+        >
+          <div className="grid grid-cols-2 gap-4">
+            <div className="h-56 bg-card/40">
+              <ReactECharts
+                option={analysisChart1}
+                style={{ height: "100%", width: "100%" }}
+                theme={isDark ? "dark" : "light"}
+              />
+            </div>
+            <div className="h-56 bg-card/40">
+              <ReactECharts
+                option={analysisChart2}
+                style={{ height: "100%", width: "100%" }}
+                theme={isDark ? "dark" : "light"}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 mt-5">
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-sm uppercase">L FB1:</span>
+                <span className="text-sm uppercase">3PP99 A</span>
               </div>
-              <div className="flex items-center gap-3 justify-end">
-                <span className="text-sm text-muted-foreground uppercase font-black tracking-widest opacity-40">
-                  SPD Uses
-                </span>
-                <span className="text-sm font-mono font-black text-foreground/90">
-                  000 pss
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-muted-foreground uppercase font-black tracking-widest opacity-40">
-                  Manual/PV
-                </span>
-                <span className="text-sm font-mono font-black text-orange-500 tracking-tighter">
-                  6079 pss
-                </span>
-              </div>
-              <div className="flex items-center gap-3 justify-end">
-                <span className="text-sm text-muted-foreground uppercase font-black tracking-widest opacity-40">
-                  SPK Elements
-                </span>
-                <span className="text-sm font-mono font-black text-foreground/90 uppercase tracking-tighter">
-                  679 Size
-                </span>
+
+              <div className="flex items-center gap-2">
+                <span className="text-sm uppercase">Manual/PV:</span>
+                <span className="text-sm uppercase">6079 pss</span>
               </div>
             </div>
-
-            <div className="flex flex-col justify-center border-l-2 border-border/10 pl-6 space-y-2">
-              <div className="text-sm text-muted-foreground/70 font-bold leading-relaxed uppercase tracking-tighter italic">
-                Real-time sync:{" "}
-                <span className="text-primary font-black">
-                  InWell & CT Live Feed
-                </span>
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-sm uppercase">SPD Uses:</span>
+                <span className="text-sm uppercase">000 pss</span>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="flex -space-x-1.5">
-                  <div className="w-3 h-3 rounded-full bg-blue-500 border-2 border-card shadow-[0_0_10px_rgba(59,130,246,0.3)]" />
-                  <div className="w-3 h-3 rounded-full bg-green-500 border-2 border-card shadow-[0_0_10px_rgba(34,197,94,0.3)]" />
-                </div>
-                <span className="text-sm text-primary font-black uppercase tracking-[0.2em] animate-pulse">
-                  Telemetry Online
-                </span>
+
+              <div className="flex items-center gap-2">
+                <span className="text-sm uppercase"> SPK Elements:</span>
+                <span className="text-sm uppercase">679 Size</span>
               </div>
             </div>
           </div>
+          {/* <div className="flex flex-col justify-center border-l-2 border-border/10 pl-6 space-y-2">
+            <div className="text-sm text-muted-foreground/70 font-bold uppercase italic">
+              Real-time sync:{" "}
+              <span className="text-primary font-black">
+                InWell & CT Live Feed
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex -space-x-1.5">
+                <div className="w-3 h-3 rounded-full bg-blue-500 border-2 border-card" />
+                <div className="w-3 h-3 rounded-full bg-green-500 border-2 border-card" />
+              </div>
+              <span className="text-sm text-primary font-black uppercase tracking-[0.2em] animate-pulse">
+                Telemetry Online
+              </span>
+            </div>
+          </div> */}
         </PanelCard>
+
         <PanelCard
           title={
             <div className="flex items-center gap-3">
-              <span className="text-xl font-black text-foreground/90">
-                Friction Losses
-              </span>
-              <Badge
-                variant="secondary"
-                className="bg-orange-600/20 text-orange-500 border-orange-500/40 h-7 px-4 flex items-center gap-2 cursor-pointer hover:bg-orange-500/30 transition-all shadow-lg shadow-orange-500/5"
-              >
-                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-ping" />
+              <span>Friction Losses</span>
+              <Badge variant="default" className="text-sm">
                 Calculated Ps
               </Badge>
             </div>
           }
           headerAction={
-            <div className="flex gap-2">
-              <CommonButton
-                variant="outline"
-                size="sm"
-                className="h-9 text-sm font-black uppercase tracking-widest bg-muted/20 border-border/30 hover:border-primary/40 rounded-lg"
-              >
-                Nipple I.D.
-              </CommonButton>
+            <div className="flex items-center gap-2">
+              <CommonButton variant="outline">Nipple I.D.</CommonButton>
               <CommonFormSelect
                 name="frictionLosses.outerDiameter"
                 control={control}
                 options={[{ label: "Outer Dia", value: "outer" }]}
                 placeholder="Outer Dia"
-                className="h-9 w-32 text-sm font-black uppercase tracking-widest bg-muted/20 border-border/30 rounded-lg"
               />
             </div>
           }
         >
           <div className="space-y-4">
-            {/* Calculation List */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between items-center bg-foreground/[0.03] rounded-xl p-3 border border-border/10 px-4 group hover:bg-foreground/[0.06] hover:border-primary/20 transition-all cursor-default">
-                <div className="space-y-0.5">
-                  <div className="text-sm font-black text-muted-foreground uppercase tracking-[0.2em] opacity-40 group-hover:opacity-70 transition-opacity">
-                    Calculated By
-                  </div>
-                  <div className="text-sm font-black text-foreground/80 group-hover:text-primary transition-colors uppercase tracking-widest">
-                    Manual RP
-                  </div>
-                </div>
-                <div className="text-2xl font-mono font-black text-foreground/95 flex items-baseline gap-1.5 group-hover:scale-110 transition-transform origin-right">
-                  492{" "}
-                  <span className="text-sm text-muted-foreground uppercase font-black">
-                    psi
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center bg-foreground/[0.03] rounded-xl p-3 border border-border/10 px-4 group hover:bg-foreground/[0.06] hover:border-primary/20 transition-all cursor-default">
-                <div className="space-y-0.5">
-                  <div className="text-sm font-black text-muted-foreground uppercase tracking-[0.2em] opacity-40 group-hover:opacity-70 transition-opacity">
-                    Circulated Flow
-                  </div>
-                  <div className="text-sm font-black text-foreground/80 group-hover:text-primary transition-colors uppercase tracking-widest">
-                    Noniuatic Los
-                  </div>
-                </div>
-                <div className="text-xl font-mono font-black text-foreground/90 group-hover:text-foreground transition-colors">
-                  600 / 5m
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center bg-foreground/[0.03] rounded-xl p-3 border border-border/10 px-4 group hover:bg-foreground/[0.06] hover:border-primary/20 transition-all cursor-default">
-                <div className="space-y-0.5">
-                  <div className="text-sm font-black text-muted-foreground uppercase tracking-[0.2em] opacity-40 group-hover:opacity-70 transition-opacity">
-                    Flow In / Out
-                  </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+              <StatCard
+                label="Calculated By"
+                subtitle="Manual RP"
+                value={
+                  <>
+                    492{" "}
+                    <span className="text-sm text-muted-foreground uppercase font-black">
+                      psi
+                    </span>
+                  </>
+                }
+              />
+              <StatCard
+                label="Circulated Flow"
+                subtitle="Noniuatic Los"
+                value="600 / 5m"
+                valueClassName="text-xl"
+              />
+              <StatCard
+                label="Flow In / Out"
+                subtitle={
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-black text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.3)]">
+                    <span className="text-sm font-black text-orange-500">
                       492 psi
                     </span>
-                    <div className="w-1.5 h-1.5 rotate-45 border-r border-b border-muted-foreground/30" />
-                    <span className="text-sm font-black text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.3)]">
+                    <span className="text-sm font-black text-orange-400">
                       600s
                     </span>
                   </div>
-                </div>
-                <div className="text-xl font-mono font-black text-green-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]">
-                  510 / 5m
-                </div>
-              </div>
+                }
+                value="510 / 5m"
+                valueClassName="text-xl text-green-500"
+              />
             </div>
 
-            {/* Highlight Box */}
-            <div className="bg-primary/[0.03] border-2 border-primary/10 rounded-2xl p-4 space-y-4 relative overflow-hidden group shadow-2xl">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-primary/10 transition-colors" />
+            <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border/10">
+              <CommonFormSelect
+                label="Temp"
+                name="frictionLosses.temperature"
+                control={control}
+                options={[{ label: "Select", value: "select" }]}
+                placeholder="Select"
+              />
+              <CommonFormSelect
+                label="Simplified"
+                name="frictionLosses.simplified"
+                control={control}
+                options={[{ label: "Select", value: "select" }]}
+                placeholder="Select"
+              />
+              <CommonFormSelect
+                label="Ved Puff"
+                name="frictionLosses.vedPuff"
+                control={control}
+                options={[{ label: "Select", value: "select" }]}
+                placeholder="Select"
+              />
+            </div>
 
-              <div className="text-sm leading-relaxed text-muted-foreground font-bold px-4 border-l-4 border-primary/40 italic relative">
+            <div className="bg-primary/[0.03] border-2 border-primary/10 p-4 space-y-4 relative">
+              <div className="text-sm leading-relaxed text-muted-foreground font-bold px-4 border-l-4 border-primary/40 italic">
                 Panel Numbering Count Des ={" "}
                 <span className="text-foreground font-black">8000</span> TT
                 gpmy. <br />
                 <span className="opacity-60">Sampling: 55 AF MF 1-3 PF</span>
               </div>
 
-              <div className="flex items-center gap-6 px-2 relative">
-                <div className="flex items-center gap-2.5 cursor-pointer group/item">
-                  <div className="w-4 h-4 rounded-md border border-orange-500/40 flex items-center justify-center bg-orange-500/10 group-hover/item:bg-orange-500/30 transition-all shadow-[0_0_15px_rgba(249,115,22,0.1)]">
-                    <div className="w-2 h-2 bg-orange-500 rounded-full shadow-[0_0_10px_rgba(249,115,22,1)]" />
+              <div className="flex items-center gap-6 px-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-4 h-4 rounded-md border border-orange-500/40 flex items-center justify-center bg-orange-500/10">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full" />
                   </div>
-                  <span className="text-sm uppercase font-black tracking-widest text-muted-foreground/60 group-hover/item:text-orange-500 transition-colors">
+                  <span className="text-sm uppercase font-black tracking-widest text-muted-foreground/60">
                     Simulated
                   </span>
                 </div>
-
-                <div className="flex items-center gap-2.5 cursor-pointer group/item">
-                  <div className="w-4 h-4 rounded-md border border-green-500/40 flex items-center justify-center bg-green-500/10 group-hover/item:bg-green-500/30 transition-all">
-                    <div className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,1)]" />
+                <div className="flex items-center gap-2.5">
+                  <div className="w-4 h-4 rounded-md border border-green-500/40 flex items-center justify-center bg-green-500/10">
+                    <div className="w-2 h-2 bg-green-500 rounded-full" />
                   </div>
-                  <span className="text-sm uppercase font-black tracking-widest text-muted-foreground/60 group-hover/item:text-green-500 transition-colors">
+                  <span className="text-sm uppercase font-black tracking-widest text-muted-foreground/60">
                     55 AF
                   </span>
                 </div>
-
-                <div className="flex items-center gap-2.5 cursor-pointer group/item opacity-40 hover:opacity-80 transition-opacity">
-                  <div className="w-4 h-4 rounded-md border border-muted-foreground/30 flex items-center justify-center bg-foreground/5 transition-all">
-                    <Droplets className="w-2 h-2 text-muted-foreground" />
-                  </div>
-                  <span className="text-sm uppercase font-black tracking-widest text-muted-foreground">
-                    MP 1-3 PF
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Form Row */}
-            <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border/10">
-              <div className="space-y-2">
-                <label className="text-sm font-black text-muted-foreground uppercase tracking-[0.2em] pl-1 opacity-50">
-                  Temp:
-                </label>
-                <CommonFormSelect
-                  name="frictionLosses.temperature"
-                  control={control}
-                  options={[{ label: "Select", value: "select" }]}
-                  placeholder="Select"
-                  className="h-9 border-border/20 bg-foreground/[0.04] text-sm font-black rounded-lg"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-black text-muted-foreground uppercase tracking-[0.2em] pl-1 opacity-50">
-                  Simplified:
-                </label>
-                <CommonFormSelect
-                  name="frictionLosses.simplified"
-                  control={control}
-                  options={[{ label: "Select", value: "select" }]}
-                  placeholder="Select"
-                  className="h-9 border-border/20 bg-foreground/[0.04] text-sm font-black rounded-lg"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-black text-muted-foreground uppercase tracking-[0.2em] pl-1 opacity-50">
-                  Ved Puff:
-                </label>
-                <CommonFormSelect
-                  name="frictionLosses.vedPuff"
-                  control={control}
-                  options={[{ label: "Select", value: "select" }]}
-                  placeholder="Select"
-                  className="h-9 border-border/20 bg-white/[0.04] text-sm font-black rounded-lg"
-                />
               </div>
             </div>
           </div>
