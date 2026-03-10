@@ -49,3 +49,4 @@ export {
   CommonFormToggle,
   CommonFormCheckbox,
 } from "./CommonFormFields";
+export { default as ProtectedRoute } from "./ProtectedRoute";
