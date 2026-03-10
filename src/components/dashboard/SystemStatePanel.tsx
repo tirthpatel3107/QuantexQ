@@ -49,9 +49,7 @@ export function SystemStatePanel({ className }: SystemStatePanelProps) {
               )}
 
               {item.type === "text" && (
-                <span className="text-base">
-                  {item.value as string}
-                </span>
+                <span className="text-base">{item.value as string}</span>
               )}
             </div>
           </div>

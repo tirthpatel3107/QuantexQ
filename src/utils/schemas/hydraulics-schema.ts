@@ -46,4 +46,6 @@ export const hydraulicsFormSchema = z.object({
 });
 
 export type HydraulicsFormValues = z.infer<typeof hydraulicsFormSchema>;
-export type HydraulicsParameterItem = z.infer<typeof hydraulicParameterListSchema>;
+export type HydraulicsParameterItem = z.infer<
+  typeof hydraulicParameterListSchema
+>;
