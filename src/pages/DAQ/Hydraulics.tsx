@@ -66,6 +66,77 @@ export function Hydraulics() {
   const { mutate: saveHydraulicsData } = useSaveHydraulicsData();
   const { registerSaveHandler, unregisterSaveHandler } = useDAQContext();
 
+  // Get accent color from CSS variable
+  const [accentColor, setAccentColor] = useState("#10b981");
+
+  useEffect(() => {
+    const updateAccentColor = () => {
+      const root = document.documentElement;
+      const accentHsl = getComputedStyle(root)
+        .getPropertyValue("--accent-color")
+        .trim();
+      if (accentHsl) {
+        // Convert HSL to hex for ECharts
+        const hslValues = accentHsl.split(" ");
+        const h = parseFloat(hslValues[0]);
+        const s = parseFloat(hslValues[1]) / 100;
+        const l = parseFloat(hslValues[2]) / 100;
+
+        // HSL to RGB conversion
+        const c = (1 - Math.abs(2 * l - 1)) * s;
+        const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+        const m = l - c / 2;
+        let r = 0,
+          g = 0,
+          b = 0;
+
+        if (h >= 0 && h < 60) {
+          r = c;
+          g = x;
+          b = 0;
+        } else if (h >= 60 && h < 120) {
+          r = x;
+          g = c;
+          b = 0;
+        } else if (h >= 120 && h < 180) {
+          r = 0;
+          g = c;
+          b = x;
+        } else if (h >= 180 && h < 240) {
+          r = 0;
+          g = x;
+          b = c;
+        } else if (h >= 240 && h < 300) {
+          r = x;
+          g = 0;
+          b = c;
+        } else if (h >= 300 && h < 360) {
+          r = c;
+          g = 0;
+          b = x;
+        }
+
+        r = Math.round((r + m) * 255);
+        g = Math.round((g + m) * 255);
+        b = Math.round((b + m) * 255);
+
+        const hex = `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+        setAccentColor(hex);
+      }
+    };
+
+    updateAccentColor();
+
+    // Listen for theme changes
+    const observer = new MutationObserver(updateAccentColor);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "style"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   const form = useForm<HydraulicsFormValues>({
     resolver: zodResolver(hydraulicsFormSchema),
     defaultValues: {
@@ -366,7 +437,7 @@ export function Hydraulics() {
           data: [10, 35, 38, 37, 36, 35],
           type: "line",
           smooth: true,
-          color: "#f59e0b",
+          color: accentColor,
           lineStyle: { width: 2 },
           symbol: "none",
           areaStyle: {
@@ -377,8 +448,8 @@ export function Hydraulics() {
               x2: 0,
               y2: 1,
               colorStops: [
-                { offset: 0, color: "rgba(245, 158, 11, 0.25)" },
-                { offset: 1, color: "rgba(245, 158, 11, 0)" },
+                { offset: 0, color: `${accentColor}40` },
+                { offset: 1, color: `${accentColor}00` },
               ],
             },
           },
@@ -394,7 +465,7 @@ export function Hydraulics() {
         },
       ],
     }),
-    [],
+    [accentColor],
   );
 
   const chartOption2 = useMemo(
@@ -419,7 +490,7 @@ export function Hydraulics() {
           data: [35, 10, 5, 2, 1, 0.5],
           type: "line",
           smooth: true,
-          color: "#10b981",
+          color: accentColor,
           lineStyle: { width: 2.5 },
           symbol: "none",
           areaStyle: {
@@ -430,15 +501,15 @@ export function Hydraulics() {
               x2: 0,
               y2: 1,
               colorStops: [
-                { offset: 0, color: "rgba(16, 185, 129, 0.25)" },
-                { offset: 1, color: "rgba(16, 185, 129, 0)" },
+                { offset: 0, color: `${accentColor}40` },
+                { offset: 1, color: `${accentColor}00` },
               ],
             },
           },
         },
       ],
     }),
-    [],
+    [accentColor],
   );
 
   const analysisChart1 = useMemo(
@@ -456,7 +527,7 @@ export function Hydraulics() {
           data: [15, 20, 15, 30, 25, 40, 35, 50, 45, 60],
           type: "line",
           smooth: true,
-          color: "#22c55e",
+          color: accentColor,
           lineStyle: { width: 2 },
           symbol: "none",
         },
@@ -470,7 +541,7 @@ export function Hydraulics() {
         },
       ],
     }),
-    [],
+    [accentColor],
   );
 
   const analysisChart2 = useMemo(
@@ -488,16 +559,16 @@ export function Hydraulics() {
           data: [5, 10, 5, 60, 5, 10, 5, 80, 5, 10],
           type: "line",
           smooth: true,
-          color: "#3b82f6",
+          color: accentColor,
           lineStyle: { width: 2.5 },
           symbol: "none",
           areaStyle: {
-            color: "rgba(59, 130, 246, 0.1)",
+            color: `${accentColor}1A`,
           },
         },
       ],
     }),
-    [],
+    [accentColor],
   );
 
   if (isLoading) {
