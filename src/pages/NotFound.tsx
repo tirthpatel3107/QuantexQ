@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ROUTES } from "@/utils/constants/routes";
+import { ROUTES } from "@/services/routes/clientRoutes";
 
 /** 404 page; logs invalid path and offers link home. */
 const NotFound = () => {

@@ -1,5 +1,5 @@
 /** App-wide constants and config. */
-export { ROUTES, type RoutePath } from "./routes";
+export { ROUTES, type RoutePath } from "../../services/routes/clientRoutes";
 export {
   STATUS_LEVEL,
   PUMP_STATUS,
@@ -19,5 +19,5 @@ export {
 } from "./config";
 export * from "./tabs/network";
 export * from "./tabs/daq";
-export * from "./tabs/mud-properties";
+export * from "./tabs/mudProperties";
 export * from "./tabs/settings";

@@ -23,6 +23,7 @@ import type {
   SecurityOptionsData,
   DiagnosticsOptionsData,
 } from "./network.types";
+import { SERVER_ROUTES } from "../../routes/serverRoutes";
 
 // ============================================
 // Query Keys
@@ -55,7 +56,7 @@ export const networkKeys = {
 
 const fetchSourcesData = async (): Promise<ApiResponse<SourcesTabData>> => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/network/sources`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.SOURCES}`);
   // if (!response.ok) throw new Error('Failed to fetch sources data');
   // return response.json();
 
@@ -146,7 +147,7 @@ const fetchSourcesOptions = async (): Promise<
   ApiResponse<SourcesOptionsData>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/network/sources/options`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.SOURCES_OPTIONS}`);
   // if (!response.ok) throw new Error('Failed to fetch sources options');
   // return response.json();
 
@@ -198,7 +199,7 @@ export const useSourcesOptions = () => {
 
 const fetchProtocolsData = async (): Promise<ApiResponse<ProtocolsTabData>> => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/network/protocols`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.PROTOCOLS}`);
   // if (!response.ok) throw new Error('Failed to fetch protocols data');
   // return response.json();
 
@@ -280,7 +281,7 @@ export const useProtocolsOptions = () => {
 
 const fetchRoutingData = async (): Promise<ApiResponse<RoutingTabData>> => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/network/routing`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.ROUTING}`);
   // if (!response.ok) throw new Error('Failed to fetch routing data');
   // return response.json();
 
@@ -384,7 +385,7 @@ export const useRoutingOptions = () => {
 
 const fetchSecurityData = async (): Promise<ApiResponse<SecurityTabData>> => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/network/security`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.SECURITY}`);
   // if (!response.ok) throw new Error('Failed to fetch security data');
   // return response.json();
 
@@ -489,7 +490,7 @@ const fetchDiagnosticsData = async (): Promise<
   ApiResponse<DiagnosticsTabData>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/network/diagnostics`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.DIAGNOSTICS}`);
   // if (!response.ok) throw new Error('Failed to fetch diagnostics data');
   // return response.json();
 
@@ -606,7 +607,7 @@ const saveSourcesData = async (
   payload: SaveSourcesPayload,
 ): Promise<ApiResponse<SaveResult>> => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/network/sources`, {
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.SOURCES}`, {
   //   method: 'POST',
   //   headers: { 'Content-Type': 'application/json' },
   //   body: JSON.stringify(payload),
@@ -652,7 +653,7 @@ const saveProtocolsData = async (
   payload: SaveProtocolsPayload,
 ): Promise<ApiResponse<SaveResult>> => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/network/protocols`, {
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.PROTOCOLS}`, {
   //   method: 'POST',
   //   headers: { 'Content-Type': 'application/json' },
   //   body: JSON.stringify(payload),
@@ -698,7 +699,7 @@ const saveRoutingData = async (
   payload: SaveRoutingPayload,
 ): Promise<ApiResponse<SaveResult>> => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/network/routing`, {
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.ROUTING}`, {
   //   method: 'POST',
   //   headers: { 'Content-Type': 'application/json' },
   //   body: JSON.stringify(payload),
@@ -744,7 +745,7 @@ const saveSecurityData = async (
   payload: SaveSecurityPayload,
 ): Promise<ApiResponse<SaveResult>> => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/network/security`, {
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.SECURITY}`, {
   //   method: 'POST',
   //   headers: { 'Content-Type': 'application/json' },
   //   body: JSON.stringify(payload),
@@ -790,7 +791,7 @@ const saveDiagnosticsData = async (
   payload: SaveDiagnosticsPayload,
 ): Promise<ApiResponse<SaveResult>> => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/network/diagnostics`, {
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.DIAGNOSTICS}`, {
   //   method: 'POST',
   //   headers: { 'Content-Type': 'application/json' },
   //   body: JSON.stringify(payload),

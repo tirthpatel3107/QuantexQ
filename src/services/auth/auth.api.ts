@@ -9,6 +9,7 @@
 
 // import apiClient from "./axiosClient";
 import type { AuthResponse, SignInPayload, SignUpPayload } from "./auth.types";
+import { SERVER_ROUTES } from "../routes/serverRoutes";
 
 // ─── Sign In ──────────────────────────────────────────────────────────────────
 
@@ -16,7 +17,7 @@ export const signInRequest = async (
   payload: SignInPayload,
 ): Promise<AuthResponse> => {
   // TODO: Uncomment when real API is ready
-  // const response = await apiClient.post<AuthResponse>("/auth/sign-in", payload);
+  // const response = await apiClient.post<AuthResponse>(SERVER_ROUTES.AUTH.SIGN_IN, payload);
   // return response.data;
 
   // MOCK RESPONSE
@@ -57,7 +58,7 @@ export const signUpRequest = async (
   payload: SignUpPayload,
 ): Promise<AuthResponse> => {
   // TODO: Uncomment when real API is ready
-  // const response = await apiClient.post<AuthResponse>("/auth/sign-up", payload);
+  // const response = await apiClient.post<AuthResponse>(SERVER_ROUTES.AUTH.SIGN_UP, payload);
   // return response.data;
 
   // MOCK RESPONSE
@@ -89,7 +90,7 @@ export const signUpRequest = async (
 
 export const signOutRequest = async (): Promise<void> => {
   // TODO: Uncomment when real API is ready
-  // await apiClient.post("/auth/sign-out");
+  // await apiClient.post(SERVER_ROUTES.AUTH.SIGN_OUT);
 
   // MOCK: no-op
   return Promise.resolve();
@@ -99,7 +100,7 @@ export const signOutRequest = async (): Promise<void> => {
 
 // export const refreshTokenRequest = async (refreshToken: string) => {
 //   const response = await apiClient.post<{ data: { accessToken: string } }>(
-//     "/auth/refresh",
+//     SERVER_ROUTES.AUTH.REFRESH,
 //     { refreshToken }
 //   );
 //   return response.data;

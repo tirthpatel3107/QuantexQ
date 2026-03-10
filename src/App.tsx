@@ -10,7 +10,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "./context/Sidebar/SidebarContext.tsx";
 import { AccentColorProvider } from "@/hooks/useAccentColor";
 import { AuthProvider } from "@/context/Auth/AuthContext";
-import { ROUTES } from "@/utils/constants/routes.ts";
+import { ROUTES } from "@/services/routes/clientRoutes.ts";
 import { THEME_STORAGE_KEY } from "@/utils/constants/config.ts";
 
 const Index = lazy(() => import("./pages/Index"));

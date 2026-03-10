@@ -28,6 +28,7 @@ import type {
   LogAnalysisOptionsData,
   SystemSettingsOptionsData,
 } from "./daq.types";
+import { SERVER_ROUTES } from "../../routes/serverRoutes";
 
 // ============================================
 // Query Keys
@@ -58,7 +59,7 @@ export const daqKeys = {
 
 const fetchDisplayData = async (): Promise<ApiResponse<DisplayTabData>> => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/daq/display`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.DAQ.DISPLAY}`);
   // if (!response.ok) throw new Error('Failed to fetch display data');
   // return response.json();
 
@@ -161,7 +162,7 @@ export const useDisplayData = () => {
 
 const fetchStreamingData = async (): Promise<ApiResponse<StreamingTabData>> => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/daq/streaming`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.DAQ.STREAMING}`);
   // if (!response.ok) throw new Error('Failed to fetch streaming data');
   // return response.json();
 
@@ -227,7 +228,7 @@ const fetchNotificationsData = async (): Promise<
   ApiResponse<NotificationsTabData>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/daq/notifications`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.DAQ.NOTIFICATIONS}`);
   // if (!response.ok) throw new Error('Failed to fetch notifications data');
   // return response.json();
 
@@ -310,7 +311,7 @@ const fetchLogAnalysisData = async (): Promise<
   ApiResponse<LogAnalysisTabData>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/daq/log-analysis`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.DAQ.LOG_ANALYSIS}`);
   // if (!response.ok) throw new Error('Failed to fetch log analysis data');
   // return response.json();
 
@@ -414,7 +415,7 @@ const fetchSensorPermsData = async (): Promise<
   ApiResponse<SensorPermsTabData>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/daq/sensor-perms`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.DAQ.SENSOR_PERMS}`);
   // if (!response.ok) throw new Error('Failed to fetch sensor permissions data');
   // return response.json();
 
@@ -471,7 +472,7 @@ const fetchCalibrationData = async (): Promise<
   ApiResponse<CalibrationTabData>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/daq/calibration`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.DAQ.CALIBRATION}`);
   // if (!response.ok) throw new Error('Failed to fetch calibration data');
   // return response.json();
 
@@ -627,7 +628,7 @@ const fetchHydraulicsData = async (): Promise<
   ApiResponse<HydraulicsTabData>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/daq/hydraulics`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.DAQ.HYDRAULICS}`);
   // if (!response.ok) throw new Error('Failed to fetch hydraulics data');
   // return response.json();
 
@@ -737,7 +738,7 @@ const fetchSystemSettingsData = async (): Promise<
   ApiResponse<SystemSettingsTabData>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/daq/system-settings`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.DAQ.SYSTEM_SETTINGS}`);
   // if (!response.ok) throw new Error('Failed to fetch system settings data');
   // return response.json();
 
@@ -807,7 +808,7 @@ export const useSystemSettingsData = () => {
 
 const fetchDownloadsData = async (): Promise<ApiResponse<DownloadsTabData>> => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/daq/downloads`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.DAQ.DOWNLOADS}`);
   // if (!response.ok) throw new Error('Failed to fetch downloads data');
   // return response.json();
 

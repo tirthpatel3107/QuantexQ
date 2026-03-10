@@ -5,6 +5,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ApiResponse, SaveResult } from "../types";
+import { SERVER_ROUTES } from "../../routes/serverRoutes";
 
 // ============================================
 // Query Keys
@@ -51,7 +52,7 @@ const fetchGeneralSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/settings/general`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.GENERAL}`);
   // if (!response.ok) throw new Error('Failed to fetch general settings');
   // return response.json();
 
@@ -132,7 +133,7 @@ const fetchUiDisplaySettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/settings/ui-display`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.UI_DISPLAY}`);
   // if (!response.ok) throw new Error('Failed to fetch UI display settings');
   // return response.json();
 
@@ -215,7 +216,7 @@ const fetchUnitsSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/settings/units`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.UNITS}`);
   // if (!response.ok) throw new Error('Failed to fetch units settings');
   // return response.json();
 
@@ -301,7 +302,7 @@ const fetchDataTimeSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/settings/data-time`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.DATA_TIME}`);
   // if (!response.ok) throw new Error('Failed to fetch data time settings');
   // return response.json();
 
@@ -387,7 +388,7 @@ const fetchAlarmsSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/settings/alarms`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.ALARMS}`);
   // if (!response.ok) throw new Error('Failed to fetch alarms settings');
   // return response.json();
 
@@ -485,7 +486,7 @@ const fetchSignalsSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/settings/signals`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.SIGNALS}`);
   // if (!response.ok) throw new Error('Failed to fetch signals settings');
   // return response.json();
 
@@ -649,7 +650,7 @@ const fetchChokePumpsSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/settings/choke-pumps`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.CHOKE_PUMPS}`);
   // if (!response.ok) throw new Error('Failed to fetch choke pumps settings');
   // return response.json();
 
@@ -747,7 +748,7 @@ const fetchAutoControlSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/settings/auto-control`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.AUTO_CONTROL}`);
   // if (!response.ok) throw new Error('Failed to fetch auto control settings');
   // return response.json();
 
@@ -837,7 +838,7 @@ const fetchHydraulicsModelSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/settings/hydraulics-model`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.HYDRAULICS_MODEL}`);
   // if (!response.ok) throw new Error('Failed to fetch hydraulics model settings');
   // return response.json();
 
@@ -928,7 +929,7 @@ const fetchAboutDiagnosticsSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
   // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}/settings/about-diagnostics`);
+  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.ABOUT_DIAGNOSTICS}`);
   // if (!response.ok) throw new Error('Failed to fetch about diagnostics settings');
   // return response.json();
 

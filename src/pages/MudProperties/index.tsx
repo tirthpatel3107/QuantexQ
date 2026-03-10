@@ -32,7 +32,7 @@ import {
 } from "@/context/MudProperties";
 
 // Constants & Types
-import { ROUTES } from "@/utils/constants/routes";
+import { ROUTES } from "@/services/routes/clientRoutes";
 import { MUD_NAV } from "@/utils/constants";
 import { FluidData } from "@/utils/types/mud";
 

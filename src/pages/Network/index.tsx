@@ -23,7 +23,7 @@ import { Diagnostics } from "./Diagnostics";
 import { NetworkProvider, useNetworkContext } from "@/context/Network";
 
 // Constants
-import { ROUTES } from "@/utils/constants/routes";
+import { ROUTES } from "@/services/routes/clientRoutes";
 import { NETWORK_NAV } from "@/utils/constants";
 
 // Icons

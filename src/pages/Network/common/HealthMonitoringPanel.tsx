@@ -21,7 +21,7 @@ import {
   DEFAULT_DEVICE_HEALTH,
   DEFAULT_CONNECTION_LOGS,
   type HealthMonitoringPanelProps,
-} from "@/utils/constants/health-monitoring-constants";
+} from "@/utils/constants/healthMonitoring";
 
 // Icons
 import { Settings } from "lucide-react";
