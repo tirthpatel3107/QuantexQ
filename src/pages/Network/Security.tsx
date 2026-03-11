@@ -330,7 +330,7 @@ export function Security() {
   ]);
 
   if (isLoading || !hasSetInitial) {
-    return <SectionSkeleton count={6} />;
+    return <SectionSkeleton count={3} />;
   }
 
   return (

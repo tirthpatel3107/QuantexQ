@@ -570,7 +570,7 @@ export function Hydraulics() {
   );
 
   if (isLoading) {
-    return <SectionSkeleton count={6} />;
+    return <SectionSkeleton count={3} />;
   }
 
   return (

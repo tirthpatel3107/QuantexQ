@@ -45,7 +45,7 @@ export function HydraulicsModel() {
   });
 
   if (isLoading || !form.formData) {
-    return <SectionSkeleton count={6} />;
+    return <SectionSkeleton count={3} />;
   }
 
   return (

@@ -144,7 +144,7 @@ export function LogAnalysis() {
   );
 
   if (isLoading || !hasSetInitial || !logAnalysisResponse?.data) {
-    return <SectionSkeleton count={6} />;
+    return <SectionSkeleton count={3} />;
   }
 
   const logEntries = logAnalysisResponse.data.logEntries || [];

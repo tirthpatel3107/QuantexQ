@@ -135,7 +135,7 @@ export function Protocols() {
 
   // ---- Loading State ----
   if (isLoading || !hasSetInitial || !protocolsResponse?.data) {
-    return <SectionSkeleton count={6} />;
+    return <SectionSkeleton count={3} />;
   }
 
   return (

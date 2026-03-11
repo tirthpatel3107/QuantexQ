@@ -74,7 +74,7 @@ export function FluidOverview() {
   );
 
   if (isLoading || !form.formData) {
-    return <SectionSkeleton count={6} />;
+    return <SectionSkeleton count={3} />;
   }
 
   const fluid = form.formData;

@@ -13,7 +13,7 @@ export function Summary({ fluid }: SummaryProps) {
   const summaryData = summaryResponse?.data;
 
   if (isLoading) {
-    return <SectionSkeleton count={6} />;
+    return <SectionSkeleton count={3} />;
   }
 
   // Use API data if available, otherwise fall back to fluid prop

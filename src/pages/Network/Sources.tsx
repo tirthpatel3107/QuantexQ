@@ -128,7 +128,7 @@ export function Sources() {
 
   // ---- Loading State ----
   if (isLoading || !hasSetInitial || !sourcesResponse?.data) {
-    return <SectionSkeleton count={6} />;
+    return <SectionSkeleton count={3} />;
   }
 
   const connectionStatus = sourcesResponse.data.rigPlc.connectionStatus;

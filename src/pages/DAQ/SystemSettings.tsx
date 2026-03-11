@@ -114,7 +114,7 @@ export function SystemSettings() {
   ]);
 
   if (isLoading || !hasSetInitial || !systemSettingsResponse?.data) {
-    return <SectionSkeleton count={6} />;
+    return <SectionSkeleton count={3} />;
   }
 
   return (
