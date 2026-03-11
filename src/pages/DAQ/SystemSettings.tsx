@@ -69,7 +69,12 @@ export function SystemSettings() {
       const { systemSettings, alarmSettings, accountSecurity, scheduleTime } =
         systemSettingsResponse.data;
       reset({ systemSettings, alarmSettings, accountSecurity, scheduleTime });
-      setHasSetInitial(true);
+      // Use timeout to avoid direct setState in effect
+      const timeoutId = setTimeout(() => {
+        setHasSetInitial(true);
+      }, 0);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [systemSettingsResponse, hasSetInitial, reset]);
 

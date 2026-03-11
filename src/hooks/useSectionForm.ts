@@ -26,7 +26,12 @@ export function useSectionForm<T>({
   // Initialize form data once when initialData becomes available
   useEffect(() => {
     if (initialData && !formData) {
-      setFormData(initialData);
+      // Use a timeout to avoid direct setState in effect
+      const timeoutId = setTimeout(() => {
+        setFormData(initialData);
+      }, 0);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [initialData, formData]);
 

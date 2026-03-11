@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-const REQUIRED_MESSAGE = "This field is required";
-
 export const streamingFormSchema = z.object({
   streaming: z.object({
     enabled: z.boolean().default(true),

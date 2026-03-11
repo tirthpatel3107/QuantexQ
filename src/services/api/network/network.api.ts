@@ -23,7 +23,6 @@ import type {
   SecurityOptionsData,
   DiagnosticsOptionsData,
 } from "./network.types";
-import { SERVER_ROUTES } from "../../routes/serverRoutes";
 
 // ============================================
 // Query Keys

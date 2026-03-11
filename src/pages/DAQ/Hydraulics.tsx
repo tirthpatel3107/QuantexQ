@@ -32,12 +32,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import {
   Search,
-  Filter,
   RotateCcw,
-  AlertTriangle,
-  TrendingUp,
   Cpu,
-  Droplets,
   Wind,
 } from "lucide-react";
 

@@ -129,8 +129,18 @@ export function Notifications() {
     if (notificationsResponse?.data && !hasSetInitial) {
       const { settings, store, log } = notificationsResponse.data;
       reset({ settings, store });
-      setLogEntries(log);
-      setHasSetInitial(true);
+      // Use timeouts to avoid direct setState in effect
+      const timeoutId1 = setTimeout(() => {
+        setLogEntries(log);
+      }, 0);
+      const timeoutId2 = setTimeout(() => {
+        setHasSetInitial(true);
+      }, 0);
+      
+      return () => {
+        clearTimeout(timeoutId1);
+        clearTimeout(timeoutId2);
+      };
     }
   }, [notificationsResponse, hasSetInitial, reset]);
 

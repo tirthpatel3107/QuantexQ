@@ -28,7 +28,6 @@ import type {
   LogAnalysisOptionsData,
   SystemSettingsOptionsData,
 } from "./daq.types";
-import { SERVER_ROUTES } from "../../routes/serverRoutes";
 
 // ============================================
 // Query Keys

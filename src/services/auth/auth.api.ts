@@ -9,7 +9,6 @@
 
 // import apiClient from "./axiosClient";
 import type { AuthResponse, SignInPayload, SignUpPayload } from "./auth.types";
-import { SERVER_ROUTES } from "../routes/serverRoutes";
 
 // ─── Sign In ──────────────────────────────────────────────────────────────────
 

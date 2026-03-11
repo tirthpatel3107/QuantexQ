@@ -20,7 +20,6 @@ import type {
   SaveGasCompressibilityPayload,
   SaveCalibrationPayload,
 } from "./mudproperties.types";
-import { SERVER_ROUTES } from "../../routes/serverRoutes";
 
 // ============================================
 // Query Keys

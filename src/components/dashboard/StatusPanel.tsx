@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { cn } from "@/utils/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -40,7 +40,27 @@ const DonutChart = memo(function DonutChart({
   const sum = data.reduce((a, s) => a + s.value, 0) || 1;
   const cx = size / 2;
   const cy = size / 2;
-  let acc = -Math.PI / 2; // start from top
+  
+  const slicesWithAngles = useMemo(() => {
+    const startAngle = -Math.PI / 2; // start from top
+    
+    const { slices } = data.reduce(
+      (acc, slice) => {
+        const ratio = Math.max(0, slice.value) / sum;
+        const start = acc.currentAngle;
+        const end = start + ratio * 2 * Math.PI;
+        
+        acc.slices.push({ ...slice, start, end });
+        acc.currentAngle = end + PAD_RAD;
+        
+        return acc;
+      },
+      { slices: [] as Array<typeof data[0] & { start: number; end: number }>, currentAngle: startAngle }
+    );
+    
+    return slices;
+  }, [data, sum]);
+  
   return (
     <svg
       width={size}
@@ -48,20 +68,13 @@ const DonutChart = memo(function DonutChart({
       viewBox={`0 0 ${size} ${size}`}
       className="shrink-0"
     >
-      {data.map((slice) => {
-        const ratio = Math.max(0, slice.value) / sum;
-        const start = acc;
-        acc += ratio * 2 * Math.PI;
-        const end = acc;
-        acc += PAD_RAD;
-        return (
-          <path
-            key={slice.label}
-            d={getDonutPath(cx, cy, innerR, outerR, start, end)}
-            fill={slice.color}
-          />
-        );
-      })}
+      {slicesWithAngles.map((slice) => (
+        <path
+          key={slice.label}
+          d={getDonutPath(cx, cy, innerR, outerR, slice.start, slice.end)}
+          fill={slice.color}
+        />
+      ))}
     </svg>
   );
 });

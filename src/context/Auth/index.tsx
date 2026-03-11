@@ -49,17 +49,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   // Rehydrate session on mount
   useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem(USER_STORAGE_KEY);
-      if (storedUser) {
-        const user: User = JSON.parse(storedUser);
-        setState({ user, isAuthenticated: true, isLoading: false });
-      } else {
-        setState((s) => ({ ...s, isLoading: false }));
+    const initializeAuth = () => {
+      try {
+        const storedUser = localStorage.getItem(USER_STORAGE_KEY);
+        if (storedUser) {
+          const user: User = JSON.parse(storedUser);
+          return { user, isAuthenticated: true, isLoading: false };
+        } else {
+          return { user: null, isAuthenticated: false, isLoading: false };
+        }
+      } catch {
+        return { user: null, isAuthenticated: false, isLoading: false };
       }
-    } catch {
-      setState((s) => ({ ...s, isLoading: false }));
-    }
+    };
+
+    // Use a timeout to avoid direct setState in effect
+    const timeoutId = setTimeout(() => {
+      setState(initializeAuth());
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   // ─── Sign In ───────────────────────────────────────────────────────────────

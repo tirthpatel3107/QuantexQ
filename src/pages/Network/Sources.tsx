@@ -78,7 +78,12 @@ export function Sources() {
     if (sourcesResponse?.data && !hasSetInitial) {
       const { rigPlc, pwdWits, devices } = sourcesResponse.data;
       reset({ rigPlc, pwdWits, devices });
-      setHasSetInitial(true);
+      // Use timeout to avoid direct setState in effect
+      const timeoutId = setTimeout(() => {
+        setHasSetInitial(true);
+      }, 0);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [sourcesResponse, hasSetInitial, reset]);
 

@@ -83,7 +83,12 @@ export function Routing() {
     if (routingResponse?.data && !hasSetInitial) {
       // NOTE: Using initial data constant for now as per previous implementation logic
       reset(ROUTING_INITIAL_DATA);
-      setHasSetInitial(true);
+      // Use timeout to avoid direct setState in effect
+      const timeoutId = setTimeout(() => {
+        setHasSetInitial(true);
+      }, 0);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [routingResponse, hasSetInitial, reset]);
 

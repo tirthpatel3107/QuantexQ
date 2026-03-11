@@ -3,7 +3,6 @@ import {
   Wrench,
   BookOpen,
   PlusCircle,
-  Sliders,
   ChevronDown,
   Gauge,
   LayoutDashboard,

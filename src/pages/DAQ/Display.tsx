@@ -7,7 +7,6 @@ import ReactECharts from "echarts-for-react";
 import {
   SectionSkeleton,
   FormSaveDialog,
-  StatusBadge,
   CommonFormToggle,
 } from "@/components/common";
 import { PanelCard } from "@/components/dashboard/PanelCard";
@@ -33,6 +32,121 @@ import type { SaveDisplayPayload } from "@/services/api/daq/daq.types";
 
 // Context
 import { useDAQContext } from "@/context/DAQ";
+
+// ---- Chart Components (moved outside render) ----
+const PremiumChart = ({
+  data,
+  color,
+  height = 80,
+  showArea = true,
+  lineType = "solid" as "solid" | "dashed" | "dotted",
+  secondaryData,
+  secondaryColor = "#f59e0b",
+}: {
+  data: Array<{ time: string; value: number }>;
+  color?: string;
+  height?: number | string;
+  showArea?: boolean;
+  lineType?: "solid" | "dashed" | "dotted";
+  secondaryData?: Array<{ time: string; value: number }>;
+  secondaryColor?: string;
+}) => {
+  const option = {
+    animation: false,
+    grid: { top: 10, right: 5, bottom: 10, left: 5 },
+    xAxis: {
+      type: "category",
+      boundaryGap: false,
+      show: false,
+    },
+    yAxis: {
+      type: "value",
+      show: false,
+      min: "dataMin",
+      max: "dataMax",
+    },
+    series: [
+      {
+        data: data.map((d) => d.value),
+        type: "line",
+        smooth: true,
+        symbol: "none",
+        lineStyle: {
+          width: 2.5,
+          color: color,
+          type: lineType,
+          shadowBlur: 10,
+          shadowColor: color + "66",
+        },
+        areaStyle: showArea
+          ? {
+              color: {
+                type: "linear",
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: color + "4D" }, // 30% opacity
+                  { offset: 1, color: color + "00" }, // 0% opacity
+                ],
+              },
+            }
+          : undefined,
+      },
+      ...(secondaryData
+        ? [
+            {
+              data: secondaryData.map((d) => d.value),
+              type: "line",
+              smooth: true,
+              symbol: "none",
+              lineStyle: {
+                width: 1.5,
+                color: secondaryColor,
+                type: "dashed",
+              },
+            },
+          ]
+        : []),
+    ],
+  };
+
+  return (
+    <ReactECharts
+      option={option}
+      style={{ height: height, width: "100%" }}
+      opts={{ renderer: "canvas" }}
+    />
+  );
+};
+
+const LegendItem = ({
+  color,
+  label,
+  value,
+  unit,
+}: {
+  color: string;
+  label: string;
+  value?: string | number;
+  unit?: string;
+}) => (
+  <div className="flex items-center gap-2 min-w-0">
+    <div
+      className="w-1.5 h-1.5 rounded-sm shrink-0 shadow-[0_0_5px_rgba(255,255,255,0.1)]"
+      style={{ backgroundColor: color }}
+    />
+    <span className="text-sm text-muted-foreground/80 uppercase tracking-tighter truncate font-bold">
+      {label}
+    </span>
+    {value !== undefined && (
+      <span className="ml-auto text-sm font-mono font-bold text-foreground/70">
+        {value} {unit}
+      </span>
+    )}
+  </div>
+);
 
 /**
  * Display Component
@@ -139,7 +253,12 @@ export function Display() {
   useEffect(() => {
     if (displayResponse?.data && !hasSetInitial) {
       reset({ sections: displayResponse.data.sections });
-      setHasSetInitial(true);
+      // Use a timeout to avoid direct setState in effect
+      const timeoutId = setTimeout(() => {
+        setHasSetInitial(true);
+      }, 0);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [displayResponse, hasSetInitial, reset]);
 
@@ -193,121 +312,6 @@ export function Display() {
       largeTrend: generateMockData(60, 400, 60),
     }),
     [],
-  );
-
-  // ---- Premium Chart Components ----
-  const PremiumChart = ({
-    data,
-    color = accentColor,
-    height = 80,
-    showArea = true,
-    lineType = "solid" as "solid" | "dashed" | "dotted",
-    secondaryData,
-    secondaryColor = "#f59e0b",
-  }: {
-    data: any[];
-    color?: string;
-    height?: number | string;
-    showArea?: boolean;
-    lineType?: "solid" | "dashed" | "dotted";
-    secondaryData?: any[];
-    secondaryColor?: string;
-  }) => {
-    const option = {
-      animation: false,
-      grid: { top: 10, right: 5, bottom: 10, left: 5 },
-      xAxis: {
-        type: "category",
-        boundaryGap: false,
-        show: false,
-      },
-      yAxis: {
-        type: "value",
-        show: false,
-        min: "dataMin",
-        max: "dataMax",
-      },
-      series: [
-        {
-          data: data.map((d) => d.value),
-          type: "line",
-          smooth: true,
-          symbol: "none",
-          lineStyle: {
-            width: 2.5,
-            color: color,
-            type: lineType,
-            shadowBlur: 10,
-            shadowColor: color + "66",
-          },
-          areaStyle: showArea
-            ? {
-                color: {
-                  type: "linear",
-                  x: 0,
-                  y: 0,
-                  x2: 0,
-                  y2: 1,
-                  colorStops: [
-                    { offset: 0, color: color + "4D" }, // 30% opacity
-                    { offset: 1, color: color + "00" }, // 0% opacity
-                  ],
-                },
-              }
-            : undefined,
-        },
-        ...(secondaryData
-          ? [
-              {
-                data: secondaryData.map((d) => d.value),
-                type: "line",
-                smooth: true,
-                symbol: "none",
-                lineStyle: {
-                  width: 1.5,
-                  color: secondaryColor,
-                  type: "dashed",
-                },
-              },
-            ]
-          : []),
-      ],
-    };
-
-    return (
-      <ReactECharts
-        option={option}
-        style={{ height: height, width: "100%" }}
-        opts={{ renderer: "canvas" }}
-      />
-    );
-  };
-
-  const LegendItem = ({
-    color,
-    label,
-    value,
-    unit,
-  }: {
-    color: string;
-    label: string;
-    value?: string | number;
-    unit?: string;
-  }) => (
-    <div className="flex items-center gap-2 min-w-0">
-      <div
-        className="w-1.5 h-1.5 rounded-sm shrink-0 shadow-[0_0_5px_rgba(255,255,255,0.1)]"
-        style={{ backgroundColor: color }}
-      />
-      <span className="text-sm text-muted-foreground/80 uppercase tracking-tighter truncate font-bold">
-        {label}
-      </span>
-      {value !== undefined && (
-        <span className="ml-auto text-sm font-mono font-bold text-foreground/70">
-          {value} {unit}
-        </span>
-      )}
-    </div>
   );
 
   // ---- Loading State ----
