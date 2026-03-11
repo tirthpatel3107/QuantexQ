@@ -5,7 +5,7 @@ import { cn } from "@/utils/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { COLORS } from "@/utils/constants/colors";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTheme } from "@/hooks/useTheme";
+import { useTheme } from "@/context/Theme";
 import { Clock } from "lucide-react";
 import { ChartDataPoint } from "@/utils/types/chart";
 

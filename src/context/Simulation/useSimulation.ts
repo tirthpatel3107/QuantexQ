@@ -2,7 +2,7 @@ import { useContext } from "react";
 import {
   SimulationStateContext,
   SimulationDataContext,
-} from "../context/Simulation";
+} from "./SimulationContext";
 
 /**
  * Combined hook to access both simulation state and real-time data.

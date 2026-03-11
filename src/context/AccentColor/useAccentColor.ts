@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AccentColorProviderContext } from "./accent-color-context";
+import { AccentColorProviderContext } from "./AccentColorContext";
 
 export function useAccentColor() {
   const context = useContext(AccentColorProviderContext);

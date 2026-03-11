@@ -4,7 +4,7 @@ import { useSectionForm } from "@/hooks/useSectionForm";
 
 // Components
 import { SectionSkeleton, FormSaveDialog } from "@/components/common";
-import { TemperaturePanel } from "./panels/TemperaturePanel";
+import { TemperaturePanel } from "./fluidOverview/TemperaturePanel";
 
 // Services & Types
 import {

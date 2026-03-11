@@ -8,7 +8,7 @@ import { useSectionForm } from "@/hooks/useSectionForm";
 import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 
 // Components - Local
-import { DensitySolidsPanel } from "./panels/DensitySolidsPanel";
+import { DensitySolidsPanel } from "./fluidOverview/DensitySolidsPanel";
 
 // Services & API
 import {

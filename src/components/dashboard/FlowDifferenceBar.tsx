@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/utils/lib/utils";
-import { useSimulationData } from "@/hooks/useSimulation";
+import { useSimulationData } from "@/context/Simulation";
 import { COLORS } from "@/utils/constants/colors";
 import { DASHBOARD_LIMITS } from "@/utils/constants/dashboard";
 import { SemiCircleGauge } from "./SemiCircleGauge";

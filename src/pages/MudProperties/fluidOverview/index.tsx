@@ -6,10 +6,10 @@ import { useSectionForm } from "@/hooks/useSectionForm";
 import { SectionSkeleton, FormSaveDialog } from "@/components/common";
 
 // Components - Local Panels
-import { FluidSystemPanel } from "./panels/FluidSystemPanel";
-import { RheologyPanel } from "./panels/RheologyPanel";
-import { DensitySolidsPanel } from "./panels/DensitySolidsPanel";
-import { TemperaturePanel } from "./panels/TemperaturePanel";
+import { FluidSystemPanel } from "./FluidSystemPanel";
+import { RheologyPanel } from "./RheologyPanel";
+import { DensitySolidsPanel } from "./DensitySolidsPanel";
+import { TemperaturePanel } from "./TemperaturePanel";
 
 // Services & Types
 import {

@@ -3,7 +3,7 @@ import { cn } from "@/utils/lib/utils";
 import { VerticalChartCard } from "@/components/dashboard/VerticalChartCard";
 import { DepthGauge } from "@/components/dashboard/DepthGauge";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
-import { useSimulationData } from "@/hooks/useSimulation";
+import { useSimulationData } from "@/context/Simulation";
 import {
   CENTER_CARDS,
   metricsFromLatestPoint,

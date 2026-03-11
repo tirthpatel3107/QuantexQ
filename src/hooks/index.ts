@@ -9,10 +9,10 @@ export {
 
 // Existing hooks
 export { useToast } from "./use-toast";
-export { useTheme } from "./useTheme";
-export { useSimulation } from "./useSimulation";
-export { useSidebarContext } from "./useSidebarContext";
+export { useTheme } from "../context/Theme";
+export { useSimulation } from "../context/Simulation";
+export { useSidebarContext } from "../context/Sidebar";
 export { useInitialSkeleton } from "./useInitialSkeleton";
-export { useAccentColor } from "./useAccentColorHook";
+export { useAccentColor } from "../context/AccentColor";
 export { useSectionForm } from "./useSectionForm";
 export { useSaveWithConfirmation } from "./useSaveWithConfirmation";

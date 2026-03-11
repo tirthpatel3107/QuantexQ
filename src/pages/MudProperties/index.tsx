@@ -14,7 +14,7 @@ import {
 
 // Components - Local
 import { MudPropertiesOverview } from "./MudPropertiesOverview";
-import { FluidOverview } from "./FluidOverview";
+import { FluidOverview } from "./fluidOverview";
 import { Rheology } from "./Rheology";
 import { Density } from "./Density";
 import { Temperature } from "./Temperature";

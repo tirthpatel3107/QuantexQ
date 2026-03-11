@@ -4,7 +4,7 @@ import { useSectionForm } from "@/hooks/useSectionForm";
 
 // Components
 import { SectionSkeleton, FormSaveDialog } from "@/components/common";
-import { RheologyPanel } from "./panels/RheologyPanel";
+import { RheologyPanel } from "./fluidOverview/RheologyPanel";
 
 // Services & Types
 import {

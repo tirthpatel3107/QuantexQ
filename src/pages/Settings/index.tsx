@@ -27,7 +27,7 @@ import { AutoControl } from "./AutoControl";
 import { ChokePumps } from "./ChokePumps";
 import { HydraulicsModel } from "./HydraulicsModel";
 import { UiDisplay } from "./UiDisplay";
-import { UsersRoles } from "./userRoles";
+import { UsersRoles } from "./userAndRoles";
 import { AboutDiagnostics } from "./AboutDiagnostics";
 import { SETTINGS_NAV } from "@/utils/constants";
 import { GeneralSettingsData } from "@/utils/types/settings";

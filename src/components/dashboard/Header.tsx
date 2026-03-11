@@ -28,9 +28,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/utils/lib/utils";
 import { notifications } from "@/utils/data/mockData";
-import { useSimulationState } from "@/hooks/useSimulation";
+import { useSimulationState } from "@/context/Simulation";
 import { SimulationTimerWidget } from "@/components/dashboard/SimulationTimerWidget";
-import { useTheme } from "@/hooks/useTheme";
+import { useTheme } from "@/context/Theme";
 import {
   CommonAlertDialog,
   CommonButton,

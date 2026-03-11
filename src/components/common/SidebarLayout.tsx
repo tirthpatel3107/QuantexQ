@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/utils/lib/utils";
-import { useSidebarContext } from "@/hooks/useSidebarContext";
+import { useSidebarContext } from "@/context/Sidebar";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import { CommonButton } from "./CommonButton";
 import { CommonTooltip } from "./CommonTooltip";

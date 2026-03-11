@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { Square } from "lucide-react";
-import { useSimulation } from "@/hooks/useSimulation";
+import { useSimulation } from "@/context/Simulation";
 import {
   CommonAlertDialog,
   CommonButton,

@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CommonDialog, CommonButton, CommonTooltip } from "@/components/common";
 import type { VerticalChartMetric } from "@/utils/types/chart";
 import { COLORS } from "@/utils/constants/colors";
-import { useTheme } from "@/hooks/useTheme";
+import { useTheme } from "@/context/Theme";
 import { ChartDataPoint } from "@/utils/types/chart";
 
 export type { VerticalChartMetric };

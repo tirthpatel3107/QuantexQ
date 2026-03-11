@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/utils/lib/utils";
-import { useSidebarContext } from "@/hooks/useSidebarContext";
+import { useSidebarContext } from "@/context/Sidebar";
 import { LucideIcon } from "lucide-react";
 
 export interface SidebarNavItem {

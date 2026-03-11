@@ -4,7 +4,7 @@ import {
   ACCENT_COLOR_MAP_DARK,
   ACCENT_COLOR_MAP_LIGHT,
   type AccentColor,
-} from "./accent-color-context";
+} from "./AccentColorContext";
 
 export type { AccentColor };
 
