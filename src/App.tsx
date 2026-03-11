@@ -14,12 +14,12 @@ import { ROUTES } from "@/services/routes/clientRoutes.ts";
 import { THEME_STORAGE_KEY } from "@/utils/constants/config.ts";
 
 const Index = lazy(() => import("./pages/Index"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Profile = lazy(() => import("./pages/Profile"));
-const MudProperties = lazy(() => import("./pages/MudProperties/index"));
-const Settings = lazy(() => import("./pages/Settings/index"));
-const DAQ = lazy(() => import("./pages/DAQ/index"));
-const Network = lazy(() => import("./pages/Network/index"));
+const NotFound = lazy(() => import("./pages/notFound/index.tsx"));
+const Profile = lazy(() => import("./pages/profile/index.tsx"));
+const MudProperties = lazy(() => import("./pages/mudProperties/index"));
+const Settings = lazy(() => import("./pages/settings/index"));
+const DAQ = lazy(() => import("./pages/daq/index"));
+const Network = lazy(() => import("./pages/network/index"));
 
 // ─── Auth Pages (lazy) ───────────────────────────────────────────────────────
 // NOTE: Auth routes & ProtectedRoute are wired up but commented out below.
@@ -89,10 +89,7 @@ const App = () => (
                       path={`${ROUTES.SETTINGS}/:section?`}
                       element={<Settings />}
                     />
-                    <Route
-                      path={`${ROUTES.DAQ}/:section?`}
-                      element={<DAQ />}
-                    />
+                    <Route path={`${ROUTES.DAQ}/:section?`} element={<DAQ />} />
                     <Route
                       path={`${ROUTES.NETWORK}/:section?`}
                       element={<Network />}

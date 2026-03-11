@@ -1,6 +1,6 @@
 import React from "react";
 import { Header } from "@/components/dashboard/Header";
-import Dashboard from "@/pages/Dashboard";
+import Dashboard from "@/pages/dashboard";
 
 /**
  * Main Dashboard Landing Page
