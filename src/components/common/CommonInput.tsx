@@ -47,7 +47,7 @@ const CommonInput = React.forwardRef<HTMLInputElement, CommonInputProps>(
             disabled={disabled}
             type={resolvedType}
             className={cn(
-              "bg-background border-border/50 hover:bg-accent hover:border-primary/30 focus-visible:border-primary/30 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all duration-200",
+              "bg-background border-border/50 dark:hover:bg-accent hover:border-primary/30 focus:outline-none focus:ring-0 focus:border-primary/30 focus-visible:border-primary/30 focus-visible:ring-0 focus-visible:ring-offset-0 transition-colors duration-200",
               Icon && "pl-9",
               (hasSuffix || isPassword) && "pr-12",
               type === "number" && "input-no-spin",

@@ -149,7 +149,7 @@ export function CommonDropdownMenu({
         <div className="relative">
           <button
             className={cn(
-              "h-9 px-3 flex items-center justify-center gap-2 rounded-md border border-border bg-white/5 text-foreground hover:border-primary/50 hover:bg-primary/5 shadow-sm transition-all active:scale-95 whitespace-nowrap text-[13px]",
+              "h-9 px-3 flex items-center justify-center gap-2 rounded-md border border-border bg-white/5 text-foreground hover:border-primary/50 hover:bg-transparent dark:hover:bg-primary/5 shadow-sm transition-all active:scale-95 whitespace-nowrap text-[13px]",
               isActive && "border-primary/50 text-primary bg-primary/5",
               triggerClassName,
             )}

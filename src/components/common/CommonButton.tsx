@@ -34,7 +34,7 @@ const CommonButton = React.forwardRef<HTMLButtonElement, CommonButtonProps>(
         ref={ref}
         disabled={disabled || loading}
         className={cn(
-          "relative transition-all duration-200 active:scale-95 select-none hover:border-transparent",
+          "relative transition-all duration-200 active:scale-95 select-none hover:border-primary/30",
           loading && "text-transparent hover:text-transparent",
           className,
         )}

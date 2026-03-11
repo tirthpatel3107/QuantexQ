@@ -37,7 +37,7 @@ export const CommonSearchInput = memo(function CommonSearchInput({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="pl-9 pr-9 bg-background border-border/50 hover:bg-accent hover:border-primary/30 focus-visible:border-primary/30 focus-visible:ring-0 focus-visible:ring-offset-0 w-full transition-all duration-200"
+        className="pl-9 pr-9 bg-background border-border/50 hover:bg-background dark:hover:bg-accent hover:border-primary/30 focus-visible:border-primary/30 focus-visible:ring-0 focus-visible:ring-offset-0 w-full transition-all duration-200"
       />
       {value && (
         <CommonTooltip content="Clear search">

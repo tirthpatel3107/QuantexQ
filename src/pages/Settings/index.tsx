@@ -51,22 +51,17 @@ function SettingsContent() {
     () => (
       <>
         <CommonTooltip content="Save settings">
-          <CommonButton
-            variant="outline"
-            size="sm"
-            icon={Save}
-            onClick={requestSave}
-          >
+          <CommonButton variant="outline" icon={Save} onClick={requestSave}>
             Save
           </CommonButton>
         </CommonTooltip>
         <CommonTooltip content="Discard changes">
-          <CommonButton variant="outline" size="sm" icon={RotateCcw}>
+          <CommonButton variant="outline" icon={RotateCcw}>
             Discard
           </CommonButton>
         </CommonTooltip>
         <CommonTooltip content="Export settings">
-          <CommonButton variant="outline" size="sm" icon={Upload}>
+          <CommonButton variant="outline" icon={Upload}>
             Export
           </CommonButton>
         </CommonTooltip>
