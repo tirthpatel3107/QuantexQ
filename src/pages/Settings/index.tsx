@@ -11,8 +11,8 @@ import { ROUTES } from "@/services/routes/clientRoutes";
 import {
   PageLayout,
   SidebarLayout,
-  PageHeaderBar,
-  SidebarNav,
+  PageHeaderLayout,
+  SidebarNavLayout,
 } from "@/components/layouts";
 import { CommonButton, CommonTooltip } from "@/components/shared";
 
@@ -71,7 +71,7 @@ function SettingsContent() {
 
   const sidebarNav = useMemo(
     () => (
-      <SidebarNav
+      <SidebarNavLayout
         items={SETTINGS_NAV}
         activeSection={activeSection}
         baseRoute={ROUTES.SETTINGS}
@@ -132,7 +132,7 @@ function SettingsContent() {
           </p>
         }
       >
-        <PageHeaderBar
+        <PageHeaderLayout
           icon={
             activeNav?.icon ? (
               <activeNav.icon className="h-5 w-5" />

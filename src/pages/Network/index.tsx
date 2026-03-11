@@ -5,8 +5,8 @@ import { useParams } from "react-router-dom";
 import {
   PageLayout,
   SidebarLayout,
-  PageHeaderBar,
-  SidebarNav,
+  PageHeaderLayout,
+  SidebarNavLayout,
 } from "@/components/layouts";
 import { CommonButton, CommonTooltip } from "@/components/shared";
 
@@ -70,7 +70,7 @@ function NetworkContent() {
   const activeNav = NETWORK_NAV.find((n) => n.id === activeSection);
 
   const sidebarNav = (
-    <SidebarNav
+    <SidebarNavLayout
       items={NETWORK_NAV}
       activeSection={activeSection}
       baseRoute={ROUTES.NETWORK}
@@ -111,7 +111,7 @@ function NetworkContent() {
           </p>
         }
       >
-        <PageHeaderBar
+        <PageHeaderLayout
           icon={
             activeNav?.icon ? (
               <activeNav.icon className="h-5 w-5" />

@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import {
   PageLayout,
   SidebarLayout,
-  PageHeaderBar,
+  PageHeaderLayout,
   SidebarNav,
 } from "@/components/layouts";
 import { CommonButton, CommonTooltip } from "@/components/shared";
@@ -134,7 +134,7 @@ function DAQContent() {
         }
       >
         {/* Page title and metadata bar with contextual actions */}
-        <PageHeaderBar
+        <PageHeaderLayout
           icon={
             activeNav?.icon ? (
               <activeNav.icon className="h-5 w-5" />

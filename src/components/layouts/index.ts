@@ -1,6 +1,6 @@
 export { PageLayout } from "./PageLayout";
 export { SidebarLayout } from "./SidebarLayout";
-export { SidebarNav } from "./SidebarNav";
-export type { SidebarNavItem } from "./SidebarNav";
-export { PageHeaderBar } from "./PageHeaderBar";
-export { default as ProtectedRoute } from "./ProtectedRoute";
+export { SidebarNavLayout } from "./SidebarNavLayout";
+export type { SidebarNavItem } from "./SidebarNavLayout";
+export { PageHeaderLayout } from "./PageHeaderLayout";
+export { default as ProtectedRouteLayout } from "./ProtectedRouteLayout";

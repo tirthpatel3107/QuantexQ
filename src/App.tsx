@@ -22,13 +22,13 @@ const DAQ = lazy(() => import("./pages/daq/index"));
 const Network = lazy(() => import("./pages/network/index"));
 
 // ─── Auth Pages (lazy) ───────────────────────────────────────────────────────
-// NOTE: Auth routes & ProtectedRoute are wired up but commented out below.
+// NOTE: Auth routes & ProtectedRouteLayout are wired up but commented out below.
 // Uncomment the relevant sections when authentication flow is ready.
 const SignIn = lazy(() => import("./pages/auth/SignIn"));
 const SignUp = lazy(() => import("./pages/auth/SignUp"));
 
 import { PageLoader } from "@/components/shared/index.ts";
-// import { ProtectedRoute } from "@/components/common"; // Uncomment when auth enforcement is enabled
+// import { ProtectedRouteLayout } from "@/components/common"; // Uncomment when auth enforcement is enabled
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -67,8 +67,8 @@ const App = () => (
                   <Route path={ROUTES.SIGN_UP} element={<SignUp />} />
 
                   {/* ── Protected App Routes ────────────────────────────────── */}
-                  {/* NOTE: Wrap with <ProtectedRoute /> when auth is enabled   */}
-                  {/* <Route element={<ProtectedRoute />}> */}
+                  {/* NOTE: Wrap with <ProtectedRouteLayout /> when auth is enabled   */}
+                  {/* <Route element={<ProtectedRouteLayout />}> */}
                   <Route
                     element={
                       <SidebarProvider>
@@ -111,8 +111,8 @@ const App = () => (
 
 /**
  * Inner layout outlet that keeps Sidebar & Simulation scoped to app pages only.
- * Replace this with <ProtectedRoute /> when auth is enabled:
- *   element={<ProtectedRoute />} instead of element={<ProtectedRouteLayout />}
+ * Replace this with <ProtectedRouteLayout /> when auth is enabled:
+ *   element={<ProtectedRouteLayout />} instead of element={<ProtectedRouteLayout />}
  */
 const ProtectedRouteLayout = () => <Outlet />;
 

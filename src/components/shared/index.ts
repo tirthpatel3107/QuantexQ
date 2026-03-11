@@ -4,7 +4,7 @@ export { PageLayout } from "../layouts";
 export { RestoreDefaultsButton } from "./RestoreDefaultsButton";
 export { CommonSearchInput } from "./CommonSearchInput";
 export { LabeledInputWithUnit } from "./LabeledInputWithUnit";
-export { PageHeaderBar } from "../layouts";
+export { PageHeaderLayout } from "../layouts";
 export { SidebarLayout } from "../layouts";
 export { CommonAlertDialog } from "./CommonAlertDialog";
 export { CommonButton } from "./CommonButton";
@@ -14,7 +14,7 @@ export { CommonInput } from "./CommonInput";
 export { PageLoader } from "./PageLoader";
 export { CommonTable } from "./CommonTable";
 export { CommonDialog } from "./CommonDialog";
-export { SidebarNav } from "../layouts";
+export { SidebarNavLayout } from "../layouts";
 export type { SidebarNavItem } from "../layouts";
 export {
   CommonTabs,
@@ -49,4 +49,4 @@ export {
   CommonFormToggle,
   CommonFormCheckbox,
 } from "./CommonFormFields";
-export { ProtectedRoute } from "../layouts";
+export { ProtectedRouteLayout } from "../layouts";

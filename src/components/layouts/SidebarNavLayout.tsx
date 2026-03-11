@@ -17,7 +17,7 @@ interface SidebarNavProps {
   baseRoute: string;
 }
 
-export const SidebarNav = memo(function SidebarNav({
+export const SidebarNavLayout = memo(function SidebarNavLayout({
   items,
   activeSection,
   baseRoute,
