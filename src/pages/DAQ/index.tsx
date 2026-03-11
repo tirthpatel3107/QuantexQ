@@ -6,7 +6,7 @@ import {
   PageLayout,
   SidebarLayout,
   PageHeaderLayout,
-  SidebarNav,
+  SidebarNavLayout,
 } from "@/components/layouts";
 import { CommonButton, CommonTooltip } from "@/components/shared";
 
@@ -80,7 +80,7 @@ function DAQContent() {
 
   // Sidebar navigation component for switching between DAQ sub-modules
   const sidebarNav = (
-    <SidebarNav
+    <SidebarNavLayout
       items={DAQ_NAV}
       activeSection={activeSection}
       baseRoute={ROUTES.DAQ}
