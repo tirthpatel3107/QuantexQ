@@ -5,7 +5,7 @@ import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 import {
   systemSettingsFormSchema,
   type SystemSettingsFormValues,
-} from "@/utils/schemas/system-settings-schema";
+} from "@/utils/schemas/systemSettings";
 
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import {

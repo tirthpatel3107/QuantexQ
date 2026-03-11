@@ -34,7 +34,7 @@ import {
 import {
   sourcesFormSchema,
   type SourcesFormValues,
-} from "@/utils/schemas/sources-schema";
+} from "@/utils/schemas/sources";
 import type { SaveSourcesPayload } from "@/services/api/network/network.types";
 
 // Contexts

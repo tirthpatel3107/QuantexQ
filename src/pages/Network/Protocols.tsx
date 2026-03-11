@@ -34,7 +34,7 @@ import {
 import {
   protocolsFormSchema,
   type ProtocolsFormValues,
-} from "@/utils/schemas/protocols-schema";
+} from "@/utils/schemas/protocols";
 import type { SaveProtocolsPayload } from "@/services/api/network/network.types";
 
 // Contexts

@@ -28,7 +28,7 @@ import { useDisplayData, useSaveDisplayData } from "@/services/api/daq/daq.api";
 import {
   displayFormSchema,
   type DisplayFormValues,
-} from "@/utils/schemas/display-schema";
+} from "@/utils/schemas/display";
 import type { SaveDisplayPayload } from "@/services/api/daq/daq.types";
 
 // Context

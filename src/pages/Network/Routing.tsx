@@ -37,7 +37,7 @@ import {
   routingFormSchema,
   ROUTING_INITIAL_DATA,
   type RoutingFormValues,
-} from "@/utils/schemas/routing-schema";
+} from "@/utils/schemas/routing";
 import type { SaveRoutingPayload } from "@/services/api/network/network.types";
 
 // Contexts

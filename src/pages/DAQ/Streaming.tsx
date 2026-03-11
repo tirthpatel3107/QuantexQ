@@ -8,7 +8,7 @@ import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 import {
   streamingFormSchema,
   type StreamingFormValues,
-} from "@/utils/schemas/streaming-schema";
+} from "@/utils/schemas/streaming";
 
 // Components
 import { PanelCard } from "@/components/dashboard/PanelCard";

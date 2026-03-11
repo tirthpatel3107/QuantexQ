@@ -10,7 +10,7 @@ import {
   hydraulicsFormSchema,
   type HydraulicsFormValues,
   type HydraulicsParameterItem,
-} from "@/utils/schemas/hydraulics-schema";
+} from "@/utils/schemas/hydraulics";
 import {
   useReactTable,
   getCoreRowModel,

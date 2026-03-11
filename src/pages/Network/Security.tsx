@@ -38,7 +38,7 @@ import {
 import {
   securityFormSchema,
   type SecurityFormValues,
-} from "@/utils/schemas/security-schema";
+} from "@/utils/schemas/security";
 import type { SaveSecurityPayload } from "@/services/api/network/network.types";
 
 // Contexts

@@ -37,7 +37,7 @@ import {
   diagnosticsFormSchema,
   MOCK_CHART_DATA,
   type DiagnosticsFormValues,
-} from "@/utils/schemas/diagnostics-schema";
+} from "@/utils/schemas/diagnostics";
 import type { SaveDiagnosticsPayload } from "@/services/api/network/network.types";
 import type { EChartsOption } from "echarts";
 

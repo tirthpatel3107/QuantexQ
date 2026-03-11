@@ -6,7 +6,7 @@ import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 import {
   calibrationFormSchema,
   type CalibrationFormValues,
-} from "@/utils/schemas/calibration-schema";
+} from "@/utils/schemas/calibration";
 
 // Components - Common
 import {
