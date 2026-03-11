@@ -265,9 +265,7 @@ export function Streaming() {
                 <span className="text-muted-foreground">
                   Logging Frequency:
                 </span>
-                <span className="font-medium">
-                  {loggingFrequency}
-                </span>
+                <span className="font-medium">{loggingFrequency}</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -275,11 +273,7 @@ export function Streaming() {
                   Auto-cache:
                 </span>
                 <Badge
-                  variant={
-                    autoCache
-                      ? "default"
-                      : "secondary"
-                  }
+                  variant={autoCache ? "default" : "secondary"}
                   className="text-sm"
                 >
                   {autoCache ? "ON" : "OFF"}

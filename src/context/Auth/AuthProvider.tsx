@@ -9,11 +9,7 @@
  * in auth.api.ts and axiosClient.ts.
  */
 
-import {
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { signInRequest, signUpRequest, signOutRequest } from "@/services/auth";
 import type {
   AuthProviderProps,
@@ -93,5 +89,3 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     </AuthContext.Provider>
   );
 };
-
-

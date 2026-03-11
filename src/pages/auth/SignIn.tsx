@@ -39,7 +39,9 @@ const SignIn = () => {
       navigate(ROUTES.HOME, { replace: true });
     } catch (err) {
       setServerError(
-        err instanceof Error ? err.message : "Sign in failed. Please try again.",
+        err instanceof Error
+          ? err.message
+          : "Sign in failed. Please try again.",
       );
     }
   };
@@ -85,7 +87,11 @@ const SignIn = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+            className="space-y-5"
+          >
             {/* Email */}
             <div className="space-y-1.5">
               <label
@@ -168,7 +174,9 @@ const SignIn = () => {
 
             {/* Demo Hint */}
             <div className="rounded-md bg-primary/5 border border-primary/15 px-3 py-2.5 text-xs text-muted-foreground leading-relaxed">
-              <span className="text-foreground font-medium">Demo credentials: </span>
+              <span className="text-foreground font-medium">
+                Demo credentials:{" "}
+              </span>
               operator@quantexq.com / password123
             </div>
 

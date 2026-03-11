@@ -118,6 +118,7 @@ export function Roles() {
     [],
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const rolesTable = useReactTable({
     data: ROLES_DATA,
     columns: rolesColumns,

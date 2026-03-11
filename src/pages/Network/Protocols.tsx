@@ -72,9 +72,11 @@ export function Protocols() {
 
   const rigPlcType = useWatch({ control, name: "rigPlc.type" });
   const pwdType = useWatch({ control, name: "pwd.type" });
-  const modbusEndpoints = useWatch({ control, name: "rigPlc.modbusEndpoints" }) || [];
+  const modbusEndpoints =
+    useWatch({ control, name: "rigPlc.modbusEndpoints" }) || [];
   const opcEndpoint = useWatch({ control, name: "rigPlc.opcEndpoint" }) || "";
-  const ethernetEndpoint = useWatch({ control, name: "rigPlc.ethernetEndpoint" }) || "";
+  const ethernetEndpoint =
+    useWatch({ control, name: "rigPlc.ethernetEndpoint" }) || "";
 
   // ---- Effects & Side Effects ----
 
@@ -135,8 +137,6 @@ export function Protocols() {
   if (isLoading || !hasSetInitial || !protocolsResponse?.data) {
     return <SectionSkeleton count={6} />;
   }
-
-
 
   return (
     <>

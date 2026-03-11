@@ -1,10 +1,4 @@
-import {
-  useState,
-  useCallback,
-  useEffect,
-  useRef,
-  useMemo,
-} from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { appendChartPoint } from "@/utils/data/mockData";
 import { formatElapsedSeconds } from "@/utils/lib/date-utils";
 import {
@@ -123,5 +117,3 @@ export function SimulationProvider({ children }: SimulationProviderProps) {
     </SimulationStateContext.Provider>
   );
 }
-
-

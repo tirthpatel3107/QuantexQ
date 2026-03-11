@@ -1,5 +1,8 @@
 import { createContext } from "react";
-import type { SimulationStateContextValue, SimulationDataContextValue } from "./types";
+import type {
+  SimulationStateContextValue,
+  SimulationDataContextValue,
+} from "./types";
 
 export const SimulationStateContext =
   createContext<SimulationStateContextValue | null>(null);

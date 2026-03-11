@@ -30,12 +30,7 @@ import {
   StatCard,
 } from "@/components/common";
 import { Badge } from "@/components/ui/badge";
-import {
-  Search,
-  RotateCcw,
-  Cpu,
-  Wind,
-} from "lucide-react";
+import { Search, RotateCcw, Cpu, Wind } from "lucide-react";
 
 // Chart
 import ReactECharts from "echarts-for-react";
@@ -283,11 +278,11 @@ export function Hydraulics() {
 
   // Watch parameter lists
   const parameterListsRaw = useWatch({ control, name: "parameterLists" });
-  
+
   // Memoize to prevent dependency issues in useMemo
   const watchedParameterLists = useMemo(
     () => parameterListsRaw || [],
-    [parameterListsRaw]
+    [parameterListsRaw],
   );
 
   // ============================================
@@ -398,6 +393,7 @@ export function Hydraulics() {
     [watchedParameterLists],
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: tableData,
     columns,

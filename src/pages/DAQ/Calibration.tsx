@@ -149,8 +149,10 @@ export function Calibration() {
 
   // Filtered permission rows for the sensor table
   const permissions = useWatch({ control, name: "permissions" });
-  const defaultPermissions = useWatch({ control, name: "defaultPermissions" }) ?? [];
-  const senectoPermissions = useWatch({ control, name: "senectoPermissions" }) ?? [];
+  const defaultPermissions =
+    useWatch({ control, name: "defaultPermissions" }) ?? [];
+  const senectoPermissions =
+    useWatch({ control, name: "senectoPermissions" }) ?? [];
 
   const filteredPermissions = useMemo(() => {
     if (!permissions) return [];

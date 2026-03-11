@@ -136,7 +136,7 @@ export function Notifications() {
       const timeoutId2 = setTimeout(() => {
         setHasSetInitial(true);
       }, 0);
-      
+
       return () => {
         clearTimeout(timeoutId1);
         clearTimeout(timeoutId2);

@@ -82,7 +82,7 @@ export function Sources() {
       const timeoutId = setTimeout(() => {
         setHasSetInitial(true);
       }, 0);
-      
+
       return () => clearTimeout(timeoutId);
     }
   }, [sourcesResponse, hasSetInitial, reset]);

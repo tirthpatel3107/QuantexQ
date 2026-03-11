@@ -236,9 +236,7 @@ const SignUp = () => {
                       <div
                         key={i}
                         className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                          i < strength.score
-                            ? strength.color
-                            : "bg-border"
+                          i < strength.score ? strength.color : "bg-border"
                         }`}
                       />
                     ))}
@@ -283,9 +281,7 @@ const SignUp = () => {
                   tabIndex={-1}
                   onClick={() => setShowConfirm((v) => !v)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                  aria-label={
-                    showConfirm ? "Hide password" : "Show password"
-                  }
+                  aria-label={showConfirm ? "Hide password" : "Show password"}
                 >
                   {showConfirm ? (
                     <EyeOff className="w-4 h-4" />

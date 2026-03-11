@@ -84,5 +84,3 @@ export function AccentColorProvider({
     </AccentColorProviderContext.Provider>
   );
 }
-
-

@@ -193,6 +193,7 @@ export function Alarms() {
     [form],
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const sensorsTable = useReactTable({
     data: sensorsData,
     columns,

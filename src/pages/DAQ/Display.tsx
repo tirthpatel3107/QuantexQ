@@ -257,7 +257,7 @@ export function Display() {
       const timeoutId = setTimeout(() => {
         setHasSetInitial(true);
       }, 0);
-      
+
       return () => clearTimeout(timeoutId);
     }
   }, [displayResponse, hasSetInitial, reset]);

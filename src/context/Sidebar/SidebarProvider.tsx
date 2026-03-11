@@ -15,5 +15,3 @@ export function SidebarProvider({ children }: SidebarProviderProps) {
     </SidebarContext.Provider>
   );
 }
-
-

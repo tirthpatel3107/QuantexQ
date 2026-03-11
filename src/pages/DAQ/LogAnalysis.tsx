@@ -94,7 +94,7 @@ export function LogAnalysis() {
       const timeoutId = setTimeout(() => {
         setHasSetInitial(true);
       }, 0);
-      
+
       return () => clearTimeout(timeoutId);
     }
   }, [logAnalysisResponse, hasSetInitial, reset]);
@@ -138,7 +138,7 @@ export function LogAnalysis() {
     () =>
       Array.from({ length: 20 }, (_, i) => ({
         time: `${16 + Math.floor(i / 3)}:${(18 + i * 2) % 60}`,
-        value: 20 + (i * 0.5) % 20, // Use deterministic calculation instead of Math.random
+        value: 20 + ((i * 0.5) % 20), // Use deterministic calculation instead of Math.random
       })),
     [],
   );

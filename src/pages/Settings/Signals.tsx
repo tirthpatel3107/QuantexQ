@@ -323,6 +323,7 @@ export function Signals() {
   /**
    * TanStack Table instance for managing grid state.
    */
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: filteredData,
     columns,

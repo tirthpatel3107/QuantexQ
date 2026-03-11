@@ -73,7 +73,7 @@ export function SystemSettings() {
       const timeoutId = setTimeout(() => {
         setHasSetInitial(true);
       }, 0);
-      
+
       return () => clearTimeout(timeoutId);
     }
   }, [systemSettingsResponse, hasSetInitial, reset]);

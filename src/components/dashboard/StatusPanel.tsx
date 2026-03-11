@@ -40,27 +40,30 @@ const DonutChart = memo(function DonutChart({
   const sum = data.reduce((a, s) => a + s.value, 0) || 1;
   const cx = size / 2;
   const cy = size / 2;
-  
+
   const slicesWithAngles = useMemo(() => {
     const startAngle = -Math.PI / 2; // start from top
-    
+
     const { slices } = data.reduce(
       (acc, slice) => {
         const ratio = Math.max(0, slice.value) / sum;
         const start = acc.currentAngle;
         const end = start + ratio * 2 * Math.PI;
-        
+
         acc.slices.push({ ...slice, start, end });
         acc.currentAngle = end + PAD_RAD;
-        
+
         return acc;
       },
-      { slices: [] as Array<typeof data[0] & { start: number; end: number }>, currentAngle: startAngle }
+      {
+        slices: [] as Array<(typeof data)[0] & { start: number; end: number }>,
+        currentAngle: startAngle,
+      },
     );
-    
+
     return slices;
   }, [data, sum]);
-  
+
   return (
     <svg
       width={size}

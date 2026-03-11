@@ -1,8 +1,4 @@
-import {
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import { useState, useMemo, useCallback } from "react";
 import type { DAQProviderProps } from "./types";
 import { DAQContext } from "./context";
 
@@ -30,5 +26,3 @@ export function DAQProvider({ children }: DAQProviderProps) {
 
   return <DAQContext.Provider value={value}>{children}</DAQContext.Provider>;
 }
-
-

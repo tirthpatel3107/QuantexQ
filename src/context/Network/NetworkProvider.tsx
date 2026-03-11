@@ -1,8 +1,4 @@
-import {
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import { useState, useMemo, useCallback } from "react";
 import type { NetworkProviderProps } from "./types";
 import { NetworkContext } from "./context";
 
@@ -32,5 +28,3 @@ export function NetworkProvider({ children }: NetworkProviderProps) {
     <NetworkContext.Provider value={value}>{children}</NetworkContext.Provider>
   );
 }
-
-

@@ -1,12 +1,10 @@
-import {
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import { useState, useMemo, useCallback } from "react";
 import type { MudPropertiesProviderProps } from "./types";
 import { MudPropertiesContext } from "./context";
 
-export function MudPropertiesProvider({ children }: MudPropertiesProviderProps) {
+export function MudPropertiesProvider({
+  children,
+}: MudPropertiesProviderProps) {
   const [saveHandler, setSaveHandler] = useState<(() => void) | null>(null);
 
   const registerSaveHandler = useCallback((handler: () => void) => {
@@ -34,5 +32,3 @@ export function MudPropertiesProvider({ children }: MudPropertiesProviderProps) 
     </MudPropertiesContext.Provider>
   );
 }
-
-

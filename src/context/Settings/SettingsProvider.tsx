@@ -1,8 +1,4 @@
-import {
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import { useState, useMemo, useCallback } from "react";
 import type { SettingsProviderProps } from "./types";
 import { SettingsContext } from "./context";
 
@@ -34,5 +30,3 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     </SettingsContext.Provider>
   );
 }
-
-

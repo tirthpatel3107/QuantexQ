@@ -30,7 +30,7 @@ export function useSectionForm<T>({
       const timeoutId = setTimeout(() => {
         setFormData(initialData);
       }, 0);
-      
+
       return () => clearTimeout(timeoutId);
     }
   }, [initialData, formData]);

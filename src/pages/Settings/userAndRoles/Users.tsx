@@ -194,6 +194,7 @@ export function Users() {
     return USERS_DATA.filter((user) => roleFilter.includes(user.role));
   }, [roleFilter]);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const usersTable = useReactTable({
     data: filteredUsers,
     columns: usersColumns,
