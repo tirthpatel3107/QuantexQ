@@ -29,7 +29,7 @@ import { MudPropertiesSidebar } from "@/components/mudProperties/MudPropertiesSi
 import {
   MudPropertiesProvider,
   useMudPropertiesContext,
-} from "@/context/MudProperties";
+} from "@/context/mudProperties";
 
 // Constants & Types
 import { ROUTES } from "@/services/routes/clientRoutes";

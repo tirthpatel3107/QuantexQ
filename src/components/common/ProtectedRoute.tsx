@@ -12,7 +12,7 @@
  */
 
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "@/context/Auth";
+import { useAuth } from "@/context/auth";
 import { PageLoader } from "@/components/common";
 import { ROUTES } from "@/services/routes/clientRoutes";
 

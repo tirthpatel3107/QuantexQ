@@ -21,7 +21,7 @@ import {
 } from "@/services/api/settings/settings.api";
 
 // Context
-import { useSettingsContext } from "@/context/Settings";
+import { useSettingsContext } from "@/context/settings";
 
 interface GeneralFormData {
   defaultWellName: string;

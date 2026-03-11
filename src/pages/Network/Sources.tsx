@@ -38,7 +38,7 @@ import {
 import type { SaveSourcesPayload } from "@/services/api/network/network.types";
 
 // Contexts
-import { useNetworkContext } from "@/context/Network";
+import { useNetworkContext } from "@/context/network";
 
 /**
  * Sources Component

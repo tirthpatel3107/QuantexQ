@@ -42,7 +42,7 @@ import {
 import type { SaveSecurityPayload } from "@/services/api/network/network.types";
 
 // Contexts
-import { useNetworkContext } from "@/context/Network";
+import { useNetworkContext } from "@/context/network";
 
 // Icons
 import { Plus, UploadCloud, X, FileCheck2 } from "lucide-react";

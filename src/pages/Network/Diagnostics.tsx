@@ -42,7 +42,7 @@ import type { SaveDiagnosticsPayload } from "@/services/api/network/network.type
 import type { EChartsOption } from "echarts";
 
 // Contexts
-import { useNetworkContext } from "@/context/Network";
+import { useNetworkContext } from "@/context/network";
 
 // Icons & Utils
 import { Play, FileDown } from "lucide-react";

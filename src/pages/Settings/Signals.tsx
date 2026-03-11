@@ -41,7 +41,7 @@ import {
 } from "@/services/api/settings/settings.api";
 
 // Contexts
-import { useSettingsContext } from "@/context/Settings";
+import { useSettingsContext } from "@/context/settings";
 
 // Icons & Utils
 import {

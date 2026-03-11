@@ -38,7 +38,7 @@ import {
 import type { SaveProtocolsPayload } from "@/services/api/network/network.types";
 
 // Contexts
-import { useNetworkContext } from "@/context/Network";
+import { useNetworkContext } from "@/context/network";
 
 /**
  * Protocols Component

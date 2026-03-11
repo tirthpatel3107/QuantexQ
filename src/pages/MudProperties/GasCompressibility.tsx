@@ -20,7 +20,7 @@ import {
 import type { SaveGasCompressibilityPayload } from "@/services/api/mudproperties/mudproperties.types";
 
 // Context
-import { useMudPropertiesContext } from "@/context/MudProperties";
+import { useMudPropertiesContext } from "@/context/mudProperties";
 
 export function GasCompressibility() {
   const { data: gasResponse, isLoading } = useGasCompressibilityData();

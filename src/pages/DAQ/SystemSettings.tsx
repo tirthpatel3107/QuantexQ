@@ -26,7 +26,7 @@ import {
 import type { SaveSystemSettingsPayload } from "@/services/api/daq/daq.types";
 
 // Context
-import { useDAQContext } from "@/context/DAQ";
+import { useDAQContext } from "@/context/daq";
 
 export function SystemSettings() {
   const { data: systemSettingsResponse, isLoading } = useSystemSettingsData();

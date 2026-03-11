@@ -41,7 +41,7 @@ import {
 import type { SaveRoutingPayload } from "@/services/api/network/network.types";
 
 // Contexts
-import { useNetworkContext } from "@/context/Network";
+import { useNetworkContext } from "@/context/network";
 
 // Icons
 import { Plus } from "lucide-react";

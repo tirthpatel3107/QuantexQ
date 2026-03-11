@@ -24,7 +24,7 @@ import { SystemSettings } from "./SystemSettings";
 import { Downloads } from "./downloads/index";
 
 // Contexts
-import { DAQProvider, useDAQContext } from "@/context/DAQ";
+import { DAQProvider, useDAQContext } from "@/context/daq";
 
 // Constants
 import { ROUTES } from "@/services/routes/clientRoutes";

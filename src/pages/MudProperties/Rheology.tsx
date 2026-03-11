@@ -14,7 +14,7 @@ import {
 import type { SaveRheologyPayload } from "@/services/api/mudproperties/mudproperties.types";
 
 // Context
-import { useMudPropertiesContext } from "@/context/MudProperties";
+import { useMudPropertiesContext } from "@/context/mudProperties";
 
 export function Rheology() {
   const { data: rheologyResponse, isLoading } = useRheologyData();

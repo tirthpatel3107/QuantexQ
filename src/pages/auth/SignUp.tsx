@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Eye, EyeOff, Loader2, Lock, Mail, User, Zap } from "lucide-react";
-import { useAuth } from "@/context/Auth";
+import { useAuth } from "@/context/auth";
 import { ROUTES } from "@/services/routes/clientRoutes";
 
 // ─── Validation Schema ────────────────────────────────────────────────────────

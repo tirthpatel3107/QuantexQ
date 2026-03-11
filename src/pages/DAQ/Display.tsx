@@ -18,7 +18,7 @@ import { LiveSensorStrip } from "./LiveSensorStrip";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
 // Context
-import { ThemeProviderContext } from "@/context/Theme";
+import { ThemeProviderContext } from "@/context/theme";
 
 // Services & API
 import { useDisplayData, useSaveDisplayData } from "@/services/api/daq/daq.api";
@@ -31,7 +31,7 @@ import {
 import type { SaveDisplayPayload } from "@/services/api/daq/daq.types";
 
 // Context
-import { useDAQContext } from "@/context/DAQ";
+import { useDAQContext } from "@/context/daq";
 
 // ---- Chart Components (moved outside render) ----
 const PremiumChart = ({

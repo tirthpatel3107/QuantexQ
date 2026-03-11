@@ -1,7 +1,7 @@
 // React & Hooks
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { useTheme } from "@/context/Theme";
+import { useTheme } from "@/context/theme";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
@@ -48,7 +48,7 @@ import {
 import type { SaveHydraulicsPayload } from "@/services/api/daq/daq.types";
 
 // Context
-import { useDAQContext } from "@/context/DAQ";
+import { useDAQContext } from "@/context/daq";
 
 // ============================================
 // Constants & Configuration

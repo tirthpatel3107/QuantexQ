@@ -25,7 +25,7 @@ import {
 import type { SaveCalibrationPayload } from "@/services/api/mudproperties/mudproperties.types";
 
 // Contexts
-import { useMudPropertiesContext } from "@/context/MudProperties";
+import { useMudPropertiesContext } from "@/context/mudProperties";
 
 /**
  * Calibration Component

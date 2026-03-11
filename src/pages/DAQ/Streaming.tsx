@@ -38,7 +38,7 @@ import type {
 import type { ApiResponse } from "@/services/api/types";
 
 // Context
-import { useDAQContext } from "@/context/DAQ";
+import { useDAQContext } from "@/context/daq";
 
 // ============================================
 // Component

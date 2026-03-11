@@ -27,7 +27,7 @@ import {
 import type { SaveLogAnalysisPayload } from "@/services/api/daq/daq.types";
 
 // Context
-import { useDAQContext } from "@/context/DAQ";
+import { useDAQContext } from "@/context/daq";
 
 // Local Components
 import { ChartPanel } from "@/components/dashboard/ChartPanel";

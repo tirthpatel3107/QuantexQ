@@ -1,7 +1,7 @@
 import React from "react";
 import ReactECharts from "echarts-for-react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { ThemeProviderContext } from "@/context/Theme";
+import { ThemeProviderContext } from "@/context/theme";
 
 interface LiveSensorStripProps {
   title?: string;

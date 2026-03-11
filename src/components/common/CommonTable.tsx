@@ -23,7 +23,7 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/utils/lib/utils";
-import { useTheme } from "@/context/Theme";
+import { useTheme } from "@/context/theme";
 
 interface CommonTableProps<TData> {
   table: TanstackTable<TData>;

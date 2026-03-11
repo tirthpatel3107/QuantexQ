@@ -12,7 +12,7 @@ import {
 } from "@/services/api/settings/settings.api";
 
 // Context
-import { useSettingsContext } from "@/context/Settings";
+import { useSettingsContext } from "@/context/settings";
 
 export function AutoControl() {
   const { data: autoControlResponse, isLoading } = useAutoControlSettings();

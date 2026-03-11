@@ -33,7 +33,7 @@ import type {
 } from "@/services/api/daq/daq.types";
 
 // Context
-import { useDAQContext } from "@/context/DAQ";
+import { useDAQContext } from "@/context/daq";
 
 // ============================================
 // Zod Schema

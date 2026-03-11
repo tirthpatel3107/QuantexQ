@@ -20,7 +20,7 @@ import { Security } from "./Security";
 import { Diagnostics } from "./Diagnostics";
 
 // Contexts
-import { NetworkProvider, useNetworkContext } from "@/context/Network";
+import { NetworkProvider, useNetworkContext } from "@/context/network";
 
 // Constants
 import { ROUTES } from "@/services/routes/clientRoutes";
