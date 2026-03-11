@@ -200,10 +200,10 @@ export function Diagnostics() {
 
   return (
     <>
-      <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-3 items-start">
         <div className="grid grid-cols-1 gap-3 items-start">
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-start">
             {/* Quick Tests */}
             <PanelCard title="Quick Tests">
               <div className="space-y-3">
@@ -288,7 +288,7 @@ export function Diagnostics() {
             </PanelCard>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-[1fr_2fr] gap-3 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-3 items-start">
             {/* Critical Tags Watchlist */}
             <PanelCard title="Critical Tags Watchlist">
               <div className="space-y-2">

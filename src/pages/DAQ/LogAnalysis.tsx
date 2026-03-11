@@ -285,7 +285,7 @@ export function LogAnalysis() {
           </div>
         </PanelCard>
 
-        <div className="grid grid-cols-1 xl:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-3">
           {/* Alert/Notify Analysis */}
           <div className="xl:col-span-3">
             <PanelCard title="Alert/Notify Analysis">

@@ -44,44 +44,37 @@ export interface SaveDisplayPayload {
 // ============================================
 
 export interface StreamingTabData {
-  witsStream: WitsStreamConfig;
-  edrLogging: EdrLoggingConfig;
-  dataRate: DataRateConfig;
-  liveExport: LiveExportConfig;
+  streaming: {
+    enabled: boolean;
+    realTimeLevel: string;
+    destination: string;
+  };
+  loggingStatus: {
+    enabled: boolean;
+    frequency: string;
+    autoCache: boolean;
+    startLoggingUponSystemReady: boolean;
+    appendOnLogStop: boolean;
+  };
+  loggingDestinations: {
+    exportLogFiles: {
+      destinationLogsTo: string;
+      anotherDirectory: string;
+      diskCacheDirectory: string;
+    };
+    network: {
+      networkLocation: string;
+      directory: string;
+    };
+  };
+  ftpServer: {
+    ftpUrl1: string;
+    ftpUrl2: string;
+    ftpPas: string;
+  };
 }
 
-export interface WitsStreamConfig {
-  enabled: boolean;
-  level: "0" | "1";
-  endpoint: string;
-  baudRate: number;
-}
-
-export interface EdrLoggingConfig {
-  enabled: boolean;
-  rate: number;
-  channels: string[];
-  format: "csv" | "json" | "binary";
-}
-
-export interface DataRateConfig {
-  frequency: number;
-  bufferSize: number;
-  downsampling: boolean;
-}
-
-export interface LiveExportConfig {
-  enabled: boolean;
-  targets: string[];
-  format: "csv" | "json";
-}
-
-export interface SaveStreamingPayload {
-  witsStream: WitsStreamConfig;
-  edrLogging: EdrLoggingConfig;
-  dataRate: DataRateConfig;
-  liveExport: LiveExportConfig;
-}
+export type SaveStreamingPayload = StreamingTabData;
 
 // ============================================
 // Notifications Tab
@@ -296,10 +289,11 @@ export interface HydraulicModel {
 export interface HydraulicParameterList {
   id: string;
   name: string;
-  mudOut: number;
+  mudOut: string;
+  mudIn: string; // was 85.01 in UI
   mudType: string;
-  temp: number;
-  bbt: number;
+  temp: string;
+  bbt: string;
 }
 
 export interface HydraulicsAnalysis {
@@ -308,16 +302,28 @@ export interface HydraulicsAnalysis {
 }
 
 export interface FrictionLossesSummary {
-  calculatedPs: number;
-  circulatedFlow: number;
-  annularFrictionLoss: number;
+  calculatedBy: string;
+  circulatedFlow: string;
   circulatingFlowIn: number;
   circulatingFlowOut: number;
+  psValue: string;
+  flowValue: string;
+  outFlowValue: string;
+  temperature: string;
+  simplified: string;
+  vedPuff: string;
+  nippleInnerDiameter: string;
+  outerDiameter: string;
+  panelCostInfo: string;
+  simulated: boolean;
+  ssAf: boolean;
+  mp73Pf: boolean;
 }
 
 export interface SaveHydraulicsPayload {
   modelsUsed: HydraulicModel[];
   parameterLists: HydraulicParameterList[];
+  frictionLosses: FrictionLossesSummary;
 }
 
 // ============================================
@@ -419,6 +425,7 @@ export interface DisplayOptionsData {
 
 export interface StreamingOptionsData {
   witsLevelOptions: Array<{ label: string; value: string }>;
+  destinationOptions: Array<{ label: string; value: string }>;
   formatOptions: Array<{ label: string; value: string }>;
   baudRateOptions: Array<{ label: string; value: number }>;
 }
@@ -445,6 +452,12 @@ export interface CalibrationOptionsData {
 export interface HydraulicsOptionsData {
   modelTypeOptions: Array<{ label: string; value: string }>;
   mudTypeOptions: Array<{ label: string; value: string }>;
+  calculatedByOptions: Array<{ label: string; value: string }>;
+  circulatedFlowOptions: Array<{ label: string; value: string }>;
+  temperatureOptions: Array<{ label: string; value: string }>;
+  simplifiedOptions: Array<{ label: string; value: string }>;
+  vedPuffOptions: Array<{ label: string; value: string }>;
+  outerDiameterOptions: Array<{ label: string; value: string }>;
 }
 
 export interface SystemSettingsOptionsData {

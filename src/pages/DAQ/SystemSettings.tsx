@@ -116,7 +116,7 @@ export function SystemSettings() {
     <>
       <div className="grid grid-cols-1 gap-4">
         {/* Left Column */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {/* System Settings Panel */}
           <PanelCard
             title={
@@ -127,7 +127,7 @@ export function SystemSettings() {
             }
             headerAction={<RestoreDefaultsButton />}
           >
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 auto-rows-max">
               <CommonFormSelect
                 name="systemSettings.systemType"
                 control={control}
@@ -186,7 +186,7 @@ export function SystemSettings() {
 
             <hr className="my-5" />
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 auto-rows-max">
               <div className="flex items-center">
                 <CommonFormToggle
                   name="systemSettings.autoPresetRestoreTime"
@@ -224,7 +224,7 @@ export function SystemSettings() {
           >
             <div className="space-y-3">
               {/* Row 1: Sound Volume and Alert Length */}
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 auto-rows-max">
                 <CommonFormSelect
                   name="alarmSettings.soundVolume"
                   control={control}
@@ -243,7 +243,7 @@ export function SystemSettings() {
               </div>
 
               {/* Row 4: Surface Temp, HP Low, HP High */}
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 auto-rows-max">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 auto-rows-max">
                 <CommonFormInput
                   name="alarmSettings.surfaceTempOffset"
                   control={control}
@@ -273,7 +273,7 @@ export function SystemSettings() {
               </div>
 
               {/* Row 5: Bit Size and Email Alerts */}
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-3 auto-rows-max">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 auto-rows-max">
                 <CommonFormInput
                   name="alarmSettings.bitSize"
                   control={control}
@@ -300,7 +300,7 @@ export function SystemSettings() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 auto-rows-max">
                 <CommonFormSelect
                   name="alarmSettings.emailAlerts"
                   control={control}
@@ -323,7 +323,7 @@ export function SystemSettings() {
 
             {/* Row 2: Realtime Streaming */}
             <div
-              className={`grid grid-cols-1 xl:grid-cols-[2fr_2fr_1fr] gap-3 items-center ${realtimeStreamingEnabled ? "mb-3" : "mb-5"} `}
+              className={`grid grid-cols-1 lg:grid-cols-[2fr_2fr_1fr] gap-3 items-center ${realtimeStreamingEnabled ? "mb-3" : "mb-5"} `}
             >
               <CommonFormToggle
                 name="alarmSettings.realtimeStreamingEnabled"
@@ -353,7 +353,7 @@ export function SystemSettings() {
             </div>
 
             {/* Row 3: Auto Mute and Capture Recirculation */}
-            <div className="grid grid-cols-1 xl:grid-cols-[2fr_2fr_1fr] gap-3 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-[2fr_2fr_1fr] gap-3 items-center">
               <CommonFormToggle
                 name="alarmSettings.autoMuteAlarms"
                 control={control}
@@ -384,7 +384,7 @@ export function SystemSettings() {
         </div>
 
         {/* Right Column */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 auto-rows-max">
           {/* Account & Security Panel */}
           <PanelCard
             title="Account & Security"
@@ -396,7 +396,7 @@ export function SystemSettings() {
           >
             <div className="space-y-4">
               {/* Row 1: Timeouts and Retrieve Decals */}
-              <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3 items-center">
+              <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-3 items-center">
                 <div className="flex items-center gap-3">
                   <label className="text-sm font-medium">Timeouts</label>
 
@@ -419,7 +419,7 @@ export function SystemSettings() {
               </div>
 
               {/* Row 2: User Login and Update Firewall */}
-              <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3 items-center">
+              <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-3 items-center">
                 <label className="text-sm font-medium">
                   User Login / Permissions
                 </label>
@@ -433,7 +433,7 @@ export function SystemSettings() {
               </div>
 
               {/* Row 3: System Security and Always Backup */}
-              <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3 items-center">
+              <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-3 items-center">
                 <label className="text-sm font-medium">System Security</label>
                 <CommonButton
                   type="button"
@@ -445,7 +445,7 @@ export function SystemSettings() {
               </div>
 
               {/* Row 4: Backup Database and Change Password */}
-              <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3 items-center">
+              <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-3 items-center">
                 <label className="text-sm font-medium">
                   Backup Database to Directory
                 </label>
@@ -466,7 +466,7 @@ export function SystemSettings() {
             headerAction={<RestoreDefaultsButton />}
           >
             <div className="space-y-4">
-              <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr_1fr] gap-3 items-center">
+              <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-3 items-center">
                 <CommonFormToggle
                   name="scheduleTime.autoUTCSync"
                   control={control}
@@ -493,7 +493,7 @@ export function SystemSettings() {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 xl:grid-cols-[2fr_1fr_1fr] gap-3 auto-rows-max">
+              <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] gap-3 auto-rows-max">
                 <CommonFormInput
                   name="scheduleTime.localTime"
                   control={control}
