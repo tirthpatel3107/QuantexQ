@@ -138,7 +138,7 @@ export function Routing() {
 
   return (
     <>
-      <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-3">
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 gap-3 auto-rows-max">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 auto-rows-max">
@@ -271,7 +271,7 @@ export function Routing() {
                     </div>
 
                     {/* Primary Channel Configuration */}
-                    <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2 items-center">
+                    <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_2fr] gap-2 items-center">
                       <CommonFormInput
                         name="outputChannels.chokeA"
                         control={control}
@@ -293,7 +293,7 @@ export function Routing() {
                     </div>
 
                     {/* Supplementary Channel Configuration */}
-                    <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2 items-center">
+                    <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_2fr] gap-2 items-center">
                       <CommonFormInput
                         name="outputChannels.sbInCoop"
                         control={control}
@@ -343,7 +343,7 @@ export function Routing() {
                     </div>
 
                     {/* Flow and Alternate Inputs */}
-                    <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_2fr] gap-2">
+                    <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_2fr] gap-2">
                       <CommonFormInput
                         name="dualQControl.flowQIn"
                         control={control}
@@ -365,7 +365,7 @@ export function Routing() {
                     </div>
 
                     {/* Auxiliary and Setpoint Inputs */}
-                    <div className="grid grid-cols-3 xl:grid-cols-[1fr_1fr_2fr] gap-2">
+                    <div className="grid grid-cols-3 lg:grid-cols-[1fr_1fr_2fr] gap-2">
                       <CommonFormInput
                         name="dualQControl.mpdQAux"
                         control={control}

@@ -7,7 +7,7 @@ export function DaqOverview() {
   // const navigate = useNavigate();
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 items-start">
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 items-start">
       {DAQ_SECTION_CARDS.daq.map((card) => (
         <CategoryCard
           key={card.id}

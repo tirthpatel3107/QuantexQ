@@ -290,6 +290,85 @@
     @apply text-sm font-semibold uppercase tracking-wide text-foreground/90;
   }
 
+  /* Chart container backgrounds */
+  .chart-bg {
+    @apply bg-[#1a1c1e]/40 rounded p-1;
+  }
+
+  .light .chart-bg {
+    @apply bg-muted/30 border border-border/30;
+  }
+
+  /* Light chart background for better visibility */
+  .chart-bg-light {
+    @apply bg-white/5 rounded p-3;
+  }
+
+  .light .chart-bg-light {
+    @apply bg-white border border-border/30;
+  }
+
+  /* Chart axis colors */
+  .chart-axis-label {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .light .chart-axis-label {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .chart-axis-line {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .light .chart-axis-line {
+    color: hsl(var(--border));
+  }
+
+  .chart-split-line {
+    color: rgba(255, 255, 255, 0.15);
+  }
+
+  .light .chart-split-line {
+    color: hsl(var(--border) / 0.3);
+  }
+
+  /* Chart borders */
+  .chart-border {
+    @apply border-t border-white/5;
+  }
+
+  .light .chart-border {
+    @apply border-t border-border/20;
+  }
+
+  /* Main value display */
+  .main-value {
+    @apply text-xl font-black text-white tabular-nums drop-shadow-[0_2px_8px_rgba(255,255,255,0.15)] leading-none;
+  }
+
+  .light .main-value {
+    @apply text-foreground drop-shadow-none;
+  }
+
+  /* Depth info background */
+  .depth-info-bg {
+    @apply bg-white/5;
+  }
+
+  .light .depth-info-bg {
+    @apply bg-muted/40 border border-border/30;
+  }
+
+  /* Status indicator dot */
+  .status-dot-secondary {
+    @apply bg-white/20;
+  }
+
+  .light .status-dot-secondary {
+    @apply bg-muted-foreground/30;
+  }
+
   /* Depth gauge */
   .depth-gauge {
     @apply relative w-full h-full bg-gradient-to-b from-white/20 via-black/20 to-white/20 rounded;
