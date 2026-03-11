@@ -3,12 +3,10 @@ import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 // Components - Common
-import {
-  PageLayout,
-  SidebarLayout,
-  PageHeaderLayout,
-  SidebarNavLayout,
-} from "@/components/layouts";
+import { PageLayout } from "@/components/layouts/PageLayout";
+import { SidebarLayout } from "@/components/layouts/SidebarLayout";
+import { PageHeaderLayout } from "@/components/layouts/PageHeaderLayout";
+import { SidebarNavLayout } from "@/components/layouts/SidebarNavLayout";
 import { CommonButton, CommonTooltip } from "@/components/shared";
 
 // Components - Local

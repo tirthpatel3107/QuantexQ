@@ -3,9 +3,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "@/context/theme/index.ts";
-import { AccentColorProvider } from "@/context/accentColor/index.ts";
-import { AuthProvider } from "@/context/auth/index.ts";
+import { ThemeProvider } from "@/context/theme";
+import { AccentColorProvider } from "@/context/accentColor";
+import { AuthProvider } from "@/context/auth";
 import { THEME_STORAGE_KEY } from "@/utils/constants/config.ts";
 
 import AppRoutes from "@/app/routes/index.tsx";

@@ -8,12 +8,10 @@ import {
 } from "lucide-react";
 
 import { ROUTES } from "@/app/routes/clientRoutes";
-import {
-  PageLayout,
-  SidebarLayout,
-  PageHeaderLayout,
-  SidebarNavLayout,
-} from "@/components/layouts";
+import { PageLayout } from "@/components/layouts/PageLayout";
+import { SidebarLayout } from "@/components/layouts/SidebarLayout";
+import { PageHeaderLayout } from "@/components/layouts/PageHeaderLayout";
+import { SidebarNavLayout } from "@/components/layouts/SidebarNavLayout";
 import { CommonButton, CommonTooltip } from "@/components/shared";
 
 import { SettingsOverview } from "./SettingsOverview";
