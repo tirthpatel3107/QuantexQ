@@ -2,22 +2,11 @@ import {
   useState,
   useMemo,
   useCallback,
-  ReactNode,
-  createContext,
-  useContext,
 } from "react";
+import type { NetworkProviderProps } from "./types";
+import { NetworkContext } from "./context";
 
-export interface NetworkContextType {
-  requestSave: () => void;
-  registerSaveHandler: (handler: () => void) => void;
-  unregisterSaveHandler: () => void;
-}
-
-export const NetworkContext = createContext<NetworkContextType | undefined>(
-  undefined,
-);
-
-export function NetworkProvider({ children }: { children: ReactNode }) {
+export function NetworkProvider({ children }: NetworkProviderProps) {
   const [saveHandler, setSaveHandler] = useState<(() => void) | null>(null);
 
   const registerSaveHandler = useCallback((handler: () => void) => {
@@ -44,10 +33,4 @@ export function NetworkProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useNetworkContext() {
-  const context = useContext(NetworkContext);
-  if (context === undefined) {
-    throw new Error("useNetworkContext must be used within a NetworkProvider");
-  }
-  return context;
-}
+

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 // Form & Validation
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Hooks
@@ -82,8 +82,8 @@ export function Diagnostics() {
     },
   });
 
-  const { reset, control, handleSubmit, watch } = formMethods;
-  const showMask = watch("jitterAnalysis.showMask");
+  const { reset, control, handleSubmit } = formMethods;
+  const showMask = useWatch({ control, name: "jitterAnalysis.showMask" });
 
   // ---- Effects & Side Effects ----
 
@@ -113,7 +113,8 @@ export function Diagnostics() {
           showMask: false,
         },
       });
-      setHasSetInitial(true);
+      // Use setTimeout to avoid synchronous setState in effect
+      setTimeout(() => setHasSetInitial(true), 0);
     }
   }, [diagnosticsResponse, hasSetInitial, reset]);
 

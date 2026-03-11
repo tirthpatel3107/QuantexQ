@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 // Form & Validation
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Hooks
@@ -65,10 +65,16 @@ export function Protocols() {
   const {
     reset,
     handleSubmit,
-    watch,
+    control,
     setValue,
     formState: { errors },
   } = formMethods;
+
+  const rigPlcType = useWatch({ control, name: "rigPlc.type" });
+  const pwdType = useWatch({ control, name: "pwd.type" });
+  const modbusEndpoints = useWatch({ control, name: "rigPlc.modbusEndpoints" }) || [];
+  const opcEndpoint = useWatch({ control, name: "rigPlc.opcEndpoint" }) || "";
+  const ethernetEndpoint = useWatch({ control, name: "rigPlc.ethernetEndpoint" }) || "";
 
   // ---- Effects & Side Effects ----
 
@@ -80,7 +86,8 @@ export function Protocols() {
     if (protocolsResponse?.data && !hasSetInitial) {
       const { rigPlc, pwd } = protocolsResponse.data;
       reset({ rigPlc, pwd });
-      setHasSetInitial(true);
+      // Use setTimeout to avoid synchronous setState in effect
+      setTimeout(() => setHasSetInitial(true), 0);
     }
   }, [protocolsResponse, hasSetInitial, reset]);
 
@@ -129,8 +136,7 @@ export function Protocols() {
     return <SectionSkeleton count={6} />;
   }
 
-  const rigPlcType = watch("rigPlc.type");
-  const pwdType = watch("pwd.type");
+
 
   return (
     <>
@@ -183,11 +189,9 @@ export function Protocols() {
                         <div>
                           <CommonInput
                             placeholder="10.1.0.1:13:502"
-                            value={watch("rigPlc.modbusEndpoints.0") || ""}
+                            value={modbusEndpoints[0] || ""}
                             onChange={(e) => {
-                              const endpoints =
-                                watch("rigPlc.modbusEndpoints") || [];
-                              const newEndpoints = [...endpoints];
+                              const newEndpoints = [...modbusEndpoints];
                               newEndpoints[0] = e.target.value;
                               setValue("rigPlc.modbusEndpoints", newEndpoints);
                             }}
@@ -201,11 +205,9 @@ export function Protocols() {
                         <div>
                           <CommonInput
                             placeholder="10.1.0.113:502"
-                            value={watch("rigPlc.modbusEndpoints.1") || ""}
+                            value={modbusEndpoints[1] || ""}
                             onChange={(e) => {
-                              const endpoints =
-                                watch("rigPlc.modbusEndpoints") || [];
-                              const newEndpoints = [...endpoints];
+                              const newEndpoints = [...modbusEndpoints];
                               newEndpoints[1] = e.target.value;
                               setValue("rigPlc.modbusEndpoints", newEndpoints);
                             }}
@@ -240,7 +242,7 @@ export function Protocols() {
                       <div>
                         <CommonInput
                           placeholder="opc.tcp 10.1.0.113:49320"
-                          value={watch("rigPlc.opcEndpoint") || ""}
+                          value={opcEndpoint}
                           onChange={(e) =>
                             setValue("rigPlc.opcEndpoint", e.target.value)
                           }
@@ -267,7 +269,7 @@ export function Protocols() {
                       <div>
                         <CommonInput
                           placeholder="100.10.1.14:10.13:40818"
-                          value={watch("rigPlc.ethernetEndpoint") || ""}
+                          value={ethernetEndpoint}
                           onChange={(e) =>
                             setValue("rigPlc.ethernetEndpoint", e.target.value)
                           }

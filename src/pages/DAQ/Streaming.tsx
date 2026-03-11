@@ -1,6 +1,6 @@
 // React & Hooks
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
@@ -123,17 +123,52 @@ export function Streaming() {
     return () => unregisterSaveHandler();
   }, [registerSaveHandler, unregisterSaveHandler, form, saveWithConfirmation]);
 
+  // Move all useWatch hooks before any conditional returns
+  const streamingEnabled = useWatch({
+    control: form.control,
+    name: "streaming.enabled",
+  });
+  const loggingEnabled = useWatch({
+    control: form.control,
+    name: "loggingStatus.enabled",
+  });
+  const loggingFrequency = useWatch({
+    control: form.control,
+    name: "loggingStatus.frequency",
+  });
+  const autoCache = useWatch({
+    control: form.control,
+    name: "loggingStatus.autoCache",
+  });
+  const destinationLogsTo = useWatch({
+    control: form.control,
+    name: "loggingDestinations.exportLogFiles.destinationLogsTo",
+  });
+  const anotherDirectory = useWatch({
+    control: form.control,
+    name: "loggingDestinations.exportLogFiles.anotherDirectory",
+  });
+  const diskCacheDirectory = useWatch({
+    control: form.control,
+    name: "loggingDestinations.exportLogFiles.diskCacheDirectory",
+  });
+  const networkLocation = useWatch({
+    control: form.control,
+    name: "loggingDestinations.network.networkLocation",
+  });
+  const networkDirectory = useWatch({
+    control: form.control,
+    name: "loggingDestinations.network.directory",
+  });
+
   if (isLoading) {
     return <SectionSkeleton count={6} />;
   }
 
-  const streamingEnabled = form.watch("streaming.enabled");
-  const loggingEnabled = form.watch("loggingStatus.enabled");
-
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-        {/* Card 1: Streaming */}
+        {/* Card 1: Streaming */
         <PanelCard
           title="Streaming"
           headerAction={
@@ -231,7 +266,7 @@ export function Streaming() {
                   Logging Frequency:
                 </span>
                 <span className="font-medium">
-                  {form.watch("loggingStatus.frequency")}
+                  {loggingFrequency}
                 </span>
               </div>
 
@@ -241,13 +276,13 @@ export function Streaming() {
                 </span>
                 <Badge
                   variant={
-                    form.watch("loggingStatus.autoCache")
+                    autoCache
                       ? "default"
                       : "secondary"
                   }
                   className="text-sm"
                 >
-                  {form.watch("loggingStatus.autoCache") ? "ON" : "OFF"}
+                  {autoCache ? "ON" : "OFF"}
                 </Badge>
                 <Badge variant="secondary" className="text-sm">
                   Disk cache active
@@ -328,9 +363,7 @@ export function Streaming() {
                       Destination Logs to:
                     </span>
                     <code className="bg-muted px-2 py-1 rounded text-sm flex-1">
-                      {form.watch(
-                        "loggingDestinations.exportLogFiles.destinationLogsTo",
-                      )}
+                      {destinationLogsTo}
                     </code>
                   </div>
 
@@ -339,9 +372,7 @@ export function Streaming() {
                       Another Directory:
                     </span>
                     <code className="bg-muted px-2 py-1 rounded text-sm flex-1">
-                      {form.watch(
-                        "loggingDestinations.exportLogFiles.anotherDirectory",
-                      )}
+                      {anotherDirectory}
                     </code>
                   </div>
 
@@ -350,9 +381,7 @@ export function Streaming() {
                       Disk cache directory:
                     </span>
                     <code className="bg-muted px-2 py-1 rounded text-sm flex-1">
-                      {form.watch(
-                        "loggingDestinations.exportLogFiles.diskCacheDirectory",
-                      )}
+                      {diskCacheDirectory}
                     </code>
                   </div>
                 </div>
@@ -368,9 +397,7 @@ export function Streaming() {
                       Network Location:
                     </span>
                     <code className="bg-muted px-2 py-1 rounded text-sm flex-1">
-                      {form.watch(
-                        "loggingDestinations.network.networkLocation",
-                      )}
+                      {networkLocation}
                     </code>
                   </div>
                   <div className="flex items-center gap-2">
@@ -378,7 +405,7 @@ export function Streaming() {
                       Directory:
                     </span>
                     <code className="bg-muted px-2 py-1 rounded text-sm flex-1">
-                      {form.watch("loggingDestinations.network.directory")}
+                      {networkDirectory}
                     </code>
                   </div>
                 </div>

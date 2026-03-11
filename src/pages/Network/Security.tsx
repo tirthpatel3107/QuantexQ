@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 
 // Form & Validation
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroup } from "@/components/ui/radio-group";
 
@@ -185,10 +185,10 @@ export function Security() {
     },
   });
 
-  const { reset, control, handleSubmit, watch } = formMethods;
+  const { reset, control, handleSubmit } = formMethods;
 
-  const authMethod = watch("authentication.method");
-  const pwdAuthMethod = watch("pwd.authMethod");
+  const authMethod = useWatch({ control, name: "authentication.method" });
+  const pwdAuthMethod = useWatch({ control, name: "pwd.authMethod" });
 
   // ---- Effects & Side Effects ----
 
@@ -237,7 +237,8 @@ export function Security() {
           password: (pwdProfile?.settings?.password as string) || "",
         },
       });
-      setHasSetInitial(true);
+      // Use setTimeout to avoid synchronous setState in effect
+      setTimeout(() => setHasSetInitial(true), 0);
     }
   }, [securityResponse, hasSetInitial, reset]);
 

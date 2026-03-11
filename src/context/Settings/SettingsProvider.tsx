@@ -2,20 +2,11 @@ import {
   useState,
   useMemo,
   useCallback,
-  ReactNode,
-  createContext,
-  useContext,
 } from "react";
+import type { SettingsProviderProps } from "./types";
+import { SettingsContext } from "./context";
 
-export interface DAQContextType {
-  requestSave: () => void;
-  registerSaveHandler: (handler: () => void) => void;
-  unregisterSaveHandler: () => void;
-}
-
-export const DAQContext = createContext<DAQContextType | undefined>(undefined);
-
-export function DAQProvider({ children }: { children: ReactNode }) {
+export function SettingsProvider({ children }: SettingsProviderProps) {
   const [saveHandler, setSaveHandler] = useState<(() => void) | null>(null);
 
   const registerSaveHandler = useCallback((handler: () => void) => {
@@ -37,13 +28,11 @@ export function DAQProvider({ children }: { children: ReactNode }) {
     [requestSave, registerSaveHandler, unregisterSaveHandler],
   );
 
-  return <DAQContext.Provider value={value}>{children}</DAQContext.Provider>;
+  return (
+    <SettingsContext.Provider value={value}>
+      {children}
+    </SettingsContext.Provider>
+  );
 }
 
-export function useDAQContext() {
-  const context = useContext(DAQContext);
-  if (context === undefined) {
-    throw new Error("useDAQContext must be used within a DAQProvider");
-  }
-  return context;
-}
+

@@ -1,6 +1,6 @@
 // React & Hooks
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useTheme } from "@/context/Theme";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
@@ -240,7 +240,7 @@ export function Hydraulics() {
     },
   });
 
-  const { reset, control, handleSubmit, watch } = form;
+  const { reset, control, handleSubmit } = form;
   const [searchTerm, setSearchTerm] = useState("");
   const [tableSearch, setTableSearch] = useState("");
 
@@ -281,7 +281,14 @@ export function Hydraulics() {
     saveWithConfirmation,
   ]);
 
-  const watchedParameterLists = watch("parameterLists") || [];
+  // Watch parameter lists
+  const parameterListsRaw = useWatch({ control, name: "parameterLists" });
+  
+  // Memoize to prevent dependency issues in useMemo
+  const watchedParameterLists = useMemo(
+    () => parameterListsRaw || [],
+    [parameterListsRaw]
+  );
 
   // ============================================
   // Table Configuration
@@ -331,7 +338,6 @@ export function Hydraulics() {
         header: "Wed Type:",
         cell: (info) => {
           const value = info.getValue();
-          const item = info.row.original;
           const isSpecial = value === "BBT" || value === "DBT";
           if (isSpecial) {
             return (
@@ -384,7 +390,7 @@ export function Hydraulics() {
         },
       }),
     ],
-    [columnHelper],
+    [],
   );
 
   const tableData = useMemo(

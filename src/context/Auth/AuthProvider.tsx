@@ -10,35 +10,22 @@
  */
 
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useState,
 } from "react";
-import type { ReactNode } from "react";
 import { signInRequest, signUpRequest, signOutRequest } from "@/services/auth";
 import type {
-  AuthContextValue,
+  AuthProviderProps,
   AuthState,
   SignInPayload,
   SignUpPayload,
   User,
-} from "@/services/auth";
-
-// ─── Storage Keys ─────────────────────────────────────────────────────────────
-// Uncomment and use tokenStorage from axiosClient when real API is ready
-const USER_STORAGE_KEY = "quantexq_user";
-
-// ─── Context ──────────────────────────────────────────────────────────────────
-
-const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+} from "./types";
+import { USER_STORAGE_KEY } from "./constants";
+import { AuthContext } from "./context";
 
 // ─── Provider ────────────────────────────────────────────────────────────────
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, setState] = useState<AuthState>({
@@ -107,10 +94,4 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 };
 
-// ─── Hook ──────────────────────────────────────────────────────────────────────
 
-export const useAuth = (): AuthContextValue => {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within an <AuthProvider>");
-  return ctx;
-};

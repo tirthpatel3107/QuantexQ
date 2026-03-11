@@ -1,6 +1,6 @@
 // React & Hooks
 import { useState, useEffect, useMemo, Fragment } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 import {
@@ -80,7 +80,7 @@ export function Calibration() {
     resolver: zodResolver(calibrationFormSchema),
   });
 
-  const { reset, control, handleSubmit, watch } = formMethods;
+  const { reset, control, handleSubmit } = formMethods;
 
   // Track initial data hydration (prevents re-reset on re-renders)
   const [hasSetInitial, setHasSetInitial] = useState(false);
@@ -108,7 +108,8 @@ export function Calibration() {
         sensorPermissionsOk,
         validateAll,
       });
-      setHasSetInitial(true);
+      // Use setTimeout to avoid synchronous setState in effect
+      setTimeout(() => setHasSetInitial(true), 0);
     }
   }, [calibrationResponse, hasSetInitial, reset]);
 
@@ -147,7 +148,10 @@ export function Calibration() {
   ]);
 
   // Filtered permission rows for the sensor table
-  const permissions = watch("permissions");
+  const permissions = useWatch({ control, name: "permissions" });
+  const defaultPermissions = useWatch({ control, name: "defaultPermissions" }) ?? [];
+  const senectoPermissions = useWatch({ control, name: "senectoPermissions" }) ?? [];
+
   const filteredPermissions = useMemo(() => {
     if (!permissions) return [];
     if (!searchQuery) return permissions;
@@ -279,7 +283,7 @@ export function Calibration() {
               <div className="space-y-2">
                 <Label className="ml-[3px]">Default Permissions Lists</Label>
                 <div className="space-y-2">
-                  {(watch("defaultPermissions") ?? []).map((item, index) => (
+                  {defaultPermissions.map((item, index) => (
                     <div
                       key={item.name}
                       className="flex items-center justify-between py-2 px-3 bg-muted/20 rounded"
@@ -340,7 +344,7 @@ export function Calibration() {
                       const i = realIndex >= 0 ? realIndex : idx;
 
                       // Watch the depth checkbox value for this row
-                      const isDepthChecked = watch(`permissions.${i}.depth`);
+                      const isDepthChecked = permission.depth;
 
                       return (
                         <tr
@@ -502,7 +506,7 @@ export function Calibration() {
                 </div>
 
                 {/* Data rows */}
-                {(watch("senectoPermissions") ?? []).map((item, index) => (
+                {senectoPermissions.map((item, index) => (
                   <Fragment key={item.key}>
                     {/* Permissions label + enabled checkbox */}
                     <div
