@@ -7,7 +7,7 @@ import {
   Upload,
 } from "lucide-react";
 
-import { ROUTES } from "@/services/routes/clientRoutes";
+import { ROUTES } from "@/app/routes/clientRoutes";
 import {
   PageLayout,
   SidebarLayout,

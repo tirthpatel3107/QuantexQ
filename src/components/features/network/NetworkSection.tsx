@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { CategoryCard } from "@/components/features/dashboard/CategoryCard";
-import { ROUTES } from "@/services/routes/clientRoutes";
+import { ROUTES } from "@/app/routes/clientRoutes";
 
 interface NetworkSectionProps {
   cards: {

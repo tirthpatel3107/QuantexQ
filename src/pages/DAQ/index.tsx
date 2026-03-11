@@ -26,7 +26,7 @@ import { Downloads } from "./downloads/index";
 import { DAQProvider, useDAQContext } from "@/context/daq";
 
 // Constants
-import { ROUTES } from "@/services/routes/clientRoutes";
+import { ROUTES } from "@/app/routes/clientRoutes";
 import { DAQ_NAV } from "@/utils/constants";
 
 // Icons

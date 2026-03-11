@@ -1,5 +1,5 @@
 /** App-wide constants and config. */
-export { ROUTES, type RoutePath } from "../../services/routes/clientRoutes";
+export { ROUTES, type RoutePath } from "../../app/routes/clientRoutes";
 export {
   STATUS_LEVEL,
   PUMP_STATUS,
