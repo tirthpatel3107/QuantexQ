@@ -5,7 +5,7 @@ import { useMemo, useCallback } from "react";
 import { useSectionForm } from "@/hooks/useSectionForm";
 
 // Components - Common
-import { SectionSkeleton, FormSaveDialog } from "@/components/common";
+import { SectionSkeleton, FormSaveDialog } from "@/components/shared";
 
 // Components - Local
 import { DensitySolidsPanel } from "./fluidOverview/DensitySolidsPanel";

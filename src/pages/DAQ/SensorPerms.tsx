@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useSectionForm } from "@/hooks/useSectionForm";
-import { SectionSkeleton, FormSaveDialog } from "@/components/common";
+import { SectionSkeleton, FormSaveDialog } from "@/components/shared";
 import {
   useSensorPermsData,
   useSaveSensorPermsData,

@@ -3,7 +3,7 @@ import {
   CommonTabs,
   CommonTabsContent,
   CommonTabsNav,
-} from "@/components/common";
+} from "@/components/shared";
 import { Users } from "./Users";
 import { Roles } from "./Roles";
 

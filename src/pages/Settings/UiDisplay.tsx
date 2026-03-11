@@ -4,7 +4,7 @@ import { useSectionForm } from "@/hooks/useSectionForm";
 import { useTheme } from "@/context/theme";
 import { useAccentColor } from "@/context/accentColor";
 import { type Theme } from "@/context/theme";
-import type { CommonSelectOption } from "@/components/common/CommonSelect";
+import type { CommonSelectOption } from "@/components/shared/CommonSelect";
 
 // Components - UI & Icons
 import {
@@ -14,7 +14,7 @@ import {
   CommonSlider,
   SectionSkeleton,
   FormSaveDialog,
-} from "@/components/common";
+} from "@/components/shared";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { RefreshCw, Download, ChevronRight } from "lucide-react";
 import { cn } from "@/utils/lib/utils";

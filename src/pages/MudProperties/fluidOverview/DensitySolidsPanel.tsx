@@ -4,7 +4,7 @@ import {
   RestoreDefaultsButton,
   LabeledInputWithUnit,
   CommonInput,
-} from "@/components/common";
+} from "@/components/shared";
 import { FluidData } from "@/utils/types/mud";
 
 interface DensitySolidsPanelProps {

@@ -10,7 +10,7 @@ import {
   CommonInput,
   SectionSkeleton,
   FormSaveDialog,
-} from "@/components/common";
+} from "@/components/shared";
 
 // Components - Local
 import { PanelCard } from "@/components/dashboard/PanelCard";

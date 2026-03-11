@@ -13,7 +13,7 @@ import {
   CommonAlertDialog,
   CommonButton,
   CommonTooltip,
-} from "@/components/common";
+} from "@/components/shared";
 import { SimulationAction } from "@/utils/types/dashboard";
 
 /**

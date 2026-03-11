@@ -6,7 +6,7 @@ import {
   CommonAlertDialog,
   CommonButton,
   CommonTooltip,
-} from "@/components/common";
+} from "@/components/shared";
 
 import { SIMULATION_TIMER_STORAGE_KEY } from "@/utils/constants/config";
 

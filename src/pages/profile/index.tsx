@@ -5,7 +5,7 @@ import {
   CommonButton,
   PageLoader,
   CommonToggle,
-} from "@/components/common";
+} from "@/components/shared";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

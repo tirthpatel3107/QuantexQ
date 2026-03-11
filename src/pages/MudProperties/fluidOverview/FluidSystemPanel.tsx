@@ -3,7 +3,7 @@ import {
   RestoreDefaultsButton,
   CommonSelect,
   CommonInput,
-} from "@/components/common";
+} from "@/components/shared";
 import { FluidData } from "@/utils/types/mud";
 
 interface FluidSystemPanelProps {

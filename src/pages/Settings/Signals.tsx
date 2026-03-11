@@ -31,7 +31,7 @@ import {
   CommonAlertDialog,
   type CommonDropdownOption,
   type CommonSelectOption,
-} from "@/components/common";
+} from "@/components/shared";
 
 // Services & API
 import {

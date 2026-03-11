@@ -4,7 +4,7 @@ import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
 import { cn } from "@/utils/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CommonDialog, CommonTooltip } from "@/components/common";
+import { CommonDialog, CommonTooltip } from "@/components/shared";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 
 interface ChartPanelProps {

@@ -15,7 +15,7 @@ import {
   CommonButton,
   SidebarNav,
   CommonTooltip,
-} from "@/components/common";
+} from "@/components/shared";
 
 import { SettingsOverview } from "./SettingsOverview";
 import { GeneralSettings } from "./General";

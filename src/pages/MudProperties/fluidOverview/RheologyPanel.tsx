@@ -4,7 +4,7 @@ import {
   LabeledInputWithUnit,
   CommonInput,
   CommonToggle,
-} from "@/components/common";
+} from "@/components/shared";
 import { FluidData } from "@/utils/types/mud";
 
 interface RheologyPanelProps {

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Download as DownloadIcon, FolderOpen } from "lucide-react";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import { CommonButton } from "@/components/common/CommonButton";
+import { CommonButton } from "@/components/shared/CommonButton";
 import {
   CommonTabs,
   CommonTabsContent,
   CommonTabsList,
   CommonTabsTrigger,
-} from "@/components/common/CommonTabs";
+} from "@/components/shared/CommonTabs";
 import { Download } from "./Download";
 import { DcsSets } from "./DcsSets";
 import { DownloadPatch } from "./DownloadPatch";

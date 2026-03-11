@@ -13,7 +13,7 @@
 
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/context/auth";
-import { PageLoader } from "@/components/common";
+import { PageLoader } from "@/components/shared";
 import { ROUTES } from "@/services/routes/clientRoutes";
 
 const ProtectedRoute = () => {

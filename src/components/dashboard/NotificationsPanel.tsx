@@ -5,7 +5,7 @@ import {
   CommonAlertDialog,
   CommonButton,
   CommonTooltip,
-} from "@/components/common";
+} from "@/components/shared";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 

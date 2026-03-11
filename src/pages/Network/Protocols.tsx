@@ -18,7 +18,7 @@ import {
   CommonRadio,
   SectionSkeleton,
   FormSaveDialog,
-} from "@/components/common";
+} from "@/components/shared";
 
 // Components - Local
 import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";

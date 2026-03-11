@@ -9,7 +9,7 @@ import {
   CommonButton,
   SidebarNav,
   CommonTooltip,
-} from "@/components/common";
+} from "@/components/shared";
 
 // Components - Local
 import { NetworkOverview } from "./NetworkOverview";

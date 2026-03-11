@@ -1,5 +1,5 @@
 import { Triangle } from "lucide-react";
-import { CommonButton } from "@/components/common";
+import { CommonButton } from "@/components/shared";
 
 export function FlowControlStack() {
   return (

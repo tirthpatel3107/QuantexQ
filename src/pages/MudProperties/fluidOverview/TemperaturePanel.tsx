@@ -2,7 +2,7 @@ import { PanelCard } from "@/components/dashboard/PanelCard";
 import {
   RestoreDefaultsButton,
   LabeledInputWithUnit,
-} from "@/components/common";
+} from "@/components/shared";
 import { FluidData } from "@/utils/types/mud";
 
 interface TemperaturePanelProps {

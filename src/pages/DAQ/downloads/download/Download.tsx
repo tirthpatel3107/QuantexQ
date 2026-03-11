@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FileText } from "lucide-react";
 import { cn } from "@/utils/lib/utils";
-import { CommonButton } from "@/components/common/CommonButton";
+import { CommonButton } from "@/components/shared/CommonButton";
 
 export interface FileItem {
   name: string;

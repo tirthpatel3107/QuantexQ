@@ -3,7 +3,7 @@ import { useMemo, useCallback } from "react";
 import { useSectionForm } from "@/hooks/useSectionForm";
 
 // Components - UI & Icons
-import { SectionSkeleton, FormSaveDialog } from "@/components/common";
+import { SectionSkeleton, FormSaveDialog } from "@/components/shared";
 
 // Components - Local Panels
 import { FluidSystemPanel } from "./FluidSystemPanel";

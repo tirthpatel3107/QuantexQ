@@ -20,7 +20,7 @@ import { DASHBOARD_LIMITS } from "@/utils/constants/dashboard";
 import { SemiCircleGauge } from "./SemiCircleGauge";
 import { SegmentedBar } from "./SegmentedBar";
 import { FlowControlStack } from "./FlowControlStack";
-import { CommonTooltip } from "@/components/common";
+import { CommonTooltip } from "@/components/shared";
 
 interface FlowDifferenceBarProps {
   /** Whether to show a skeleton loader */

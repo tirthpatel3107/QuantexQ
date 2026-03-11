@@ -14,9 +14,9 @@ import {
   CommonSearchInput,
   CommonTable,
   CommonDialog,
-} from "@/components/common";
-import { CommonAlertDialog } from "@/components/common/CommonAlertDialog";
-import { CommonInput } from "@/components/common/CommonInput";
+} from "@/components/shared";
+import { CommonAlertDialog } from "@/components/shared/CommonAlertDialog";
+import { CommonInput } from "@/components/shared/CommonInput";
 import { Label } from "@/components/ui/label";
 
 type Role = {

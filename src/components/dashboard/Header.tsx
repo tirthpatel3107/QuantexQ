@@ -35,7 +35,7 @@ import {
   CommonAlertDialog,
   CommonButton,
   CommonTooltip,
-} from "@/components/common";
+} from "@/components/shared";
 
 import { formatTime, formatDate } from "@/utils/lib/date-utils";
 

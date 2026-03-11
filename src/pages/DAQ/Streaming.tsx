@@ -19,7 +19,7 @@ import {
   CommonFormCheckbox,
   SectionSkeleton,
   FormSaveDialog,
-} from "@/components/common";
+} from "@/components/shared";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";

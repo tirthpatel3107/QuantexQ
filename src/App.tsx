@@ -27,7 +27,7 @@ const Network = lazy(() => import("./pages/network/index"));
 const SignIn = lazy(() => import("./pages/auth/SignIn"));
 const SignUp = lazy(() => import("./pages/auth/SignUp"));
 
-import { PageLoader } from "@/components/common";
+import { PageLoader } from "@/components/shared/index.ts";
 // import { ProtectedRoute } from "@/components/common"; // Uncomment when auth enforcement is enabled
 
 const queryClient = new QueryClient({

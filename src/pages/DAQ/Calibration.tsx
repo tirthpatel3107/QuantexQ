@@ -17,7 +17,7 @@ import {
   CommonFormSelect,
   CommonFormInput,
   CommonCheckbox,
-} from "@/components/common";
+} from "@/components/shared";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";

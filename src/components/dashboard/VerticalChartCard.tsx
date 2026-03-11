@@ -6,7 +6,7 @@ import type { EChartsOption, LineSeriesOption } from "echarts";
 import { cn } from "@/utils/lib/utils";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CommonDialog, CommonButton, CommonTooltip } from "@/components/common";
+import { CommonDialog, CommonButton, CommonTooltip } from "@/components/shared";
 import type { VerticalChartMetric } from "@/utils/types/chart";
 import { COLORS } from "@/utils/constants/colors";
 import { useTheme } from "@/context/theme";

@@ -28,7 +28,7 @@ import {
   FormSaveDialog,
   CommonTable,
   StatCard,
-} from "@/components/common";
+} from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
 import { Search, RotateCcw, Cpu, Wind } from "lucide-react";
 

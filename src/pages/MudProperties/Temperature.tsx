@@ -3,7 +3,7 @@ import { useMemo, useCallback } from "react";
 import { useSectionForm } from "@/hooks/useSectionForm";
 
 // Components
-import { SectionSkeleton, FormSaveDialog } from "@/components/common";
+import { SectionSkeleton, FormSaveDialog } from "@/components/shared";
 import { TemperaturePanel } from "./fluidOverview/TemperaturePanel";
 
 // Services & Types

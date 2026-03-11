@@ -10,7 +10,7 @@ import {
   CommonToggle,
   CommonCheckbox,
   StatusBadge,
-} from "@/components/common";
+} from "@/components/shared";
 
 // Components - Local
 import { PanelCard } from "@/components/dashboard/PanelCard";

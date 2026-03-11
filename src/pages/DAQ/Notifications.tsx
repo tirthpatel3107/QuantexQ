@@ -15,7 +15,7 @@ import {
   SectionSkeleton,
   FormSaveDialog,
   CommonToast,
-} from "@/components/common";
+} from "@/components/shared";
 import { Volume2, Play, Bell } from "lucide-react";
 import { cn } from "@/utils/lib/utils";
 

@@ -15,8 +15,8 @@ import {
   CommonFormToggle,
   CommonFormInput,
   CommonFormSelect,
-} from "@/components/common";
-import { RestoreDefaultsButton } from "@/components/common/RestoreDefaultsButton";
+} from "@/components/shared";
+import { RestoreDefaultsButton } from "@/components/shared/RestoreDefaultsButton";
 import { Settings } from "lucide-react";
 import {
   useSystemSettingsData,

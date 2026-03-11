@@ -24,9 +24,9 @@ import {
   SectionSkeleton,
   FormSaveDialog,
   CommonAlertDialog,
-} from "@/components/common";
+} from "@/components/shared";
 import { PanelCard } from "@/components/dashboard/PanelCard";
-import type { CommonSelectOption } from "@/components/common/CommonSelect";
+import type { CommonSelectOption } from "@/components/shared/CommonSelect";
 
 // Services & Types
 import {

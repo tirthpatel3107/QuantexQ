@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import { CommonToast } from "@/components/common/CommonToast";
+import { CommonToast } from "@/components/shared/CommonToast";
 
 interface UseSaveWithConfirmationOptions<T> {
   onSave: (data: T) => void | Promise<void>;

@@ -8,7 +8,7 @@ import {
   SectionSkeleton,
   FormSaveDialog,
   CommonFormToggle,
-} from "@/components/common";
+} from "@/components/shared";
 import { PanelCard } from "@/components/dashboard/PanelCard";
 import { StatRow } from "@/components/dashboard/StatRow";
 import { SystemStatePanel } from "@/components/dashboard/SystemStatePanel";

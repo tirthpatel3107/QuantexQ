@@ -13,7 +13,7 @@ import {
   FormSaveDialog,
   CommonFormInput,
   CommonFormSelect,
-} from "@/components/common";
+} from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
 import { Filter, Download, AlertTriangle } from "lucide-react";
 import { cn } from "@/utils/lib/utils";
