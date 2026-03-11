@@ -1,12 +1,48 @@
-import { useEffect, useState } from "react";
-import {
-  AccentColorProviderContext,
-  ACCENT_COLOR_MAP_DARK,
-  ACCENT_COLOR_MAP_LIGHT,
-  type AccentColor,
-} from "./AccentColorContext";
+import { createContext, useContext, useEffect, useState } from "react";
 
-export type { AccentColor };
+export type AccentColor =
+  | "white"
+  | "blue"
+  | "green"
+  | "orange"
+  | "pink"
+  | "purple"
+  | "cyan";
+
+export type AccentColorProviderState = {
+  accentColor: AccentColor;
+  setAccentColor: (color: AccentColor) => void;
+};
+
+export const initialState: AccentColorProviderState = {
+  accentColor: "white",
+  setAccentColor: () => null,
+};
+
+export const AccentColorProviderContext =
+  createContext<AccentColorProviderState>(initialState);
+
+// Dark mode HSL values
+export const ACCENT_COLOR_MAP_DARK: Record<AccentColor, string> = {
+  white: "0 0% 98%",
+  blue: "217 91% 60%",
+  green: "158 64% 52%",
+  orange: "38 92% 50%",
+  pink: "330 81% 60%",
+  purple: "271 81% 66%",
+  cyan: "188 94% 43%",
+};
+
+// Light mode HSL values (adjusted for better visibility on light backgrounds)
+export const ACCENT_COLOR_MAP_LIGHT: Record<AccentColor, string> = {
+  white: "0 0% 10%", // Black for light mode
+  blue: "217 91% 50%", // Slightly darker blue
+  green: "158 64% 42%", // Slightly darker green
+  orange: "38 92% 45%", // Slightly darker orange
+  pink: "330 81% 50%", // Slightly darker pink
+  purple: "271 81% 56%", // Slightly darker purple
+  cyan: "188 94% 38%", // Slightly darker cyan
+};
 
 type AccentColorProviderProps = {
   children: React.ReactNode;
@@ -88,4 +124,14 @@ export function AccentColorProvider({
       {children}
     </AccentColorProviderContext.Provider>
   );
+}
+
+export function useAccentColor() {
+  const context = useContext(AccentColorProviderContext);
+  if (context === undefined) {
+    throw new Error(
+      "useAccentColor must be used within an AccentColorProvider",
+    );
+  }
+  return context;
 }

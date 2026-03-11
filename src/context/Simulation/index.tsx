@@ -1,4 +1,6 @@
 import {
+  createContext,
+  useContext,
   useState,
   useCallback,
   useEffect,
@@ -6,19 +8,58 @@ import {
   useMemo,
   type ReactNode,
 } from "react";
+import {
+  flowData,
+  densityData,
+  surfacePressureData,
+  standpipePressureData,
+  bottomHolePressureData,
+  chokeChartData,
+  appendChartPoint,
+} from "@/utils/data/mockData";
+import { ChartDataKey, ChartDataset } from "@/utils/types/chart";
 import { formatElapsedSeconds } from "@/utils/lib/date-utils";
-import { appendChartPoint } from "@/utils/data/mockData";
 import {
   CHART_UPDATE_INTERVAL_MS,
   TIMER_TICK_MS,
 } from "@/utils/constants/config";
-import {
-  SimulationStateContext,
-  SimulationDataContext,
-  INITIAL_CHART_DATA,
-  CHART_KEYS,
-  ChartDataState,
-} from "./SimulationContext";
+
+export type ChartDataState = Record<ChartDataKey, ChartDataset>;
+
+export const INITIAL_CHART_DATA: ChartDataState = {
+  flow: flowData,
+  density: densityData,
+  surfacePressure: surfacePressureData,
+  standpipePressure: standpipePressureData,
+  bottomHolePressure: bottomHolePressureData,
+  choke: chokeChartData,
+};
+
+export interface SimulationStateContextValue {
+  isRunning: boolean;
+  setRunning: (running: boolean) => void;
+  showTimer: boolean;
+}
+
+export interface SimulationDataContextValue {
+  chartData: ChartDataState;
+  elapsedSeconds: number;
+  formattedElapsed: string;
+}
+
+export const SimulationStateContext =
+  createContext<SimulationStateContextValue | null>(null);
+export const SimulationDataContext =
+  createContext<SimulationDataContextValue | null>(null);
+
+export const CHART_KEYS: ChartDataKey[] = [
+  "flow",
+  "density",
+  "surfacePressure",
+  "standpipePressure",
+  "bottomHolePressure",
+  "choke",
+];
 
 /**
  * Simulation Context Provider
@@ -127,4 +168,47 @@ export function SimulationProvider({ children }: { children: ReactNode }) {
       </SimulationDataContext.Provider>
     </SimulationStateContext.Provider>
   );
+}
+
+/**
+ * Combined hook to access both simulation state and real-time data.
+ * @returns Object containing isRunning, setRunning, chartData, etc.
+ * @throws Error if used outside of SimulationProvider
+ */
+export function useSimulation() {
+  const state = useContext(SimulationStateContext);
+  const data = useContext(SimulationDataContext);
+
+  if (!state || !data) {
+    throw new Error("useSimulation must be used within SimulationProvider");
+  }
+
+  return { ...state, ...data };
+}
+
+/**
+ * Hook to access only the simulation control state (isRunning, setRunning).
+ * Use this to avoid unnecessary re-renders when only controls are needed.
+ * @returns SimulationStateContext value
+ */
+export function useSimulationState() {
+  const state = useContext(SimulationStateContext);
+  if (!state) {
+    throw new Error(
+      "useSimulationState must be used within SimulationProvider",
+    );
+  }
+  return state;
+}
+
+/**
+ * Hook to access only the real-time simulation data (chartData, elapsedSeconds).
+ * @returns SimulationDataContext value
+ */
+export function useSimulationData() {
+  const data = useContext(SimulationDataContext);
+  if (!data) {
+    throw new Error("useSimulationData must be used within SimulationProvider");
+  }
+  return data;
 }

@@ -1,7 +1,19 @@
-import { useState, useMemo, useCallback, ReactNode } from "react";
-import { DAQContext, type DAQContextType } from "./context";
+import {
+  useState,
+  useMemo,
+  useCallback,
+  ReactNode,
+  createContext,
+  useContext,
+} from "react";
 
-export type { DAQContextType };
+export interface DAQContextType {
+  requestSave: () => void;
+  registerSaveHandler: (handler: () => void) => void;
+  unregisterSaveHandler: () => void;
+}
+
+export const DAQContext = createContext<DAQContextType | undefined>(undefined);
 
 export function DAQProvider({ children }: { children: ReactNode }) {
   const [saveHandler, setSaveHandler] = useState<(() => void) | null>(null);
@@ -26,4 +38,12 @@ export function DAQProvider({ children }: { children: ReactNode }) {
   );
 
   return <DAQContext.Provider value={value}>{children}</DAQContext.Provider>;
+}
+
+export function useDAQContext() {
+  const context = useContext(DAQContext);
+  if (context === undefined) {
+    throw new Error("useDAQContext must be used within a DAQProvider");
+  }
+  return context;
 }

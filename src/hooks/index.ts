@@ -8,7 +8,7 @@ export {
 } from "./usePerformanceMonitor";
 
 // Existing hooks
-export { useToast } from "./use-toast";
+export { useToast } from "./useToast";
 export { useTheme } from "../context/Theme";
 export { useSimulation } from "../context/Simulation";
 export { useSidebarContext } from "../context/Sidebar";

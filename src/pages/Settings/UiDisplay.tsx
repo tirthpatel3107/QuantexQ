@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { useSectionForm } from "@/hooks/useSectionForm";
 import { useTheme } from "@/context/Theme";
 import { useAccentColor } from "@/context/AccentColor";
-import { type Theme } from "@/context/Theme/ThemeContext";
+import { type Theme } from "@/context/Theme";
 import type { CommonSelectOption } from "@/components/common/CommonSelect";
 
 // Components - UI & Icons
