@@ -226,7 +226,7 @@ export function Temperature() {
   return (
     <>
       <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
-        <div className="grid grid-cols-1 gap-3 auto-rows-max">
+        <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-3 auto-rows-max">
           {/* ---- Temperature Section ---- */}
           <PanelCard
             title="Temperature"
@@ -235,7 +235,7 @@ export function Temperature() {
             }
           >
             <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 gap-3 text-sm">
                 <CommonFormInput
                   name="surfaceTemp"
                   control={control}
@@ -253,35 +253,32 @@ export function Temperature() {
                   type="text"
                   suffix="°F"
                 />
-              </div>
 
-              <div className="text-sm text-muted-foreground">
-                Calculation gradient: {temperatureResponse.data.tempGradient}
-                °F/100 ft
-              </div>
+                <div className="text-sm text-muted-foreground">
+                  Calculation gradient: {temperatureResponse.data.tempGradient}
+                  °F/100 ft
+                </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                 <CommonFormInput
                   name="densitometryTempSett"
                   control={control}
-                  label="Densitometry temperature sett:"
+                  label="Densitometry temperature set"
                   placeholder="170"
                   type="text"
                   suffix="RER"
                 />
-              </div>
 
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 py-3">
                 <CommonFormToggle
                   name="applyTempCorrection"
                   control={control}
                   label="Apply temperature correction to rheology"
+                  className="my-4"
                 />
-              </div>
 
-              <div className="text-sm text-muted-foreground">
-                Pressure/Temperature viscosity model:{" "}
-                {temperatureResponse.data.viscosityModel}
+                <div className="text-sm text-muted-foreground">
+                  Pressure/Temperature viscosity model:{" "}
+                  {temperatureResponse.data.viscosityModel}
+                </div>
               </div>
             </div>
           </PanelCard>
@@ -295,7 +292,7 @@ export function Temperature() {
           >
             <div className="space-y-4">
               {/* ECharts chart */}
-              <div className="h-[300px]">
+              <div className="h-[450px]">
                 <ReactECharts
                   option={chartOption}
                   style={{ height: "100%", width: "100%" }}
@@ -351,7 +348,7 @@ export function Temperature() {
                     {tempRange.applyViscosityCorrection ? "ON" : "OFF"}
                   </span>
                   <div
-                    className={`w-8 h-4 rounded-full ${
+                    className={`w-4 h-4 rounded-full ${
                       tempRange.applyViscosityCorrection
                         ? "bg-green-500"
                         : "bg-gray-300"
