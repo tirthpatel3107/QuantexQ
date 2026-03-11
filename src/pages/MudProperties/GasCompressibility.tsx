@@ -308,8 +308,8 @@ export function GasCompressibility() {
 
   return (
     <>
-      <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
-        <div className="grid grid-cols-1 gap-3 auto-rows-max">
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-3 auto-rows-max">
           {/* ---- Gas / Compressibility Section ---- */}
           <PanelCard
             title="Gas / Compressibility"
@@ -319,45 +319,42 @@ export function GasCompressibility() {
               </div>
             }
           >
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 xl:grid-cols-2">
-                <CommonFormToggle
-                  name="enableCompressibility"
-                  control={control}
-                  label="Enable compressibility"
-                />
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                <CommonFormInput
-                  name="mudCompressibility"
-                  control={control}
-                  label="Mud compressibility"
-                  placeholder="0.00030"
-                  type="text"
-                  unit="1/psi"
-                  disabled={!enableCompressibility}
-                />
+            <div className="grid grid-cols-1 gap-3">
+              <CommonFormToggle
+                name="enableCompressibility"
+                control={control}
+                label="Enable compressibility"
+                className="my-4"
+              />
+              <CommonFormInput
+                name="mudCompressibility"
+                control={control}
+                label="Mud compressibility"
+                placeholder="0.00030"
+                type="text"
+                unit="1/psi"
+                disabled={!enableCompressibility}
+              />
 
-                <CommonFormInput
-                  name="gasCut"
-                  control={control}
-                  label="Gas-cut"
-                  placeholder="0"
-                  type="text"
-                  unit="%"
-                  disabled={!enableCompressibility}
-                />
+              <CommonFormInput
+                name="gasCut"
+                control={control}
+                label="Gas-cut"
+                placeholder="0"
+                type="text"
+                unit="%"
+                disabled={!enableCompressibility}
+              />
 
-                <CommonFormInput
-                  name="gasDensity"
-                  control={control}
-                  label="Gas density"
-                  placeholder="0.69"
-                  type="text"
-                  unit="—"
-                  disabled={!enableCompressibility}
-                />
-              </div>
+              <CommonFormInput
+                name="gasDensity"
+                control={control}
+                label="Gas density"
+                placeholder="0.69"
+                type="text"
+                unit="—"
+                disabled={!enableCompressibility}
+              />
             </div>
           </PanelCard>
 
@@ -368,15 +365,13 @@ export function GasCompressibility() {
               <CommonButton variant="outline">Export CSV Data</CommonButton>
             }
           >
-            <div className="space-y-4">
-              {/* Chart Area */}
-              <div className="h-[350px] w-full">
-                <ReactECharts
-                  option={chartOption}
-                  style={{ width: "100%", height: "100%" }}
-                  opts={{ renderer: "svg" }}
-                />
-              </div>
+            {/* Chart Area */}
+            <div className="h-[400px]">
+              <ReactECharts
+                option={chartOption}
+                style={{ width: "100%", height: "100%" }}
+                opts={{ renderer: "svg" }}
+              />
             </div>
           </PanelCard>
         </div>
