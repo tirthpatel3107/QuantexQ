@@ -123,18 +123,30 @@ export interface SaveTemperaturePayload {
 // ============================================
 
 export interface GasCompressibilityTabData {
-  gasSolubility: string;
-  compressibilityFactor: string;
-  gasOilRatio: string;
-  gasGravity: string;
-  criticalPressure: string;
-  criticalTemp: string;
+  enableCompressibility: boolean;
+  mudCompressibility: string;
+  gasCut: string;
+  gasDensity: string;
+  annularCompressibility: string;
+  ecdAtBit: string;
+  requiredInputs: {
+    componentLoad: boolean;
+    depthCompressionLoad: boolean;
+    annularPressureVato: boolean;
+    signalConsistency: boolean;
+  };
+  chartData: {
+    depth: number[];
+    annularPressure: number[];
+    mudCompressibleDepth: number;
+  };
 }
 
 export interface SaveGasCompressibilityPayload {
-  gasSolubility: string;
-  compressibilityFactor: string;
-  gasOilRatio: string;
+  enableCompressibility: boolean;
+  mudCompressibility: string;
+  gasCut: string;
+  gasDensity: string;
 }
 
 // ============================================

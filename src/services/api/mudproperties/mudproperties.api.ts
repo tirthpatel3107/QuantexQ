@@ -246,12 +246,23 @@ const fetchGasCompressibilityData = async (): Promise<
       resolve({
         success: true,
         data: {
-          gasSolubility: "0.85",
-          compressibilityFactor: "0.92",
-          gasOilRatio: "150",
-          gasGravity: "0.65",
-          criticalPressure: "667",
-          criticalTemp: "-116",
+          enableCompressibility: true,
+          mudCompressibility: "0.00030",
+          gasCut: "0",
+          gasDensity: "0.69",
+          annularCompressibility: "2.56",
+          ecdAtBit: "18.91",
+          requiredInputs: {
+            componentLoad: true,
+            depthCompressionLoad: true,
+            annularPressureVato: false,
+            signalConsistency: true,
+          },
+          chartData: {
+            depth: [0, 1000, 2000, 3000, 4000, 5000, 6000, 6270],
+            annularPressure: [3000, 3500, 4200, 4800, 5400, 6000, 6200, 6300],
+            mudCompressibleDepth: 357,
+          },
         },
         timestamp: new Date().toISOString(),
       });
