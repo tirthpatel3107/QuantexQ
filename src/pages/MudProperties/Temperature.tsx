@@ -226,7 +226,7 @@ export function Temperature() {
   return (
     <>
       <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-3 auto-rows-max">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-3 auto-rows-max">
           {/* ---- Temperature Section ---- */}
           <PanelCard
             title="Temperature"
