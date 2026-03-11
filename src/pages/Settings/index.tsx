@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import {
   Settings as SettingsIcon,
@@ -29,7 +29,7 @@ import { UiDisplay } from "./UiDisplay";
 import { UsersRoles } from "./userAndRoles";
 import { AboutDiagnostics } from "./AboutDiagnostics";
 import { SETTINGS_NAV } from "@/utils/constants";
-import { GeneralSettingsData } from "@/utils/types/settings";
+// import { GeneralSettingsData } from "@/utils/types/settings";
 import { SettingsProvider, useSettingsContext } from "@/context/settings";
 
 function SettingsContent() {
@@ -37,14 +37,14 @@ function SettingsContent() {
   const activeSection = section || "setting";
   const { requestSave } = useSettingsContext();
 
-  const [general, setGeneral] = useState<GeneralSettingsData>({
-    defaultWellName: "NFQ-21-6A",
-    defaultRigName: "Rig-01",
-    defaultScenario: "Static",
-    startupScreen1: "Quantum HUD",
-    startupScreen2: "Quantum HUD",
-  });
-  const [safetyConfirmations, setSafetyConfirmations] = useState(true);
+  // const [general, setGeneral] = useState<GeneralSettingsData>({
+  //   defaultWellName: "NFQ-21-6A",
+  //   defaultRigName: "Rig-01",
+  //   defaultScenario: "Static",
+  //   startupScreen1: "Quantum HUD",
+  //   startupScreen2: "Quantum HUD",
+  // });
+  // const [safetyConfirmations, setSafetyConfirmations] = useState(true);
 
   const headerActions = useMemo(
     () => (
@@ -94,9 +94,7 @@ function SettingsContent() {
           </>
         );
       case "general":
-        return (
-          <GeneralSettings />
-        );
+        return <GeneralSettings />;
       case "units":
         return <Units />;
       case "data-time":
