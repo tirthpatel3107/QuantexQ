@@ -308,7 +308,7 @@ export function Temperature() {
           <PanelCard
             title={
               <div className="flex items-center gap-2">
-                <span>Temperature Range:</span>
+                <span>Temperature Range</span>
                 <span
                   className={`text-sm px-2 py-0.5 rounded ${
                     tempRange.status === "OK"
