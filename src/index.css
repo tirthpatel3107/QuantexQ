@@ -401,6 +401,20 @@
     animation: skeleton-shimmer 1.6s ease-in-out infinite;
   }
 
+  /* Light mode skeleton with improved shimmer */
+  .light .skeleton::after {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--background) / 0.4) 25%,
+      hsl(var(--background) / 0.8) 50%,
+      hsl(var(--background) / 0.4) 75%,
+      transparent 100%
+    );
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    animation-delay: -0.5s;
+  }
+
   @keyframes skeleton-shimmer {
     0% {
       transform: translateX(-100%);
