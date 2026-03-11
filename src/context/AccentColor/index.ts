@@ -5,6 +5,5 @@ export {
   ACCENT_COLOR_MAP_LIGHT,
   initialState,
 } from "./constants";
-export { AccentColorProviderContext } from "./context";
-export { useAccentColor } from "./hook";
+export { AccentColorProviderContext, useAccentColor } from "./context";
 export { AccentColorProvider } from "./AccentColorProvider";

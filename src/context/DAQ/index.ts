@@ -1,5 +1,4 @@
 // Re-export everything for convenience
 export type { DAQContextType, DAQProviderProps } from "./types";
-export { DAQContext } from "./context";
-export { useDAQContext } from "./hook";
+export { DAQContext, useDAQContext } from "./context";
 export { DAQProvider } from "./DAQProvider";

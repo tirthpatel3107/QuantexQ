@@ -6,6 +6,5 @@ export type {
   SimulationProviderProps,
 } from "./types";
 export { INITIAL_CHART_DATA, CHART_KEYS } from "./constants";
-export { SimulationStateContext, SimulationDataContext } from "./context";
-export { useSimulation, useSimulationState, useSimulationData } from "./hooks";
+export { SimulationStateContext, SimulationDataContext, useSimulation, useSimulationState, useSimulationData } from "./context";
 export { SimulationProvider } from "./SimulationProvider";

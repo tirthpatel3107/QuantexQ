@@ -26,7 +26,7 @@ const SIDEBAR_KEYBOARD_SHORTCUT = "b";
 
 import { SidebarContext } from "./sidebar-context";
 import type { SidebarContextValue } from "./sidebar-context";
-import { useSidebar } from "@/context/UI";
+import { useSidebar } from "@/context/ui";
 
 const SidebarProvider = React.forwardRef<
   HTMLDivElement,

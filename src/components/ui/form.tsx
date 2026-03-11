@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 const Form = FormProvider;
 
 import { FormFieldContext, FormItemContext } from "./form-context";
-import { useFormField } from "@/context/UI";
+import { useFormField } from "@/context/ui";
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,

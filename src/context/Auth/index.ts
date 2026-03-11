@@ -8,6 +8,5 @@ export type {
   AuthProviderProps,
 } from "./types";
 export { USER_STORAGE_KEY } from "./constants";
-export { AuthContext } from "./context";
-export { useAuth } from "./hook";
+export { AuthContext, useAuth } from "./context";
 export { AuthProvider } from "./AuthProvider";
