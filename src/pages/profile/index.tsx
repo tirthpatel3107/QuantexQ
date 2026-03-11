@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { PageLayout } from "@/components/layouts";
 import {
-  PageLayout,
   CommonAlertDialog,
   CommonButton,
   PageLoader,

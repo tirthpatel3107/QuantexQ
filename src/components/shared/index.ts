@@ -1,11 +1,11 @@
 /** Common layout and form components shared across pages. */
 export { CommonAccordionItem } from "./CommonAccordion";
-export { PageLayout } from "./PageLayout";
+export { PageLayout } from "../layouts";
 export { RestoreDefaultsButton } from "./RestoreDefaultsButton";
 export { CommonSearchInput } from "./CommonSearchInput";
 export { LabeledInputWithUnit } from "./LabeledInputWithUnit";
-export { PageHeaderBar } from "./PageHeaderBar";
-export { SidebarLayout } from "./SidebarLayout";
+export { PageHeaderBar } from "../layouts";
+export { SidebarLayout } from "../layouts";
 export { CommonAlertDialog } from "./CommonAlertDialog";
 export { CommonButton } from "./CommonButton";
 export { CommonSelect } from "./CommonSelect";
@@ -14,8 +14,8 @@ export { CommonInput } from "./CommonInput";
 export { PageLoader } from "./PageLoader";
 export { CommonTable } from "./CommonTable";
 export { CommonDialog } from "./CommonDialog";
-export { SidebarNav } from "./SidebarNav";
-export type { SidebarNavItem } from "./SidebarNav";
+export { SidebarNav } from "../layouts";
+export type { SidebarNavItem } from "../layouts";
 export {
   CommonTabs,
   CommonTabsList,
@@ -49,4 +49,4 @@ export {
   CommonFormToggle,
   CommonFormCheckbox,
 } from "./CommonFormFields";
-export { default as ProtectedRoute } from "./ProtectedRoute";
+export { ProtectedRoute } from "../layouts";

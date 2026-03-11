@@ -7,10 +7,9 @@ import {
   PageLayout,
   SidebarLayout,
   PageHeaderBar,
-  CommonButton,
   SidebarNav,
-  CommonTooltip,
-} from "@/components/shared";
+} from "@/components/layouts";
+import { CommonButton, CommonTooltip } from "@/components/shared";
 
 // Components - Local
 import { MudPropertiesOverview } from "./MudPropertiesOverview";

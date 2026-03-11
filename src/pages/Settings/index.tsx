@@ -12,10 +12,9 @@ import {
   PageLayout,
   SidebarLayout,
   PageHeaderBar,
-  CommonButton,
   SidebarNav,
-  CommonTooltip,
-} from "@/components/shared";
+} from "@/components/layouts";
+import { CommonButton, CommonTooltip } from "@/components/shared";
 
 import { SettingsOverview } from "./SettingsOverview";
 import { GeneralSettings } from "./General";
@@ -96,12 +95,7 @@ function SettingsContent() {
         );
       case "general":
         return (
-          <GeneralSettings
-            general={general}
-            setGeneral={setGeneral}
-            safetyConfirmations={safetyConfirmations}
-            setSafetyConfirmations={setSafetyConfirmations}
-          />
+          <GeneralSettings />
         );
       case "units":
         return <Units />;
