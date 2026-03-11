@@ -1,5 +1,5 @@
 import { Lock, ExternalLink } from "lucide-react";
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import {
   RestoreDefaultsButton,
   LabeledInputWithUnit,

@@ -4,7 +4,7 @@ import { useSectionForm } from "@/hooks/useSectionForm";
 
 // Components
 import { Label } from "@/components/ui/label";
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import {
   RestoreDefaultsButton,
   CommonInput,

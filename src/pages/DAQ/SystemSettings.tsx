@@ -7,7 +7,7 @@ import {
   type SystemSettingsFormValues,
 } from "@/utils/schemas/systemSettings";
 
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import {
   SectionSkeleton,
   FormSaveDialog,

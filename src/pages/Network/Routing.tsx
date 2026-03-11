@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
 // Components - UI
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 
 // Components - Common
 import {

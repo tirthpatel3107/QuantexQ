@@ -1,4 +1,4 @@
-import { CategoryCard } from "@/components/dashboard/CategoryCard";
+import { CategoryCard } from "@/components/features/dashboard/CategoryCard";
 
 interface DaqSectionProps {
   cards: {

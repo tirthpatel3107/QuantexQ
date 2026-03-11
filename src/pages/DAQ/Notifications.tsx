@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
 // Components – UI & Icons
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import {
   CommonButton,
   CommonFormToggle,

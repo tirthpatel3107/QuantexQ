@@ -21,7 +21,7 @@ import {
 
 // Components - Local
 import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 
 // Services & API
 import {

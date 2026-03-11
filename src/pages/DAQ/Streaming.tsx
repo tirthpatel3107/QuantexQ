@@ -11,7 +11,7 @@ import {
 } from "@/utils/schemas/streaming";
 
 // Components
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import {
   CommonButton,
   CommonFormInput,

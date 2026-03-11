@@ -1,5 +1,5 @@
 // import { useNavigate } from "react-router-dom";
-import { CategoryCard } from "@/components/dashboard/CategoryCard";
+import { CategoryCard } from "@/components/features/dashboard/CategoryCard";
 // import { ROUTES } from "@/utils/constants/routes";
 import { DAQ_SECTION_CARDS } from "@/utils/constants";
 

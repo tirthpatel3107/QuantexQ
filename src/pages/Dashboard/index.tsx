@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { cn } from "@/utils/lib/utils";
-import { VerticalChartCard } from "@/components/dashboard/VerticalChartCard";
-import { DepthGauge } from "@/components/dashboard/DepthGauge";
+import { VerticalChartCard } from "@/components/features/dashboard/VerticalChartCard";
+import { DepthGauge } from "@/components/features/dashboard/DepthGauge";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { useSimulationData } from "@/context/simulation";
 import {
@@ -9,8 +9,8 @@ import {
   metricsFromLatestPoint,
 } from "@/utils/data/dashboardChartConfig";
 
-import { TimeAxisCard } from "@/components/dashboard/TimeAxisCard";
-import { FlowDifferenceBar } from "@/components/dashboard/FlowDifferenceBar";
+import { TimeAxisCard } from "@/components/features/dashboard/TimeAxisCard";
+import { FlowDifferenceBar } from "@/components/features/dashboard/FlowDifferenceBar";
 
 /**
  * Dashboard Component

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Download as DownloadIcon, FolderOpen } from "lucide-react";
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import { CommonButton } from "@/components/shared/CommonButton";
 import {
   CommonTabs,

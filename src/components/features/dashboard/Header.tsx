@@ -18,7 +18,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { SideDrawer } from "@/components/dashboard/SideDrawer";
+import { SideDrawer } from "@/components/features/dashboard/SideDrawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   DropdownMenu,
@@ -29,7 +29,7 @@ import {
 import { cn } from "@/utils/lib/utils";
 import { notifications } from "@/utils/data/mockData";
 import { useSimulationState } from "@/context/simulation";
-import { SimulationTimerWidget } from "@/components/dashboard/SimulationTimerWidget";
+import { SimulationTimerWidget } from "@/components/features/dashboard/SimulationTimerWidget";
 import { useTheme } from "@/context/theme";
 import {
   CommonAlertDialog,

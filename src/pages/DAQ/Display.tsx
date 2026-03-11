@@ -9,9 +9,9 @@ import {
   FormSaveDialog,
   CommonFormToggle,
 } from "@/components/shared";
-import { PanelCard } from "@/components/dashboard/PanelCard";
-import { StatRow } from "@/components/dashboard/StatRow";
-import { SystemStatePanel } from "@/components/dashboard/SystemStatePanel";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
+import { StatRow } from "@/components/features/dashboard/StatRow";
+import { SystemStatePanel } from "@/components/features/dashboard/SystemStatePanel";
 import { LiveSensorStrip } from "./LiveSensorStrip";
 
 // Hooks

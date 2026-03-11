@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { useSectionForm } from "@/hooks/useSectionForm";
 
 // Components - UI & Icons
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import {
   RestoreDefaultsButton,
   CommonSelect,

@@ -1,5 +1,5 @@
 // Components - Local
-import { NetworkSection } from "../../components/network/NetworkSection";
+import { NetworkSection } from "../../components/features/network/NetworkSection";
 
 // Constants
 import { NETWORK_SECTION_CARDS as SECTION_CARDS } from "@/utils/constants";

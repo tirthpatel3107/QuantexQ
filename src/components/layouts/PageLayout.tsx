@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Header } from "@/components/dashboard/Header";
+import { Header } from "@/components/features/dashboard/Header";
 import { cn } from "@/utils/lib/utils";
 
 export interface PageLayoutProps {

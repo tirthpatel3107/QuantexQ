@@ -1,5 +1,5 @@
 import { SectionSkeleton } from "@/components/shared";
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import { FluidData } from "@/utils/types/mud";
 import { useSummaryData } from "@/services/api/mudproperties/mudproperties.api";
 

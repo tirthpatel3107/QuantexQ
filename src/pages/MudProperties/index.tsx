@@ -22,7 +22,7 @@ import { Calibration } from "./Calibration";
 import { Summary } from "./Summary";
 
 // Components - UI
-import { MudPropertiesSidebar } from "@/components/mudProperties/MudPropertiesSidebar";
+import { MudPropertiesSidebar } from "@/components/features/mudProperties/MudPropertiesSidebar";
 
 // Contexts
 import {

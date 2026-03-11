@@ -13,7 +13,7 @@ import {
 } from "@/components/shared";
 
 // Components - Local
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 
 // Constants & Types
 import {

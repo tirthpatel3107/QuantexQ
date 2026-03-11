@@ -15,7 +15,7 @@ import {
   SectionSkeleton,
   FormSaveDialog,
 } from "@/components/shared";
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import { RefreshCw, Download, ChevronRight } from "lucide-react";
 import { cn } from "@/utils/lib/utils";
 import { Separator } from "@/components/ui/separator";

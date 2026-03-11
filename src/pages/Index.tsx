@@ -1,5 +1,5 @@
 import React from "react";
-import { Header } from "@/components/dashboard/Header";
+import { Header } from "@/components/features/dashboard/Header";
 import Dashboard from "@/pages/dashboard";
 
 /**

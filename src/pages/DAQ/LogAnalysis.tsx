@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
 // Components - UI & Icons
-import { PanelCard } from "@/components/dashboard/PanelCard";
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import {
   SectionSkeleton,
   CommonButton,
@@ -30,7 +30,7 @@ import type { SaveLogAnalysisPayload } from "@/services/api/daq/daq.types";
 import { useDAQContext } from "@/context/daq";
 
 // Local Components
-import { ChartPanel } from "@/components/dashboard/ChartPanel";
+import { ChartPanel } from "@/components/features/dashboard/ChartPanel";
 
 // Schema
 const logAnalysisFormSchema = z.object({
