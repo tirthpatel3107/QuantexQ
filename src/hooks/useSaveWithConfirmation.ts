@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { CommonToast } from "@/components/common/CommonToast";
 
 interface UseSaveWithConfirmationOptions<T> {
@@ -26,22 +26,27 @@ export function useSaveWithConfirmation<T>({
   /**
    * Trigger the confirmation dialog
    */
-  const requestSave = (data: T) => {
+  const requestSave = useCallback((data: T) => {
     setPendingData(data);
     setIsConfirmOpen(true);
-  };
+  }, []);
+
+  const onSaveRef = useRef(onSave);
+  useEffect(() => {
+    onSaveRef.current = onSave;
+  }, [onSave]);
 
   /**
    * Handle the actual save after confirmation
    */
-  const handleConfirmedSave = async () => {
+  const handleConfirmedSave = useCallback(async () => {
     if (!pendingData) return;
 
     setIsConfirmOpen(false);
     setIsSaving(true);
 
     try {
-      await onSave(pendingData);
+      await onSaveRef.current(pendingData);
       CommonToast.success(successMessage);
     } catch (error) {
       console.error("Save error:", error);
@@ -53,24 +58,35 @@ export function useSaveWithConfirmation<T>({
       setIsSaving(false);
       setPendingData(null);
     }
-  };
+  }, [pendingData, successMessage, errorMessage]);
 
   /**
    * Handle cancellation
    */
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setIsConfirmOpen(false);
     setPendingData(null);
-  };
+  }, []);
 
-  return {
-    isConfirmOpen,
-    setIsConfirmOpen,
-    isSaving,
-    requestSave,
-    handleConfirmedSave,
-    handleCancel,
-    confirmTitle,
-    confirmDescription,
-  };
+  return useMemo(
+    () => ({
+      isConfirmOpen,
+      setIsConfirmOpen,
+      isSaving,
+      requestSave,
+      handleConfirmedSave,
+      handleCancel,
+      confirmTitle,
+      confirmDescription,
+    }),
+    [
+      isConfirmOpen,
+      isSaving,
+      requestSave,
+      handleConfirmedSave,
+      handleCancel,
+      confirmTitle,
+      confirmDescription,
+    ],
+  );
 }

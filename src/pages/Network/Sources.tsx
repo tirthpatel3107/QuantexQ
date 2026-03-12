@@ -132,8 +132,8 @@ export function Sources() {
 
   return (
     <>
-      <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 auto-rows-max">
+      <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr] gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 auto-rows-max">
           {/* ---- Rig PLC Source Section ---- */}
           <PanelCard
             title={
