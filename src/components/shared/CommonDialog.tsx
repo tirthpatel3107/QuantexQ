@@ -49,7 +49,7 @@ export function CommonDialog({
   children,
   footer,
   className,
-  maxWidth = "sm:max-w-[425px]",
+  maxWidth = "lg:max-w-[800px]",
   showDivider = true,
   hideClose = false,
 }: CommonDialogProps) {

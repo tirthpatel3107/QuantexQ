@@ -24,11 +24,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 // Components - Common
 import {
   CommonButton,
-  CommonSelect,
   CommonSearchInput,
   CommonTable,
   CommonDialog,
-  CommonInput,
   CommonDropdownMenu,
   SectionSkeleton,
   FormSaveDialog,
@@ -38,6 +36,10 @@ import {
 } from "@/components/shared";
 
 // Components - Local
+import { AddSignalModal } from "./AddSignalModal";
+import { EditSignalModal } from "./EditSignalModal";
+import { StatusBar } from "./StatusBar";
+import { ActionButtons } from "./ActionButtons";
 
 // Services & API
 import {
@@ -52,16 +54,7 @@ import {
 import { useSettingsContext } from "@/context/settings";
 
 // Icons & Utils
-import {
-  Star,
-  Plus,
-  Settings,
-  Upload,
-  Download,
-  Filter,
-  Pencil,
-  Trash2,
-} from "lucide-react";
+import { Star, Filter, Pencil, Trash2 } from "lucide-react";
 import { cn } from "@/utils/lib/utils";
 
 // Types & Schemas
@@ -410,110 +403,37 @@ export function Signals() {
             />
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-wrap items-center gap-2">
-            <CommonButton
-              variant="outline"
-              size="sm"
-              icon={Plus}
-              onClick={() => setIsAddSignalModalOpen(true)}
-            >
-              Add Signal
-            </CommonButton>
-            <CommonButton
-              variant="outline"
-              size="sm"
-              icon={Settings}
-              onClick={() => setIsConfigureTagsModalOpen(true)}
-            >
-              Configure Tags
-            </CommonButton>
-            <CommonButton variant="outline" size="sm" icon={Upload}>
-              Import Tags
-            </CommonButton>
-            <CommonButton variant="outline" size="sm" icon={Download}>
-              Export Tags
-            </CommonButton>
-          </div>
+          <ActionButtons
+            onAddSignal={() => setIsAddSignalModalOpen(true)}
+            onConfigureTags={() => setIsConfigureTagsModalOpen(true)}
+            onImportTags={() => {}}
+            onExportTags={() => {}}
+          />
         </div>
 
-        {/* Stats Bar */}
-        <div className="flex items-center justify-between text-[13px] text-muted-foreground px-1">
-          <div className="flex items-center gap-4">
-            <span>
-              Total Signals:{" "}
-              <span className="font-semibold">{totalSignals}</span>
-            </span>
-            <span className="text-muted-foreground/50">|</span>
-            <span>
-              Used: <span className="font-semibold">{usedSignals}</span>
-            </span>
-          </div>
-        </div>
+        <StatusBar totalSignals={totalSignals} usedSignals={usedSignals} />
 
         {/* Table */}
         <CommonTable table={table} noDataMessage="No signals found." />
 
-        {/* Add Signal Modal */}
-        <CommonDialog
+        <AddSignalModal
           open={isAddSignalModalOpen}
           onOpenChange={setIsAddSignalModalOpen}
-          title="Add New Signal"
-          description="Configure a new signal for monitoring and control."
-          footer={
-            <>
-              <CommonButton
-                variant="outline"
-                size="sm"
-                onClick={() => setIsAddSignalModalOpen(false)}
-              >
-                Cancel
-              </CommonButton>
-              <CommonButton
-                size="sm"
-                onClick={() => setIsAddSignalModalOpen(false)}
-              >
-                Add Signal
-              </CommonButton>
-            </>
+          subsystemOptions={
+            (options?.subsystemOptions as CommonSelectOption[]) || []
           }
-        >
-          <div className="grid gap-4">
-            <CommonInput
-              label="Signal Name"
-              id="signal-name"
-              placeholder="Enter signal name"
-            />
-            <CommonSelect
-              label="Subsystem"
-              options={
-                (options?.subsystemOptions as CommonSelectOption[]) || []
-              }
-              value=""
-              onValueChange={() => {}}
-              placeholder="Select subsystem"
-            />
-            <CommonInput
-              label="Unit"
-              id="unit"
-              placeholder="e.g., RPM, psi, %"
-            />
-            <CommonInput
-              label="Value Range"
-              id="value-range"
-              placeholder="e.g., 0-2400"
-            />
-            <div className="flex items-center space-x-2">
-              <Checkbox id="add-in-use" defaultChecked={true} />
-              <label
-                htmlFor="add-in-use"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                In Use
-              </label>
-            </div>
-          </div>
-        </CommonDialog>
+          onAdd={() => setIsAddSignalModalOpen(false)}
+        />
+        
+        <EditSignalModal
+          open={isEditSignalModalOpen}
+          onOpenChange={setIsEditSignalModalOpen}
+          selectedSignal={selectedSignal}
+          subsystemOptions={
+            (options?.subsystemOptions as CommonSelectOption[]) || []
+          }
+          onSave={() => setIsEditSignalModalOpen(false)}
+        />
 
         {/* Configure Tags Modal */}
         <CommonDialog
@@ -541,73 +461,6 @@ export function Signals() {
         >
           <div className="text-sm text-muted-foreground">
             Tag configuration interface will be implemented here.
-          </div>
-        </CommonDialog>
-
-        {/* Edit Signal Modal */}
-        <CommonDialog
-          open={isEditSignalModalOpen}
-          onOpenChange={setIsEditSignalModalOpen}
-          title="Edit Signal"
-          description={`Modify details for ${selectedSignal?.name}.`}
-          footer={
-            <>
-              <CommonButton
-                variant="outline"
-                size="sm"
-                onClick={() => setIsEditSignalModalOpen(false)}
-              >
-                Cancel
-              </CommonButton>
-              <CommonButton
-                size="sm"
-                onClick={() => setIsEditSignalModalOpen(false)}
-              >
-                Save Changes
-              </CommonButton>
-            </>
-          }
-        >
-          <div className="grid gap-4">
-            <CommonInput
-              label="Signal Name"
-              id="edit-signal-name"
-              defaultValue={selectedSignal?.name}
-              placeholder="Enter signal name"
-            />
-            <CommonSelect
-              label="Subsystem"
-              options={
-                (options?.subsystemOptions as CommonSelectOption[]) || []
-              }
-              value={selectedSignal?.subsystem || ""}
-              onValueChange={() => {}}
-              placeholder="Select subsystem"
-            />
-            <CommonInput
-              label="Unit"
-              id="edit-unit"
-              defaultValue={selectedSignal?.unit}
-              placeholder="e.g., RPM, psi, %"
-            />
-            <CommonInput
-              label="Value Range"
-              id="edit-value-range"
-              defaultValue={selectedSignal?.valueRange}
-              placeholder="e.g., 0-2400"
-            />
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="edit-in-use"
-                defaultChecked={selectedSignal?.inUse}
-              />
-              <label
-                htmlFor="edit-in-use"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                In Use
-              </label>
-            </div>
           </div>
         </CommonDialog>
 
