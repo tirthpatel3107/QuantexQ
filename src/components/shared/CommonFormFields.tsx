@@ -17,6 +17,7 @@ export type CommonFormInputProps<
   control: Control<TFieldValues>;
   name: TName;
   containerClassName?: string;
+  unit?: string;
 };
 
 export function CommonFormInput<
@@ -26,6 +27,7 @@ export function CommonFormInput<
   control,
   name,
   containerClassName,
+  unit,
   ...props
 }: CommonFormInputProps<TFieldValues, TName>) {
   return (
@@ -34,7 +36,7 @@ export function CommonFormInput<
       control={control}
       render={({ field, fieldState }) => (
         <div className={containerClassName}>
-          <CommonInput {...field} {...props} />
+          <CommonInput {...field} {...props} suffix={unit || props.suffix} />
           {fieldState.error && (
             <p className="text-sm text-destructive mt-0.5 ml-1">
               {fieldState.error.message}

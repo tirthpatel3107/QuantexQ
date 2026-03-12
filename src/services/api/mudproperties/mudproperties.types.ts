@@ -91,17 +91,31 @@ export interface TemperatureTabData {
   surfaceTemp: string;
   bottomholeTemp: string;
   tempGradient: string;
-  flowlineTemp: string;
-  ambientTemp: string;
-  staticTemp: string;
-  circulatingTemp: string;
+  densitometryTempSett: string;
+  applyTempCorrection: boolean;
+  viscosityModel: string;
+  tempRange: {
+    status: "OK" | "WARN" | "BAD";
+    surfaceTemp: string;
+    bottomholeTemp: string;
+    applyViscosityCorrection: boolean;
+    tempSurfaceDrop: string;
+    wuCased: string;
+    bottomholeDefine: string;
+  };
+  chartData: Array<{
+    depth: number;
+    temperature: number;
+  }>;
 }
 
 export interface SaveTemperaturePayload {
   surfaceTemp: string;
   bottomholeTemp: string;
   tempGradient: string;
-  flowlineTemp: string;
+  densitometryTempSett: string;
+  applyTempCorrection: boolean;
+  viscosityModel: string;
 }
 
 // ============================================
@@ -109,18 +123,30 @@ export interface SaveTemperaturePayload {
 // ============================================
 
 export interface GasCompressibilityTabData {
-  gasSolubility: string;
-  compressibilityFactor: string;
-  gasOilRatio: string;
-  gasGravity: string;
-  criticalPressure: string;
-  criticalTemp: string;
+  enableCompressibility: boolean;
+  mudCompressibility: string;
+  gasCut: string;
+  gasDensity: string;
+  annularCompressibility: string;
+  ecdAtBit: string;
+  requiredInputs: {
+    componentLoad: boolean;
+    depthCompressionLoad: boolean;
+    annularPressureVato: boolean;
+    signalConsistency: boolean;
+  };
+  chartData: {
+    depth: number[];
+    annularPressure: number[];
+    mudCompressibleDepth: number;
+  };
 }
 
 export interface SaveGasCompressibilityPayload {
-  gasSolubility: string;
-  compressibilityFactor: string;
-  gasOilRatio: string;
+  enableCompressibility: boolean;
+  mudCompressibility: string;
+  gasCut: string;
+  gasDensity: string;
 }
 
 // ============================================
@@ -187,6 +213,7 @@ export interface DensityOptionsData {
 
 export interface TemperatureOptionsData {
   unitOptions: SelectOption[];
+  viscosityModelOptions: SelectOption[];
 }
 
 export interface GasCompressibilityOptionsData {
