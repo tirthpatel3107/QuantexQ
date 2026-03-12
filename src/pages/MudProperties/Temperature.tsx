@@ -37,7 +37,7 @@ import {
 import {
   temperatureFormSchema,
   type TemperatureFormValues,
-} from "@/utils/schemas/temperature-schema";
+} from "@/utils/schemas/temperature";
 import type { SaveTemperaturePayload } from "@/services/api/mudproperties/mudproperties.types";
 
 // Context

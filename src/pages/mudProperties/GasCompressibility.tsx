@@ -38,7 +38,7 @@ import {
 import {
   gasCompressibilityFormSchema,
   type GasCompressibilityFormValues,
-} from "@/utils/schemas/gas-compressibility-schema";
+} from "@/utils/schemas/gasCompressibility";
 import type { SaveGasCompressibilityPayload } from "@/services/api/mudproperties/mudproperties.types";
 
 // Context

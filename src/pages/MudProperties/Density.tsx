@@ -45,7 +45,7 @@ import {
 import {
   densityFormSchema,
   type DensityFormValues,
-} from "@/utils/schemas/density-schema";
+} from "@/utils/schemas/density";
 import type { SaveDensityPayload } from "@/services/api/mudproperties/mudproperties.types";
 
 // Contexts
