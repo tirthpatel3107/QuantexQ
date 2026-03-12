@@ -10,6 +10,8 @@ import {
   pumpStatus,
   operationalStatus,
 } from "@/utils/data/mockData";
+import apiClient from "./apiClient";
+import { SERVER_ROUTES } from "./routes/serverRoutes";
 
 /**
  * Service hook to fetch dashboard chart data.

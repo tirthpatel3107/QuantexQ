@@ -23,6 +23,8 @@ import type {
   SecurityOptionsData,
   DiagnosticsOptionsData,
 } from "./network.types";
+import apiClient from "@/services/apiClient";
+import { SERVER_ROUTES } from "@/services/routes/serverRoutes";
 
 // ============================================
 // Query Keys
@@ -43,21 +45,18 @@ export const networkKeys = {
     [...networkKeys.all, "diagnostics", "options"] as const,
 };
 
-// ============================================
-// API Base URL
-// ============================================
-
-// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
+// API Base URL is handled by apiClient
 
 // ============================================
 // GET: Sources Tab
 // ============================================
 
 const fetchSourcesData = async (): Promise<ApiResponse<SourcesTabData>> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.SOURCES}`);
-  // if (!response.ok) throw new Error('Failed to fetch sources data');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<SourcesTabData>>(SERVER_ROUTES.NETWORK.SOURCES);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -145,10 +144,11 @@ export const useSourcesData = () => {
 const fetchSourcesOptions = async (): Promise<
   ApiResponse<SourcesOptionsData>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.SOURCES_OPTIONS}`);
-  // if (!response.ok) throw new Error('Failed to fetch sources options');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<SourcesOptionsData>>(SERVER_ROUTES.NETWORK.SOURCES_OPTIONS);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -197,10 +197,11 @@ export const useSourcesOptions = () => {
 // ============================================
 
 const fetchProtocolsData = async (): Promise<ApiResponse<ProtocolsTabData>> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.PROTOCOLS}`);
-  // if (!response.ok) throw new Error('Failed to fetch protocols data');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<ProtocolsTabData>>(SERVER_ROUTES.NETWORK.PROTOCOLS);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -279,10 +280,11 @@ export const useProtocolsOptions = () => {
 // ============================================
 
 const fetchRoutingData = async (): Promise<ApiResponse<RoutingTabData>> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.ROUTING}`);
-  // if (!response.ok) throw new Error('Failed to fetch routing data');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<RoutingTabData>>(SERVER_ROUTES.NETWORK.ROUTING);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -383,10 +385,11 @@ export const useRoutingOptions = () => {
 // ============================================
 
 const fetchSecurityData = async (): Promise<ApiResponse<SecurityTabData>> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.SECURITY}`);
-  // if (!response.ok) throw new Error('Failed to fetch security data');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<SecurityTabData>>(SERVER_ROUTES.NETWORK.SECURITY);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -488,10 +491,11 @@ export const useSecurityOptions = () => {
 const fetchDiagnosticsData = async (): Promise<
   ApiResponse<DiagnosticsTabData>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.DIAGNOSTICS}`);
-  // if (!response.ok) throw new Error('Failed to fetch diagnostics data');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<DiagnosticsTabData>>(SERVER_ROUTES.NETWORK.DIAGNOSTICS);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -605,14 +609,11 @@ export const useDiagnosticsOptions = () => {
 const saveSourcesData = async (
   payload: SaveSourcesPayload,
 ): Promise<ApiResponse<SaveResult>> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.SOURCES}`, {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(payload),
-  // });
-  // if (!response.ok) throw new Error('Failed to save sources');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.post<ApiResponse<SaveResult>>(SERVER_ROUTES.NETWORK.SOURCES, payload);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -651,14 +652,11 @@ export const useSaveSourcesData = () => {
 const saveProtocolsData = async (
   payload: SaveProtocolsPayload,
 ): Promise<ApiResponse<SaveResult>> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.PROTOCOLS}`, {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(payload),
-  // });
-  // if (!response.ok) throw new Error('Failed to save protocols');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.post<ApiResponse<SaveResult>>(SERVER_ROUTES.NETWORK.PROTOCOLS, payload);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -697,14 +695,11 @@ export const useSaveProtocolsData = () => {
 const saveRoutingData = async (
   payload: SaveRoutingPayload,
 ): Promise<ApiResponse<SaveResult>> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.ROUTING}`, {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(payload),
-  // });
-  // if (!response.ok) throw new Error('Failed to save routing');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.post<ApiResponse<SaveResult>>(SERVER_ROUTES.NETWORK.ROUTING, payload);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -743,14 +738,11 @@ export const useSaveRoutingData = () => {
 const saveSecurityData = async (
   payload: SaveSecurityPayload,
 ): Promise<ApiResponse<SaveResult>> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.SECURITY}`, {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(payload),
-  // });
-  // if (!response.ok) throw new Error('Failed to save security');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.post<ApiResponse<SaveResult>>(SERVER_ROUTES.NETWORK.SECURITY, payload);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -789,14 +781,11 @@ export const useSaveSecurityData = () => {
 const saveDiagnosticsData = async (
   payload: SaveDiagnosticsPayload,
 ): Promise<ApiResponse<SaveResult>> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.NETWORK.DIAGNOSTICS}`, {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(payload),
-  // });
-  // if (!response.ok) throw new Error('Failed to save diagnostics');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.post<ApiResponse<SaveResult>>(SERVER_ROUTES.NETWORK.DIAGNOSTICS, payload);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {

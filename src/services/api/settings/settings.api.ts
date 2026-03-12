@@ -5,6 +5,8 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ApiResponse, SaveResult } from "../types";
+import apiClient from "@/services/apiClient";
+import { SERVER_ROUTES } from "@/services/routes/serverRoutes";
 
 // ============================================
 // Query Keys
@@ -50,10 +52,11 @@ export const settingsKeys = {
 const fetchGeneralSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.GENERAL}`);
-  // if (!response.ok) throw new Error('Failed to fetch general settings');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<Record<string, unknown>>>(SERVER_ROUTES.SETTINGS.GENERAL);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -61,13 +64,12 @@ const fetchGeneralSettings = async (): Promise<
       resolve({
         success: true,
         data: {
-          applicationName: "Quantex Q",
-          language: "en",
-          timezone: "America/New_York",
-          dateFormat: "MM/DD/YYYY",
-          timeFormat: "12h",
-          autoSave: true,
-          autoSaveInterval: 300,
+          applicationName: "Well Alpha",
+          defaultRigName: "Rig-01",
+          defaultScenario: "Static",
+          startupScreen1: "Dashboard",
+          startupScreen2: "Dashboard",
+          safetyConfirmations: true,
         },
         timestamp: new Date().toISOString(),
       });
@@ -131,10 +133,11 @@ export const useGeneralOptions = () => {
 const fetchUiDisplaySettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.UI_DISPLAY}`);
-  // if (!response.ok) throw new Error('Failed to fetch UI display settings');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<Record<string, unknown>>>(SERVER_ROUTES.SETTINGS.UI_DISPLAY);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -214,10 +217,11 @@ export const useUiDisplayOptions = () => {
 const fetchUnitsSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.UNITS}`);
-  // if (!response.ok) throw new Error('Failed to fetch units settings');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<Record<string, unknown>>>(SERVER_ROUTES.SETTINGS.UNITS);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -300,10 +304,11 @@ export const useUnitsOptions = () => {
 const fetchDataTimeSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.DATA_TIME}`);
-  // if (!response.ok) throw new Error('Failed to fetch data time settings');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<Record<string, unknown>>>(SERVER_ROUTES.SETTINGS.DATA_TIME);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -386,10 +391,11 @@ export const useDataTimeOptions = () => {
 const fetchAlarmsSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.ALARMS}`);
-  // if (!response.ok) throw new Error('Failed to fetch alarms settings');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<Record<string, unknown>>>(SERVER_ROUTES.SETTINGS.ALARMS);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -484,10 +490,11 @@ export const useAlarmsOptions = () => {
 const fetchSignalsSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.SIGNALS}`);
-  // if (!response.ok) throw new Error('Failed to fetch signals settings');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<Record<string, unknown>>>(SERVER_ROUTES.SETTINGS.SIGNALS);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -648,10 +655,11 @@ export const useSignalsOptions = () => {
 const fetchChokePumpsSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.CHOKE_PUMPS}`);
-  // if (!response.ok) throw new Error('Failed to fetch choke pumps settings');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<Record<string, unknown>>>(SERVER_ROUTES.SETTINGS.CHOKE_PUMPS);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -746,10 +754,11 @@ export const useChokePumpsOptions = () => {
 const fetchAutoControlSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.AUTO_CONTROL}`);
-  // if (!response.ok) throw new Error('Failed to fetch auto control settings');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<Record<string, unknown>>>(SERVER_ROUTES.SETTINGS.AUTO_CONTROL);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -836,10 +845,11 @@ export const useAutoControlOptions = () => {
 const fetchHydraulicsModelSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.HYDRAULICS_MODEL}`);
-  // if (!response.ok) throw new Error('Failed to fetch hydraulics model settings');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<Record<string, unknown>>>(SERVER_ROUTES.SETTINGS.HYDRAULICS_MODEL);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -927,10 +937,11 @@ export const useHydraulicsModelOptions = () => {
 const fetchAboutDiagnosticsSettings = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.SETTINGS.ABOUT_DIAGNOSTICS}`);
-  // if (!response.ok) throw new Error('Failed to fetch about diagnostics settings');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<Record<string, unknown>>>(SERVER_ROUTES.SETTINGS.ABOUT_DIAGNOSTICS);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {

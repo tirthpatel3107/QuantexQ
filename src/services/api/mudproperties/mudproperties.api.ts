@@ -20,6 +20,8 @@ import type {
   SaveGasCompressibilityPayload,
   SaveCalibrationPayload,
 } from "./mudproperties.types";
+import apiClient from "@/services/apiClient";
+import { SERVER_ROUTES } from "@/services/routes/serverRoutes";
 
 // ============================================
 // Query Keys
@@ -47,11 +49,7 @@ export const mudPropertiesKeys = {
   summary: () => [...mudPropertiesKeys.all, "summary"] as const,
 };
 
-// ============================================
-// API Base URL
-// ============================================
-
-// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
+// API Base URL is handled by apiClient
 
 // ============================================
 // GET: Fluid Overview Tab
@@ -60,10 +58,11 @@ export const mudPropertiesKeys = {
 const fetchFluidOverviewData = async (): Promise<
   ApiResponse<FluidOverviewTabData>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.MUD_PROPERTIES.OVERVIEW}`);
-  // if (!response.ok) throw new Error('Failed to fetch fluid overview data');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<FluidOverviewTabData>>(SERVER_ROUTES.MUD_PROPERTIES.OVERVIEW);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -99,10 +98,11 @@ export const useFluidOverviewData = () => {
 // ============================================
 
 const fetchRheologyData = async (): Promise<ApiResponse<RheologyTabData>> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.MUD_PROPERTIES.RHEOLOGY}`);
-  // if (!response.ok) throw new Error('Failed to fetch rheology data');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<RheologyTabData>>(SERVER_ROUTES.MUD_PROPERTIES.RHEOLOGY);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -138,10 +138,11 @@ export const useRheologyData = () => {
 // ============================================
 
 const fetchDensityData = async (): Promise<ApiResponse<DensityTabData>> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.MUD_PROPERTIES.DENSITY}`);
-  // if (!response.ok) throw new Error('Failed to fetch density data');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<DensityTabData>>(SERVER_ROUTES.MUD_PROPERTIES.DENSITY);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -178,10 +179,11 @@ export const useDensityData = () => {
 const fetchTemperatureData = async (): Promise<
   ApiResponse<TemperatureTabData>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.MUD_PROPERTIES.TEMPERATURE}`);
-  // if (!response.ok) throw new Error('Failed to fetch temperature data');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<TemperatureTabData>>(SERVER_ROUTES.MUD_PROPERTIES.TEMPERATURE);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -235,10 +237,11 @@ export const useTemperatureData = () => {
 const fetchGasCompressibilityData = async (): Promise<
   ApiResponse<GasCompressibilityTabData>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.MUD_PROPERTIES.GAS}`);
-  // if (!response.ok) throw new Error('Failed to fetch gas compressibility data');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<GasCompressibilityTabData>>(SERVER_ROUTES.MUD_PROPERTIES.GAS);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -285,10 +288,11 @@ export const useGasCompressibilityData = () => {
 const fetchCalibrationData = async (): Promise<
   ApiResponse<CalibrationTabData>
 > => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.MUD_PROPERTIES.CALIBRATION}`);
-  // if (!response.ok) throw new Error('Failed to fetch calibration data');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<CalibrationTabData>>(SERVER_ROUTES.MUD_PROPERTIES.CALIBRATION);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -367,10 +371,11 @@ export const useCalibrationData = () => {
 // ============================================
 
 const fetchSummaryData = async (): Promise<ApiResponse<SummaryTabData>> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await fetch(`${API_BASE_URL}${SERVER_ROUTES.MUD_PROPERTIES.SUMMARY}`);
-  // if (!response.ok) throw new Error('Failed to fetch summary data');
-  // return response.json();
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<SummaryTabData>>(SERVER_ROUTES.MUD_PROPERTIES.SUMMARY);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {

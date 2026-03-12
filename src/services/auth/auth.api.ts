@@ -7,7 +7,8 @@
  * out; swap the mock Promise calls with apiClient calls when integrating.
  */
 
-// import apiClient from "./axiosClient";
+import apiClient from "../apiClient";
+import { SERVER_ROUTES } from "../routes/serverRoutes";
 import type { AuthResponse, SignInPayload, SignUpPayload } from "./auth.types";
 
 // ─── Sign In ──────────────────────────────────────────────────────────────────
@@ -15,9 +16,11 @@ import type { AuthResponse, SignInPayload, SignUpPayload } from "./auth.types";
 export const signInRequest = async (
   payload: SignInPayload,
 ): Promise<AuthResponse> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await apiClient.post<AuthResponse>(SERVER_ROUTES.AUTH.SIGN_IN, payload);
-  // return response.data;
+  // Real API implementation (commented out until endpoint is live)
+  /*
+  const response = await apiClient.post<AuthResponse>(SERVER_ROUTES.AUTH.SIGN_IN, payload);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve, reject) => {
@@ -56,9 +59,11 @@ export const signInRequest = async (
 export const signUpRequest = async (
   payload: SignUpPayload,
 ): Promise<AuthResponse> => {
-  // TODO: Uncomment when real API is ready
-  // const response = await apiClient.post<AuthResponse>(SERVER_ROUTES.AUTH.SIGN_UP, payload);
-  // return response.data;
+  // Real API implementation
+  /*
+  const response = await apiClient.post<AuthResponse>(SERVER_ROUTES.AUTH.SIGN_UP, payload);
+  return response.data;
+  */
 
   // MOCK RESPONSE
   return new Promise((resolve) => {
@@ -88,8 +93,10 @@ export const signUpRequest = async (
 // ─── Sign Out ────────────────────────────────────────────────────────────────
 
 export const signOutRequest = async (): Promise<void> => {
-  // TODO: Uncomment when real API is ready
-  // await apiClient.post(SERVER_ROUTES.AUTH.SIGN_OUT);
+  // Real API implementation
+  /*
+  await apiClient.post(SERVER_ROUTES.AUTH.SIGN_OUT);
+  */
 
   // MOCK: no-op
   return Promise.resolve();

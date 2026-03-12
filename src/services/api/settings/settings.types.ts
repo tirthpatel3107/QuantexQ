@@ -19,12 +19,20 @@ export interface SettingsData {
 
 export interface GeneralSettingsTabData {
   applicationName: string;
-  language: string;
-  timezone: string;
-  dateFormat: string;
-  timeFormat: "12h" | "24h";
-  autoSave: boolean;
-  autoSaveInterval: number; // in seconds
+  defaultRigName: string;
+  defaultScenario: string;
+  startupScreen1: string;
+  startupScreen2: string;
+  safetyConfirmations: boolean;
+}
+
+export interface SaveGeneralPayload extends Record<string, unknown> {
+  applicationName: string;
+  defaultRigName: string;
+  defaultScenario: string;
+  startupScreen1: string;
+  startupScreen2: string;
+  safetyConfirmations: boolean;
 }
 
 export interface SaveGeneralSettingsPayload {
