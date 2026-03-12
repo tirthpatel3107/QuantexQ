@@ -30,7 +30,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { memo, useState } from "react";
 import { cn } from "@/utils/lib/utils";
-import { ROUTES } from "@/app/routes/clientRoutes";
+import { ROUTES } from "@/app/routes/routeEndpoints";
 
 interface SideDrawerProps {
   open: boolean;

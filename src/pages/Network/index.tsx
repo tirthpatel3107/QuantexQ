@@ -20,7 +20,7 @@ import { Diagnostics } from "./Diagnostics";
 import { NetworkProvider, useNetworkContext } from "@/context/network";
 
 // Constants
-import { ROUTES } from "@/app/routes/clientRoutes";
+import { ROUTES } from "@/app/routes/routeEndpoints";
 import { NETWORK_NAV } from "@/utils/constants";
 
 // Icons

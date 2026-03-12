@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { CategoryCard } from "@/components/features/dashboard/CategoryCard";
-import { ROUTES } from "@/app/routes/clientRoutes";
+import { ROUTES } from "@/app/routes/routeEndpoints";
 import { MUD_OVERVIEW_CARDS } from "@/utils/constants";
 
 export function MudPropertiesOverview() {

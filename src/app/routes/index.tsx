@@ -3,7 +3,7 @@ import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 
 import { SimulationProvider } from "@/context/simulation/index.ts";
 import { SidebarProvider } from "@/context/sidebar/index.ts";
-import { ROUTES } from "@/app/routes/clientRoutes";
+import { ROUTES } from "@/app/routes/routeEndpoints";
 
 const Index = lazy(() => import("@/pages/Index"));
 const NotFound = lazy(() => import("@/pages/notFound/index.tsx"));
@@ -63,10 +63,7 @@ const AppRoutes = () => {
               element={<Settings />}
             />
             <Route path={`${ROUTES.DAQ}/:section?`} element={<DAQ />} />
-            <Route
-              path={`${ROUTES.NETWORK}/:section?`}
-              element={<Network />}
-            />
+            <Route path={`${ROUTES.NETWORK}/:section?`} element={<Network />} />
           </Route>
           {/* </Route> */}
 

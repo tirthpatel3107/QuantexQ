@@ -15,7 +15,11 @@ export const calibrationFormSchema = z.object({
   gasCompressibility: z.object({
     densitySensorOffset: numericString(-1, 1, "Density sensor offset"),
     pvYpCorrectionFactor: numericString(-100, 100, "PV/YP correction factor"),
-    temperatureSensorOffset: numericString(-50, 50, "Temperature sensor offset"),
+    temperatureSensorOffset: numericString(
+      -50,
+      50,
+      "Temperature sensor offset",
+    ),
     gasCut: numericString(0, 100, "Gas-cut"),
   }),
   sanityCheck: z.object({
@@ -40,7 +44,7 @@ export const calibrationFormSchema = z.object({
       checkType: z.string(),
       matchCount: z.number(),
       details: z.string().optional(),
-    })
+    }),
   ),
 });
 

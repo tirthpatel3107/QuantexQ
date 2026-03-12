@@ -10,7 +10,7 @@ import {
   CircleUser,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { ROUTES } from "@/app/routes/clientRoutes";
+import { ROUTES } from "@/app/routes/routeEndpoints";
 import {
   Sheet,
   SheetContent,
