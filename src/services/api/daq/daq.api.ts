@@ -70,17 +70,73 @@ const fetchDisplayData = async (): Promise<ApiResponse<DisplayTabData>> => {
         data: {
           sections: [
             {
-              id: "sec-1",
-              title: "Real-time Monitoring",
-              description: "Live sensor data display",
+              id: "pressures",
+              title: "Pressures",
+              description: "",
               type: "monitoring",
               enabled: true,
             },
             {
-              id: "sec-2",
-              title: "Historical Trends",
-              description: "Time-series data visualization",
+              id: "flow",
+              title: "Flow",
+              description: "",
+              type: "monitoring",
+              enabled: true,
+            },
+            {
+              id: "mw-in-out",
+              title: "MW In & Out",
+              description: "",
+              type: "monitoring",
+              enabled: true,
+            },
+            {
+              id: "flow-in",
+              title: "Flow In",
+              description: "",
+              type: "monitoring",
+              enabled: true,
+            },
+            {
+              id: "out-flow",
+              title: "OUT Flow",
+              description: "",
+              type: "monitoring",
+              enabled: true,
+            },
+            {
+              id: "rotary-drilling",
+              title: "Rotary / Drilling",
+              description: "",
+              type: "monitoring",
+              enabled: true,
+            },
+            {
+              id: "turbing",
+              title: "Turbing",
+              description: "",
+              type: "monitoring",
+              enabled: true,
+            },
+            {
+              id: "trend-analysis",
+              title: "Trend Analysis",
+              description: "",
               type: "trends",
+              enabled: true,
+            },
+            {
+              id: "validation-status",
+              title: "Validation Status",
+              description: "",
+              type: "monitoring",
+              enabled: true,
+            },
+            {
+              id: "sensor-validation",
+              title: "Sensor Validation",
+              description: "",
+              type: "monitoring",
               enabled: true,
             },
           ],
@@ -115,29 +171,40 @@ const fetchStreamingData = async (): Promise<ApiResponse<StreamingTabData>> => {
       resolve({
         success: true,
         data: {
-          witsStream: {
-            enabled: true,
-            level: "1",
-            endpoint: "tcp://192.168.1.100:5000",
-            baudRate: 9600,
-          },
-          edrLogging: {
-            enabled: true,
-            rate: 1000,
-            channels: ["pressure", "temperature", "flow"],
-            format: "csv",
-          },
-          dataRate: {
-            frequency: 100,
-            bufferSize: 10000,
-            downsampling: false,
-          },
-          liveExport: {
+          streaming: {
             enabled: false,
-            targets: [],
-            format: "json",
+            realTimeLevel: "",
+            destination: "",
+          },
+          loggingStatus: {
+            enabled: false,
+            frequency: "",
+            autoCache: false,
+            startLoggingUponSystemReady: false,
+            appendOnLogStop: false,
+          },
+          loggingDestinations: {
+            exportLogFiles: {
+              destinationLogsTo: "Desktop",
+              anotherDirectory:
+                "F:/Documents/Manektech%20Utils/Quantex%20Q/Logging.png",
+              diskCacheDirectory:
+                "F:/Documents/Manektech%20Utils/Quantex%20Q/Logging.png",
+            },
+            network: {
+              networkLocation:
+                "F:/Documents/Manektech%20Utils/Quantex%20Q/Logging.png",
+              directory:
+                "F:/Documents/Manektech%20Utils/Quantex%20Q/Logging.png",
+            },
+          },
+          ftpServer: {
+            ftpUrl1: "",
+            ftpUrl2: "",
+            ftpPas: "",
           },
         },
+
         timestamp: new Date().toISOString(),
       });
     }, 500);
@@ -476,7 +543,7 @@ const fetchCalibrationData = async (): Promise<
             },
           ],
           defaultPermissions: [
-            { name: "WildLife", auto: true },
+            { name: "Wdidate", auto: true },
             { name: "Depth", auto: true },
           ],
           senectoPermissions: [
@@ -580,12 +647,49 @@ const fetchHydraulicsData = async (): Promise<
           ],
           parameterLists: [
             {
-              id: "param-1",
-              name: "Standard Mud",
-              mudOut: 12.5,
-              mudType: "WBM",
-              temp: 75,
-              bbt: 150,
+              id: "MW In",
+              name: "MW In",
+              mudOut: "12.4 ppg",
+              mudIn: "12.4 ppg",
+              mudType: "OBM : Inputs",
+              temp: "0.685 p/2.5.5",
+              bbt: "234 rr",
+            },
+            {
+              id: "RD7",
+              name: "RD7",
+              mudOut: "800 Typo",
+              mudIn: "38.8 p/g",
+              mudType: "Name inputs",
+              temp: "0.885 p/2.5.5",
+              bbt: "234 rr",
+            },
+            {
+              id: "MPT",
+              name: "MPT",
+              mudOut: "80.9 ppg",
+              mudIn: "27.5 ppg",
+              mudType: "BBT 234 rr",
+              temp: "0.108 p/69.65",
+              bbt: "234 rr",
+            },
+            {
+              id: "DBT",
+              name: "DBT",
+              mudOut: "35.0 pps",
+              mudIn: "Y",
+              mudType: "BBT 234 rr",
+              temp: "0.185 p/8.9.5",
+              bbt: "234 rr",
+            },
+            {
+              id: "BIT",
+              name: "BIT",
+              mudOut: "17.5 pps",
+              mudIn: "Y",
+              mudType: "DBT 234 rr",
+              temp: "0.685 p/10.55",
+              bbt: "234 rr",
             },
           ],
           analysis: {
@@ -593,11 +697,22 @@ const fetchHydraulicsData = async (): Promise<
             pressurePlots: {},
           },
           frictionLosses: {
-            calculatedPs: 2500,
-            circulatedFlow: 450,
-            annularFrictionLoss: 150,
-            circulatingFlowIn: 450,
-            circulatingFlowOut: 445,
+            calculatedBy: "Manual RP",
+            circulatedFlow: "Manual Low",
+            circulatingFlowIn: 492,
+            circulatingFlowOut: 600,
+            psValue: "492 psi",
+            flowValue: "600 / Stm",
+            outFlowValue: "510 / Stm",
+            temperature: "Temperature",
+            simplified: "Simplified",
+            vedPuff: "Ved Puff",
+            nippleInnerDiameter: "12 DT",
+            outerDiameter: "9 5/8",
+            panelCostInfo: "Panel Mounting Count Cost is approx 115 approx",
+            simulated: true,
+            ssAf: true,
+            mp73Pf: false,
           },
         },
         timestamp: new Date().toISOString(),
@@ -1042,19 +1157,11 @@ export const useStreamingOptions = () => {
             success: true,
             data: {
               witsLevelOptions: [
-                { label: "Level 0", value: "0" },
-                { label: "Level 1", value: "1" },
+                { label: "Level 0", value: "Level 0" },
+                { label: "Level 1", value: "Level 1" },
+                { label: "Level 2", value: "Level 2" },
               ],
-              formatOptions: [
-                { label: "CSV", value: "csv" },
-                { label: "JSON", value: "json" },
-                { label: "Binary", value: "binary" },
-              ],
-              baudRateOptions: [
-                { label: "9600", value: 9600 },
-                { label: "19200", value: 19200 },
-                { label: "38400", value: 38400 },
-              ],
+              destinationOptions: [{ label: "All", value: "all" }],
             },
           });
         }, 300);
@@ -1192,6 +1299,24 @@ export const useHydraulicsOptions = () => {
                 { label: "WBM", value: "WBM" },
                 { label: "OBM", value: "OBM" },
                 { label: "SBM", value: "SBM" },
+              ],
+              calculatedByOptions: [
+                { label: "Manual RP", value: "Manual RP" },
+                { label: "Auto", value: "Auto" },
+              ],
+              circulatedFlowOptions: [
+                { label: "Manual Low", value: "Manual Low" },
+                { label: "Auto", value: "Auto" },
+              ],
+              temperatureOptions: [
+                { label: "Temperature", value: "Temperature" },
+              ],
+              simplifiedOptions: [{ label: "Simplified", value: "Simplified" }],
+              vedPuffOptions: [{ label: "Ved Puff", value: "Ved Puff" }],
+              outerDiameterOptions: [
+                { label: "9 5/8", value: "9 5/8" },
+                { label: "7", value: "7" },
+                { label: "5 1/2", value: "5 1/2" },
               ],
             },
           });

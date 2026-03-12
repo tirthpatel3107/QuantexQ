@@ -21,7 +21,7 @@ export function NetworkSection({ cards }: NetworkSectionProps) {
   };
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 items-start">
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 items-start">
       {cards.map((card) => (
         <CategoryCard
           key={card.id}

@@ -66,8 +66,9 @@ export function CommonSelect({
             role="combobox"
             aria-expanded={open}
             className={cn(
-              "w-full justify-between bg-background font-normal border-border/50 hover:border-primary/30 transition-all duration-200 ml-0 mt-2",
+              "w-full justify-between bg-background font-normal border-border/50 hover:border-primary/30 transition-all duration-200 ml-0",
               !value && "text-muted-foreground",
+              label && "mt-2",
               triggerClassName,
             )}
             disabled={disabled}
