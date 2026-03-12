@@ -20,7 +20,7 @@ import { DASHBOARD_LIMITS } from "@/utils/constants/dashboard";
 import { SemiCircleGauge } from "./SemiCircleGauge";
 import { SegmentedBar } from "./SegmentedBar";
 import { FlowControlStack } from "./FlowControlStack";
-import { CommonTooltip } from "@/components/shared";
+import { StatusIndicator, CommonTooltip } from "@/components/shared";
 
 interface FlowDifferenceBarProps {
   /** Whether to show a skeleton loader */
@@ -318,18 +318,8 @@ export const FlowDifferenceBar = memo(function FlowDifferenceBar({
 
         {/* Live Connectivity Indicators */}
         <div className="flex flex-col justify-center gap-2.5 px-3 border-l border-border/30 dark:border-white/5 h-full">
-          <div className="flex items-center gap-2">
-            <div className="status-indicator online" />
-            <span className="text-success text-[12px] font-bold uppercase tracking-wider whitespace-nowrap">
-              Live
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="status-indicator online" />
-            <span className="text-success text-[12px] font-bold uppercase tracking-wider whitespace-nowrap">
-              System Hydraulics
-            </span>
-          </div>
+          <StatusIndicator color="#22c55e" label="Live" />
+          <StatusIndicator color="#22c55e" label="System Hydraulics" />
         </div>
       </div>
 

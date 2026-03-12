@@ -2,11 +2,13 @@
 import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
-// Components - Common
+// Components - Layouts
 import { PageLayout } from "@/components/layouts/PageLayout";
 import { SidebarLayout } from "@/components/layouts/SidebarLayout";
 import { PageHeaderLayout } from "@/components/layouts/PageHeaderLayout";
 import { SidebarNavLayout } from "@/components/layouts/SidebarNavLayout";
+
+// Components - Common
 import { CommonButton, CommonTooltip } from "@/components/shared";
 
 // Components - Local
@@ -18,9 +20,12 @@ import { Temperature } from "./Temperature";
 import { GasCompressibility } from "./GasCompressibility";
 import { Calibration } from "./Calibration";
 import { Summary } from "./Summary";
-
-// Components - UI
 import { MudPropertiesSidebar } from "@/components/features/mudProperties/MudPropertiesSidebar";
+
+// Services & API
+
+// Types & Schemas
+import type { FluidData } from "@/utils/types/mud";
 
 // Contexts
 import {
@@ -28,12 +33,11 @@ import {
   useMudPropertiesContext,
 } from "@/context/mudProperties";
 
-// Constants & Types
+// Utils & Constants
 import { ROUTES } from "@/app/routes/routeEndpoints";
 import { MUD_NAV } from "@/utils/constants";
-import { FluidData } from "@/utils/types/mud";
 
-// Icons
+// Icons & Utils
 import { Droplets, Save, RotateCcw, Download } from "lucide-react";
 
 /**

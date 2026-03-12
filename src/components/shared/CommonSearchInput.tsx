@@ -1,8 +1,17 @@
+// React
 import { memo } from "react";
+
+// Icons
 import { Search, X } from "lucide-react";
+
+// Components - UI
 import { Input } from "@/components/ui/input";
-import { cn } from "@/utils/lib/utils";
+
+// Components - Local
 import { CommonTooltip } from "./CommonTooltip";
+
+// Utils
+import { cn } from "@/utils/lib/utils";
 
 export interface CommonSearchInputProps {
   value: string;

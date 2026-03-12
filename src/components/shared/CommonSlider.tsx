@@ -1,3 +1,4 @@
+// Components - UI
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
@@ -14,7 +15,8 @@ interface CommonSliderProps {
   valueFormatter?: (value: number) => string;
   showRangeLabels?: boolean;
   rangeLabels?: string[];
-  rangeLabelPositions?: number[]; // Positions for labels (0-100%)
+  /** Positions for labels (0–100%) */
+  rangeLabelPositions?: number[];
   className?: string;
 }
 

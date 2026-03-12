@@ -1,4 +1,11 @@
+// React & Hooks
 import { useState, useMemo } from "react";
+
+// Form & Validation
+
+// Hooks
+
+// Third-party
 import {
   useReactTable,
   getCoreRowModel,
@@ -8,16 +15,26 @@ import {
   createColumnHelper,
   type PaginationState,
 } from "@tanstack/react-table";
-import { Pencil, Trash2, Plus } from "lucide-react";
+
+// Components - UI
+import { Label } from "@/components/ui/label";
+
+// Components - Common
 import {
   CommonButton,
   CommonSearchInput,
   CommonTable,
   CommonDialog,
+  CommonAlertDialog,
+  CommonInput,
 } from "@/components/shared";
-import { CommonAlertDialog } from "@/components/shared/CommonAlertDialog";
-import { CommonInput } from "@/components/shared/CommonInput";
-import { Label } from "@/components/ui/label";
+
+// Components - Local
+
+// Contexts
+
+// Icons & Utils
+import { Pencil, Trash2, Plus } from "lucide-react";
 
 type Role = {
   id: number;

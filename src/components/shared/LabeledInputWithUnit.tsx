@@ -1,5 +1,13 @@
+// React
+import type { ReactNode } from "react";
+
+// Components - Local
 import { CommonInput } from "./CommonInput";
+
+// Components - UI
 import { Label } from "@/components/ui/label";
+
+// Utils
 import { cn } from "@/utils/lib/utils";
 
 export interface LabeledInputWithUnitProps {
@@ -9,7 +17,7 @@ export interface LabeledInputWithUnitProps {
   unit: string;
   readOnly?: boolean;
   /** Optional suffix (e.g. lock/expand buttons). */
-  suffix?: React.ReactNode;
+  suffix?: ReactNode;
   /** Input id for label. */
   id?: string;
   className?: string;

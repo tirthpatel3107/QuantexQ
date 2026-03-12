@@ -1,6 +1,13 @@
-import React from "react";
+// React & Hooks
+import { useContext, useState, useEffect } from "react";
+
+// Third-party
 import ReactECharts from "echarts-for-react";
+
+// Components - Local
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
+
+// Contexts
 import { ThemeProviderContext } from "@/context/theme";
 
 interface LiveSensorStripProps {
@@ -23,16 +30,16 @@ export function LiveSensorStrip({
   depth = "61,40",
   className,
 }: LiveSensorStripProps) {
-  const { theme } = React.useContext(ThemeProviderContext);
+  const { theme } = useContext(ThemeProviderContext);
   const isDark = theme === "dark" || theme === "midnight";
 
-  const [data, setData] = React.useState(() =>
+  const [data, setData] = useState(() =>
     Array.from({ length: 120 }).map(() => 20 + Math.random() * 40),
   );
-  const [val, setVal] = React.useState(parseFloat(initialValue));
+  const [val, setVal] = useState(parseFloat(initialValue));
 
   // Simulate real-time updates
-  React.useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(() => {
       setData((prev) => {
         const newData = [...prev.slice(1)];

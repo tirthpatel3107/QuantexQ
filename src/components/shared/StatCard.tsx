@@ -1,5 +1,8 @@
+// React
 import { ReactNode } from "react";
-import { cn } from "../../utils/lib/utils";
+
+// Utils
+import { cn } from "@/utils/lib/utils";
 
 interface StatCardProps {
   label: string;

@@ -1,3 +1,7 @@
+// React
+import * as React from "react";
+
+// Components - UI
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,6 +12,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+
+// Utils
 import { cn } from "@/utils/lib/utils";
 
 interface CommonAlertDialogProps {

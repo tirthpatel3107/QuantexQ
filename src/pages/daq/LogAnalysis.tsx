@@ -1,12 +1,18 @@
 // React & Hooks
 import { useState, useEffect, useMemo } from "react";
-import { z } from "zod";
+
+// Form & Validation
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+// Hooks
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
-// Components - UI & Icons
-import { PanelCard } from "@/components/features/dashboard/PanelCard";
+// Components - UI
+import { Badge } from "@/components/ui/badge";
+
+// Components - Common
 import {
   SectionSkeleton,
   CommonButton,
@@ -14,11 +20,12 @@ import {
   CommonFormInput,
   CommonFormSelect,
 } from "@/components/shared";
-import { Badge } from "@/components/ui/badge";
-import { Filter, Download, AlertTriangle } from "lucide-react";
-import { cn } from "@/utils/lib/utils";
 
-// Services & Types
+// Components - Local
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
+import { ChartPanel } from "@/components/features/dashboard/ChartPanel";
+
+// Services & API
 import {
   useLogAnalysisData,
   useSaveLogAnalysisData,
@@ -26,13 +33,16 @@ import {
 } from "@/services/api/daq/daq.api";
 import type { SaveLogAnalysisPayload } from "@/services/api/daq/daq.types";
 
-// Context
+// Types & Schemas
+
+// Contexts
 import { useDAQContext } from "@/context/daq";
 
-// Local Components
-import { ChartPanel } from "@/components/features/dashboard/ChartPanel";
+// Icons & Utils
+import { Filter, Download, AlertTriangle } from "lucide-react";
+import { cn } from "@/utils/lib/utils";
 
-// Schema
+// Schema & Types
 const logAnalysisFormSchema = z.object({
   logResults: z.object({
     dataFilterLevel: z.string().min(1, "Filter level is required"),

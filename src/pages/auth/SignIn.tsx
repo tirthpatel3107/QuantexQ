@@ -1,11 +1,26 @@
+// React & Hooks
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
+// Form & Validation
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, Loader2, Lock, Mail, Zap } from "lucide-react";
+
+// Hooks
+
+// Services & API
+
+// Types & Schemas
+
+// Contexts
 import { useAuth } from "@/context/auth";
+
+// Utils & Constants
 import { ROUTES } from "@/app/routes/routeEndpoints";
+
+// Icons & Utils
+import { Eye, EyeOff, Loader2, Lock, Mail, Zap } from "lucide-react";
 
 // ─── Validation Schema ────────────────────────────────────────────────────────
 

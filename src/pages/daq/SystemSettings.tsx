@@ -1,13 +1,14 @@
+// React & Hooks
 import { useState, useEffect } from "react";
+
+// Form & Validation
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import {
-  systemSettingsFormSchema,
-  type SystemSettingsFormValues,
-} from "@/utils/schemas/systemSettings";
 
-import { PanelCard } from "@/components/features/dashboard/PanelCard";
+// Hooks
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Components - Common
 import {
   SectionSkeleton,
   FormSaveDialog,
@@ -17,7 +18,11 @@ import {
   CommonFormSelect,
 } from "@/components/shared";
 import { RestoreDefaultsButton } from "@/components/shared/RestoreDefaultsButton";
-import { Settings } from "lucide-react";
+
+// Components - Local
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
+
+// Services & API
 import {
   useSystemSettingsData,
   useSaveSystemSettingsData,
@@ -25,8 +30,17 @@ import {
 } from "@/services/api/daq/daq.api";
 import type { SaveSystemSettingsPayload } from "@/services/api/daq/daq.types";
 
-// Context
+// Types & Schemas
+import {
+  systemSettingsFormSchema,
+  type SystemSettingsFormValues,
+} from "@/utils/schemas/systemSettings";
+
+// Contexts
 import { useDAQContext } from "@/context/daq";
+
+// Icons & Utils
+import { Settings } from "lucide-react";
 
 export function SystemSettings() {
   const { data: systemSettingsResponse, isLoading } = useSystemSettingsData();

@@ -1,8 +1,15 @@
+// React
 import * as React from "react";
-import { cn } from "@/utils/lib/utils";
+
+// Components - UI
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+// Icons
 import { Eye, EyeOff } from "lucide-react";
+
+// Utils
+import { cn } from "@/utils/lib/utils";
 
 export interface CommonInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {

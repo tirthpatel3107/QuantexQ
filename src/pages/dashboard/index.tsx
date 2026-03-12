@@ -1,16 +1,28 @@
-import React, { useState, useMemo, useCallback } from "react";
-import { cn } from "@/utils/lib/utils";
+// React & Hooks
+import { useState, useMemo, useCallback } from "react";
+
+// Hooks
+import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+
+// Components - Local
 import { VerticalChartCard } from "@/components/features/dashboard/VerticalChartCard";
 import { DepthGauge } from "@/components/features/dashboard/DepthGauge";
-import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+import { TimeAxisCard } from "@/components/features/dashboard/TimeAxisCard";
+import { FlowDifferenceBar } from "@/components/features/dashboard/FlowDifferenceBar";
+
+// Services & API
+
+// Types & Schemas
+
+// Contexts
 import { useSimulationData } from "@/context/simulation";
+
+// Utils & Constants
+import { cn } from "@/utils/lib/utils";
 import {
   CENTER_CARDS,
   metricsFromLatestPoint,
 } from "@/utils/data/dashboardChartConfig";
-
-import { TimeAxisCard } from "@/components/features/dashboard/TimeAxisCard";
-import { FlowDifferenceBar } from "@/components/features/dashboard/FlowDifferenceBar";
 
 /**
  * Dashboard Component

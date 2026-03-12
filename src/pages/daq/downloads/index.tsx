@@ -1,14 +1,24 @@
+// React & Hooks
 import { useMemo } from "react";
+
+// Hooks
 import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Components - Common
 import { SectionSkeleton, FormSaveDialog } from "@/components/shared";
+
+// Components - Local
+import { DownloadPanel } from "./download";
+import { DownloadHistory } from "./DownloadHistory";
+
+// Services & API
 import {
   useDownloadsData,
   useSaveDownloadsData,
 } from "@/services/api/daq/daq.api";
 import type { SaveDownloadsPayload } from "@/services/api/daq/daq.types";
-import { DownloadPanel } from "./download";
-import { DownloadHistory } from "./DownloadHistory";
-// Context
+
+// Contexts
 import { useDAQContext } from "@/context/daq";
 
 export function Downloads() {

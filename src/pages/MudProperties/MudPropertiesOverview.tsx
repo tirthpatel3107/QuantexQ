@@ -1,7 +1,22 @@
+// React & Hooks
 import { useNavigate } from "react-router-dom";
+
+// Form & Validation
+
+// Hooks
+
+// Services & API
+
+// Types & Schemas
+
+// Components - Local
 import { CategoryCard } from "@/components/features/dashboard/CategoryCard";
+
+// Utils & Constants
 import { ROUTES } from "@/app/routes/routeEndpoints";
 import { MUD_OVERVIEW_CARDS } from "@/utils/constants";
+
+// Icons & Utils
 
 export function MudPropertiesOverview() {
   const navigate = useNavigate();

@@ -1,5 +1,27 @@
+// React & Hooks
+
+// Form & Validation
+
+// Hooks
+
+// Third-party
+
+// Components - UI
+
+// Components - Common
+
+// Components - Local
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
+
+// Services & API
+
+// Types & Schemas
+
+// Contexts
+
+// Icons & Utils
 import { Check } from "lucide-react";
+
 
 export function MudPropertiesSidebar() {
   return (

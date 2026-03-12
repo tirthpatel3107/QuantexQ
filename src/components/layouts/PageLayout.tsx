@@ -1,5 +1,10 @@
+// React & Hooks
 import type { ReactNode } from "react";
+
+// Components - Features
 import { Header } from "@/components/features/dashboard/Header";
+
+// Icons & Utils
 import { cn } from "@/utils/lib/utils";
 
 export interface PageLayoutProps {

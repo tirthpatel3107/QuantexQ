@@ -1,7 +1,29 @@
+// React & Hooks
+
+// Form & Validation
+
+// Hooks
+
+// Third-party
+
+// Components - UI
+
+// Components - Common
 import { SectionSkeleton } from "@/components/shared";
+
+// Components - Local
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
-import { FluidData } from "@/utils/types/mud";
+
+// Services & API
 import { useSummaryData } from "@/services/api/mudproperties/mudproperties.api";
+
+// Types & Schemas
+import type { FluidData } from "@/utils/types/mud";
+
+// Contexts
+
+// Icons & Utils
+
 
 interface SummaryProps {
   fluid: FluidData;

@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // Hooks
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
+// Third-party
+
 // Components - UI
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup } from "@/components/ui/radio-group";
@@ -21,8 +23,8 @@ import {
 } from "@/components/shared";
 
 // Components - Local
-import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
+import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";
 
 // Services & API
 import {
@@ -39,6 +41,9 @@ import type { SaveProtocolsPayload } from "@/services/api/network/network.types"
 
 // Contexts
 import { useNetworkContext } from "@/context/network";
+
+// Icons & Utils
+
 
 /**
  * Protocols Component

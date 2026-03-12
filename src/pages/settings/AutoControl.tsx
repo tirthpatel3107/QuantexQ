@@ -1,18 +1,28 @@
 // React & Hooks
 import { useMemo } from "react";
+
+// Form & Validation
+
+// Hooks
 import { useSectionForm } from "@/hooks/useSectionForm";
 
-// Components - UI & Icons
-import { SectionSkeleton, FormSaveDialog } from "@/components/shared";
-
-// Services & Types
+// Services & API
 import {
   useAutoControlSettings,
   useSaveAutoControlSettings,
 } from "@/services/api/settings/settings.api";
 
-// Context
+// Types & Schemas
+
+// Components - Common
+import { SectionSkeleton, FormSaveDialog } from "@/components/shared";
+
+// Components - Local
+
+// Contexts
 import { useSettingsContext } from "@/context/settings";
+
+// Icons & Utils
 
 export function AutoControl() {
   const { data: autoControlResponse, isLoading } = useAutoControlSettings();

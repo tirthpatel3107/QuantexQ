@@ -1,12 +1,19 @@
 // React & Hooks
 import { useState, useEffect, useMemo, Fragment } from "react";
+
+// Form & Validation
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+// Hooks
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-import {
-  calibrationFormSchema,
-  type CalibrationFormValues,
-} from "@/utils/schemas/calibration";
+
+// Third-party
+import ReactECharts from "echarts-for-react";
+
+// Components - UI
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 
 // Components - Common
 import {
@@ -18,26 +25,29 @@ import {
   CommonFormInput,
   CommonCheckbox,
 } from "@/components/shared";
+
+// Components - Local
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/utils/lib/utils";
 
-// Icons
-import { Search, Settings } from "lucide-react";
-
-// Chart
-import ReactECharts from "echarts-for-react";
-
-// Services & Types
+// Services & API
 import {
   useCalibrationData,
   useSaveCalibrationData,
 } from "@/services/api/daq/daq.api";
 import type { SaveCalibrationPayload } from "@/services/api/daq/daq.types";
 
-// Context
+// Types & Schemas
+import {
+  calibrationFormSchema,
+  type CalibrationFormValues,
+} from "@/utils/schemas/calibration";
+
+// Contexts
 import { useDAQContext } from "@/context/daq";
+
+// Icons & Utils
+import { Search, Settings } from "lucide-react";
+import { cn } from "@/utils/lib/utils";
 
 // ============================================
 

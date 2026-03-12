@@ -1,10 +1,31 @@
-import { PanelCard } from "@/components/features/dashboard/PanelCard";
+// React & Hooks
+
+// Form & Validation
+
+// Hooks
+
+// Third-party
+
+// Components - UI
+
+// Components - Common
 import {
   RestoreDefaultsButton,
   CommonSelect,
   CommonInput,
 } from "@/components/shared";
-import { FluidData } from "@/utils/types/mud";
+
+// Components - Local
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
+
+// Services & API
+
+// Types & Schemas
+import type { FluidData } from "@/utils/types/mud";
+
+// Contexts
+
+// Icons & Utils
 
 interface FluidSystemPanelProps {
   fluid: FluidData;

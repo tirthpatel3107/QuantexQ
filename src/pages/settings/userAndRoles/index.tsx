@@ -1,11 +1,28 @@
+// React & Hooks
 import { useState, useMemo } from "react";
+
+// Form & Validation
+
+// Hooks
+
+// Services & API
+
+// Types & Schemas
+
+// Components - Common
 import {
   CommonTabs,
   CommonTabsContent,
   CommonTabsNav,
 } from "@/components/shared";
+
+// Components - Local
 import { Users } from "./Users";
 import { Roles } from "./Roles";
+
+// Contexts
+
+// Icons & Utils
 
 export function UsersRoles() {
   const [activeTab, setActiveTab] = useState("users");

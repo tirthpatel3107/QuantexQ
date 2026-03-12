@@ -1,4 +1,7 @@
+// Components - UI
 import { Badge, type BadgeProps } from "@/components/ui/badge";
+
+// Utils
 import { cn } from "@/utils/lib/utils";
 
 export interface StatusBadgeProps extends BadgeProps {

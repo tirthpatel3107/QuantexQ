@@ -1,17 +1,21 @@
 // React & Hooks
 import { useEffect } from "react";
+
+// Form & Validation
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+// Hooks
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
-// Schema & Types
-import {
-  streamingFormSchema,
-  type StreamingFormValues,
-} from "@/utils/schemas/streaming";
+// Third-party
 
-// Components
-import { PanelCard } from "@/components/features/dashboard/PanelCard";
+// Components - UI
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+
+// Components - Common
 import {
   CommonButton,
   CommonFormInput,
@@ -20,12 +24,11 @@ import {
   SectionSkeleton,
   FormSaveDialog,
 } from "@/components/shared";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { FolderOpen } from "lucide-react";
 
-// Services & Types
+// Components - Local
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
+
+// Services & API
 import {
   useStreamingData,
   useSaveStreamingData,
@@ -37,8 +40,17 @@ import type {
 } from "@/services/api/daq/daq.types";
 import type { ApiResponse } from "@/services/api/types";
 
-// Context
+// Types & Schemas
+import {
+  streamingFormSchema,
+  type StreamingFormValues,
+} from "@/utils/schemas/streaming";
+
+// Contexts
 import { useDAQContext } from "@/context/daq";
+
+// Icons & Utils
+import { FolderOpen } from "lucide-react";
 
 // ============================================
 // Component

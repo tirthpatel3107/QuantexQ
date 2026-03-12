@@ -1,4 +1,7 @@
+// React & Hooks
 import { useState, useEffect, useCallback } from "react";
+
+// Hooks
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
 interface UseSectionFormOptions<T> {

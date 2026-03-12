@@ -1,3 +1,4 @@
+// Hooks
 import { toast } from "@/hooks/useToast";
 
 export type ToastVariant =

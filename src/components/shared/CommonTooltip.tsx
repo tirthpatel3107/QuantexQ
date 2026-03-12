@@ -1,4 +1,7 @@
+// React
 import * as React from "react";
+
+// Components - UI
 import {
   Tooltip,
   TooltipContent,
@@ -14,8 +17,8 @@ interface CommonTooltipProps {
 }
 
 /**
- * Common tooltip component that always displays on top
- * Wraps shadcn/ui tooltip with consistent positioning
+ * Common tooltip component that always displays on top.
+ * Wraps shadcn/ui tooltip with consistent positioning.
  */
 export const CommonTooltip: React.FC<CommonTooltipProps> = ({
   children,

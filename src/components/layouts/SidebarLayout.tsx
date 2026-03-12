@@ -1,10 +1,24 @@
+// React & Hooks
 import type { ReactNode } from "react";
+
+// Hooks
+
+// Components - UI
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/utils/lib/utils";
+
+// Components - Common
+import { CommonButton, CommonTooltip } from "@/components/shared";
+
+// Services & API
+
+// Types & Schemas
+
+// Contexts
 import { useSidebarContext } from "@/context/sidebar";
+
+// Icons & Utils
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
-import { CommonButton } from "@/components/shared";
-import { CommonTooltip } from "@/components/shared";
+import { cn } from "@/utils/lib/utils";
 
 export interface SidebarLayoutProps {
   /** Sidebar content (nav list). */

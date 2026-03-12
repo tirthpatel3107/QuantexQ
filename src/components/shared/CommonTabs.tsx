@@ -1,10 +1,15 @@
+// React
 import * as React from "react";
+
+// Components - UI
 import {
   Tabs as BaseTabs,
   TabsList as BaseTabsList,
   TabsTrigger as BaseTabsTrigger,
   TabsContent as BaseTabsContent,
 } from "@/components/ui/tabs";
+
+// Utils
 import { cn } from "@/utils/lib/utils";
 
 export type CommonTabsProps = React.ComponentPropsWithoutRef<typeof BaseTabs>;

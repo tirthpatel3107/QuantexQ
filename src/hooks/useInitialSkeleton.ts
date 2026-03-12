@@ -1,4 +1,7 @@
+// React & Hooks
 import { useEffect, useState } from "react";
+
+// Constants
 import { SKELETON_DURATION_MS } from "@/utils/constants/config";
 
 /**

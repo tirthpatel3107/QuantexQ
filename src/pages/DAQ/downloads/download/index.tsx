@@ -1,16 +1,23 @@
+// React & Hooks
 import { useState } from "react";
-import { Download as DownloadIcon, FolderOpen } from "lucide-react";
-import { PanelCard } from "@/components/features/dashboard/PanelCard";
-import { CommonButton } from "@/components/shared/CommonButton";
+
+// Components - Common
 import {
+  CommonButton,
   CommonTabs,
   CommonTabsContent,
   CommonTabsList,
   CommonTabsTrigger,
-} from "@/components/shared/CommonTabs";
+} from "@/components/shared";
+
+// Components - Local
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import { Download } from "./Download";
 import { DcsSets } from "./DcsSets";
 import { DownloadPatch } from "./DownloadPatch";
+
+// Icons & Utils
+import { Download as DownloadIcon, FolderOpen } from "lucide-react";
 
 export function DownloadPanel() {
   const [activeTab, setActiveTab] = useState("downloads");

@@ -6,9 +6,10 @@ export const diagnosticsFormSchema = z.object({
     duration: z.string().min(1, "Duration is required"),
   }),
   jitterAnalysis: z.object({
-    showMask: z.boolean().default(false),
+    showMask: z.boolean(),
   }),
 });
+
 
 export const MOCK_CHART_DATA = {
   latency: Array.from({ length: 20 }, (_, i) => ({

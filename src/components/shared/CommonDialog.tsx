@@ -1,4 +1,7 @@
+// React
 import * as React from "react";
+
+// Components - UI
 import {
   Dialog,
   DialogContent,
@@ -7,6 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+
+// Utils
 import { cn } from "@/utils/lib/utils";
 
 interface CommonDialogProps {

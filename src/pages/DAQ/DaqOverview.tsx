@@ -1,7 +1,28 @@
-// import { useNavigate } from "react-router-dom";
+// React & Hooks
+
+// Form & Validation
+
+// Hooks
+
+// Third-party
+
+// Components - UI
+
+// Components - Common
+
+// Components - Local
 import { CategoryCard } from "@/components/features/dashboard/CategoryCard";
-// import { ROUTES } from "@/utils/constants/routes";
+
+// Services & API
+
+// Types & Schemas
+
+// Contexts
+
+// Utils & Constants
 import { DAQ_SECTION_CARDS } from "@/utils/constants";
+
+// Icons & Utils
 
 export function DaqOverview() {
   // const navigate = useNavigate();

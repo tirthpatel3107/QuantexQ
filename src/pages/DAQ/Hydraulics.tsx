@@ -1,16 +1,14 @@
 // React & Hooks
 import { useEffect, useMemo, useState } from "react";
+
+// Form & Validation
 import { useForm, useWatch } from "react-hook-form";
-import { useTheme } from "@/context/theme";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+// Hooks
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
-// Schema & Types
-import {
-  hydraulicsFormSchema,
-  type HydraulicsFormValues,
-  type HydraulicsParameterItem,
-} from "@/utils/schemas/hydraulics";
+// Third-party
 import {
   useReactTable,
   getCoreRowModel,
@@ -18,9 +16,12 @@ import {
   getFilteredRowModel,
   createColumnHelper,
 } from "@tanstack/react-table";
+import ReactECharts from "echarts-for-react";
 
-// Components
-import { PanelCard } from "@/components/features/dashboard/PanelCard";
+// Components - UI
+import { Badge } from "@/components/ui/badge";
+
+// Components - Common
 import {
   CommonButton,
   CommonFormSelect,
@@ -29,21 +30,30 @@ import {
   CommonTable,
   StatCard,
 } from "@/components/shared";
-import { Badge } from "@/components/ui/badge";
-import { Search, RotateCcw, Cpu, Wind } from "lucide-react";
 
-// Chart
-import ReactECharts from "echarts-for-react";
+// Components - Local
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 
-// Services & Types
+// Services & API
 import {
   useHydraulicsData,
   useSaveHydraulicsData,
 } from "@/services/api/daq/daq.api";
 import type { SaveHydraulicsPayload } from "@/services/api/daq/daq.types";
 
-// Context
+// Types & Schemas
+import {
+  hydraulicsFormSchema,
+  type HydraulicsFormValues,
+  type HydraulicsParameterItem,
+} from "@/utils/schemas/hydraulics";
+
+// Contexts
+import { useTheme } from "@/context/theme";
 import { useDAQContext } from "@/context/daq";
+
+// Icons & Utils
+import { Search, RotateCcw, Cpu, Wind } from "lucide-react";
 
 // ============================================
 // Constants & Configuration

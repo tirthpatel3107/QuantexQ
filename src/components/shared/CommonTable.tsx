@@ -1,4 +1,7 @@
+// Third-party - Data Table
 import { flexRender, type Table as TanstackTable } from "@tanstack/react-table";
+
+// Icons
 import {
   ChevronDown,
   ChevronUp,
@@ -6,6 +9,8 @@ import {
   ChevronRight,
   Check,
 } from "lucide-react";
+
+// Components - UI
 import {
   Table,
   TableBody,
@@ -22,8 +27,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/utils/lib/utils";
+
+// Contexts
 import { useTheme } from "@/context/theme";
+
+// Utils
+import { cn } from "@/utils/lib/utils";
 
 interface CommonTableProps<TData> {
   table: TanstackTable<TData>;

@@ -1,7 +1,14 @@
+// React
 import * as React from "react";
+
+// Components - UI
 import { Button, type ButtonProps } from "@/components/ui/button";
-import { cn } from "@/utils/lib/utils";
+
+// Icons
 import { Loader2 } from "lucide-react";
+
+// Utils
+import { cn } from "@/utils/lib/utils";
 
 export interface CommonButtonProps extends ButtonProps {
   /** Optional icon to display */

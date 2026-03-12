@@ -1,26 +1,38 @@
 // React & Hooks
 import { useMemo, useCallback } from "react";
+
+// Form & Validation
+
+// Hooks
 import { useSectionForm } from "@/hooks/useSectionForm";
 
-// Components - UI & Icons
+// Third-party
+
+// Components - UI
+
+// Components - Common
 import { SectionSkeleton, FormSaveDialog } from "@/components/shared";
 
-// Components - Local Panels
+// Components - Local
 import { FluidSystemPanel } from "./FluidSystemPanel";
 import { RheologyPanel } from "./RheologyPanel";
 import { DensitySolidsPanel } from "./DensitySolidsPanel";
 import { TemperaturePanel } from "./TemperaturePanel";
 
-// Services & Types
+// Services & API
 import {
   useFluidOverviewData,
   useSaveFluidOverviewData,
   useFluidOverviewOptions,
 } from "@/services/api/mudproperties/mudproperties.api";
+
+// Types & Schemas
 import type { SaveFluidOverviewPayload } from "@/services/api/mudproperties/mudproperties.types";
 
-// Context
+// Contexts
 import { useMudPropertiesContext } from "@/context/mudProperties";
+
+// Icons & Utils
 
 export function FluidOverview() {
   const { data: overviewResponse, isLoading } = useFluidOverviewData();

@@ -1,3 +1,19 @@
+// React & Hooks
+import { Navigate, Outlet } from "react-router-dom";
+
+// Hooks
+
+// Components - Common
+import { PageLoader } from "@/components/shared";
+
+// Contexts
+import { useAuth } from "@/context/auth";
+
+// Utils & Constants
+import { ROUTES } from "@/app/routes/routeEndpoints";
+
+// Icons & Utils
+
 /**
  * ProtectedRouteLayout
  *
@@ -10,12 +26,6 @@
  *     <Route path="/dashboard" element={<Dashboard />} />
  *   </Route>
  */
-
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "@/context/auth";
-import { PageLoader } from "@/components/shared";
-import { ROUTES } from "@/app/routes/routeEndpoints";
-
 const ProtectedRouteLayout = () => {
   const { isAuthenticated, isLoading } = useAuth();
 

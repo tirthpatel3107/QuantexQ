@@ -1,14 +1,21 @@
+// Third-party - Data Fetching
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+// Components - UI
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+
+// Contexts
 import { ThemeProvider } from "@/context/theme";
 import { AccentColorProvider } from "@/context/accentColor";
 import { AuthProvider } from "@/context/auth";
-import { THEME_STORAGE_KEY } from "@/utils/constants/config.ts";
 
-import AppRoutes from "@/app/routes/index.tsx";
+// Utils & Constants
+import { THEME_STORAGE_KEY } from "@/utils/constants/config";
+
+// Routes
+import AppRoutes from "@/app/routes";
 
 const queryClient = new QueryClient({
   defaultOptions: {

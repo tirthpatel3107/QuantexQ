@@ -1,20 +1,35 @@
 // React & Hooks
 import { useMemo, useCallback } from "react";
+
+// Form & Validation
+
+// Hooks
 import { useSectionForm } from "@/hooks/useSectionForm";
 
-// Components
+// Third-party
+
+// Components - UI
+
+// Components - Common
 import { SectionSkeleton, FormSaveDialog } from "@/components/shared";
+
+// Components - Local
 import { RheologyPanel } from "./fluidOverview/RheologyPanel";
 
-// Services & Types
+// Services & API
 import {
   useRheologyData,
   useSaveRheologyData,
 } from "@/services/api/mudproperties/mudproperties.api";
+
+// Types & Schemas
 import type { SaveRheologyPayload } from "@/services/api/mudproperties/mudproperties.types";
 
-// Context
+// Contexts
 import { useMudPropertiesContext } from "@/context/mudProperties";
+
+// Icons & Utils
+
 
 export function Rheology() {
   const { data: rheologyResponse, isLoading } = useRheologyData();

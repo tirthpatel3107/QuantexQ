@@ -1,6 +1,11 @@
+// React
 import * as React from "react";
+
+// Components - UI
 import { RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+
+// Utils
 import { cn } from "@/utils/lib/utils";
 
 export type CommonRadioProps = React.ComponentPropsWithoutRef<

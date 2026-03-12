@@ -1,5 +1,10 @@
+// Icons
 import { RotateCcw } from "lucide-react";
+
+// Components - UI
 import { Button } from "@/components/ui/button";
+
+// Components - Local
 import { CommonTooltip } from "./CommonTooltip";
 
 export interface RestoreDefaultsButtonProps {

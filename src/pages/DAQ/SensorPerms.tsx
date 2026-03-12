@@ -1,13 +1,29 @@
+// React & Hooks
 import { useMemo } from "react";
+
+// Form & Validation
+
+// Hooks
 import { useSectionForm } from "@/hooks/useSectionForm";
-import { SectionSkeleton, FormSaveDialog } from "@/components/shared";
+
+// Services & API
 import {
   useSensorPermsData,
   useSaveSensorPermsData,
 } from "@/services/api/daq/daq.api";
 import type { SaveSensorPermsPayload } from "@/services/api/daq/daq.types";
-// Context
+
+// Types & Schemas
+
+// Components - Common
+import { SectionSkeleton, FormSaveDialog } from "@/components/shared";
+
+// Components - Local
+
+// Contexts
 import { useDAQContext } from "@/context/daq";
+
+// Icons & Utils
 
 export function SensorPerms() {
   const { data: sensorPermsResponse, isLoading } = useSensorPermsData();

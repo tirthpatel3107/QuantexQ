@@ -1,5 +1,12 @@
 // React & Hooks
 import { useState, useMemo, useCallback } from "react";
+
+// Form & Validation
+
+// Hooks
+import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Third-party
 import {
   useReactTable,
   getCoreRowModel,
@@ -10,9 +17,6 @@ import {
   type SortingState,
   type PaginationState,
 } from "@tanstack/react-table";
-
-// Hooks
-import { useSectionForm } from "@/hooks/useSectionForm";
 
 // Components - UI
 import { Checkbox } from "@/components/ui/checkbox";
@@ -33,12 +37,16 @@ import {
   type CommonSelectOption,
 } from "@/components/shared";
 
+// Components - Local
+
 // Services & API
 import {
   useSignalsSettings,
   useSaveSignalsSettings,
   useSignalsOptions,
 } from "@/services/api/settings/settings.api";
+
+// Types & Schemas
 
 // Contexts
 import { useSettingsContext } from "@/context/settings";

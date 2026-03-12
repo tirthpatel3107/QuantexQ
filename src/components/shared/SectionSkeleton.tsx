@@ -1,4 +1,7 @@
+// Components - Local
 import { CommonSkeleton } from "./CommonSkeleton";
+
+// Utils
 import { cn } from "@/utils/lib/utils";
 
 interface SectionSkeletonProps {

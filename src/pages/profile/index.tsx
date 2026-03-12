@@ -1,17 +1,38 @@
+// React & Hooks
 import { useState } from "react";
-import { PageLayout } from "@/components/layouts/PageLayout";
+
+// Form & Validation
+
+// Hooks
+import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
+
+// Services & API
+
+// Types & Schemas
+
+// Components - UI
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+// Components - Common
 import {
   CommonAlertDialog,
   CommonButton,
   PageLoader,
   CommonToggle,
 } from "@/components/shared";
+
+// Components - Local
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
+// Contexts
+import { useTheme } from "@/context/theme";
+
+// Icons & Utils
 import {
   BellRing,
   Globe2,
@@ -25,8 +46,7 @@ import {
   Clock4,
   Check,
 } from "lucide-react";
-import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
-import { useTheme } from "@/context/theme";
+
 const sessions = [
   {
     device: "Rugged Tablet · Rig Control Room",

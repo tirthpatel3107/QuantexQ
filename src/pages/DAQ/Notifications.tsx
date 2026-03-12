@@ -1,12 +1,17 @@
 // React & Hooks
 import { useState, useEffect } from "react";
-import { z } from "zod";
+
+// Form & Validation
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+// Hooks
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
-// Components – UI & Icons
-import { PanelCard } from "@/components/features/dashboard/PanelCard";
+// Components - UI
+
+// Components - Common
 import {
   CommonButton,
   CommonFormToggle,
@@ -16,10 +21,11 @@ import {
   FormSaveDialog,
   CommonToast,
 } from "@/components/shared";
-import { Volume2, Play, Bell } from "lucide-react";
-import { cn } from "@/utils/lib/utils";
 
-// Services & Types
+// Components - Local
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
+
+// Services & API
 import {
   useNotificationsData,
   useSaveNotificationsData,
@@ -32,9 +38,16 @@ import type {
   NotificationsStore,
 } from "@/services/api/daq/daq.types";
 
-// Context
+// Types & Schemas
+
+// Contexts
 import { useDAQContext } from "@/context/daq";
 
+// Icons & Utils
+import { Volume2, Play, Bell } from "lucide-react";
+import { cn } from "@/utils/lib/utils";
+
+// Schema & Types
 // ============================================
 // Zod Schema
 // ============================================

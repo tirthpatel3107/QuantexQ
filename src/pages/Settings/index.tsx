@@ -1,19 +1,21 @@
+// React & Hooks
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Settings as SettingsIcon,
-  Save,
-  RotateCcw,
-  Upload,
-} from "lucide-react";
 
-import { ROUTES } from "@/app/routes/routeEndpoints";
+// Hooks
+
+// Services & API
+
+// Types & Schemas
+
+// Components - Common
 import { PageLayout } from "@/components/layouts/PageLayout";
 import { SidebarLayout } from "@/components/layouts/SidebarLayout";
 import { PageHeaderLayout } from "@/components/layouts/PageHeaderLayout";
 import { SidebarNavLayout } from "@/components/layouts/SidebarNavLayout";
 import { CommonButton, CommonTooltip } from "@/components/shared";
 
+// Components - Local
 import { SettingsOverview } from "./SettingsOverview";
 import { GeneralSettings } from "./General";
 import { Units } from "./Units";
@@ -26,11 +28,32 @@ import { HydraulicsModel } from "./HydraulicsModel";
 import { UiDisplay } from "./UiDisplay";
 import { UsersRoles } from "./userAndRoles";
 import { AboutDiagnostics } from "./AboutDiagnostics";
-import { SETTINGS_NAV } from "@/utils/constants";
-// import { GeneralSettingsData } from "@/utils/types/settings";
+
+// Contexts
 import { SettingsProvider, useSettingsContext } from "@/context/settings";
 
+// Utils & Constants
+import { SETTINGS_NAV } from "@/utils/constants";
+import { ROUTES } from "@/app/routes/routeEndpoints";
+
+// Icons & Utils
+import {
+  Settings as SettingsIcon,
+  Save,
+  RotateCcw,
+  Upload,
+} from "lucide-react";
+
+/**
+ * SettingsContent Component
+ *
+ * The internal layout for the Settings module.
+ * Handles sub-section routing and provides a shared header with global actions.
+ *
+ * @returns JSX.Element
+ */
 function SettingsContent() {
+  // ---- Data & State ----
   const { section } = useParams();
   const activeSection = section || "setting";
   const { requestSave } = useSettingsContext();
@@ -43,6 +66,8 @@ function SettingsContent() {
   //   startupScreen2: "Quantum HUD",
   // });
   // const [safetyConfirmations, setSafetyConfirmations] = useState(true);
+
+  // ---- Render Helpers ----
 
   const headerActions = useMemo(
     () => (
@@ -83,6 +108,9 @@ function SettingsContent() {
     [activeSection],
   );
 
+  /**
+   * Navigates to the active sub-section of the Settings module.
+   */
   const renderSection = () => {
     switch (activeSection) {
       case "setting":
@@ -147,6 +175,14 @@ function SettingsContent() {
   );
 }
 
+/**
+ * Settings Module Entry Point
+ *
+ * Wraps SettingsContent with SettingsProvider to enable centralized
+ * form saving and data synchronization across different sub-sections.
+ *
+ * @returns JSX.Element
+ */
 export default function Settings() {
   return (
     <SettingsProvider>

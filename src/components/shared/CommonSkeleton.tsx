@@ -1,4 +1,7 @@
+// Components - UI
 import { Skeleton } from "@/components/ui/skeleton";
+
+// Utils
 import { cn } from "@/utils/lib/utils";
 
 interface CommonSkeletonProps {

@@ -1,10 +1,6 @@
 // React & Hooks
 import { useState, useEffect, useMemo } from "react";
 
-// Components
-import { SectionSkeleton, FormSaveDialog } from "@/components/shared";
-import { TemperaturePanel } from "./fluidOverview/TemperaturePanel";
-
 // Form & Validation
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,8 +8,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // Hooks
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
+// Third-party
+import ReactECharts from "echarts-for-react";
+
+// Components - UI
+
 // Components - Common
 import {
+  SectionSkeleton,
+  FormSaveDialog,
   CommonFormInput,
   CommonFormToggle,
   RestoreDefaultsButton,
@@ -22,10 +25,7 @@ import {
 
 // Components - Local
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
-
-// Chart
-import ReactECharts from "echarts-for-react";
-import { Download, Copy } from "lucide-react";
+import { TemperaturePanel } from "./fluidOverview/TemperaturePanel";
 
 // Services & API
 import {
@@ -40,8 +40,12 @@ import {
 } from "@/utils/schemas/temperature";
 import type { SaveTemperaturePayload } from "@/services/api/mudproperties/mudproperties.types";
 
-// Context
+// Contexts
 import { useMudPropertiesContext } from "@/context/mudProperties";
+
+// Icons & Utils
+import { Download, Copy } from "lucide-react";
+
 
 /**
  * Temperature Component

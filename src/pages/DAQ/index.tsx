@@ -1,11 +1,13 @@
 // React & Hooks
 import { useParams } from "react-router-dom";
 
-// Components - Common
+// Components - Layouts
 import { PageLayout } from "@/components/layouts/PageLayout";
 import { SidebarLayout } from "@/components/layouts/SidebarLayout";
 import { PageHeaderLayout } from "@/components/layouts/PageHeaderLayout";
 import { SidebarNavLayout } from "@/components/layouts/SidebarNavLayout";
+
+// Components - Common
 import { CommonButton, CommonTooltip } from "@/components/shared";
 
 // Components - Local
@@ -18,17 +20,18 @@ import { SensorPerms } from "./SensorPerms";
 import { Calibration } from "./Calibration";
 import { Hydraulics } from "./Hydraulics";
 import { SystemSettings } from "./SystemSettings";
-import { Downloads } from "./downloads/index";
+import { Downloads } from "./downloads";
 
 // Contexts
 import { DAQProvider, useDAQContext } from "@/context/daq";
 
-// Constants
+// Utils & Constants
 import { ROUTES } from "@/app/routes/routeEndpoints";
 import { DAQ_NAV } from "@/utils/constants";
 
-// Icons
+// Icons & Utils
 import { Activity, Save, RotateCcw, Upload } from "lucide-react";
+
 /**
  * DAQContent Component
  *
@@ -85,14 +88,11 @@ function DAQContent() {
     />
   );
 
-  /**
-   * Routing logic for DAQ sub-sections.
-   * Dynamically renders the appropriate component based on the 'section' URL parameter.
-   */
   // ---- Render Helpers ----
 
   /**
-   * Navigates to the active sub-section of the DAQ module.
+   * Routing logic for DAQ sub-sections.
+   * Dynamically renders the appropriate component based on the 'section' URL parameter.
    */
   const renderSection = () => {
     switch (activeSection) {

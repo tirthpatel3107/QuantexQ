@@ -1,15 +1,17 @@
 // React & Hooks
 import { useState, useEffect, useMemo } from "react";
 
-// Third-party
-import ReactECharts from "echarts-for-react";
-import { Copy, RotateCcw } from "lucide-react";
-
 // Form & Validation
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// UI Components
+// Hooks
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Third-party
+import ReactECharts from "echarts-for-react";
+
+// Components - UI
 import {
   Accordion,
   AccordionContent,
@@ -17,13 +19,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-// Hooks
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-
 // Components - Common
-
-// Components - Local
-import { DensitySolidsPanel } from "./fluidOverview/DensitySolidsPanel";
 import {
   SectionSkeleton,
   FormSaveDialog,
@@ -34,6 +30,7 @@ import {
 
 // Components - Local
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
+import { DensitySolidsPanel } from "./fluidOverview/DensitySolidsPanel";
 
 // Services & API
 import {
@@ -50,6 +47,10 @@ import type { SaveDensityPayload } from "@/services/api/mudproperties/mudpropert
 
 // Contexts
 import { useMudPropertiesContext } from "@/context/mudProperties";
+
+// Icons & Utils
+import { Copy, RotateCcw } from "lucide-react";
+
 
 /**
  * Density Component

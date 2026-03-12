@@ -1,5 +1,8 @@
-import { FileText } from "lucide-react";
+// Components - Local
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
+
+// Icons & Utils
+import { FileText } from "lucide-react";
 
 interface DownloadHistoryItem {
   timestamp: string;

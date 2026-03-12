@@ -1,8 +1,17 @@
+// React & Hooks
 import { memo } from "react";
 import { useNavigate } from "react-router-dom";
-import { cn } from "@/utils/lib/utils";
+
+// Hooks
+
+// Components - UI
+
+// Contexts
 import { useSidebarContext } from "@/context/sidebar";
+
+// Icons & Utils
 import { LucideIcon } from "lucide-react";
+import { cn } from "@/utils/lib/utils";
 
 export interface SidebarNavItem {
   id: string;

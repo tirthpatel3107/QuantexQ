@@ -1,8 +1,29 @@
-// Components - Local
-import { NetworkSection } from "../../components/features/network/NetworkSection";
+// React & Hooks
 
-// Constants
+// Form & Validation
+
+// Hooks
+
+// Third-party
+
+// Components - UI
+
+// Components - Common
+
+// Components - Local
+import { NetworkSection } from "@/components/features/network/NetworkSection";
+
+// Services & API
+
+// Types & Schemas
+
+// Contexts
+
+// Utils & Constants
 import { NETWORK_SECTION_CARDS as SECTION_CARDS } from "@/utils/constants";
+
+// Icons & Utils
+
 
 /**
  * NetworkOverview Component

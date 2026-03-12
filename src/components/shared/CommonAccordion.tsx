@@ -1,4 +1,7 @@
+// React
 import { ReactNode, useState } from "react";
+
+// Icons
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface CommonAccordionItemProps {

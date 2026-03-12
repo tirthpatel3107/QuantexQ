@@ -1,16 +1,21 @@
 // React & Hooks
 import { useState, useMemo } from "react";
+
+// Form & Validation
+
+// Hooks
+import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Third-party
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
 } from "@tanstack/react-table";
-import { useSectionForm } from "@/hooks/useSectionForm";
 
-// Components - UI & Icons
-import { Bell, Trash2, Activity, Zap, PlusCircle } from "lucide-react";
+// Components - Common
 import {
   CommonTable,
   CommonTabs,
@@ -25,18 +30,25 @@ import {
   FormSaveDialog,
   CommonAlertDialog,
 } from "@/components/shared";
-import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import type { CommonSelectOption } from "@/components/shared/CommonSelect";
 
-// Services & Types
+// Components - Local
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
+
+// Services & API
 import {
   useAlarmsSettings,
   useSaveAlarmsSettings,
   useAlarmsOptions,
 } from "@/services/api/settings/settings.api";
 
-// Context
+// Types & Schemas
+
+// Contexts
 import { useSettingsContext } from "@/context/settings";
+
+// Icons & Utils
+import { Bell, Trash2, Activity, Zap, PlusCircle } from "lucide-react";
 
 type SensorLimit = {
   id: string;

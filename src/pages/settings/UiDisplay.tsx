@@ -1,12 +1,24 @@
 // React & Hooks
 import { useMemo } from "react";
-import { useSectionForm } from "@/hooks/useSectionForm";
-import { useTheme } from "@/context/theme";
-import { useAccentColor } from "@/context/accentColor";
-import { type Theme } from "@/context/theme";
-import type { CommonSelectOption } from "@/components/shared/CommonSelect";
 
-// Components - UI & Icons
+// Form & Validation
+
+// Hooks
+import { useSectionForm } from "@/hooks/useSectionForm";
+
+// Services & API
+import {
+  useUiDisplaySettings,
+  useSaveUiDisplaySettings,
+  useUiDisplayOptions,
+} from "@/services/api/settings/settings.api";
+
+// Types & Schemas
+
+// Components - UI
+import { Separator } from "@/components/ui/separator";
+
+// Components - Common
 import {
   CommonButton,
   CommonSelect,
@@ -15,21 +27,21 @@ import {
   SectionSkeleton,
   FormSaveDialog,
 } from "@/components/shared";
+import type { CommonSelectOption } from "@/components/shared/CommonSelect";
+
+// Components - Local
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
-import { RefreshCw, Download, ChevronRight } from "lucide-react";
-import { cn } from "@/utils/lib/utils";
-import { Separator } from "@/components/ui/separator";
 
-// Services & Types
-import {
-  useUiDisplaySettings,
-  useSaveUiDisplaySettings,
-  useUiDisplayOptions,
-} from "@/services/api/settings/settings.api";
-
-// Context
+// Contexts
+import { useTheme } from "@/context/theme";
+import { useAccentColor } from "@/context/accentColor";
+import { type Theme } from "@/context/theme";
 import { useSettingsContext } from "@/context/settings";
 import { AccentColor } from "@/context/accentColor";
+
+// Icons & Utils
+import { RefreshCw, Download, ChevronRight } from "lucide-react";
+import { cn } from "@/utils/lib/utils";
 
 const THEME_OPTIONS = [
   { label: "Dark", value: "dark" },

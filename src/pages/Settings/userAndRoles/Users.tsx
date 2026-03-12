@@ -1,4 +1,11 @@
+// React & Hooks
 import { useState, useMemo } from "react";
+
+// Form & Validation
+
+// Hooks
+
+// Third-party
 import {
   useReactTable,
   getCoreRowModel,
@@ -9,17 +16,27 @@ import {
   type SortingState,
   type PaginationState,
 } from "@tanstack/react-table";
-import { ShieldCheck, Pencil, Trash2, UserPlus, Filter } from "lucide-react";
+
+// Components - UI
+
+// Components - Common
 import {
   CommonButton,
   CommonSearchInput,
   CommonTable,
   CommonDialog,
   CommonDropdownMenu,
+  CommonAlertDialog,
+  CommonInput,
+  CommonSelect,
 } from "@/components/shared";
-import { CommonAlertDialog } from "@/components/shared/CommonAlertDialog";
-import { CommonInput } from "@/components/shared/CommonInput";
-import { CommonSelect } from "@/components/shared/CommonSelect";
+
+// Components - Local
+
+// Contexts
+
+// Icons & Utils
+import { ShieldCheck, Pencil, Trash2, UserPlus, Filter } from "lucide-react";
 
 type User = {
   id: number;

@@ -1,6 +1,19 @@
+// React & Hooks
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+
+// Hooks
+
+// Services & API
+
+// Types & Schemas
+
+// Contexts
+
+// Utils & Constants
 import { ROUTES } from "@/app/routes/routeEndpoints";
+
+// Icons & Utils
 
 /** 404 page; logs invalid path and offers link home. */
 const NotFound = () => {

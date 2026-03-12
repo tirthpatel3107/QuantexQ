@@ -1,6 +1,12 @@
 // React & Hooks
 import { useState } from "react";
 
+// Form & Validation
+
+// Hooks
+
+// Third-party
+
 // Components - UI
 import { Badge } from "@/components/ui/badge";
 
@@ -15,7 +21,13 @@ import {
 // Components - Local
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
 
-// Constants & Types
+// Services & API
+
+// Types & Schemas
+
+// Contexts
+
+// Utils & Constants
 import {
   DEFAULT_HEALTH_METRICS,
   DEFAULT_DEVICE_HEALTH,
@@ -23,8 +35,9 @@ import {
   type HealthMonitoringPanelProps,
 } from "@/utils/constants/healthMonitoring";
 
-// Icons
+// Icons & Utils
 import { Settings } from "lucide-react";
+
 
 /**
  * HealthMonitoringPanel Component

@@ -1,7 +1,18 @@
+// React & Hooks
 import { useState, useEffect, useMemo, useContext } from "react";
+
+// Form & Validation
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+// Hooks
+import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
+
+// Third-party
 import ReactECharts from "echarts-for-react";
+
+// Components - UI
+import { Separator } from "@/components/ui/separator";
 
 // Components - Common
 import {
@@ -9,29 +20,28 @@ import {
   FormSaveDialog,
   CommonFormToggle,
 } from "@/components/shared";
+
+// Components - Local
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import { StatRow } from "@/components/features/dashboard/StatRow";
 import { SystemStatePanel } from "@/components/features/dashboard/SystemStatePanel";
 import { LiveSensorStrip } from "./LiveSensorStrip";
 
-// Hooks
-import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
-
-// Context
-import { ThemeProviderContext } from "@/context/theme";
-
 // Services & API
 import { useDisplayData, useSaveDisplayData } from "@/services/api/daq/daq.api";
+import type { SaveDisplayPayload } from "@/services/api/daq/daq.types";
 
 // Types & Schemas
 import {
   displayFormSchema,
   type DisplayFormValues,
 } from "@/utils/schemas/display";
-import type { SaveDisplayPayload } from "@/services/api/daq/daq.types";
 
-// Context
+// Contexts
+import { ThemeProviderContext } from "@/context/theme";
 import { useDAQContext } from "@/context/daq";
+
+// Icons & Utils
 
 // ---- Chart Components (moved outside render) ----
 const PremiumChart = ({

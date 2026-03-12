@@ -1,9 +1,21 @@
 // React & Hooks
 import { useMemo } from "react";
+
+// Form & Validation
+
+// Hooks
 import { useSectionForm } from "@/hooks/useSectionForm";
 
-// Components - UI & Icons
-import { PanelCard } from "@/components/features/dashboard/PanelCard";
+// Services & API
+import {
+  useGeneralSettings,
+  useSaveGeneralSettings,
+  useGeneralOptions,
+} from "@/services/api/settings/settings.api";
+
+// Types & Schemas
+
+// Components - Common
 import {
   RestoreDefaultsButton,
   CommonSelect,
@@ -12,16 +24,15 @@ import {
   SectionSkeleton,
   FormSaveDialog,
 } from "@/components/shared";
+import type { CommonSelectOption } from "@/components/shared/CommonSelect";
 
-// Services & Types
-import {
-  useGeneralSettings,
-  useSaveGeneralSettings,
-  useGeneralOptions,
-} from "@/services/api/settings/settings.api";
+// Components - Local
+import { PanelCard } from "@/components/features/dashboard/PanelCard";
 
-// Context
+// Contexts
 import { useSettingsContext } from "@/context/settings";
+
+// Icons & Utils
 
 interface GeneralFormData {
   defaultWellName: string;
@@ -39,7 +50,10 @@ export function GeneralSettings() {
   const { mutate: saveGeneralData } = useSaveGeneralSettings();
   const { registerSaveHandler, unregisterSaveHandler } = useSettingsContext();
 
-  const options = optionsResponse?.data;
+  const options = (optionsResponse?.data || {}) as Record<
+    string,
+    CommonSelectOption[]
+  >;
 
   // Memoize initial data
   const initialData = useMemo(() => {

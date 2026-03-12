@@ -8,9 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // Hooks
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
+// Third-party
+import ReactECharts from "echarts-for-react";
+import type { EChartsOption } from "echarts";
+
 // Components - UI
 import { Badge } from "@/components/ui/badge";
-import ReactECharts from "echarts-for-react";
 
 // Components - Common
 import {
@@ -22,8 +25,8 @@ import {
 } from "@/components/shared";
 
 // Components - Local
-import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
+import { HealthMonitoringPanel } from "./common/HealthMonitoringPanel";
 
 // Services & API
 import {
@@ -39,7 +42,6 @@ import {
   type DiagnosticsFormValues,
 } from "@/utils/schemas/diagnostics";
 import type { SaveDiagnosticsPayload } from "@/services/api/network/network.types";
-import type { EChartsOption } from "echarts";
 
 // Contexts
 import { useNetworkContext } from "@/context/network";
@@ -47,6 +49,7 @@ import { useNetworkContext } from "@/context/network";
 // Icons & Utils
 import { Play, FileDown } from "lucide-react";
 import { cn } from "@/utils/lib/utils";
+
 
 /**
  * Diagnostics Component
@@ -180,9 +183,11 @@ export function Diagnostics() {
    * Allows the global 'Save' button in the layout to trigger this form's submission.
    */
   useEffect(() => {
-    const handleSave = handleSubmit((validData) => {
-      saveWithConfirmation.requestSave(validData);
-    });
+    const handleSave = () => {
+      handleSubmit((validData: DiagnosticsFormValues) => {
+        saveWithConfirmation.requestSave(validData);
+      })();
+    };
 
     registerSaveHandler(handleSave);
     return () => {
@@ -194,6 +199,7 @@ export function Diagnostics() {
     unregisterSaveHandler,
     saveWithConfirmation,
   ]);
+
 
   if (isLoading || !hasSetInitial) {
     return <SectionSkeleton count={3} />;

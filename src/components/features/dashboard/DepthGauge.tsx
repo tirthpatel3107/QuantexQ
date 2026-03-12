@@ -3,6 +3,7 @@ import { memo, useMemo } from "react";
 import { useInitialSkeleton } from "@/hooks/useInitialSkeleton";
 import { cn } from "@/utils/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { StatRow } from "@/components/features/dashboard/StatRow";
 
 interface DepthGaugeProps {
   currentDepth: number;
@@ -152,42 +153,20 @@ export const DepthGauge = memo(function DepthGauge({
 
         {/* Key Metrics Summary */}
         <div className="grid grid-cols-1 gap-3 mt-4">
-          <DetailRow label="BIT DEPTH" value={bitDepth} unit="ft" />
-          <DetailRow
-            label="REMAINING"
-            value={targetDepth - currentDepth}
+          <StatRow
+            label="BIT DEPTH"
+            value={bitDepth.toLocaleString()}
             unit="ft"
-            valueClassName="text-warning"
+            valueClassName="text-primary"
+          />
+          <StatRow
+            label="REMAINING"
+            value={(targetDepth - currentDepth).toLocaleString()}
+            unit="ft"
+            valueClassName="text-primary"
           />
         </div>
       </div>
     </div>
   );
 });
-
-/**
- * Subcomponent for displaying a labeled value row
- */
-const DetailRow = ({
-  label,
-  value,
-  unit,
-  valueClassName,
-}: {
-  label: string;
-  value: number;
-  unit: string;
-  valueClassName?: string;
-}) => (
-  <div className="flex justify-between items-baseline">
-    <div className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
-      {label}
-    </div>
-    <div className={cn("text-[14px] font-bold tabular-nums", valueClassName)}>
-      {value.toLocaleString()}{" "}
-      <span className="text-[11px] font-medium text-muted-foreground ml-0.5">
-        {unit}
-      </span>
-    </div>
-  </div>
-);

@@ -1,6 +1,10 @@
+// React
 import * as React from "react";
+
+// Icons
 import { Check, LucideIcon, Search, X } from "lucide-react";
-import { cn } from "@/utils/lib/utils";
+
+// Components - UI
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +15,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+
+// Utils
+import { cn } from "@/utils/lib/utils";
 
 export interface CommonDropdownOption {
   label: string;

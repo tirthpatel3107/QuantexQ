@@ -1,9 +1,6 @@
 // React & Hooks
 import { useState, useEffect, useMemo } from "react";
 
-// Components
-import { Label } from "@/components/ui/label";
-
 // Form & Validation
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,9 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // Hooks
 import { useSaveWithConfirmation } from "@/hooks/useSaveWithConfirmation";
 
-// Chart
+// Third-party
 import ReactECharts from "echarts-for-react";
 import type { EChartsOption } from "echarts";
+
+// Components - UI
+import { Label } from "@/components/ui/label";
 
 // Components - Common
 import {
@@ -41,8 +41,11 @@ import {
 } from "@/utils/schemas/gasCompressibility";
 import type { SaveGasCompressibilityPayload } from "@/services/api/mudproperties/mudproperties.types";
 
-// Context
+// Contexts
 import { useMudPropertiesContext } from "@/context/mudProperties";
+
+// Icons & Utils
+
 
 /**
  * Gas Compressibility Component

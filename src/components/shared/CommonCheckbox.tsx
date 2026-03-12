@@ -1,6 +1,11 @@
+// React
 import * as React from "react";
+
+// Components - UI
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+
+// Utils
 import { cn } from "@/utils/lib/utils";
 
 export type CommonCheckboxProps = React.ComponentPropsWithoutRef<

@@ -1,26 +1,33 @@
+// React & Hooks
 import { Suspense, lazy } from "react";
+
+// Third-party
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 
-import { SimulationProvider } from "@/context/simulation/index.ts";
-import { SidebarProvider } from "@/context/sidebar/index.ts";
+// Components - Common
+import { PageLoader } from "@/components/shared";
+
+// Constants
 import { ROUTES } from "@/app/routes/routeEndpoints";
 
-const Index = lazy(() => import("@/pages/Index"));
-const NotFound = lazy(() => import("@/pages/notFound/index.tsx"));
-const Profile = lazy(() => import("@/pages/profile/index.tsx"));
-const MudProperties = lazy(() => import("@/pages/mudProperties/index"));
-const Settings = lazy(() => import("@/pages/settings/index"));
-const DAQ = lazy(() => import("@/pages/daq/index"));
-const Network = lazy(() => import("@/pages/network/index"));
+// Contexts
+import { SimulationProvider } from "@/context/simulation";
+import { SidebarProvider } from "@/context/sidebar";
 
-// ─── Auth Pages (lazy) ───────────────────────────────────────────────────────
+// Pages (lazy-loaded for code-splitting)
+const Index = lazy(() => import("@/pages/Index"));
+const NotFound = lazy(() => import("@/pages/notFound"));
+const Profile = lazy(() => import("@/pages/profile"));
+const MudProperties = lazy(() => import("@/pages/mudProperties"));
+const Settings = lazy(() => import("@/pages/settings"));
+const DAQ = lazy(() => import("@/pages/daq"));
+const Network = lazy(() => import("@/pages/network"));
+
+// Auth Pages (lazy) ─────────────────────────────────────────────────────────
 // NOTE: Auth routes & ProtectedRouteLayout are wired up but commented out below.
 // Uncomment the relevant sections when authentication flow is ready.
 const SignIn = lazy(() => import("@/pages/auth/SignIn"));
 const SignUp = lazy(() => import("@/pages/auth/SignUp"));
-
-import { PageLoader } from "@/components/shared/index.ts";
-// import { ProtectedRouteLayout } from "@/components/common"; // Uncomment when auth enforcement is enabled
 
 /**
  * Inner layout outlet that keeps Sidebar & Simulation scoped to app pages only.
