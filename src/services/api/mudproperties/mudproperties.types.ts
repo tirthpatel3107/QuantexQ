@@ -76,11 +76,13 @@ export interface DensityTabData {
   highGravitySolids: string;
 }
 
+export interface DensitySectionPayload {
+  title: string;
+  data: Record<string, string | number | boolean>;
+}
+
 export interface SaveDensityPayload {
-  mudWeightIn: string;
-  mudWeightOut: string;
-  oilWaterRatio: string;
-  salinity: string;
+  sections: DensitySectionPayload[];
 }
 
 // ============================================
