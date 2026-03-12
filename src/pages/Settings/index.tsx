@@ -20,7 +20,7 @@ import { SettingsOverview } from "./SettingsOverview";
 import { GeneralSettings } from "./General";
 import { Units } from "./Units";
 import { DataTime } from "./DataTime";
-import { Signals } from "./Signals";
+import { Signals } from "./signals";
 import { Alarms } from "./Alarms";
 import { AutoControl } from "./AutoControl";
 import { ChokePumps } from "./ChokePumps";
