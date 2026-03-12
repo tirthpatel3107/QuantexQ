@@ -146,7 +146,7 @@ export const TimeAxisCard = memo(function TimeAxisCard({
     >
       {/* Header with Clock Icon */}
       <div className="panel-header flex items-center justify-center gap-2 min-w-0">
-        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white dark:bg-primary/15 text-primary">
+        <div className="flex p-2.5 flex-shrink-0 items-center justify-center rounded-lg bg-white dark:bg-primary/15 text-primary">
           <Clock className="h-5 w-5" aria-hidden />
         </div>
       </div>

@@ -21,7 +21,7 @@ import { GeneralSettings } from "./General";
 import { Units } from "./Units";
 import { DataTime } from "./DataTime";
 import { Signals } from "./signals";
-import { Alarms } from "./Alarms";
+import { Alarms } from "./alarms";
 import { AutoControl } from "./AutoControl";
 import { ChokePumps } from "./ChokePumps";
 import { HydraulicsModel } from "./HydraulicsModel";

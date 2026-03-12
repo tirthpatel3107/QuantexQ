@@ -403,26 +403,41 @@ const fetchAlarmsSettings = async (): Promise<
       resolve({
         success: true,
         data: {
-          alarmProfiles: [
+          sensors: [
             {
-              id: "alarm-1",
-              name: "High Pressure",
-              threshold: 5000,
-              enabled: true,
-              priority: "high",
+              id: "sensor-1",
+              name: "Temperature",
+              lowLimit: "20",
+              highLimit: "80",
+              unit: "°C",
             },
             {
-              id: "alarm-2",
-              name: "Low Flow",
-              threshold: 100,
-              enabled: true,
-              priority: "medium",
+              id: "sensor-2",
+              name: "Pressure",
+              lowLimit: "100",
+              highLimit: "500",
+              unit: "psi",
             },
           ],
-          soundEnabled: true,
-          visualAlerts: true,
-          emailNotifications: true,
-          smsNotifications: false,
+          dynamicLimitsEnabled: true,
+          kickLimit: "",
+          lossLimit: "",
+          pitGainLimit: "",
+          sppHighLimit: "",
+          pppHighLimit: "",
+          pitVolumeHighLimit: "",
+          pitVolumeHighLimitBbl: "",
+          logicActivateWhenGainsStop: true,
+          logicActivateStickyAlarms: false,
+          logicActivateSecondaryAlarms: true,
+          logicDelay: "",
+          logicMonitorDuration: "",
+          notifyOfflineAlarm: true,
+          notifyOnlineAlarm: true,
+          kickDelay: "",
+          lossDelay: "",
+          offlineOutput: "",
+          onlineOutput: "",
         },
         timestamp: new Date().toISOString(),
       });
@@ -445,6 +460,12 @@ export const useAlarmsSettings = () => {
 const fetchAlarmsOptions = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
+  // Real API implementation
+  /*
+  const response = await apiClient.get<ApiResponse<Record<string, unknown>>>(SERVER_ROUTES.SETTINGS.ALARMS_OPTIONS);
+  return response.data;
+  */
+
   // MOCK RESPONSE
   return new Promise((resolve) => {
     setTimeout(() => {
