@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 
 // Third-party
 import ReactECharts from "echarts-for-react";
-import { RotateCcw } from "lucide-react";
+import { Copy, RotateCcw } from "lucide-react";
 
 // Form & Validation
 import { useForm } from "react-hook-form";
@@ -275,7 +275,6 @@ export function Density() {
               <div className="flex items-center gap-2">
                 <CommonButton
                   variant="outline"
-                  size="sm"
                   onClick={handleExpandAll}
                   type="button"
                 >
@@ -283,7 +282,6 @@ export function Density() {
                 </CommonButton>
                 <CommonButton
                   variant="outline"
-                  size="sm"
                   onClick={handleCollapseAll}
                   type="button"
                 >
@@ -291,7 +289,6 @@ export function Density() {
                 </CommonButton>
                 <CommonButton
                   variant="ghost"
-                  size="sm"
                   onClick={handleRestoreDefaults}
                   type="button"
                   className="px-2"
@@ -301,129 +298,173 @@ export function Density() {
               </div>
             }
           >
-            <Accordion
-              type="multiple"
-              value={accordionValue}
-              onValueChange={setAccordionValue}
-              className="space-y-0"
-            >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
               {/* Mud Weight Section */}
-              <AccordionItem value="mud-weight" className="border-b-0">
-                <AccordionTrigger className="py-3 hover:no-underline">
-                  <span className="text-sm font-medium">Mud Weight</span>
-                </AccordionTrigger>
-                <AccordionContent className="pb-6">
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <CommonFormInput
-                        name="mudWeight.mwIn"
-                        control={control}
-                        label="MW In"
-                        placeholder="12.4"
-                        type="number"
-                        step="0.1"
-                        suffix="ppg"
-                      />
-                      <CommonFormInput
-                        name="mudWeight.mwOut"
-                        control={control}
-                        label="MW Out"
-                        placeholder="12.4"
-                        type="number"
-                        step="0.1"
-                        suffix="ppg"
-                      />
+              <Accordion
+                type="multiple"
+                value={accordionValue}
+                onValueChange={setAccordionValue}
+                className="space-y-0 h-full"
+              >
+                <AccordionItem
+                  value="mud-weight"
+                  className="border rounded-lg transition-all duration-300 hover:shadow-md hover:border-primary/30 hover:bg-accent/50 group h-full"
+                >
+                  <AccordionTrigger className="py-3 px-4 hover:no-underline">
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-sm font-medium">Mud Weight</span>
                     </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-6 px-4 pt-2">
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                        <CommonFormInput
+                          name="mudWeight.mwIn"
+                          control={control}
+                          label="MW In"
+                          placeholder="12.4"
+                          type="number"
+                          step="0.1"
+                          suffix="ppg"
+                        />
+                        <CommonFormInput
+                          name="mudWeight.mwOut"
+                          control={control}
+                          label="MW Out"
+                          placeholder="12.4"
+                          type="number"
+                          step="0.1"
+                          suffix="ppg"
+                        />
+                      </div>
 
-                    <div className="flex items-center gap-3">
-                      <CommonButton
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCopyMwIn}
-                        type="button"
-                      >
-                        Copy MW In → MW Out
-                      </CommonButton>
-                      <CommonFormCheckbox
-                        name="mudWeight.useMwInOnly"
-                        control={control}
-                        label="Use MW In only"
-                      />
+                      <div className="flex flex-col gap-3">
+                        <CommonButton
+                          variant="outline"
+                          size="sm"
+                          onClick={handleCopyMwIn}
+                          type="button"
+                        >
+                          Copy MW In → MW Out
+                        </CommonButton>
+                        <CommonFormCheckbox
+                          name="mudWeight.useMwInOnly"
+                          control={control}
+                          label="Use MW In only"
+                        />
+                      </div>
                     </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-              <hr className="border-border/50" />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
 
               {/* Solids Section */}
-              <AccordionItem value="solids" className="border-b-0">
-                <AccordionTrigger className="py-3 hover:no-underline">
-                  <span className="text-sm font-medium">Solids</span>
-                </AccordionTrigger>
-                <AccordionContent className="pb-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <CommonFormInput
-                      name="solids.lgs"
-                      control={control}
-                      label="LGS (%)"
-                      placeholder="8.3"
-                      type="number"
-                      step="0.1"
-                      suffix="%"
-                    />
-                    <CommonFormInput
-                      name="solids.hgs"
-                      control={control}
-                      label="HGS (%)"
-                      placeholder="9.5"
-                      type="number"
-                      step="0.1"
-                      suffix="%"
-                    />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-              <hr className="border-border/50" />
+              <Accordion
+                type="multiple"
+                value={accordionValue}
+                onValueChange={setAccordionValue}
+                className="space-y-0 h-full"
+              >
+                <AccordionItem
+                  value="solids"
+                  className="border rounded-lg transition-all duration-300 hover:shadow-md hover:border-primary/30 hover:bg-accent/50 group h-full flex flex-col"
+                >
+                  <AccordionTrigger className="py-3 px-4 hover:no-underline">
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-sm font-medium">Solids</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-6 px-4 pt-2 flex-1">
+                    <div className="grid grid-cols-1 gap-3">
+                      <CommonFormInput
+                        name="solids.lgs"
+                        control={control}
+                        label="LGS (%)"
+                        placeholder="8.3"
+                        type="number"
+                        step="0.1"
+                        suffix="%"
+                      />
+                      <CommonFormInput
+                        name="solids.hgs"
+                        control={control}
+                        label="HGS (%)"
+                        placeholder="9.5"
+                        type="number"
+                        step="0.1"
+                        suffix="%"
+                      />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {/* Oil/Water Ratio Section */}
-              <AccordionItem value="oil-water" className="border-b-0">
-                <AccordionTrigger className="py-3 hover:no-underline">
-                  <span className="text-sm font-medium">Oil/Water Ratio</span>
-                </AccordionTrigger>
-                <AccordionContent className="pb-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <CommonFormInput
-                      name="oilWaterRatio"
-                      control={control}
-                      label="Oil/Water Ratio"
-                      placeholder="70/30"
-                      type="text"
-                    />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-              <hr className="border-border/50" />
+              <Accordion
+                type="multiple"
+                value={accordionValue}
+                onValueChange={setAccordionValue}
+                className="space-y-0 h-full"
+              >
+                <AccordionItem
+                  value="oil-water"
+                  className="border rounded-lg transition-all duration-300 hover:shadow-md hover:border-primary/30 hover:bg-accent/50 group h-full"
+                >
+                  <AccordionTrigger className="py-3 px-4 hover:no-underline">
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-sm font-medium">
+                        Oil/Water Ratio
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-6 px-4 pt-2">
+                    <div className="grid grid-cols-1 gap-3">
+                      <CommonFormInput
+                        name="oilWaterRatio"
+                        control={control}
+                        label="Oil/Water Ratio"
+                        placeholder="70/30"
+                        type="text"
+                      />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
 
               {/* Salinity Section */}
-              <AccordionItem value="salinity" className="border-b-0">
-                <AccordionTrigger className="py-3 hover:no-underline">
-                  <span className="text-sm font-medium">Salinity</span>
-                </AccordionTrigger>
-                <AccordionContent className="pb-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <CommonFormInput
-                      name="salinity"
-                      control={control}
-                      label="Salinity"
-                      placeholder="15.0"
-                      type="number"
-                      step="0.1"
-                      suffix="Ppk"
-                    />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+              <Accordion
+                type="multiple"
+                value={accordionValue}
+                onValueChange={setAccordionValue}
+                className="space-y-0 h-full"
+              >
+                <AccordionItem
+                  value="salinity"
+                  className="border rounded-lg transition-all duration-300 hover:shadow-md hover:border-primary/30 hover:bg-accent/50 group h-full"
+                >
+                  <AccordionTrigger className="py-3 px-4 hover:no-underline">
+                    <div className="flex items-center justify-between w-full">
+                      <span className="text-sm font-medium">Salinity</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-6 px-4 pt-2">
+                    <div className="grid grid-cols-1 gap-3">
+                      <CommonFormInput
+                        name="salinity"
+                        control={control}
+                        label="Salinity"
+                        placeholder="15.0"
+                        type="number"
+                        step="0.1"
+                        suffix="Ppk"
+                      />
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
           </PanelCard>
 
           {/* ---- Density at Surface vs. Depth Chart ---- */}
@@ -489,7 +530,7 @@ export function Density() {
 
               {/* Copy Button */}
               <div className="pt-3 border-t">
-                <CommonButton variant="outline" className="w-full">
+                <CommonButton variant="outline" icon={Copy} className="w-full">
                   Copy Rheology to Calibration
                 </CommonButton>
               </div>
