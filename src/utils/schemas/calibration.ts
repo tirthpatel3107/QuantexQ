@@ -1,48 +1,47 @@
 import { z } from "zod";
 
+// Helper function to validate numeric string
+const numericString = (min: number, max: number, fieldName: string) =>
+  z
+    .string()
+    .refine((val) => val === "" || !isNaN(Number(val)), {
+      message: `${fieldName} must be a valid number`,
+    })
+    .refine((val) => val === "" || (Number(val) >= min && Number(val) <= max), {
+      message: `${fieldName} must be between ${min} and ${max}`,
+    });
+
 export const calibrationFormSchema = z.object({
-  onPermissions: z.string().min(1, "Permission type is required"),
-  applyType: z.enum(["auto", "manual", "acmPerms"]),
-  weightOnBit: z.enum(["auto", "manual", "own"]),
-  permissions: z.array(
+  gasCompressibility: z.object({
+    densitySensorOffset: numericString(-1, 1, "Density sensor offset"),
+    pvYpCorrectionFactor: numericString(-100, 100, "PV/YP correction factor"),
+    temperatureSensorOffset: numericString(-50, 50, "Temperature sensor offset"),
+    gasCut: numericString(0, 100, "Gas-cut"),
+  }),
+  sanityCheck: z.object({
+    enabled: z.boolean(),
+    lastCheck: z.string().optional(),
+    densityMatch: z.boolean().optional(),
+    rheologyMatch: z.boolean().optional(),
+    temperatureMatch: z.boolean().optional(),
+  }),
+  validationStatus: z.object({
+    annularTemperature: z.string(),
+    ecdAtBit: z.string(),
+    requiredInputs: z.boolean(),
+    densityWithinRange: z.boolean(),
+    tempPressureLogic: z.boolean(),
+    requiredInputsComplete: z.string(),
+  }),
+  auditLog: z.array(
     z.object({
-      sensor: z.string(),
-      depth: z.boolean(),
-      primary: z.boolean(),
-      secondary: z.boolean(),
-      validation: z.string(),
-      comments: z.string(),
-    }),
+      id: z.string(),
+      timestamp: z.string(),
+      checkType: z.string(),
+      matchCount: z.number(),
+      details: z.string().optional(),
+    })
   ),
-  defaultPermissions: z.array(
-    z.object({
-      name: z.string(),
-      auto: z.boolean(),
-    }),
-  ),
-  senectoPermissions: z
-    .array(
-      z.object({
-        key: z.string(),
-        label: z.string(),
-        enabled: z.boolean(),
-        hydrations: z.boolean(),
-        edits: z.coerce
-          .number()
-          .min(0, "Must be at least 0")
-          .max(1, "Must be at most 1"),
-        hasSelectType: z.boolean(),
-      }),
-    )
-    .refine(
-      (items) =>
-        items.every((item) => item.edits !== null && item.edits !== undefined),
-      {
-        message: "All edits fields are required",
-      },
-    ),
-  sensorPermissionsOk: z.boolean(),
-  validateAll: z.boolean(),
 });
 
 export type CalibrationFormValues = z.infer<typeof calibrationFormSchema>;

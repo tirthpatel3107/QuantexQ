@@ -296,13 +296,57 @@ const fetchCalibrationData = async (): Promise<
       resolve({
         success: true,
         data: {
-          viscometerCalDate: "2026-01-15",
-          densityCalDate: "2026-01-20",
-          tempSensorOffset: "+2.5",
-          pressureSensorCal: "2026-01-10",
-          flowMeterCal: "2026-01-18",
-          lastCalibrationBy: "John Doe",
-          nextCalibrationDue: "2026-04-15",
+          gasCompressibility: {
+            densitySensorOffset: "0.00030",
+            pvYpCorrectionFactor: "0",
+            temperatureSensorOffset: "0",
+            gasCut: "0",
+          },
+          sanityCheck: {
+            enabled: true,
+            lastCheck: "05 Feb 2026 | 12:24",
+            densityMatch: true,
+            rheologyMatch: true,
+            temperatureMatch: true,
+          },
+          validationStatus: {
+            annularTemperature: "85",
+            ecdAtBit: "12.91",
+            requiredInputs: true,
+            densityWithinRange: true,
+            tempPressureLogic: true,
+            requiredInputsComplete: "100%",
+          },
+          auditLog: [
+            {
+              id: "1",
+              timestamp: "06 Feb 2026 | 12:24",
+              checkType: "Sanity check",
+              matchCount: 3,
+              details: "3 MATCHES",
+            },
+            {
+              id: "2",
+              timestamp: "05 Feb 2026 | 11:37",
+              checkType: "Sanity check",
+              matchCount: 1,
+              details: "Density WARN: 12.4 ppg (WBM)",
+            },
+            {
+              id: "3",
+              timestamp: "04 Feb 2026 | 09:02",
+              checkType: "Sanity check",
+              matchCount: 2,
+              details: "2 MATCHES",
+            },
+            {
+              id: "4",
+              timestamp: "04 Feb 2026 | 07:45",
+              checkType: "Sanity check",
+              matchCount: 2,
+              details: "Density SALT: 18 ppk (OBM)",
+            },
+          ],
         },
         timestamp: new Date().toISOString(),
       });
@@ -719,11 +763,16 @@ const fetchCalibrationOptions = async (): Promise<
       resolve({
         success: true,
         data: {
-          calibrationTypeOptions: [
-            { value: "viscometer", label: "Viscometer" },
-            { value: "density", label: "Density Meter" },
-            { value: "temperature", label: "Temperature Sensor" },
+          sgOptions: [
+            { value: "%", label: "%" },
+            { value: "SG", label: "SG" },
           ],
+          typicalSensorOffsets: {
+            obm: "± 0.2 ppg",
+            wbm: "± 0.1 ppg",
+            visco: "± 10%",
+            temp: "± 2°F",
+          },
         },
         timestamp: new Date().toISOString(),
       });
