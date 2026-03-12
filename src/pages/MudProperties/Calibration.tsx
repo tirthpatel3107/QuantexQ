@@ -146,7 +146,7 @@ export function Calibration() {
     <>
       <div className="grid grid-cols-1 xl:grid-cols-[3fr_1fr] gap-3">
         <div className="grid griid-cols-1 gap-3">
-          <div className="grid grid-cols-[1fr_2fr] gap-3 auto-rows-max">
+          <div className="grid grid-cols-[2fr_3fr] gap-3 auto-rows-max">
             {/* ---- Gas / Compressibility Section ---- */}
             <PanelCard
               title="Gas / Compressibility"
@@ -155,48 +155,40 @@ export function Calibration() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-3">
                   {/* Density sensor offset */}
-                  <div className="flex flex-col gap-1">
-                    <CommonFormInput
-                      name="gasCompressibility.densitySensorOffset"
-                      control={control}
-                      label="Density sensor offset"
-                      placeholder="0.00030"
-                      type="text"
-                      suffix="1/psi"
-                      containerClassName="flex-1"
-                    />
-                  </div>
+
+                  <CommonFormInput
+                    name="gasCompressibility.densitySensorOffset"
+                    control={control}
+                    label="Density sensor offset"
+                    placeholder="0.00030"
+                    type="text"
+                    suffix="1/psi"
+                    containerClassName="flex-1"
+                  />
 
                   {/* PV/YP correction factor */}
-                  <div className="flex flex-col gap-1">
-                    <CommonFormInput
-                      name="gasCompressibility.pvYpCorrectionFactor"
-                      control={control}
-                      label="PV/YP correction factor (%)"
-                      placeholder="0"
-                      type="text"
-                      suffix="%"
-                      containerClassName="flex-1"
-                    />
-                  </div>
+                  <CommonFormInput
+                    name="gasCompressibility.pvYpCorrectionFactor"
+                    control={control}
+                    label="PV/YP correction factor (%)"
+                    placeholder="0"
+                    type="text"
+                    suffix="%"
+                    containerClassName="flex-1"
+                  />
 
                   {/* Temperature sensor offset */}
-                  <div className="flex flex-col gap-1">
-                    <CommonFormInput
-                      name="gasCompressibility.temperatureSensorOffset"
-                      control={control}
-                      label="Temperature sensor offset"
-                      placeholder="0"
-                      type="text"
-                      suffix="°F"
-                      containerClassName="flex-1"
-                    />
-                  </div>
-                </div>
+                  <CommonFormInput
+                    name="gasCompressibility.temperatureSensorOffset"
+                    control={control}
+                    label="Temperature sensor offset"
+                    placeholder="0"
+                    type="text"
+                    suffix="°F"
+                    containerClassName="flex-1"
+                  />
 
-                {/* Gas-cut */}
-
-                <div className="flex flex-col gap-1">
+                  {/* Gas-cut */}
                   <CommonFormInput
                     name="gasCompressibility.gasCut"
                     control={control}
@@ -215,7 +207,7 @@ export function Calibration() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium">Sanity check</p>
+                    <p className="text-sm font-medium mb-2">Sanity check</p>
                     {sanityCheck.lastCheck && (
                       <p className="text-sm text-muted-foreground">
                         Last check: {sanityCheck.lastCheck}
@@ -224,7 +216,7 @@ export function Calibration() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div className="flex items-center gap-2 text-sm">
                     {sanityCheck.densityMatch ? (
                       <Check className="h-4 w-4 text-green-500" />
@@ -260,7 +252,7 @@ export function Calibration() {
                   <h4 className="text-sm font-medium mb-3">
                     Typical Sensor Offsets
                   </h4>
-                  <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
+                  <div className="grid grid-cols-2 gap-3 text-sm text-muted-foreground">
                     <div>• OBM: {options?.typicalSensorOffsets.obm}</div>
                     <div>• WBM: {options?.typicalSensorOffsets.wbm}</div>
                     <div>• Visco: {options?.typicalSensorOffsets.visco}</div>
@@ -289,7 +281,7 @@ export function Calibration() {
               }
             >
               <div className="space-y-2">
-                <div className="space-y-1">
+                <div className="space-y-2">
                   {auditLog.map((log) => (
                     <div
                       key={log.id}
@@ -338,7 +330,7 @@ export function Calibration() {
                 </span>
               </div>
 
-              <div className="space-y-3 pt-3 border-t">
+              <div className="space-y-4 pt-3 border-t">
                 <div className="flex justify-between items-center text-sm">
                   <span>Annular temperature</span>
                   <span className="font-medium">
