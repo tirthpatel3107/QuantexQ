@@ -353,7 +353,7 @@ export function Signals() {
   ];
 
   if (isLoading || !form.formData) {
-    return <SectionSkeleton count={6} className="p-4" />;
+    return <SectionSkeleton count={3} />;
   }
 
   return (
@@ -424,7 +424,7 @@ export function Signals() {
           }
           onAdd={() => setIsAddSignalModalOpen(false)}
         />
-        
+
         <EditSignalModal
           open={isEditSignalModalOpen}
           onOpenChange={setIsEditSignalModalOpen}

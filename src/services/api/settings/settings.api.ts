@@ -616,6 +616,10 @@ export const useSignalsSettings = () => {
 const fetchSignalsOptions = async (): Promise<
   ApiResponse<Record<string, unknown>>
 > => {
+  // API CALL: GET /api/settings/signals/options
+  // const response = await apiClient.get<ApiResponse<Record<string, unknown>>>(SERVER_ROUTES.SETTINGS.SIGNALS);
+  // return response.data;
+
   // MOCK RESPONSE
   return new Promise((resolve) => {
     setTimeout(() => {
