@@ -13,8 +13,8 @@ import {
 // Components - Local
 import { PanelCard } from "@/components/features/dashboard/PanelCard";
 import { Download } from "./Download";
-import { DcsSets } from "./DcsSets";
-import { DownloadPatch } from "./DownloadPatch";
+// import { DcsSets } from "./DcsSets";
+// import { DownloadPatch } from "./DownloadPatch";
 
 // Icons & Utils
 import { Download as DownloadIcon, FolderOpen } from "lucide-react";
@@ -50,11 +50,11 @@ export function DownloadPanel() {
         </CommonTabsContent>
 
         <CommonTabsContent value="dcs-sets">
-          <DcsSets />
+          {/* <DcsSets /> */}
         </CommonTabsContent>
 
         <CommonTabsContent value="download-patch">
-          <DownloadPatch />
+          {/* <DownloadPatch /> */}
         </CommonTabsContent>
       </CommonTabs>
     </PanelCard>
