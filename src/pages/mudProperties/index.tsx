@@ -138,8 +138,6 @@ function MudPropertiesContent() {
         return <MudPropertiesOverview />;
       case "overview":
         return <FluidOverview />;
-      case "rheology":
-        return <Rheology />;
       case "density":
         return <Density />;
       case "temperature":
@@ -148,8 +146,10 @@ function MudPropertiesContent() {
         return <GasCompressibility />;
       case "calibration":
         return <Calibration />;
+      case "rheology":
+        return <Rheology />;
       case "summary":
-        // return <Summary />;
+      return <Summary />;
       default:
         return <MudPropertiesOverview />;
     }
