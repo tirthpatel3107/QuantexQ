@@ -1,0 +1,18 @@
+/**
+ * Application route paths. Use these for navigation and route definitions
+ * to keep URLs consistent and easy to change.
+ */
+export const ROUTES = {
+  HOME: "/",
+  PROFILE: "/profile",
+  MUD_PROPERTIES: "/mud-properties",
+  SETTINGS: "/settings",
+  DAQ: "/daq",
+  NETWORK: "/network",
+
+  // Auth routes
+  SIGN_IN: "/sign-in",
+  SIGN_UP: "/sign-up",
+} as const;
+
+export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];
