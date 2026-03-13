@@ -10,9 +10,7 @@ import { useParams } from "react-router-dom";
 
 // Components - Common
 import { PageLayout } from "@/components/layouts/PageLayout";
-import { SidebarLayout } from "@/components/layouts/SidebarLayout";
 import { PageHeaderLayout } from "@/components/layouts/PageHeaderLayout";
-import { SidebarNavLayout } from "@/components/layouts/SidebarNavLayout";
 import { CommonButton, CommonTooltip } from "@/components/shared";
 
 // Components - Local
@@ -34,7 +32,6 @@ import { SettingsProvider, useSettingsContext } from "@/context/settings";
 
 // Utils & Constants
 import { SETTINGS_NAV } from "@/utils/constants";
-import { ROUTES } from "@/app/routes/routeEndpoints";
 
 // Icons & Utils
 import {
@@ -92,17 +89,6 @@ function SettingsContent() {
     [requestSave],
   );
 
-  const sidebarNav = useMemo(
-    () => (
-      <SidebarNavLayout
-        items={SETTINGS_NAV}
-        activeSection={activeSection}
-        baseRoute={ROUTES.SETTINGS}
-      />
-    ),
-    [activeSection],
-  );
-
   const activeNav = useMemo(
     () => SETTINGS_NAV.find((n) => n.id === activeSection),
     [activeSection],
@@ -148,14 +134,7 @@ function SettingsContent() {
 
   return (
     <PageLayout>
-      <SidebarLayout
-        sidebar={sidebarNav}
-        sidebarFooter={
-          <p className="text-[11px] text-muted-foreground">
-            Modified by adm.tirth | 06 Feb 2026 | 12:21
-          </p>
-        }
-      >
+      <div className="flex flex-col flex-1 min-w-0 p-3">
         <PageHeaderLayout
           icon={
             activeNav?.icon ? (
@@ -170,7 +149,7 @@ function SettingsContent() {
         />
 
         <main className="flex-1 min-w-0 overflow-auto">{renderSection()}</main>
-      </SidebarLayout>
+      </div>
     </PageLayout>
   );
 }

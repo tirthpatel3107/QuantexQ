@@ -62,7 +62,7 @@ export function SidebarLayout({
     <div className="flex flex-1">
       <div
         className={cn(
-          "hidden lg:block fixed left-0 top-[68px] bottom-0 z-10 p-3 transition-all duration-300 ease-in-out",
+          "hidden lg:block fixed left-0 top-[65px] bottom-0 z-10 p-3 transition-all duration-300 ease-in-out",
           sidebarWidth,
         )}
       >

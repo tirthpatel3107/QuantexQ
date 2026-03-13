@@ -12,7 +12,6 @@ import React from "react";
 // Components - Common
 
 // Components - Local
-import { Header } from "@/components/features/dashboard/Header";
 
 // Pages - Local
 import Dashboard from "@/pages/dashboard";
@@ -32,13 +31,8 @@ import Dashboard from "@/pages/dashboard";
  */
 export default function Index() {
   return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden">
-      {/* Top Navigation and Branding */}
-      <Header />
-
+    <div className="h-[calc(100vh-4.15rem)] bg-background flex flex-col overflow-hidden">
       <Dashboard />
-
-      {/* Overlays and Dialogs */}
     </div>
   );
 }

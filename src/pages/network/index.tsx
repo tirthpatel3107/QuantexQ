@@ -9,9 +9,7 @@ import { useParams } from "react-router-dom";
 
 // Components - Layouts
 import { PageLayout } from "@/components/layouts/PageLayout";
-import { SidebarLayout } from "@/components/layouts/SidebarLayout";
 import { PageHeaderLayout } from "@/components/layouts/PageHeaderLayout";
-import { SidebarNavLayout } from "@/components/layouts/SidebarNavLayout";
 
 // Components - Common
 import { CommonButton, CommonTooltip } from "@/components/shared";
@@ -32,7 +30,6 @@ import { Diagnostics } from "./Diagnostics";
 import { NetworkProvider, useNetworkContext } from "@/context/network";
 
 // Utils & Constants
-import { ROUTES } from "@/app/routes/routeEndpoints";
 import { NETWORK_NAV } from "@/utils/constants";
 
 // Icons & Utils
@@ -80,14 +77,6 @@ function NetworkContent() {
 
   const activeNav = NETWORK_NAV.find((n) => n.id === activeSection);
 
-  const sidebarNav = (
-    <SidebarNavLayout
-      items={NETWORK_NAV}
-      activeSection={activeSection}
-      baseRoute={ROUTES.NETWORK}
-    />
-  );
-
   // ---- Render Helpers ----
 
   /**
@@ -114,14 +103,7 @@ function NetworkContent() {
 
   return (
     <PageLayout>
-      <SidebarLayout
-        sidebar={sidebarNav}
-        sidebarFooter={
-          <p className="text-[11px] text-muted-foreground">
-            Modified by adm.tirth | 06 Feb 2026 | 16:40
-          </p>
-        }
-      >
+      <div className="flex flex-col flex-1 min-w-0 p-3">
         <PageHeaderLayout
           icon={
             activeNav?.icon ? (
@@ -136,7 +118,7 @@ function NetworkContent() {
         />
 
         <main className="flex-1 min-w-0 overflow-auto">{renderSection()}</main>
-      </SidebarLayout>
+      </div>
     </PageLayout>
   );
 }

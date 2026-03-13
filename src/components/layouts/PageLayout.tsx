@@ -1,24 +1,22 @@
 // React & Hooks
 import type { ReactNode } from "react";
 
-// Components - Features
-import { Header } from "@/components/features/dashboard/Header";
-
 // Icons & Utils
 import { cn } from "@/utils/lib/utils";
 
 export interface PageLayoutProps {
-  /** Main content; Header is rendered above. */
+  /** Main content. */
   children: ReactNode;
   /** Extra class for the outer wrapper. */
   className?: string;
-  /** Extra class for the main content area (below header). */
+  /** Extra class for the main content area. */
   mainClassName?: string;
 }
 
 /**
- * Standard page shell: full-height background, fixed Header, scrollable main.
+ * Standard page content wrapper: scrollable main area.
  * Use for Dashboard, Profile, Settings, Mud Properties.
+ * Note: Header and Sidebar are now handled by MainLayout in routes.
  */
 export function PageLayout({
   children,
@@ -26,8 +24,7 @@ export function PageLayout({
   mainClassName,
 }: PageLayoutProps) {
   return (
-    <div className={cn("min-h-screen bg-background flex flex-col", className)}>
-      <Header />
+    <div className={cn("min-h-[calc(100vh-4.15rem)] bg-background flex flex-col", className)}>
       <main className={cn("flex-1 overflow-auto", mainClassName)}>
         {children}
       </main>

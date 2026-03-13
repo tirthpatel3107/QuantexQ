@@ -18,8 +18,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { SideDrawer } from "@/components/features/dashboard/SideDrawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useAppSidebar } from "@/context/appSidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,7 +55,7 @@ export function Header() {
   const [time, setTime] = useState(() => new Date());
   const { isRunning, setRunning } = useSimulationState();
   const { theme, setTheme } = useTheme();
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const { toggle: toggleSidebar, isOpen: isSidebarOpen } = useAppSidebar();
   const [stopConfirmOpen, setStopConfirmOpen] = useState(false);
   const [startConfirmOpen, setStartConfirmOpen] = useState(false);
   const navigate = useNavigate();
@@ -74,18 +74,26 @@ export function Header() {
   }, [theme, setTheme]);
 
   return (
-    <header className="sticky top-0 z-50 min-h-14 h-auto border-b border-border bg-card px-3 sm:px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 backdrop-blur-md">
-      <SideDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
-
+    <header
+      className={cn(
+        "sticky top-0 z-50 min-h-14 h-auto border-b border-border bg-card px-3 sm:px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 backdrop-blur-md",
+        isSidebarOpen && "ml-3 ",
+      )}
+    >
       {/* Left Section: Menu Toggle and Brand Identity */}
-      <div className="flex items-center gap-2 shrink-0 min-w-0 w-full sm:w-auto">
-        <CommonTooltip content="Open menu">
+      <div
+        className={cn(
+          "flex items-center gap-2 shrink-0 min-w-0 w-full sm:w-auto transition-opacity duration-300",
+          isSidebarOpen && "opacity-0 pointer-events-none",
+        )}
+      >
+        <CommonTooltip content="Toggle menu">
           <CommonButton
             variant="ghost"
             size="icon"
-            onClick={() => setDrawerOpen(true)}
+            onClick={toggleSidebar}
             className="text-muted-foreground hover:text-foreground"
-            aria-label="Open menu"
+            aria-label="Toggle menu"
             icon={Menu}
           />
         </CommonTooltip>

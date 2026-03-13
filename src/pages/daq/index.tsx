@@ -3,9 +3,7 @@ import { useParams } from "react-router-dom";
 
 // Components - Layouts
 import { PageLayout } from "@/components/layouts/PageLayout";
-import { SidebarLayout } from "@/components/layouts/SidebarLayout";
 import { PageHeaderLayout } from "@/components/layouts/PageHeaderLayout";
-import { SidebarNavLayout } from "@/components/layouts/SidebarNavLayout";
 
 // Components - Common
 import { CommonButton, CommonTooltip } from "@/components/shared";
@@ -26,7 +24,6 @@ import { Downloads } from "./downloads";
 import { DAQProvider, useDAQContext } from "@/context/daq";
 
 // Utils & Constants
-import { ROUTES } from "@/app/routes/routeEndpoints";
 import { DAQ_NAV } from "@/utils/constants";
 
 // Icons & Utils
@@ -79,15 +76,6 @@ function DAQContent() {
   // Find the active navigation item metadata based on the current URL
   const activeNav = DAQ_NAV.find((n) => n.id === activeSection);
 
-  // Sidebar navigation component for switching between DAQ sub-modules
-  const sidebarNav = (
-    <SidebarNavLayout
-      items={DAQ_NAV}
-      activeSection={activeSection}
-      baseRoute={ROUTES.DAQ}
-    />
-  );
-
   // ---- Render Helpers ----
 
   /**
@@ -123,14 +111,7 @@ function DAQContent() {
 
   return (
     <PageLayout>
-      <SidebarLayout
-        sidebar={sidebarNav}
-        sidebarFooter={
-          <p className="text-[11px] text-muted-foreground">
-            Modified by adm.tirth | 06 Feb 2026 | 12:30
-          </p>
-        }
-      >
+      <div className="flex flex-col flex-1 min-w-0 p-3">
         {/* Page title and metadata bar with contextual actions */}
         <PageHeaderLayout
           icon={
@@ -146,7 +127,7 @@ function DAQContent() {
         />
 
         <main className="flex-1 min-w-0 overflow-auto">{renderSection()}</main>
-      </SidebarLayout>
+      </div>
     </PageLayout>
   );
 }

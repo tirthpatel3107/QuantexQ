@@ -4,9 +4,7 @@ import { useParams } from "react-router-dom";
 
 // Components - Layouts
 import { PageLayout } from "@/components/layouts/PageLayout";
-import { SidebarLayout } from "@/components/layouts/SidebarLayout";
 import { PageHeaderLayout } from "@/components/layouts/PageHeaderLayout";
-import { SidebarNavLayout } from "@/components/layouts/SidebarNavLayout";
 
 // Components - Common
 import { CommonButton, CommonTooltip } from "@/components/shared";
@@ -34,7 +32,6 @@ import {
 } from "@/context/mudProperties";
 
 // Utils & Constants
-import { ROUTES } from "@/app/routes/routeEndpoints";
 import { MUD_NAV } from "@/utils/constants";
 
 // Icons & Utils
@@ -113,17 +110,6 @@ function MudPropertiesContent() {
     [requestSave],
   );
 
-  const sidebarNav = useMemo(
-    () => (
-      <SidebarNavLayout
-        items={MUD_NAV}
-        activeSection={activeSection}
-        baseRoute={ROUTES.MUD_PROPERTIES}
-      />
-    ),
-    [activeSection],
-  );
-
   const activeNav = useMemo(
     () => MUD_NAV.find((n) => n.id === activeSection),
     [activeSection],
@@ -157,14 +143,7 @@ function MudPropertiesContent() {
 
   return (
     <PageLayout>
-      <SidebarLayout
-        sidebar={sidebarNav}
-        sidebarFooter={
-          <p className="text-[11px] text-muted-foreground">
-            Modified by adm.tirth | 06 Feb 2026 | 12:21
-          </p>
-        }
-      >
+      <div className="flex flex-col flex-1 min-w-0 p-3">
         <PageHeaderLayout
           icon={
             activeNav?.icon ? (
@@ -190,7 +169,7 @@ function MudPropertiesContent() {
             {/* {activeSection !== "mud-properties" && <MudPropertiesSidebar />} */}
           </div>
         </main>
-      </SidebarLayout>
+      </div>
     </PageLayout>
   );
 }

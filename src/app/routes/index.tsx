@@ -13,6 +13,10 @@ import { ROUTES } from "@/app/routes/routeEndpoints";
 // Contexts
 import { SimulationProvider } from "@/context/simulation";
 import { SidebarProvider } from "@/context/sidebar";
+import { AppSidebarProvider } from "@/context/appSidebar";
+
+// Components - Layout
+import { MainLayout } from "@/components/layouts/MainLayout";
 
 // Pages (lazy-loaded for code-splitting)
 const Index = lazy(() => import("@/pages/Index"));
@@ -34,7 +38,11 @@ const SignUp = lazy(() => import("@/pages/auth/SignUp"));
  * Replace this with <ProtectedRouteLayout /> when auth is enabled:
  *   element={<ProtectedRouteLayout />} instead of element={<ProtectedRouteLayout />}
  */
-const ProtectedRouteLayout = () => <Outlet />;
+const ProtectedRouteLayout = () => (
+  <MainLayout>
+    <Outlet />
+  </MainLayout>
+);
 
 const AppRoutes = () => {
   return (
@@ -51,12 +59,14 @@ const AppRoutes = () => {
           {/* <Route element={<ProtectedRouteLayout />}> */}
           <Route
             element={
-              <SidebarProvider>
-                <SimulationProvider>
-                  {/* Nested outlet so Sidebar/Simulation only wrap app pages */}
-                  <ProtectedRouteLayout />
-                </SimulationProvider>
-              </SidebarProvider>
+              <AppSidebarProvider>
+                <SidebarProvider>
+                  <SimulationProvider>
+                    {/* Nested outlet so Sidebar/Simulation only wrap app pages */}
+                    <ProtectedRouteLayout />
+                  </SimulationProvider>
+                </SidebarProvider>
+              </AppSidebarProvider>
             }
           >
             <Route path={ROUTES.HOME} element={<Index />} />
