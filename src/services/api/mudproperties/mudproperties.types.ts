@@ -205,18 +205,86 @@ export interface SaveCalibrationPayload {
 // ============================================
 
 export interface SummaryTabData {
-  fluidType: string;
-  baseFluid: string;
-  mudWeight: string;
-  viscosity: string;
-  yieldPoint: string;
-  gelStrength: string;
-  temperature: string;
-  phLevel: string;
-  solidsContent: string;
-  oilWaterRatio: string;
-  lastUpdated: string;
-  updatedBy: string;
+  mudSystemOverview: {
+    mudSystem: string;
+    baseFluid: string;
+  };
+  rheology: {
+    model: string;
+    pv: string;
+    yp: string;
+    gels: string;
+    derivedWarning?: boolean;
+  };
+  densitySolids: {
+    mudWeightIn: string;
+    mudWeightOut: string;
+    lgs: string;
+    hgs: string;
+    salinity: string;
+  };
+  temperature: {
+    surfaceTemp: string;
+    bottomholeTemp: string;
+    calculation: string;
+    densitometryTemp: string;
+  };
+  gasCompressibility: {
+    compressibility: boolean;
+    gasCut?: string;
+    compressibilityFactor?: string;
+    gasStatus?: "OK" | "Warning" | "Error";
+    gasDetected?: boolean;
+  };
+  activePitsVolume: {
+    volume: string;
+  };
+  flowlineTemperature: {
+    temperature: string;
+  };
+  oilWaterRatio: {
+    ratio: string;
+  };
+}
+
+export interface SaveSummaryPayload {
+  mudSystemOverview: {
+    mudSystem: string;
+    baseFluid: string;
+  };
+  rheology: {
+    model: string;
+    pv: string;
+    yp: string;
+    gels: string;
+  };
+  densitySolids: {
+    mudWeightIn: string;
+    mudWeightOut: string;
+    lgs: string;
+    hgs: string;
+    salinity: string;
+  };
+  temperature: {
+    surfaceTemp: string;
+    bottomholeTemp: string;
+    calculation: string;
+    densitometryTemp: string;
+  };
+  gasCompressibility: {
+    compressibility: boolean;
+    gasCut?: string;
+    compressibilityFactor?: string;
+  };
+  activePitsVolume: {
+    volume: string;
+  };
+  flowlineTemperature: {
+    temperature: string;
+  };
+  oilWaterRatio: {
+    ratio: string;
+  };
 }
 
 // ============================================
@@ -259,4 +327,11 @@ export interface CalibrationOptionsData {
     visco: string;
     temp: string;
   };
+}
+
+// Summary options for dropdown fields
+export interface SummaryOptionsData {
+  mudSystemOptions: SelectOption[];
+  baseFluidOptions: SelectOption[];
+  rheologyModelOptions: SelectOption[];
 }

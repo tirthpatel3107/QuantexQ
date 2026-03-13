@@ -47,6 +47,8 @@ export const mudPropertiesKeys = {
   calibrationOptions: () =>
     [...mudPropertiesKeys.all, "calibration", "options"] as const,
   summary: () => [...mudPropertiesKeys.all, "summary"] as const,
+  summaryOptions: () =>
+    [...mudPropertiesKeys.all, "summary", "options"] as const,
 };
 
 // API Base URL is handled by apiClient
@@ -383,18 +385,46 @@ const fetchSummaryData = async (): Promise<ApiResponse<SummaryTabData>> => {
       resolve({
         success: true,
         data: {
-          fluidType: "OBM",
-          baseFluid: "Diesel",
-          mudWeight: "12.5 ppg",
-          viscosity: "45 cP",
-          yieldPoint: "15 lb/100ft²",
-          gelStrength: "12/20 lb/100ft²",
-          temperature: "85°F / 210°F",
-          phLevel: "9.5",
-          solidsContent: "8.5%",
-          oilWaterRatio: "70/30",
-          lastUpdated: "2026-02-25T14:30:00Z",
-          updatedBy: "adm.tirth",
+          mudSystemOverview: {
+            mudSystem: "",
+            baseFluid: "",
+          },
+          rheology: {
+            model: "",
+            pv: "",
+            yp: "",
+            gels: "",
+            derivedWarning: true,
+          },
+          densitySolids: {
+            mudWeightIn: "",
+            mudWeightOut: "",
+            lgs: "",
+            hgs: "",
+            salinity: "",
+          },
+          temperature: {
+            surfaceTemp: "",
+            bottomholeTemp: "",
+            calculation: "",
+            densitometryTemp: "",
+          },
+          gasCompressibility: {
+            compressibility: true,
+            gasCut: "",
+            compressibilityFactor: "",
+            gasStatus: "OK",
+            gasDetected: false,
+          },
+          activePitsVolume: {
+            volume: "",
+          },
+          flowlineTemperature: {
+            temperature: "",
+          },
+          oilWaterRatio: {
+            ratio: "",
+          },
         },
         timestamp: new Date().toISOString(),
       });
@@ -597,6 +627,35 @@ export const useSaveCalibrationData = () => {
   });
 };
 
+// Summary
+const saveSummaryData = async (
+  payload: import("./mudproperties.types").SaveSummaryPayload,
+): Promise<ApiResponse<SaveResult>> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log("Saving Summary:", payload);
+      resolve({
+        success: true,
+        data: {
+          success: true,
+          message: "Summary data saved successfully",
+          updatedAt: new Date().toISOString(),
+        },
+      });
+    }, 800);
+  });
+};
+
+export const useSaveSummaryData = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: saveSummaryData,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: mudPropertiesKeys.summary() });
+    },
+  });
+};
+
 // ============================================
 // GET: Options Hooks for Dropdowns
 // ============================================
@@ -789,6 +848,46 @@ export const useCalibrationOptions = () => {
   return useQuery({
     queryKey: mudPropertiesKeys.calibrationOptions(),
     queryFn: fetchCalibrationOptions,
+    staleTime: 10 * 60 * 1000,
+  });
+};
+
+// Summary Options
+const fetchSummaryOptions = async (): Promise<
+  ApiResponse<import("./mudproperties.types").SummaryOptionsData>
+> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        data: {
+          mudSystemOptions: [
+            { value: "OBM", label: "OBM" },
+            { value: "WBM", label: "WBM" },
+            { value: "SBM", label: "SBM" },
+          ],
+          baseFluidOptions: [
+            { value: "Diesel", label: "Diesel" },
+            { value: "Mineral Oil", label: "Mineral Oil" },
+            { value: "Synthetic", label: "Synthetic" },
+            { value: "Water", label: "Water" },
+          ],
+          rheologyModelOptions: [
+            { value: "Bingham Plastic", label: "Bingham Plastic" },
+            { value: "Power Law", label: "Power Law" },
+            { value: "Herschel-Bulkley", label: "Herschel-Bulkley" },
+          ],
+        },
+        timestamp: new Date().toISOString(),
+      });
+    }, 300);
+  });
+};
+
+export const useSummaryOptions = () => {
+  return useQuery({
+    queryKey: mudPropertiesKeys.summaryOptions(),
+    queryFn: fetchSummaryOptions,
     staleTime: 10 * 60 * 1000,
   });
 };
