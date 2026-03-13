@@ -149,7 +149,7 @@ function MudPropertiesContent() {
       case "calibration":
         return <Calibration />;
       case "summary":
-        return <Summary />;
+        // return <Summary />;
       default:
         return <MudPropertiesOverview />;
     }
